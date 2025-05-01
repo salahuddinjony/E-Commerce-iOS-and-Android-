@@ -1,5 +1,5 @@
 
-import 'package:recipe_app/app/core/route_path.dart';
+import 'package:local/app/core/route_path.dart';
 
 
 
