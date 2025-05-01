@@ -11,8 +11,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Height=========${MediaQuery.of(context).size.height}");
+    debugPrint("Weight=========${MediaQuery.of(context).size.width}");
     return ScreenUtilInit(
-      designSize: const Size(393, 812),
+      designSize: const Size(360, 776),
       minTextAdapt: true,
       useInheritedMediaQuery: true,
       builder: (context, child) => GetMaterialApp.router(
