@@ -4,6 +4,14 @@ class RoutePath {
   //=================== General screens ===================
   static const String splashScreen = 'SplashScreen';
   static const String onboardingScreen = 'OnboardingScreen';
+  static const String chooseAuthScreen = 'ChooseAuthScreen';
+
+  ///======================= Auth Section =======================
+  static const String signInScreen = 'SignInScreen';
+  static const String signUpScreen = 'SignUpScreen';
+  static const String forgetPasswordScreen = 'ForgetPasswordScreen';
+  static const String otpScreen = 'OtpScreen';
+  static const String resetPasswordScreen = 'ResetPasswordScreen';
 
   ///======================= Vendor Section =======================
   static const String homeScreen = 'HomeScreen';

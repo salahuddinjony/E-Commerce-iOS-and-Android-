@@ -1,6 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
+import 'package:local/app/view/screens/authentication/choose_auth/choose_auth_screen.dart';
+import 'package:local/app/view/screens/authentication/forget_password/forget_password_screen.dart';
+import 'package:local/app/view/screens/authentication/otp/otp_screen.dart';
+import 'package:local/app/view/screens/authentication/reset_password/reset_password_screen.dart';
+import 'package:local/app/view/screens/authentication/sign_in/sign_in_screen.dart';
+import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:local/app/view/screens/notification/notification_screen.dart';
 import 'package:local/app/view/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
@@ -43,6 +49,66 @@ class AppRouter {
           path: RoutePath.onboardingScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: OnboardingScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= ChooseAuthScreen =======================
+        GoRoute(
+          name: RoutePath.chooseAuthScreen,
+          path: RoutePath.chooseAuthScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const ChooseAuthScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= Auth Section =======================
+        GoRoute(
+          name: RoutePath.signUpScreen,
+          path: RoutePath.signUpScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const SignUpScreen(),
+            state: state,
+          ),
+        ),
+
+        ///=======================  =======================
+        GoRoute(
+          name: RoutePath.signInScreen,
+          path: RoutePath.signInScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: SignInScreen(),
+            state: state,
+          ),
+        ),
+
+        ///=======================  =======================
+        GoRoute(
+          name: RoutePath.forgetPasswordScreen,
+          path: RoutePath.forgetPasswordScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const ForgetPasswordScreen(),
+            state: state,
+          ),
+        ),
+
+        ///=======================  =======================
+        GoRoute(
+          name: RoutePath.otpScreen,
+          path: RoutePath.otpScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const OtpScreen(),
+            state: state,
+          ),
+        ),
+
+        ///=======================  =======================
+        GoRoute(
+          name: RoutePath.resetPasswordScreen ,
+          path: RoutePath.resetPasswordScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const ResetPasswordScreen(),
             state: state,
           ),
         ),
