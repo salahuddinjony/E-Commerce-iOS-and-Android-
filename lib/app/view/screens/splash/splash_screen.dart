@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:local/app/utils/custom_assets/assets.gen.dart';
 
 import 'controller/splash_controller.dart';
 
@@ -11,7 +12,7 @@ final SplashController splashController = Get.find<SplashController>();
   @override
   Widget build(BuildContext context) {
   return  Scaffold(
-    body: Center(child: Text('Start'),),
+    body: Center(child: Assets.images.logo.image()),
   );
   }
 }
