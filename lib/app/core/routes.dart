@@ -6,7 +6,15 @@ import 'package:local/app/view/screens/vendor/add_product/add_product_screen.dar
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/order_request/order_request_screen.dart';
 import 'package:local/app/view/screens/vendor/orders/orders_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/about_us/about_us_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/change_password/change_password_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/help_center/help_center_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/personal_info/personal_info_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/privacy/privacy_policy_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/terms_conditions/terms_condition_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/transaction/transaction_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
 import 'route_path.dart';
 
 class AppRouter {
@@ -71,6 +79,85 @@ class AppRouter {
           path: RoutePath.profileScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child:  const ProfileScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= PersonalInfoScreen =======================
+        GoRoute(
+          name: RoutePath.personalInfoScreen,
+          path: RoutePath.personalInfoScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const PersonalInfoScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= PersonalInfoScreen =======================
+        GoRoute(
+          name: RoutePath.walletScreen,
+          path: RoutePath.walletScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const WalletScreen(),
+            state: state,
+          ),
+        ),
+        ///======================= TransactionScreen =======================
+        GoRoute(
+          name: RoutePath.transactionScreen,
+          path: RoutePath.transactionScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const TransactionScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= AboutUsScreen =======================
+        GoRoute(
+          name: RoutePath.aboutUsScreen,
+          path: RoutePath.aboutUsScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const AboutUsScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= PrivacyPolicyScreen =======================
+        GoRoute(
+          name: RoutePath.privacyPolicyScreen,
+          path: RoutePath.privacyPolicyScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const PrivacyPolicyScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= HelpCenterScreen =======================
+        GoRoute(
+          name: RoutePath.helpCenterScreen,
+          path: RoutePath.helpCenterScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const HelpCenterScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= TermsConditionScreen =======================
+        GoRoute(
+          name: RoutePath.termsConditionScreen,
+          path: RoutePath.termsConditionScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const TermsConditionScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= ChangePasswordScreen =======================
+        GoRoute(
+          name: RoutePath.changePasswordScreen,
+          path: RoutePath.changePasswordScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const ChangePasswordScreen(),
             state: state,
           ),
         ),
