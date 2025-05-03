@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
+import 'package:local/app/view/screens/notification/notification_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/vendor/add_product/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/order_request/order_request_screen.dart';
+import 'package:local/app/view/screens/vendor/order_request/order_view/order_view_screen.dart';
 import 'package:local/app/view/screens/vendor/orders/orders_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/about_us/about_us_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/change_password/change_password_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/help_center/help_center_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile/edit_profile_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/personal_info_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/privacy/privacy_policy_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
@@ -102,6 +105,16 @@ class AppRouter {
             state: state,
           ),
         ),
+
+        ///======================= EditProfileScreen =======================
+        GoRoute(
+          name: RoutePath.editProfileScreen,
+          path: RoutePath.editProfileScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const EditProfileScreen(),
+            state: state,
+          ),
+        ),
         ///======================= TransactionScreen =======================
         GoRoute(
           name: RoutePath.transactionScreen,
@@ -158,6 +171,26 @@ class AppRouter {
           path: RoutePath.changePasswordScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child:  const ChangePasswordScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= NotificationScreen =======================
+        GoRoute(
+          name: RoutePath.notificationScreen,
+          path: RoutePath.notificationScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const NotificationScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= OrderViewScreen =======================
+        GoRoute(
+          name: RoutePath.orderViewScreen,
+          path: RoutePath.orderViewScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const OrderViewScreen(),
             state: state,
           ),
         ),

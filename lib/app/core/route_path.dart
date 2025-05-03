@@ -18,4 +18,7 @@ class RoutePath {
   static const String helpCenterScreen = 'HelpCenterScreen';
   static const String termsConditionScreen = 'TermsConditionScreen';
   static const String changePasswordScreen = 'ChangePasswordScreen';
+  static const String notificationScreen = 'NotificationScreen';
+  static const String orderViewScreen = 'OrderViewScreen';
+  static const String editProfileScreen = 'EditProfileScreen';
 }
