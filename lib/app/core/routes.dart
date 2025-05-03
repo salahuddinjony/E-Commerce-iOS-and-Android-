@@ -105,7 +105,7 @@ class AppRouter {
 
         ///=======================  =======================
         GoRoute(
-          name: RoutePath.resetPasswordScreen ,
+          name: RoutePath.resetPasswordScreen,
           path: RoutePath.resetPasswordScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const ResetPasswordScreen(),
@@ -118,9 +118,7 @@ class AppRouter {
           name: RoutePath.homeScreen,
           path: RoutePath.homeScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const HomeScreen(),
-            state: state,
-          ),
+              child: const HomeScreen(), state: state, disableAnimation: true),
         ),
 
         ///======================= ordersScreen =======================
@@ -128,9 +126,9 @@ class AppRouter {
           name: RoutePath.ordersScreen,
           path: RoutePath.ordersScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const OrdersScreen(),
-            state: state,
-          ),
+              child: const OrdersScreen(),
+              state: state,
+              disableAnimation: true),
         ),
 
         ///======================= AddProductScreen =======================
@@ -138,9 +136,9 @@ class AppRouter {
           name: RoutePath.addProductScreen,
           path: RoutePath.addProductScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const AddProductScreen(),
-            state: state,
-          ),
+              child: const AddProductScreen(),
+              state: state,
+              disableAnimation: true),
         ),
 
         ///======================= OrderRequestScreen =======================
@@ -148,9 +146,9 @@ class AppRouter {
           name: RoutePath.orderRequestScreen,
           path: RoutePath.orderRequestScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const OrderRequestScreen(),
-            state: state,
-          ),
+              child: const OrderRequestScreen(),
+              state: state,
+              disableAnimation: true),
         ),
 
         ///======================= ProfileScreen =======================
@@ -158,9 +156,9 @@ class AppRouter {
           name: RoutePath.profileScreen,
           path: RoutePath.profileScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ProfileScreen(),
-            state: state,
-          ),
+              child: const ProfileScreen(),
+              state: state,
+              disableAnimation: true),
         ),
 
         ///======================= PersonalInfoScreen =======================
