@@ -3,6 +3,7 @@ class RoutePath {
 
   //=================== General screens ===================
   static const String splashScreen = 'SplashScreen';
+  static const String onboardingScreen = 'OnboardingScreen';
 
   ///======================= Vendor Section =======================
   static const String homeScreen = 'HomeScreen';

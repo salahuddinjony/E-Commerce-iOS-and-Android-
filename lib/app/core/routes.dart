@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/view/screens/notification/notification_screen.dart';
+import 'package:local/app/view/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/vendor/add_product/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
@@ -31,7 +32,17 @@ class AppRouter {
           name: RoutePath.splashScreen,
           path: RoutePath.splashScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  SplashScreen(),
+            child: SplashScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= OnboardingScreen =======================
+        GoRoute(
+          name: RoutePath.onboardingScreen,
+          path: RoutePath.onboardingScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: OnboardingScreen(),
             state: state,
           ),
         ),
@@ -41,7 +52,7 @@ class AppRouter {
           name: RoutePath.homeScreen,
           path: RoutePath.homeScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const HomeScreen(),
+            child: const HomeScreen(),
             state: state,
           ),
         ),
@@ -51,7 +62,7 @@ class AppRouter {
           name: RoutePath.ordersScreen,
           path: RoutePath.ordersScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const OrdersScreen(),
+            child: const OrdersScreen(),
             state: state,
           ),
         ),
@@ -61,7 +72,7 @@ class AppRouter {
           name: RoutePath.addProductScreen,
           path: RoutePath.addProductScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const AddProductScreen(),
+            child: const AddProductScreen(),
             state: state,
           ),
         ),
@@ -71,7 +82,7 @@ class AppRouter {
           name: RoutePath.orderRequestScreen,
           path: RoutePath.orderRequestScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const OrderRequestScreen(),
+            child: const OrderRequestScreen(),
             state: state,
           ),
         ),
@@ -81,7 +92,7 @@ class AppRouter {
           name: RoutePath.profileScreen,
           path: RoutePath.profileScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const ProfileScreen(),
+            child: const ProfileScreen(),
             state: state,
           ),
         ),
@@ -91,7 +102,7 @@ class AppRouter {
           name: RoutePath.personalInfoScreen,
           path: RoutePath.personalInfoScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const PersonalInfoScreen(),
+            child: const PersonalInfoScreen(),
             state: state,
           ),
         ),
@@ -101,7 +112,7 @@ class AppRouter {
           name: RoutePath.walletScreen,
           path: RoutePath.walletScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const WalletScreen(),
+            child: const WalletScreen(),
             state: state,
           ),
         ),
@@ -111,16 +122,17 @@ class AppRouter {
           name: RoutePath.editProfileScreen,
           path: RoutePath.editProfileScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const EditProfileScreen(),
+            child: const EditProfileScreen(),
             state: state,
           ),
         ),
+
         ///======================= TransactionScreen =======================
         GoRoute(
           name: RoutePath.transactionScreen,
           path: RoutePath.transactionScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const TransactionScreen(),
+            child: const TransactionScreen(),
             state: state,
           ),
         ),
@@ -130,7 +142,7 @@ class AppRouter {
           name: RoutePath.aboutUsScreen,
           path: RoutePath.aboutUsScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const AboutUsScreen(),
+            child: const AboutUsScreen(),
             state: state,
           ),
         ),
@@ -140,7 +152,7 @@ class AppRouter {
           name: RoutePath.privacyPolicyScreen,
           path: RoutePath.privacyPolicyScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const PrivacyPolicyScreen(),
+            child: const PrivacyPolicyScreen(),
             state: state,
           ),
         ),
@@ -150,7 +162,7 @@ class AppRouter {
           name: RoutePath.helpCenterScreen,
           path: RoutePath.helpCenterScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const HelpCenterScreen(),
+            child: const HelpCenterScreen(),
             state: state,
           ),
         ),
@@ -160,7 +172,7 @@ class AppRouter {
           name: RoutePath.termsConditionScreen,
           path: RoutePath.termsConditionScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const TermsConditionScreen(),
+            child: const TermsConditionScreen(),
             state: state,
           ),
         ),
@@ -170,7 +182,7 @@ class AppRouter {
           name: RoutePath.changePasswordScreen,
           path: RoutePath.changePasswordScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const ChangePasswordScreen(),
+            child: const ChangePasswordScreen(),
             state: state,
           ),
         ),
@@ -180,7 +192,7 @@ class AppRouter {
           name: RoutePath.notificationScreen,
           path: RoutePath.notificationScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const NotificationScreen(),
+            child: const NotificationScreen(),
             state: state,
           ),
         ),
@@ -190,7 +202,7 @@ class AppRouter {
           name: RoutePath.orderViewScreen,
           path: RoutePath.orderViewScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const OrderViewScreen(),
+            child: const OrderViewScreen(),
             state: state,
           ),
         ),
