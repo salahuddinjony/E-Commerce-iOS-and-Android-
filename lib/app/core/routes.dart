@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
-import 'package:local/app/view/screens/home/home_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
+import 'package:local/app/view/screens/vendor/add_product/add_product_screen.dart';
+import 'package:local/app/view/screens/vendor/home/home_screen.dart';
+import 'package:local/app/view/screens/vendor/order_request/order_request_screen.dart';
+import 'package:local/app/view/screens/vendor/orders/orders_screen.dart';
+import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
 import 'route_path.dart';
 
 class AppRouter {
@@ -21,12 +25,52 @@ class AppRouter {
           ),
         ),
 
-        ///======================= HomeScreen =======================
+        ///======================= Vendor Section =======================
         GoRoute(
           name: RoutePath.homeScreen,
           path: RoutePath.homeScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child:  const HomeScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= ordersScreen =======================
+        GoRoute(
+          name: RoutePath.ordersScreen,
+          path: RoutePath.ordersScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const OrdersScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= AddProductScreen =======================
+        GoRoute(
+          name: RoutePath.addProductScreen,
+          path: RoutePath.addProductScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const AddProductScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= OrderRequestScreen =======================
+        GoRoute(
+          name: RoutePath.orderRequestScreen,
+          path: RoutePath.orderRequestScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const OrderRequestScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= ProfileScreen =======================
+        GoRoute(
+          name: RoutePath.profileScreen,
+          path: RoutePath.profileScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const ProfileScreen(),
             state: state,
           ),
         ),
