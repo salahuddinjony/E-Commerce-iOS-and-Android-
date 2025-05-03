@@ -10,6 +10,12 @@ import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dar
 import 'package:local/app/view/screens/notification/notification_screen.dart';
 import 'package:local/app/view/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
+import 'package:local/app/view/screens/user/chat/chat_screen.dart';
+import 'package:local/app/view/screens/user/support/support_screen.dart';
+import 'package:local/app/view/screens/user/user_home/user_home_screen.dart';
+import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.dart';
+import 'package:local/app/view/screens/user/user_profile/order_history/order_history_screen.dart';
+import 'package:local/app/view/screens/user/user_profile/user_profile_screen.dart';
 import 'package:local/app/view/screens/vendor/add_product/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/order_request/order_request_screen.dart';
@@ -267,6 +273,64 @@ class AppRouter {
           path: RoutePath.orderViewScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const OrderViewScreen(),
+            state: state,
+          ),
+        ),
+
+        ///======================= User Section =======================
+        GoRoute(
+          name: RoutePath.userHomeScreen,
+          path: RoutePath.userHomeScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+              child: const UserHomeScreen(),
+              state: state,
+              disableAnimation: true),
+        ),
+
+        ///======================= ChatScreen Section =======================
+        GoRoute(
+          name: RoutePath.chatScreen,
+          path: RoutePath.chatScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+              child: const ChatScreen(), state: state, disableAnimation: true),
+        ),
+
+        ///======================= SupportScreen Section =======================
+        GoRoute(
+          name: RoutePath.supportScreen,
+          path: RoutePath.supportScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+              child: const SupportScreen(),
+              state: state,
+              disableAnimation: true),
+        ),
+
+        ///=======================  Section =======================
+        GoRoute(
+          name: RoutePath.userProfileScreen,
+          path: RoutePath.userProfileScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const UserProfileScreen(),
+            state: state,
+          ),
+        ),
+
+        ///=======================  OrderHistoryScreen =======================
+        GoRoute(
+          name: RoutePath.orderHistoryScreen,
+          path: RoutePath.orderHistoryScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const OrderHistoryScreen(),
+            state: state,
+          ),
+        ),
+
+        ///=======================  ViewMapScreen =======================
+        GoRoute(
+          name: RoutePath.viewMapScreen,
+          path: RoutePath.viewMapScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const ViewMapScreen(),
             state: state,
           ),
         ),
