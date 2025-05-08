@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local/app/core/route_path.dart';
 import 'package:local/app/global/controller/Onboarding_Controller.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
@@ -102,8 +104,7 @@ class OnboardingScreen extends StatelessWidget {
               return CustomButton(
                 onTap: () {
                   if (isLast) {
-                    // // Navigate to next screen
-                    // Get.offAllNamed('/home');
+                    context.pushNamed(RoutePath.chooseAuthScreen,);
                   } else {
                     _pageController.nextPage(
                         duration: const Duration(milliseconds: 400),

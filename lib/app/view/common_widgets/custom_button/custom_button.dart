@@ -13,8 +13,8 @@ class CustomButton extends StatelessWidget {
     this.title = 'Welcome',
     this.marginVertical = 0,
     this.marginHorizontal = 0,
-    this.fillColor = AppColors.black,
-    this.textColor = AppColors.black,
+    this.fillColor = AppColors.brightCyan,
+    this.textColor = AppColors.white,
     this.borderColor = Colors.transparent,
     this.isRadius = false,
   });
