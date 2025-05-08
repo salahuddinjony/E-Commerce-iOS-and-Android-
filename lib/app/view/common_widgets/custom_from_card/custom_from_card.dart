@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/view/common_widgets/custom_auth_container/custom_auth_container.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
 
@@ -32,11 +34,12 @@ class CustomFromCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
-          color: AppColors.black,
+          font: CustomFont.inter,
+          color: AppColors.darkNaturalGray,
           text: title,
-          fontWeight: FontWeight.w400,
-          fontSize: 16,
-          bottom: 8,
+          fontWeight: FontWeight.w600,
+          fontSize: 16.sp,
+          bottom: 8.h,
         ),
         CustomTextField(
           maxLines: isPassword ? 1 : (maxLine ?? 1), // Ensure single line for password
@@ -47,10 +50,12 @@ class CustomFromCard extends StatelessWidget {
           textEditingController: controller,
           hintText: hinText,
           inputTextStyle: const TextStyle(color: AppColors.black),
-          fillColor:isBgColor ==true? AppColors.black:AppColors.black,
-          fieldBorderColor: AppColors.black,
+          fillColor:isBgColor ==true? AppColors.black:AppColors.white,
+          fieldBorderColor: AppColors.borderColor,
           keyboardType: isPassword ? TextInputType.visiblePassword : TextInputType.text,
         ),
+
+        SizedBox(height: 14.h,)
       ],
     );
   }

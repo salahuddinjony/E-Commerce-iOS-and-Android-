@@ -1,12 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
+enum CustomFont { inter, poppins }
 
 class CustomText extends StatelessWidget {
   const CustomText({
     super.key,
+    required this.text,
     this.maxLines,
     this.textAlign = TextAlign.center,
     this.left = 0,
@@ -16,9 +18,9 @@ class CustomText extends StatelessWidget {
     this.fontSize = 12,
     this.fontWeight = FontWeight.w300,
     this.color = Colors.green,
-    required this.text,
     this.overflow = TextOverflow.ellipsis,
     this.decoration,
+    this.font = CustomFont.inter, // Default is Inter
   });
 
   final double left;
@@ -33,26 +35,39 @@ class CustomText extends StatelessWidget {
   final int? maxLines;
   final TextOverflow overflow;
   final TextDecoration? decoration;
+  final CustomFont font; // New parameter for font selection
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-      EdgeInsets.only(left: left, right: right, top: top, bottom: bottom),
+      padding: EdgeInsets.only(left: left, right: right, top: top, bottom: bottom),
       child: Text(
-        textAlign: textAlign,
         text,
+        textAlign: textAlign,
         maxLines: maxLines,
         overflow: overflow,
-        style: GoogleFonts.poppins(
-          fontSize: fontSize.w,
+        style: _getTextStyle(),
+      ),
+    );
+  }
+
+  TextStyle _getTextStyle() {
+    switch (font) {
+      case CustomFont.poppins:
+        return GoogleFonts.poppins(
+          fontSize: fontSize.sp,
           fontWeight: fontWeight,
           color: color,
           decoration: decoration,
-          decorationColor: Colors.white,
-          // decorationThickness: 2,
-        ),
-      ),
-    );
+        );
+      case CustomFont.inter:
+      default:
+        return GoogleFonts.inter(
+          fontSize: fontSize.sp,
+          fontWeight: fontWeight,
+          color: color,
+          decoration: decoration,
+        );
+    }
   }
 }

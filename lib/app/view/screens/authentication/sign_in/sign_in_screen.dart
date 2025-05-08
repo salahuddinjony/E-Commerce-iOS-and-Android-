@@ -1,134 +1,110 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
+import 'package:local/app/utils/custom_assets/assets.gen.dart';
+import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
+import 'package:local/app/view/common_widgets/custom_auth_container/custom_auth_container.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
+import 'package:local/app/view/common_widgets/custom_rich_text/custom_rich_text.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 
 class SignInScreen extends StatelessWidget {
-  SignInScreen({super.key});
-
-  final AuthController authController = Get.find<AuthController>();
+  const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+        backgroundColor: AppColors.white,
+        appBar: const CustomAppBar(
+          appBarContent: AppStrings.logIn,
+          iconData: Icons.arrow_back,
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.w),
           child: Column(
-        children: [
-          Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xCCEDC4AC), // First color (with opacity)
-                    Color(0xFFE9864E),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+            children: [
+              SizedBox(
+                height: 100.h,
               ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    const CustomText(
-                      textAlign: TextAlign.start,
-                      text: AppStrings.welcomeToTheCustomHUb,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 24,
-                      color: AppColors.black,
-                    ),
-
-                    SizedBox(
-                      height: 10.h,
-                    ),
-
-                    //ToDo ==========✅✅ Email✅✅==========
-                    CustomFromCard(
-                        hinText: AppStrings.enterYourEmail,
-                        title: AppStrings.email,
-                        controller: TextEditingController(),
-                        validator: (v) {}),
-                    //ToDo ==========✅✅ password ✅✅==========
-                    CustomFromCard(
-                        isPassword: true,
-                        hinText: AppStrings.email,
-                        title: AppStrings.password,
-                        controller: TextEditingController(),
-                        validator: (v) {}),
-
-                    ///: <<<<<<======🗄️🗄️🗄️🗄️🗄️🗄️💡💡Forgot Password💡💡🗄️🗄️🗄️🗄️🗄️🗄️🗄️>>>>>>>>===========
-
-                    // Row(
-                    //   children: [
-                    //     Checkbox(
-                    //       value: authController.isRemember.value,
-                    //       checkColor: AppColors.white50,
-                    //       activeColor: AppColors.black,
-                    //       onChanged: (value) {
-                    //         authController.isRemember.value =
-                    //             value ?? false;
-                    //         debugPrint(
-                    //             "Checkbox clicked, Remember value: ${authController.isRemember.value}");
-                    //       },
-                    //     ),
-                    //     const CustomText(
-                    //       top: 12,
-                    //       text: AppStrings.rememberMe,
-                    //       fontSize: 16,
-                    //       fontWeight: FontWeight.w500,
-                    //       color: AppColors.black,
-                    //       bottom: 15,
-                    //     ),
-                    //     const Spacer(),
-                    //     GestureDetector(
-                    //       onTap: () {
-                    //         AppRouter.route.pushNamed(
-                    //             RoutePath.forgetPasswordScreen,
-                    //             extra: userRole);
-                    //       },
-                    //       child: CustomText(
-                    //         top: 12,
-                    //         text: AppStrings.forgotPassword.tr,
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.w500,
-                    //         color: AppColors.black,
-                    //         bottom: 15,
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
-                ),
-              )),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
+              CustomFromCard(
+                  hinText: AppStrings.enterYourEmail,
+                  title: AppStrings.yourEmail,
+                  controller: TextEditingController(),
+                  validator: (v) {}),
+              CustomFromCard(
+                  isPassword: true,
+                  hinText: "Enter Your Password",
+                  title: AppStrings.password,
+                  controller: TextEditingController(),
+                  validator: (v) {}),
+              Row(
                 children: [
-                  //ToDo ==========✅✅ Sing In Button✅✅==========
-                  CustomButton(
-                    onTap: () {},
-                    title: AppStrings.signUp,
-                    fillColor: Colors.black,
-                    textColor: Colors.white,
-                  ),
-
-                  SizedBox(
-                    height: 50.h,
-                  ),
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      context.pushNamed(
+                        RoutePath.forgetPasswordScreen,
+                      );
+                    },
+                    child: CustomText(
+                      text: AppStrings.forgotPassword,
+                      font: CustomFont.inter,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.brightCyan,
+                    ),
+                  )
                 ],
-              )),
-        ],
-      )),
-    );
+              ),
+              SizedBox(
+                height: 12.h,
+              ),
+              CustomButton(
+                onTap: () {
+                  context.pushNamed(
+                    RoutePath.homeScreen,
+                  );
+                },
+                title: AppStrings.continues,
+              ),
+              SizedBox(
+                height: 25.h,
+              ),
+              CustomAuthContainer(
+                buttonText: AppStrings.signUpWithGoogle, // Text for the button
+                onPressed: () {
+                  // Handle Google authentication logic here
+                  print('Google Sign-Up button pressed');
+                },
+                image: Assets.images.google.image(),
+              ),
+              SizedBox(
+                height: 14.h,
+              ),
+              CustomAuthContainer(
+                buttonText: AppStrings.signUpWithApple, // Text for the button
+                onPressed: () {
+                  // Handle Google authentication logic here
+                  print('Google Sign-Up button pressed');
+                },
+                image: Assets.images.apple.image(),
+              ),
+              SizedBox(
+                height: 14.h,
+              ),
+              CustomRichText(
+                  firstText: AppStrings.dontHaveAnAccount,
+                  secondText: AppStrings.signUp,
+                  onTapAction: () {
+                    context.pushNamed(RoutePath.signUpScreen,);
+
+                  })
+            ],
+          ),
+        ));
   }
 }

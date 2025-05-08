@@ -12,7 +12,7 @@ class CustomRichText extends StatelessWidget {
   final int? maxLines;
   final TextAlign textAlign;
 
-  const CustomRichText({
+  const  CustomRichText({
     super.key,
     required this.firstText,
     required this.secondText,
@@ -35,17 +35,17 @@ class CustomRichText extends StatelessWidget {
               text: firstText,
               style: firstTextStyle ??
                   const TextStyle(
-                    color: AppColors.black,
+                    color: AppColors.naturalGray,
                     fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                    fontSize: 16,
                   ),
             ),
             TextSpan(
               text: secondText,
               style: secondTextStyle ??
                   const TextStyle(
-                    color: AppColors.black,
-                    fontSize: 14,
+                    color: AppColors.brightCyan,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
               recognizer: TapGestureRecognizer()..onTap = onTapAction,

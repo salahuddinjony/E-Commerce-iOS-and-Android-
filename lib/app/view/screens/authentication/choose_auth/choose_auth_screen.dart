@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/utils/custom_assets/assets.gen.dart';
@@ -22,14 +24,20 @@ class ChooseAuthScreen extends StatelessWidget {
               height: 46.h,
             ),
             CustomButton(
-              onTap: () {},
+              onTap: () {
+                context.pushNamed(RoutePath.signInScreen,);
+
+              },
               title: AppStrings.logIn,
             ),
             SizedBox(
               height: 20.h,
             ),
             CustomButton(
-              onTap: () {},
+              onTap: () {
+                context.pushNamed(RoutePath.signUpScreen,);
+
+              },
               title: AppStrings.newAccount,
             ),
             SizedBox(
