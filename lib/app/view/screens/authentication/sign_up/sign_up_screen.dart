@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
+import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
+import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
+import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
+import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  _LoginSignUpScreenState createState() => _LoginSignUpScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _LoginSignUpScreenState extends State<SignUpScreen> {
-  bool isLoginSelected =
-  true; // Tracks whether Login or SignUp form is displayed
+class _SignUpScreenState extends State<SignUpScreen> {
+  bool isClientSelected = true; // Default to 'Client'
 
-  // Controllers for text fields
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailPhoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
-  // Toggle password visibility
   bool isPasswordVisible = false;
 
   @override
@@ -34,185 +41,219 @@ class _LoginSignUpScreenState extends State<SignUpScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Log In / Sign Up Tab
+            // Toggle buttons for Client and Business Vendor
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
+                ChoiceChip(
+                  label: const Text('Client'),
+                  selected: isClientSelected,
+                  onSelected: (bool selected) {
                     setState(() {
-                      isLoginSelected = true;
+                      isClientSelected = true;
                     });
                   },
-                  child: Text(
-                    'Log in',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: isLoginSelected ? Colors.teal : Colors.grey,
-                    ),
-                  ),
+                  selectedColor: Colors.teal,
                 ),
-                GestureDetector(
-                  onTap: () {
+                SizedBox(width: 16.w),
+                ChoiceChip(
+                  label: const Text('Business Vendor'),
+                  selected: !isClientSelected,
+                  onSelected: (bool selected) {
                     setState(() {
-                      isLoginSelected = false;
+                      isClientSelected = false;
                     });
                   },
-                  child: Text(
-                    'Sign up',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: !isLoginSelected ? Colors.teal : Colors.grey,
-                    ),
-                  ),
+                  selectedColor: Colors.teal,
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
-            // Show Login Form if Login is selected
-            if (isLoginSelected) ...[
-              _buildEmailField(),
-              SizedBox(height: 20),
-              _buildPasswordField(),
-              SizedBox(height: 10),
-              _buildForgotPassword(),
-              SizedBox(height: 20),
-              _buildContinueButton(onPressed: _handleLogin),
-            ],
-
-            // Show Sign Up Form if Sign Up is selected
-            if (!isLoginSelected) ...[
-              _buildEmailField(),
-              SizedBox(height: 20),
-              _buildPasswordField(),
-              SizedBox(height: 20),
-              _buildConfirmPasswordField(),
-              SizedBox(height: 20),
-              _buildContinueButton(onPressed: _handleSignUp),
-            ],
+            // Display corresponding form based on selection
+            isClientSelected ? _buildClientForm() : _buildBusinessVendorForm(),
           ],
         ),
       ),
     );
   }
 
-  // Method to build email input field
-  Widget _buildEmailField() {
-    return TextField(
-      controller: emailController,
-      decoration: InputDecoration(
-        labelText: 'Your Email',
-        hintText: 'Enter your email',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-      ),
-    );
-  }
-
-  // Method to build password input field
-  Widget _buildPasswordField() {
-    return TextField(
-      controller: passwordController,
-      obscureText: !isPasswordVisible,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        hintText: 'Enter your password',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        suffixIcon: IconButton(
-          icon: Icon(
-            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            setState(() {
-              isPasswordVisible = !isPasswordVisible;
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  // Method to build confirm password field for Sign Up
-  Widget _buildConfirmPasswordField() {
-    return TextField(
-      obscureText: !isPasswordVisible,
-      decoration: InputDecoration(
-        labelText: 'Confirm Password',
-        hintText: 'Confirm your password',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        suffixIcon: IconButton(
-          icon: Icon(
-            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            setState(() {
-              isPasswordVisible = !isPasswordVisible;
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  // Method to build forgot password link
-  Widget _buildForgotPassword() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+  // Client Sign-Up Form
+  Widget _buildClientForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextButton(
-          onPressed: () {
-            // Handle forgot password logic here
-          },
-          child: Text(
-            'Forgot password?',
-            style: TextStyle(fontSize: 14, color: Colors.blue),
-          ),
+        //==========Name=============
+        CustomText(
+          text: AppStrings.name,
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
         ),
+        CustomTextField(
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: nameController,
+          prefixIcon: const Icon(Icons.person),
+          hintText: "Enter Your Name",
+        ),
+
+        //==========Email=============
+        CustomText(
+          top: 8.h,
+          text: 'E-mail/phone number',
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
+        ),
+        CustomTextField(
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: emailPhoneController,
+          prefixIcon: const Icon(Icons.email),
+          hintText: "Enter Your Name",
+        ),
+
+        //==========Name=============
+        CustomText(
+          top: 8.h,
+          text: AppStrings.password,
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
+        ),
+        CustomTextField(
+          isPassword: true,
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: passwordController,
+          prefixIcon: const Icon(Icons.lock),
+          hintText: "Enter Your Password",
+        ),
+        //==========Phone Number=============
+        CustomText(
+          top: 8.h,
+          text: AppStrings.confirmPassword,
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
+        ),
+        CustomTextField(
+          isPassword: true,
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: confirmPasswordController,
+          prefixIcon: const Icon(Icons.lock),
+          hintText: "Enter Your ConfirmPassword",
+        ),
+        SizedBox(
+          height: 20.h,
+        ),
+        CustomButton(
+          onTap: () {},
+          title: AppStrings.continues,
+        )
       ],
     );
   }
 
-  // Method to build the continue button
-  Widget _buildContinueButton({required VoidCallback onPressed}) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        backgroundColor: Colors.teal,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+  // Business Vendor Sign-Up Form
+  Widget _buildBusinessVendorForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        //==========Name=============
+        CustomText(
+          text: 'Business Name',
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
         ),
-      ),
-      child: Center(
-        child: Text(
-          'Continue',
-          style: TextStyle(color: Colors.white, fontSize: 16),
+        CustomTextField(
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: nameController,
+          prefixIcon: const Icon(
+            Icons.business_center_rounded,
+            color: Colors.grey,
+          ),
+          hintText: "Business Name",
         ),
-      ),
+
+        //==========Email=============
+        CustomText(
+          top: 8.h,
+          text: 'Owner\'s Name',
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
+        ),
+        CustomTextField(
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: emailPhoneController,
+          prefixIcon: const Icon(Icons.person),
+          hintText: "Owner\'s Name",
+        ),
+
+        //==========Name=============
+        CustomText(
+          top: 8.h,
+          text: 'Business E-mail',
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
+        ),
+        CustomTextField(
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: passwordController,
+          prefixIcon: const Icon(Icons.email),
+          hintText: "Business E-mail",
+        ),
+        //==========Phone Number=============
+        CustomText(
+          top: 8.h,
+          text: ' Federal ID',
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
+        ),
+        CustomTextField(
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: confirmPasswordController,
+          prefixIcon: const Icon(Icons.image),
+          hintText: "Upload Federal ID",
+        ),
+
+        //==========Phone Number=============
+        CustomText(
+          top: 8.h,
+          text: ' Both State License',
+          fontSize: 16.sp,
+          bottom: 8.h,
+          fontWeight: FontWeight.w500,
+          color: AppColors.darkNaturalGray,
+        ),
+        CustomTextField(
+          fieldBorderColor: AppColors.borderColor,
+          textEditingController: confirmPasswordController,
+          prefixIcon: const Icon(Icons.image),
+          hintText: "Upload  both state license",
+        ),
+        SizedBox(
+          height: 20.h,
+        ),
+        CustomButton(
+          onTap: () {
+            context.goNamed(
+              RoutePath.nextScreen,
+            );
+          },
+          title: "Next",
+        )
+      ],
     );
-  }
-
-  // Handle login logic
-  void _handleLogin() {
-    // Login logic goes here
-    print("Login clicked");
-  }
-
-  // Handle sign-up logic
-  void _handleSignUp() {
-    // Sign-up logic goes here
-    print("Sign up clicked");
   }
 }

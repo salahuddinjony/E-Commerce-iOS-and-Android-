@@ -6,6 +6,7 @@ import 'package:local/app/view/screens/authentication/forget_password/forget_pas
 import 'package:local/app/view/screens/authentication/otp/otp_screen.dart';
 import 'package:local/app/view/screens/authentication/reset_password/reset_password_screen.dart';
 import 'package:local/app/view/screens/authentication/sign_in/sign_in_screen.dart';
+import 'package:local/app/view/screens/authentication/sign_up/next.dart';
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:local/app/view/screens/notification/notification_screen.dart';
 import 'package:local/app/view/screens/onboarding_screen/onboarding_screen.dart';
@@ -331,6 +332,16 @@ class AppRouter {
           path: RoutePath.viewMapScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const ViewMapScreen(),
+            state: state,
+          ),
+        ),
+
+        ///=======================  ViewMapScreen =======================
+        GoRoute(
+          name: RoutePath.nextScreen,
+          path: RoutePath.nextScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const NextScreen(),
             state: state,
           ),
         ),
