@@ -8,6 +8,8 @@ class AppStrings {
   static const needSomeTingDelivered = "Need something delivered ASAP? With Quick Delivery, get your packages,   or essentials delivered within minutes!";
   static const quickDelivery = "Quick Delivery";
   static const continues = "Continue";
+  static const grow = " Grow Your T-Shirt Business with Ease";
+  static const joinTheLargestLocal = "Join the largest local t-shirt marketplace and connect with thousands of customers. Start selling today!";
   ///: <<<<<<======🗄️🗄️🗄️🗄️🗄️🗄️💡💡Auth💡💡🗄️🗄️🗄️🗄️🗄️🗄️🗄️>>>>>>>>===========
 
   static const logIn = "Log In";

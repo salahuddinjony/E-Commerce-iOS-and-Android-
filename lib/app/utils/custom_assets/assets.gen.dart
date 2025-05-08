@@ -64,12 +64,16 @@ class $AssetsImagesGen {
   AssetGenImage get onboard2 =>
       const AssetGenImage('assets/images/onboard2.png');
 
+  /// File path: assets/images/onboard3.png
+  AssetGenImage get onboard3 =>
+      const AssetGenImage('assets/images/onboard3.png');
+
   /// File path: assets/images/profile.png
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.png');
 
   /// List of all assets
   List<AssetGenImage> get values =>
-      [apple, google, logo, onboard1, onboard2, profile];
+      [apple, google, logo, onboard1, onboard2, onboard3, profile];
 }
 
 class Assets {

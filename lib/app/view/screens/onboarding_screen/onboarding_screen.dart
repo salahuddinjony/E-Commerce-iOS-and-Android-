@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:local/app/global/controller/Onboarding_Controller.dart';
+import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/utils/app_strings/app_strings.dart';
+import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
+import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'onboarding_model.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -9,18 +14,18 @@ class OnboardingScreen extends StatelessWidget {
 
   final List<OnboardingModel> pages = [
     OnboardingModel(
-      title: "Welcome",
-      description: "Discover new experiences with our app.",
+      title: AppStrings.gpsTracking,
+      description: AppStrings.trackYourLovedOnes,
       image: "assets/images/onboard1.png",
     ),
     OnboardingModel(
-      title: "Order Easily",
-      description: "Find and book services in just a few clicks.",
+      title: AppStrings.quickDelivery,
+      description: AppStrings.needSomeTingDelivered,
       image: "assets/images/onboard2.png",
     ),
     OnboardingModel(
-      title: "Stay Updated",
-      description: "Receive notifications and track updates in real time.",
+      title: AppStrings.grow,
+      description: AppStrings.joinTheLargestLocal,
       image: "assets/images/onboard3.png",
     ),
   ];
@@ -45,14 +50,22 @@ class OnboardingScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(page.image, height: 300),
-                      SizedBox(height: 40),
-                      Text(page.title,
-                          style: TextStyle(
-                              fontSize: 28, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 40),
+
+                      CustomText(
+                        text: page.title,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.darkNaturalGray,
+                      ),
+                      // Text(page.title,
+                      //     style: const TextStyle(
+                      //         fontSize: 28, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 20),
                       Text(page.description,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16, color: Colors.grey)),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.grey)),
                     ],
                   ),
                 );
@@ -64,7 +77,7 @@ class OnboardingScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 pages.length,
-                    (index) => AnimatedContainer(
+                (index) => AnimatedContainer(
                   duration: Duration(milliseconds: 300),
                   margin: EdgeInsets.all(5),
                   width: controller.currentPage.value == index ? 20 : 8,
@@ -79,22 +92,26 @@ class OnboardingScreen extends StatelessWidget {
               ),
             );
           }),
+          SizedBox(
+            height: 20.h,
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Obx(() {
               final isLast = controller.currentPage.value == pages.length - 1;
-              return ElevatedButton(
-                onPressed: () {
+              return CustomButton(
+                onTap: () {
                   if (isLast) {
-                    // Navigate to next screen
-                    Get.offAllNamed('/home');
+                    // // Navigate to next screen
+                    // Get.offAllNamed('/home');
                   } else {
                     _pageController.nextPage(
-                        duration: Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 400),
                         curve: Curves.ease);
                   }
                 },
-                child: Text(isLast ? "Get Started" : "Next"),
+                title: AppStrings.continues,
+                fillColor: AppColors.brightCyan,
               );
             }),
           ),
