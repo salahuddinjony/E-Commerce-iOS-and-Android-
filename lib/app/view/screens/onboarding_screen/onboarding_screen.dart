@@ -80,8 +80,8 @@ class OnboardingScreen extends StatelessWidget {
               children: List.generate(
                 pages.length,
                 (index) => AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  margin: EdgeInsets.all(5),
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.all(5),
                   width: controller.currentPage.value == index ? 20 : 8,
                   height: 8,
                   decoration: BoxDecoration(
@@ -121,3 +121,5 @@ class OnboardingScreen extends StatelessWidget {
     );
   }
 }
+
+
