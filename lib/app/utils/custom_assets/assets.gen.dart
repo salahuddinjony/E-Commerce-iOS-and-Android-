@@ -15,6 +15,9 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/arrow.svg
+  SvgGenImage get arrow => const SvgGenImage('assets/icons/arrow.svg');
+
   /// File path: assets/icons/arrow_back.svg
   SvgGenImage get arrowBack => const SvgGenImage('assets/icons/arrow_back.svg');
 
@@ -41,7 +44,7 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<SvgGenImage> get values =>
-      [arrowBack, edit, eye, eyeOff, lock, logout, mail, user];
+      [arrow, arrowBack, edit, eye, eyeOff, lock, logout, mail, user];
 }
 
 class $AssetsImagesGen {
@@ -87,6 +90,9 @@ class $AssetsImagesGen {
   AssetGenImage get supportUnselected =>
       const AssetGenImage('assets/images/support_unselected.png');
 
+  /// File path: assets/images/u_tee.png
+  AssetGenImage get uTee => const AssetGenImage('assets/images/u_tee.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
         apple,
@@ -99,7 +105,8 @@ class $AssetsImagesGen {
         onboard3,
         orderUnselected,
         profile,
-        supportUnselected
+        supportUnselected,
+        uTee
       ];
 }
 

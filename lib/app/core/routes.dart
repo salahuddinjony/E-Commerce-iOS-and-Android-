@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
+import 'package:local/app/utils/enums/transection_type.dart';
 import 'package:local/app/view/screens/authentication/choose_auth/choose_auth_screen.dart';
 import 'package:local/app/view/screens/authentication/forget_password/forget_password_screen.dart';
 import 'package:local/app/view/screens/authentication/otp/otp_screen.dart';
@@ -215,6 +216,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const AboutUsScreen(),
             state: state,
+            transitionType: TransitionType.detailsScreen
           ),
         ),
 
@@ -225,6 +227,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const PrivacyPolicyScreen(),
             state: state,
+              transitionType: TransitionType.detailsScreen
           ),
         ),
 
@@ -245,6 +248,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const TermsConditionScreen(),
             state: state,
+              transitionType: TransitionType.detailsScreen
           ),
         ),
 
@@ -347,10 +351,12 @@ class AppRouter {
         ),
       ]);
 
-  static CustomTransitionPage _buildPageWithAnimation(
-      {required Widget child,
-      required GoRouterState state,
-      bool disableAnimation = false}) {
+  static CustomTransitionPage _buildPageWithAnimation({
+    required Widget child,
+    required GoRouterState state,
+    bool disableAnimation = false,
+    TransitionType transitionType = TransitionType.defaultTransition,
+  }) {
     if (disableAnimation) {
       return CustomTransitionPage(
         key: state.pageKey,
@@ -358,23 +364,45 @@ class AppRouter {
         transitionDuration: Duration.zero, // Disable animation
         transitionsBuilder: (_, __, ___, child) => child, // No transition
       );
-    } else {
+    }
+
+    // Custom transition for Details Screen (center open animation)
+    if (transitionType == TransitionType.detailsScreen) {
       return CustomTransitionPage(
         key: state.pageKey,
         child: child,
-        transitionDuration: const Duration(milliseconds: 600),
+        transitionDuration: const Duration(milliseconds: 400),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          var tween = Tween(begin: begin, end: end);
-          var offsetAnimation = animation.drive(tween);
-          return SlideTransition(
-            position: offsetAnimation,
+          // Center Open Animation
+          var curve = Curves.easeOut; // Smooth opening
+          var tween = Tween(begin: 0.0, end: 1.0); // Scale transition
+          var scaleAnimation =
+              animation.drive(tween.chain(CurveTween(curve: curve)));
+
+          return ScaleTransition(
+            scale: scaleAnimation,
             child: child,
           );
         },
       );
     }
+
+    // Default Slide Transition (right to left)
+    return CustomTransitionPage(
+      key: state.pageKey,
+      child: child,
+      transitionDuration: const Duration(milliseconds: 400),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0); // Slide from right
+        const end = Offset.zero;
+        var tween = Tween(begin: begin, end: end);
+        var offsetAnimation = animation.drive(tween);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+    );
   }
 
   static GoRouter get route => initRoute;

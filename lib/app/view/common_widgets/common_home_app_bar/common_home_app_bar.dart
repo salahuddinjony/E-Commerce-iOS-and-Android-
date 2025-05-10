@@ -1,84 +1,131 @@
-// import 'package:barber_time/app/utils/app_colors.dart';
-// import 'package:barber_time/app/view/common_widgets/custom_network_image/custom_network_image.dart';
-// import 'package:barber_time/app/view/common_widgets/custom_text/custom_text.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-//
-// class CommonHomeAppBar extends StatelessWidget {
-//   const CommonHomeAppBar({
-//     super.key,
-//     required this.scaffoldKey,
-//     required this.name,
-//     required this.image, required this.onTap,
-//   });
-//
-//   final String name;
-//   final VoidCallback onTap;
-//   final String image;
-//   final GlobalKey<ScaffoldState> scaffoldKey;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: MediaQuery.of(context).size.width,
-//       color: AppColors.linearFirst,
-//       margin: EdgeInsets.only(
-//         top: 32.h,
-//       ),
-//       padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 15),
-//       child: Column(
-//         children: [
-//           ///====================================Top Section================================
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Row(
-//                 children: [
-//                   ///==================== Profile image =====================
-//                   CustomNetworkImage(
-//                       backgroundColor: Colors.white,
-//                       boxShape: BoxShape.circle,
-//                       imageUrl: image,
-//                       height: 46,
-//                       width: 46),
-//
-//                   SizedBox(
-//                     width: 16.w,
-//                   ),
-//
-//                   Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       const CustomText(
-//                         text: 'Welcome Back!',
-//                         fontWeight: FontWeight.w500,
-//                         color: AppColors.black,
-//                         fontSize: 14,
-//                       ),
-//
-//                       ///=====================user name =======================
-//                       CustomText(
-//                         text: name,
-//                         fontWeight: FontWeight.w500,
-//                         fontSize: 18,
-//                         color: AppColors.black,
-//                       )
-//                     ],
-//                   )
-//                 ],
-//               ),
-//               SizedBox(
-//                 width: 65.w,
-//               ),
-//
-//               ///==========================Notification button ====================
-//               IconButton(
-//                   onPressed: onTap,
-//                   icon: const Icon(Icons.notification_add))
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/utils/app_strings/app_strings.dart';
+import 'package:local/app/utils/custom_assets/assets.gen.dart';
+import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
+
+class CommonHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CommonHomeAppBar({
+    super.key,
+    required this.scaffoldKey,
+    required this.onTap, required this.aboutUsOnTap, required this.privacyTap, required this.termsTap,
+  });
+
+  final VoidCallback onTap;
+  final VoidCallback aboutUsOnTap;
+  final VoidCallback privacyTap;
+  final VoidCallback termsTap;
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: AppColors.white,
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      toolbarHeight: 150.h,
+      title: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 26.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Assets.images.logo.image(height: 113.h, width: 100.w),
+            Assets.images.uTee.image(),
+            Assets.images.profile.image(height: 40.h, width: 40.w),
+          ],
+        ),
+      ),
+      actions: [
+        Builder(builder: (context) {
+          return IconButton(
+            onPressed: () {
+              final RenderBox button = context.findRenderObject() as RenderBox;
+              final RenderBox overlay =
+              Overlay.of(context).context.findRenderObject() as RenderBox;
+              final Offset position =
+              button.localToGlobal(Offset.zero, ancestor: overlay);
+
+              showMenu(
+                color: AppColors.white,
+                context: context,
+                position: RelativeRect.fromLTRB(
+                  position.dx,
+                  position.dy + button.size.height,
+                  overlay.size.width - position.dx,
+                  0,
+                ),
+                items: [
+                  PopupMenuItem(
+                    height: 33.h, // Set height of each item to make the total height 100
+                    child: SizedBox(
+                      width: 200.w, // Set the width to 200px
+                      child: Row(
+                        children: [
+                          CustomText(
+                            text: AppStrings.aboutUs,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.darkNaturalGray,
+                          ),
+                          const Spacer(),
+                          Assets.icons.arrow.svg(),
+                        ],
+                      ),
+                    ),
+                    onTap: aboutUsOnTap,
+                  ),
+                  PopupMenuItem(
+                    height: 33.h, // Set height of each item to make the total height 100
+                    child: SizedBox(
+                      width: 200.w, // Set the width to 200px
+                      child: Row(
+                        children: [
+                          CustomText(
+                            text: AppStrings.privacyPolicy,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.darkNaturalGray,
+                          ),
+                          const Spacer(),
+                          Assets.icons.arrow.svg(),
+                        ],
+                      ),
+                    ),
+                    onTap: privacyTap,
+                  ),
+                  PopupMenuItem(
+                    height: 34.h, // Adjust height slightly for the last item to complete 100px
+                    child: SizedBox(
+                      width: 200.w, // Set the width to 200px
+                      child: Row(
+                        children: [
+                          CustomText(
+                            text: AppStrings.termsOfService,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.darkNaturalGray,
+                          ),
+                          const Spacer(),
+                          Assets.icons.arrow.svg(),
+                        ],
+                      ),
+                    ),
+                    onTap: termsTap,
+                  ),
+                ],
+              );
+            },
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.black,
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(150.h);
+}
