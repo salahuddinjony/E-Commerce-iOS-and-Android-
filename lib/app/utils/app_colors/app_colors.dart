@@ -12,6 +12,7 @@ class AppColors {
   static const Color googleAuthButton = Color(0xffF6F6F6);
   static const Color borderColor = Color(0xffE1E1E1);
   static const Color naturalGray = Color(0xff737476);
+  static const Color allSideColor = Color(0xff1E5E8C);
 
 
 
