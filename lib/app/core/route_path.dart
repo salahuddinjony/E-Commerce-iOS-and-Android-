@@ -39,4 +39,6 @@ class RoutePath {
   static const String orderHistoryScreen = 'OrderHistoryScreen';
   static const String viewMapScreen = 'ViewMapScreen';
   static const String nextScreen = 'NextScreen';
+  static const String userOrderScreen = 'UserOrderScreen';
+  static const String inboxScreen = 'InboxScreen';
 }

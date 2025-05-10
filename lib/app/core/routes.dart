@@ -13,11 +13,13 @@ import 'package:local/app/view/screens/notification/notification_screen.dart';
 import 'package:local/app/view/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/user/chat/chat_screen.dart';
+import 'package:local/app/view/screens/user/chat/inbox/inbox_screen.dart';
 import 'package:local/app/view/screens/user/support/support_screen.dart';
 import 'package:local/app/view/screens/user/user_home/user_home_screen.dart';
+import 'package:local/app/view/screens/user/user_home/user_profile/order_history/order_history_screen.dart';
+import 'package:local/app/view/screens/user/user_home/user_profile/user_profile_screen.dart';
 import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.dart';
-import 'package:local/app/view/screens/user/user_profile/order_history/order_history_screen.dart';
-import 'package:local/app/view/screens/user/user_profile/user_profile_screen.dart';
+import 'package:local/app/view/screens/user/user_order/user_order_screen.dart';
 import 'package:local/app/view/screens/vendor/add_product/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/order_request/order_request_screen.dart';
@@ -214,10 +216,9 @@ class AppRouter {
           name: RoutePath.aboutUsScreen,
           path: RoutePath.aboutUsScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const AboutUsScreen(),
-            state: state,
-            transitionType: TransitionType.detailsScreen
-          ),
+              child: const AboutUsScreen(),
+              state: state,
+              transitionType: TransitionType.detailsScreen),
         ),
 
         ///======================= PrivacyPolicyScreen =======================
@@ -225,10 +226,9 @@ class AppRouter {
           name: RoutePath.privacyPolicyScreen,
           path: RoutePath.privacyPolicyScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const PrivacyPolicyScreen(),
-            state: state,
-              transitionType: TransitionType.detailsScreen
-          ),
+              child: const PrivacyPolicyScreen(),
+              state: state,
+              transitionType: TransitionType.detailsScreen),
         ),
 
         ///======================= HelpCenterScreen =======================
@@ -246,10 +246,9 @@ class AppRouter {
           name: RoutePath.termsConditionScreen,
           path: RoutePath.termsConditionScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const TermsConditionScreen(),
-            state: state,
-              transitionType: TransitionType.detailsScreen
-          ),
+              child: const TermsConditionScreen(),
+              state: state,
+              transitionType: TransitionType.detailsScreen),
         ),
 
         ///======================= ChangePasswordScreen =======================
@@ -297,7 +296,17 @@ class AppRouter {
           name: RoutePath.chatScreen,
           path: RoutePath.chatScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const ChatScreen(), state: state, disableAnimation: true),
+              child: const ChatScreen(),
+              state: state,
+              transitionType: TransitionType.detailsScreen),
+        ),
+
+        ///======================= InboxScreen Section =======================
+        GoRoute(
+          name: RoutePath.inboxScreen,
+          path: RoutePath.inboxScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+              child: const InboxScreen(), state: state, disableAnimation: true),
         ),
 
         ///======================= SupportScreen Section =======================
@@ -315,9 +324,9 @@ class AppRouter {
           name: RoutePath.userProfileScreen,
           path: RoutePath.userProfileScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const UserProfileScreen(),
-            state: state,
-          ),
+              child: const UserProfileScreen(),
+              state: state,
+              transitionType: TransitionType.detailsScreen),
         ),
 
         ///=======================  OrderHistoryScreen =======================
@@ -348,6 +357,16 @@ class AppRouter {
             child: const NextScreen(),
             state: state,
           ),
+        ),
+
+        ///=======================  UserOrderScreen =======================
+        GoRoute(
+          name: RoutePath.userOrderScreen,
+          path: RoutePath.userOrderScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+              child: const UserOrderScreen(),
+              state: state,
+              disableAnimation: true),
         ),
       ]);
 

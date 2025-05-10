@@ -29,7 +29,9 @@ class UserHomeScreen extends StatelessWidget {
             termsTap: () {
               context.pushNamed(RoutePath.termsConditionScreen,);
 
-            },
+            }, profileTap: () {
+            context.pushNamed(RoutePath.userProfileScreen,);
+          },
           )
         ],
       ),

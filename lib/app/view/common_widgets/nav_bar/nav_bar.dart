@@ -36,7 +36,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
     //===============Inbox================
     (
-      route: RoutePath.ordersScreen,
+      route: RoutePath.userOrderScreen,
       selectedIcon:
           Assets.images.orderUnselected.image(color: AppColors.brightCyan),
       unselectedIcon: Assets.images.orderUnselected.image(),
@@ -44,7 +44,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
     ),
     //===============My Shop================
     (
-      route: RoutePath.chatScreen,
+      route: RoutePath.inboxScreen,
       selectedIcon:
           Assets.images.chatUnselected.image(color: AppColors.brightCyan),
       unselectedIcon: Assets.images.chatUnselected.image(),
