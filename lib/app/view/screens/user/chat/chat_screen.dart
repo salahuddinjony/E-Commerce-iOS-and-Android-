@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:local/app/view/common_widgets/nav_bar/nav_bar.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      bottomNavigationBar: CustomNavBar(currentIndex: 2),
+    );
   }
 }

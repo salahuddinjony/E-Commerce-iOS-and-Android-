@@ -50,8 +50,16 @@ class $AssetsImagesGen {
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
 
+  /// File path: assets/images/chat_unselected.png
+  AssetGenImage get chatUnselected =>
+      const AssetGenImage('assets/images/chat_unselected.png');
+
   /// File path: assets/images/google.png
   AssetGenImage get google => const AssetGenImage('assets/images/google.png');
+
+  /// File path: assets/images/home_selected.png
+  AssetGenImage get homeSelected =>
+      const AssetGenImage('assets/images/home_selected.png');
 
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
@@ -68,12 +76,31 @@ class $AssetsImagesGen {
   AssetGenImage get onboard3 =>
       const AssetGenImage('assets/images/onboard3.png');
 
+  /// File path: assets/images/order_unselected.png
+  AssetGenImage get orderUnselected =>
+      const AssetGenImage('assets/images/order_unselected.png');
+
   /// File path: assets/images/profile.png
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.png');
 
+  /// File path: assets/images/support_unselected.png
+  AssetGenImage get supportUnselected =>
+      const AssetGenImage('assets/images/support_unselected.png');
+
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [apple, google, logo, onboard1, onboard2, onboard3, profile];
+  List<AssetGenImage> get values => [
+        apple,
+        chatUnselected,
+        google,
+        homeSelected,
+        logo,
+        onboard1,
+        onboard2,
+        onboard3,
+        orderUnselected,
+        profile,
+        supportUnselected
+      ];
 }
 
 class Assets {

@@ -65,8 +65,8 @@ class SignInScreen extends StatelessWidget {
               ),
               CustomButton(
                 onTap: () {
-                  context.pushNamed(
-                    RoutePath.homeScreen,
+                  context.goNamed(
+                    RoutePath.userHomeScreen,
                   );
                 },
                 title: AppStrings.continues,
