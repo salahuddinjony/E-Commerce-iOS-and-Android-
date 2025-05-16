@@ -26,7 +26,7 @@ class _CustomNavBarState extends State<OwnerNav> {
       Widget unselectedIcon,
       String label
       })> _navItems = [
-    //===============Home================
+    //===============================
     (
     route: RoutePath.homeScreen,
     selectedIcon: Assets.images.ownerHomeSelected.image(),
@@ -35,7 +35,7 @@ class _CustomNavBarState extends State<OwnerNav> {
     label: AppStrings.home,
     ),
 
-    //===============Inbox================
+    //===============================
     (
     route: RoutePath.ordersScreen,
     selectedIcon:
@@ -43,15 +43,15 @@ class _CustomNavBarState extends State<OwnerNav> {
     unselectedIcon: Assets.images.simplification.image(),
     label: "Orders",
     ),
-    //===============My Shop (center icon)================
+    //==============================
     (
-    route: RoutePath.addProductScreen,
-    selectedIcon: Assets.images.add.image(color: AppColors.allSideColor),
+    route: RoutePath.productScreen,
+    selectedIcon: Assets.images.add.image(),
     unselectedIcon: Assets.images.add.image(),
     label: "",
     ),
 
-    //===============Checkout================
+    //===============================
     (
     route: RoutePath.orderRequestScreen,
     selectedIcon:
@@ -59,7 +59,7 @@ class _CustomNavBarState extends State<OwnerNav> {
     unselectedIcon: Assets.images.checkOut.image(),
     label: "Checkout",
     ),
-    //===============Profile================
+    //===============================
     (
     route: RoutePath.profileScreen,
     selectedIcon: Assets.images.profile.image(color: AppColors.brightCyan),
@@ -91,7 +91,7 @@ class _CustomNavBarState extends State<OwnerNav> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: index == 2 ? 74.h : 50.h, // Center icon height 74, others 50
+                  height: index == 2 ? 74.h : 50.h,
                   child: bottomNavIndex == index
                       ? _navItems[index].selectedIcon
                       : _navItems[index].unselectedIcon,

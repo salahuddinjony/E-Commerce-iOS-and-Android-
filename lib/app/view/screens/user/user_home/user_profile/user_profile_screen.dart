@@ -10,6 +10,8 @@ import 'package:local/app/view/common_widgets/common_dialoge_box/common_dialoge_
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 
+import '../../../../common_widgets/custom_log_out_button/custom_log_out_button.dart';
+
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
 
@@ -27,36 +29,13 @@ class UserProfileScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 19.w),
             child: Column(
               children: [
-                GestureDetector(
+                //===================Log Out ==================
+                CustomLogoutButton(
                   onTap: () {
-                    context.goNamed(
-                      RoutePath.signInScreen,
-                    );
+                    context.goNamed(RoutePath.signInScreen);
                   },
-                  child: Container(
-                    padding: EdgeInsets.all(10.r),
-                    decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(6.r),
-                        ),
-                        border: Border.all(color: AppColors.allSideColor)),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Assets.icons.logout.svg(color: AppColors.allSideColor),
-                        CustomText(
-                          left: 8.w,
-                          text: AppStrings.logOut,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20.sp,
-                          color: AppColors.allSideColor,
-                        )
-                      ],
-                    ),
-                  ),
                 ),
+
               ],
             ),
           )

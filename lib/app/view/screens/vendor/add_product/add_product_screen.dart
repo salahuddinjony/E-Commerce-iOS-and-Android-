@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
+
+import '../../../../utils/app_colors/app_colors.dart';
+import '../../../common_widgets/custom_appbar/custom_appbar.dart';
 
 class AddProductScreen extends StatelessWidget {
   const AddProductScreen({super.key});
@@ -7,8 +9,19 @@ class AddProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: OwnerNav(currentIndex: 2),
+      backgroundColor: AppColors.white,
+      appBar: CustomAppBar(
+        iconData: Icons.arrow_back,
+        appBarContent: "Add Product",
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          children: [
 
+          ],
+        ),
+      ),
     );
   }
 }

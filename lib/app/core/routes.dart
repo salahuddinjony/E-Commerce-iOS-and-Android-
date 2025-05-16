@@ -25,6 +25,7 @@ import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/order_request/order_request_screen.dart';
 import 'package:local/app/view/screens/vendor/order_request/order_view/order_view_screen.dart';
 import 'package:local/app/view/screens/vendor/orders/orders_screen.dart';
+import 'package:local/app/view/screens/vendor/product/product_screen.dart' show ProductScreen;
 import 'package:local/app/view/screens/vendor/profile/about_us/about_us_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/change_password/change_password_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/help_center/help_center_screen.dart';
@@ -35,6 +36,7 @@ import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/terms_conditions/terms_condition_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/transaction/transaction_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
+import '../view/screens/vendor/profile/business_documents/business_documents_screen.dart';
 import 'route_path.dart';
 
 class AppRouter {
@@ -149,7 +151,7 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithAnimation(
               child: const AddProductScreen(),
               state: state,
-              disableAnimation: true),
+              ),
         ),
 
         ///======================= OrderRequestScreen =======================
@@ -238,6 +240,17 @@ class AppRouter {
           path: RoutePath.helpCenterScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const HelpCenterScreen(),
+            state: state,
+          ),
+        ),
+
+
+        ///======================= BusinessDocumentsScreen =======================
+        GoRoute(
+          name: RoutePath.businessDocumentsScreen,
+          path: RoutePath.businessDocumentsScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const BusinessDocumentsScreen(),
             state: state,
           ),
         ),
@@ -357,6 +370,17 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const NextScreen(),
             state: state,
+          ),
+        ),
+
+        ///=======================  productScreen =======================
+        GoRoute(
+          name: RoutePath.productScreen,
+          path: RoutePath.productScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const ProductScreen(),
+            state: state,
+            disableAnimation: true
           ),
         ),
 

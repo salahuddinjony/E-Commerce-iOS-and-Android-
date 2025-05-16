@@ -21,6 +21,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/arrow_back.svg
   SvgGenImage get arrowBack => const SvgGenImage('assets/icons/arrow_back.svg');
 
+  /// File path: assets/icons/business.svg
+  SvgGenImage get business => const SvgGenImage('assets/icons/business.svg');
+
   /// File path: assets/icons/edit.svg
   SvgGenImage get edit => const SvgGenImage('assets/icons/edit.svg');
 
@@ -44,7 +47,7 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<SvgGenImage> get values =>
-      [arrow, arrowBack, edit, eye, eyeOff, lock, logout, mail, user];
+      [arrow, arrowBack, business, edit, eye, eyeOff, lock, logout, mail, user];
 }
 
 class $AssetsImagesGen {
