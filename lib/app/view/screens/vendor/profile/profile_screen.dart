@@ -119,7 +119,9 @@ class ProfileScreen extends StatelessWidget {
                 icon: Assets.icons.mail.svg(),
                 label: 'About Us',
                 onTap: () {
-                  // handle tap if needed
+                  context.pushNamed(
+                    RoutePath.aboutUsScreen,
+                  );
                 },
               ),
 
@@ -127,7 +129,9 @@ class ProfileScreen extends StatelessWidget {
                 icon: Assets.icons.mail.svg(),
                 label: 'Privacy policy',
                 onTap: () {
-                  // handle tap if needed
+                  context.pushNamed(
+                    RoutePath.privacyPolicyScreen,
+                  );
                 },
               ),
 
@@ -135,7 +139,9 @@ class ProfileScreen extends StatelessWidget {
                 icon: Assets.icons.mail.svg(),
                 label: 'Help Center',
                 onTap: () {
-                  // handle tap if needed
+                  context.pushNamed(
+                    RoutePath.chatScreen,
+                  );
                 },
               ),
 
@@ -143,7 +149,9 @@ class ProfileScreen extends StatelessWidget {
                 icon: Assets.icons.mail.svg(),
                 label: ' Terms & Conditions',
                 onTap: () {
-                  // handle tap if needed
+                  context.pushNamed(
+                    RoutePath.termsConditionScreen,
+                  );
                 },
               ),
 
@@ -151,7 +159,9 @@ class ProfileScreen extends StatelessWidget {
                 icon: Assets.icons.mail.svg(),
                 label: 'Change password',
                 onTap: () {
-                  // handle tap if needed
+                  context.pushNamed(
+                    RoutePath.changePasswordScreen,
+                  );
                 },
               ),
 
