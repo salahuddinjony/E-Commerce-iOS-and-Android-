@@ -54,6 +54,9 @@ class $AssetsImagesGen {
   AssetGenImage get simplification =>
       const AssetGenImage('assets/images/Simplification.png');
 
+  /// File path: assets/images/add.png
+  AssetGenImage get add => const AssetGenImage('assets/images/add.png');
+
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
 
@@ -74,6 +77,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+
+  /// File path: assets/images/notification.png
+  AssetGenImage get notification =>
+      const AssetGenImage('assets/images/notification.png');
 
   /// File path: assets/images/onboard1.png
   AssetGenImage get onboard1 =>
@@ -108,12 +115,14 @@ class $AssetsImagesGen {
   /// List of all assets
   List<AssetGenImage> get values => [
         simplification,
+        add,
         apple,
         chatUnselected,
         checkOut,
         google,
         homeSelected,
         logo,
+        notification,
         onboard1,
         onboard2,
         onboard3,

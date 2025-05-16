@@ -61,9 +61,9 @@ class CommonHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 items: [
                   PopupMenuItem(
                     height: 33.h,
-                    onTap: aboutUsOnTap, // Set height of each item to make the total height 100
+                    onTap: aboutUsOnTap,
                     child: SizedBox(
-                      width: 200.w, // Set the width to 200px
+                      width: 200.w,
                       child: Row(
                         children: [
                           CustomText(
@@ -80,9 +80,9 @@ class CommonHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   PopupMenuItem(
                     height: 33.h,
-                    onTap: privacyTap, // Set height of each item to make the total height 100
+                    onTap: privacyTap,
                     child: SizedBox(
-                      width: 200.w, // Set the width to 200px
+                      width: 200.w,
                       child: Row(
                         children: [
                           CustomText(
@@ -99,9 +99,9 @@ class CommonHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   PopupMenuItem(
                     height: 34.h,
-                    onTap: termsTap, // Adjust height slightly for the last item to complete 100px
+                    onTap: termsTap,
                     child: SizedBox(
-                      width: 200.w, // Set the width to 200px
+                      width: 200.w,
                       child: Row(
                         children: [
                           CustomText(

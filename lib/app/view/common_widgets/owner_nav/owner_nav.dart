@@ -21,49 +21,50 @@ class _CustomNavBarState extends State<OwnerNav> {
 
   final List<
       ({
-        String route,
-        Widget selectedIcon,
-        Widget unselectedIcon,
-        String label
+      String route,
+      Widget selectedIcon,
+      Widget unselectedIcon,
+      String label
       })> _navItems = [
     //===============Home================
     (
-      route: RoutePath.homeScreen,
-      selectedIcon: Assets.images.ownerHomeSelected.image(),
-      unselectedIcon:
-          Assets.images.ownerHomeSelected.image(color: Colors.black),
-      label: AppStrings.home,
+    route: RoutePath.homeScreen,
+    selectedIcon: Assets.images.ownerHomeSelected.image(),
+    unselectedIcon:
+    Assets.images.ownerHomeSelected.image(color: Colors.grey),
+    label: AppStrings.home,
     ),
 
     //===============Inbox================
     (
-      route: RoutePath.ordersScreen,
-      selectedIcon:
-          Assets.images.simplification.image(color: AppColors.brightCyan),
-      unselectedIcon: Assets.images.simplification.image(),
-      label: "Orders",
+    route: RoutePath.ordersScreen,
+    selectedIcon:
+    Assets.images.simplification.image(color: AppColors.brightCyan),
+    unselectedIcon: Assets.images.simplification.image(),
+    label: "Orders",
     ),
-    //===============My Shop================
+    //===============My Shop (center icon)================
     (
-      route: RoutePath.addProductScreen,
-      selectedIcon: Assets.images.apple.image(color: AppColors.brightCyan),
-      unselectedIcon: Assets.images.apple.image(),
-      label: "",
+    route: RoutePath.addProductScreen,
+    selectedIcon: Assets.images.add.image(color: AppColors.allSideColor),
+    unselectedIcon: Assets.images.add.image(),
+    label: "",
     ),
 
-    //=============== ================
+    //===============Checkout================
     (
-      route: RoutePath.orderRequestScreen,
-      selectedIcon:
-          Assets.images.checkOut.image(color: AppColors.brightCyan),
-      unselectedIcon: Assets.images.checkOut.image(),
-      label: "Checkout",
+    route: RoutePath.orderRequestScreen,
+    selectedIcon:
+    Assets.images.checkOut.image(color: AppColors.brightCyan),
+    unselectedIcon: Assets.images.checkOut.image(),
+    label: "Checkout",
     ),
+    //===============Profile================
     (
-      route: RoutePath.profileScreen,
-      selectedIcon: Assets.images.profile.image(color: AppColors.brightCyan),
-      unselectedIcon: Assets.images.profile.image(),
-      label: AppStrings.profile,
+    route: RoutePath.profileScreen,
+    selectedIcon: Assets.images.profile.image(color: AppColors.brightCyan),
+    unselectedIcon: Assets.images.profile.image(),
+    label: AppStrings.profile,
     ),
   ];
 
@@ -77,30 +78,34 @@ class _CustomNavBarState extends State<OwnerNav> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(color: AppColors.white),
-      height: 88.h,
+      height: 112.h,
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 26.w, vertical: 13.5.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(
           _navItems.length,
-          (index) => InkWell(
+              (index) => InkWell(
             onTap: () => _onTap(index),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                bottomNavIndex == index
-                    ? _navItems[index].selectedIcon
-                    : _navItems[index].unselectedIcon,
-                SizedBox(height: 4.h),
-                CustomText(
-                  text: _navItems[index].label,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  color: bottomNavIndex == index
-                      ? AppColors.brightCyan
-                      : AppColors.black,
+                SizedBox(
+                  height: index == 2 ? 74.h : 50.h, // Center icon height 74, others 50
+                  child: bottomNavIndex == index
+                      ? _navItems[index].selectedIcon
+                      : _navItems[index].unselectedIcon,
                 ),
+                SizedBox(height: 4.h),
+                if (_navItems[index].label.isNotEmpty)
+                  CustomText(
+                    text: _navItems[index].label,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: bottomNavIndex == index
+                        ? AppColors.brightCyan
+                        : AppColors.black,
+                  ),
               ],
             ),
           ),
