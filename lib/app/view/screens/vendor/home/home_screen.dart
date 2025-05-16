@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:local/app/utils/app_colors/app_colors.dart';
+
+import '../../../common_widgets/owner_nav/owner_nav.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
+      backgroundColor:AppColors.white,
+      bottomNavigationBar: OwnerNav(currentIndex: 0,),
       body: Column(
         children: [
 

@@ -74,7 +74,7 @@ class NextScreen extends StatelessWidget {
               CustomButton(
                 onTap: () {
                   context.pushNamed(
-                    RoutePath.otpScreen,
+                    RoutePath.homeScreen,
                   );
                 },
                 title: "Submit ",

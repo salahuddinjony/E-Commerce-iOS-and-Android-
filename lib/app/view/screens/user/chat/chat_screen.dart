@@ -62,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: AppColors.white,
         appBar: const CustomAppBar(
           appBarBgColor: AppColors.white,
-          appBarContent: "Geopart",
+          appBarContent: "Chart",
           iconData: Icons.arrow_back,
         ),
         body: Chat(

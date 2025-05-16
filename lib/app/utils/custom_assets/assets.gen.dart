@@ -50,12 +50,20 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/Simplification.png
+  AssetGenImage get simplification =>
+      const AssetGenImage('assets/images/Simplification.png');
+
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
 
   /// File path: assets/images/chat_unselected.png
   AssetGenImage get chatUnselected =>
       const AssetGenImage('assets/images/chat_unselected.png');
+
+  /// File path: assets/images/checkOut.png
+  AssetGenImage get checkOut =>
+      const AssetGenImage('assets/images/checkOut.png');
 
   /// File path: assets/images/google.png
   AssetGenImage get google => const AssetGenImage('assets/images/google.png');
@@ -83,6 +91,10 @@ class $AssetsImagesGen {
   AssetGenImage get orderUnselected =>
       const AssetGenImage('assets/images/order_unselected.png');
 
+  /// File path: assets/images/owner_home_selected.png
+  AssetGenImage get ownerHomeSelected =>
+      const AssetGenImage('assets/images/owner_home_selected.png');
+
   /// File path: assets/images/profile.png
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.png');
 
@@ -95,8 +107,10 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
+        simplification,
         apple,
         chatUnselected,
+        checkOut,
         google,
         homeSelected,
         logo,
@@ -104,6 +118,7 @@ class $AssetsImagesGen {
         onboard2,
         onboard3,
         orderUnselected,
+        ownerHomeSelected,
         profile,
         supportUnselected,
         uTee

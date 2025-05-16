@@ -21,41 +21,49 @@ class _CustomNavBarState extends State<OwnerNav> {
 
   final List<
       ({
-      String route,
-      Widget selectedIcon,
-      Widget unselectedIcon,
-      String label
+        String route,
+        Widget selectedIcon,
+        Widget unselectedIcon,
+        String label
       })> _navItems = [
     //===============Home================
     (
-    route: RoutePath.userHomeScreen,
-    selectedIcon: Assets.images.homeSelected.image(),
-    unselectedIcon: Assets.images.homeSelected.image(color: Colors.black),
-    label: AppStrings.home,
+      route: RoutePath.homeScreen,
+      selectedIcon: Assets.images.ownerHomeSelected.image(),
+      unselectedIcon:
+          Assets.images.ownerHomeSelected.image(color: Colors.black),
+      label: AppStrings.home,
     ),
 
     //===============Inbox================
     (
-    route: RoutePath.ordersScreen,
-    selectedIcon:
-    Assets.images.orderUnselected.image(color: AppColors.brightCyan),
-    unselectedIcon: Assets.images.orderUnselected.image(),
-    label: AppStrings.order,
+      route: RoutePath.ordersScreen,
+      selectedIcon:
+          Assets.images.simplification.image(color: AppColors.brightCyan),
+      unselectedIcon: Assets.images.simplification.image(),
+      label: "Orders",
     ),
     //===============My Shop================
     (
-    route: RoutePath.chatScreen,
-    selectedIcon:
-    Assets.images.chatUnselected.image(color: AppColors.brightCyan),
-    unselectedIcon: Assets.images.chatUnselected.image(),
-    label: AppStrings.chat,
+      route: RoutePath.addProductScreen,
+      selectedIcon: Assets.images.apple.image(color: AppColors.brightCyan),
+      unselectedIcon: Assets.images.apple.image(),
+      label: "",
+    ),
+
+    //=============== ================
+    (
+      route: RoutePath.orderRequestScreen,
+      selectedIcon:
+          Assets.images.checkOut.image(color: AppColors.brightCyan),
+      unselectedIcon: Assets.images.checkOut.image(),
+      label: "Checkout",
     ),
     (
-    route: RoutePath.supportScreen,
-    selectedIcon:
-    Assets.images.supportUnselected.image(color: AppColors.brightCyan),
-    unselectedIcon: Assets.images.supportUnselected.image(),
-    label: AppStrings.support,
+      route: RoutePath.profileScreen,
+      selectedIcon: Assets.images.profile.image(color: AppColors.brightCyan),
+      unselectedIcon: Assets.images.profile.image(),
+      label: AppStrings.profile,
     ),
   ];
 
@@ -76,7 +84,7 @@ class _CustomNavBarState extends State<OwnerNav> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(
           _navItems.length,
-              (index) => InkWell(
+          (index) => InkWell(
             onTap: () => _onTap(index),
             child: Column(
               mainAxisSize: MainAxisSize.min,

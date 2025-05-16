@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
       builder: (context, child) => GetMaterialApp.router(
         initialBinding: DependencyInjection(),
         debugShowCheckedModeBanner: false,
-
         //route
         routeInformationParser: AppRouter.route.routeInformationParser,
         routerDelegate: AppRouter.route.routerDelegate,
