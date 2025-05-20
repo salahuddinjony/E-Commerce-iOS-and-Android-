@@ -140,7 +140,7 @@ class ProfileScreen extends StatelessWidget {
                 label: 'Help Center',
                 onTap: () {
                   context.pushNamed(
-                    RoutePath.chatScreen,
+                    RoutePath.helpCenterScreen,
                   );
                 },
               ),
