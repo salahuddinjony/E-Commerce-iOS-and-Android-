@@ -20,7 +20,6 @@ import 'package:local/app/view/screens/user/user_home/user_profile/order_history
 import 'package:local/app/view/screens/user/user_home/user_profile/user_profile_screen.dart';
 import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.dart';
 import 'package:local/app/view/screens/user/user_order/user_order_screen.dart';
-import 'package:local/app/view/screens/vendor/add_product/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/order_request/order_request_screen.dart';
 import 'package:local/app/view/screens/vendor/order_request/order_view/order_view_screen.dart';
@@ -36,6 +35,7 @@ import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/terms_conditions/terms_condition_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/transaction/transaction_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
+import '../view/screens/vendor/product/add_product/add_product_screen.dart';
 import '../view/screens/vendor/profile/business_documents/business_documents_screen.dart';
 import 'route_path.dart';
 

@@ -46,8 +46,8 @@ class _CustomNavBarState extends State<OwnerNav> {
     //==============================
     (
     route: RoutePath.productScreen,
-    selectedIcon: Assets.images.unselected.image(),
-    unselectedIcon: Assets.images.add.image(),
+    selectedIcon: Assets.images.add.image(),
+    unselectedIcon: Assets.images.unselected.image(),
     label: "",
     ),
 

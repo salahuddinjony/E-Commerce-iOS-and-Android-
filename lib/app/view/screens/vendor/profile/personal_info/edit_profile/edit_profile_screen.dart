@@ -19,10 +19,13 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  TextEditingController fullNameController = TextEditingController(text: "Albert Stevano Bajefski");
+  TextEditingController fullNameController =
+      TextEditingController(text: "Albert Stevano Bajefski");
   TextEditingController genderController = TextEditingController(text: "Male");
-  TextEditingController phoneController = TextEditingController(text: "+01722983926");
-  TextEditingController emailController = TextEditingController(text: "masu@gmail.com");
+  TextEditingController phoneController =
+      TextEditingController(text: "+01722983926");
+  TextEditingController emailController =
+      TextEditingController(text: "masu@gmail.com");
 
   void _showGenderDialog() {
     showDialog(
@@ -137,40 +140,58 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               color: AppColors.black,
             ),
             SizedBox(height: 20.h),
-            CustomFromCard(
-              hinText: "Albert Stevano Bajefski",
-              title: AppStrings.fullName,
-              controller: fullNameController,
-              validator: (v) {},
-            ),
-         CustomTextField(
-           inputTextStyle: const TextStyle(color: AppColors.black),
-           textEditingController: genderController,
-             prefixIcon: const Icon(Icons.person), // Add prefix icon
-             suffixIcon: GestureDetector(
-               onTap: _showGenderDialog,
-               child: const Icon(Icons.arrow_drop_down), // Arrow icon to open dialog
+         Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+
+             CustomFromCard(
+               hinText: "Albert Stevano Bajefski",
+               title: AppStrings.fullName,
+               controller: fullNameController,
+               validator: (v) {},
              ),
-             readOnly: true,
-         ),
-            CustomFromCard(
-              hinText: "+01722983926",
-              title: AppStrings.phone,
-              controller: phoneController,
-              validator: (v) {},
-            ),
-            CustomFromCard(
-              hinText: "masu@gmail.com",
-              title: AppStrings.email,
-              controller: emailController,
-              validator: (v) {},
-            ),
-            CustomButton(
-              onTap: () {
-                context.pop();
-              },
-              title: AppStrings.save,
-            ),
+             CustomText(
+               textAlign: TextAlign.start,
+               font: CustomFont.inter,
+               color: AppColors.darkNaturalGray,
+               text: AppStrings.gender,
+               fontWeight: FontWeight.w600,
+               fontSize: 16.sp,
+               bottom: 8.h,
+             ),
+             CustomTextField(
+               inputTextStyle: const TextStyle(color: AppColors.black),
+               textEditingController: genderController,
+               prefixIcon: const Icon(Icons.person),
+               // Add prefix icon
+               suffixIcon: GestureDetector(
+                 onTap: _showGenderDialog,
+                 child: const Icon(
+                     Icons.arrow_drop_down), // Arrow icon to open dialog
+               ),
+               readOnly: true,
+             ),
+             SizedBox(height: 12.h,),
+             CustomFromCard(
+               hinText: "+01722983926",
+               title: AppStrings.phone,
+               controller: phoneController,
+               validator: (v) {},
+             ),
+             CustomFromCard(
+               hinText: "masu@gmail.com",
+               title: AppStrings.email,
+               controller: emailController,
+               validator: (v) {},
+             ),
+             CustomButton(
+               onTap: () {
+                 context.pop();
+               },
+               title: AppStrings.save,
+             ),
+           ],
+         )
           ],
         ),
       ),

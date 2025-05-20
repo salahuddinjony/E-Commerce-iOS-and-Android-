@@ -142,6 +142,9 @@ class $AssetsImagesGen {
   AssetGenImage get unselected =>
       const AssetGenImage('assets/images/unselected.png');
 
+  /// File path: assets/images/upload.png
+  AssetGenImage get upload => const AssetGenImage('assets/images/upload.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
         simplification,
@@ -161,7 +164,8 @@ class $AssetsImagesGen {
         profile,
         supportUnselected,
         uTee,
-        unselected
+        unselected,
+        upload
       ];
 }
 
