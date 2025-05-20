@@ -16,3 +16,5 @@ final SplashController splashController = Get.find<SplashController>();
   );
   }
 }
+
+

@@ -50,10 +50,10 @@ class ForgetPasswordScreen extends StatelessWidget {
               CustomButton(
                 onTap: () {
                   context.pushNamed(
-                    RoutePath.resetPasswordScreen,
+                    RoutePath.otpScreen,
                   );
                 },
-                title: AppStrings.resetPassword,
+                title: "Verify",
               )
             ],
           ),
