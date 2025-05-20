@@ -36,7 +36,7 @@ class AppStrings {
   static const checkYourEmail  = "Check your email";
   static const weSendAReset  = "We sent a reset link to ";
   static const verifyCode  = "Verify Code";
-  static const haveEntGotTheEmail  = "Haven’t got the email yet?";
+  static const haveEntGotTheEmail  = "Haven’t got the email yet? ";
   static const resendEmail   = "Resend email";
   static const setANewPassword   = "Set a new password";
   static const createANewPassword   = "Create a new password. Ensure it differs from purposes ones for security";
