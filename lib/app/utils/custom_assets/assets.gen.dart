@@ -33,6 +33,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/eye_off.svg
   SvgGenImage get eyeOff => const SvgGenImage('assets/icons/eye_off.svg');
 
+  /// File path: assets/icons/help.svg
+  SvgGenImage get help => const SvgGenImage('assets/icons/help.svg');
+
   /// File path: assets/icons/lock.svg
   SvgGenImage get lock => const SvgGenImage('assets/icons/lock.svg');
 
@@ -42,12 +45,32 @@ class $AssetsIconsGen {
   /// File path: assets/icons/mail.svg
   SvgGenImage get mail => const SvgGenImage('assets/icons/mail.svg');
 
+  /// File path: assets/icons/transection.svg
+  SvgGenImage get transection =>
+      const SvgGenImage('assets/icons/transection.svg');
+
   /// File path: assets/icons/user.svg
   SvgGenImage get user => const SvgGenImage('assets/icons/user.svg');
 
+  /// File path: assets/icons/wallet.svg
+  SvgGenImage get wallet => const SvgGenImage('assets/icons/wallet.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values =>
-      [arrow, arrowBack, business, edit, eye, eyeOff, lock, logout, mail, user];
+  List<SvgGenImage> get values => [
+        arrow,
+        arrowBack,
+        business,
+        edit,
+        eye,
+        eyeOff,
+        help,
+        lock,
+        logout,
+        mail,
+        transection,
+        user,
+        wallet
+      ];
 }
 
 class $AssetsImagesGen {

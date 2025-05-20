@@ -97,17 +97,17 @@ class ProfileScreen extends StatelessWidget {
               ),
 
               ProfileCardRow(
-                icon: Assets.icons.mail.svg(),
+                icon: Assets.icons.wallet.svg(),
                 label: 'Wallet',
                 onTap: () {
-                  // context.pushNamed(
-                  //   RoutePath.walletScreen,
-                  // );
+                  context.pushNamed(
+                    RoutePath.walletScreen,
+                  );
                 },
               ),
 
               ProfileCardRow(
-                icon: Assets.icons.mail.svg(),
+                icon: Assets.icons.transection.svg(),
                 label: 'Transactions  History ',
                 onTap: () {
                   context.pushNamed(
@@ -116,7 +116,7 @@ class ProfileScreen extends StatelessWidget {
                 },
               ),
               ProfileCardRow(
-                icon: Assets.icons.mail.svg(),
+                icon: Assets.icons.transection.svg(),
                 label: 'About Us',
                 onTap: () {
                   context.pushNamed(
@@ -126,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
               ),
 
               ProfileCardRow(
-                icon: Assets.icons.mail.svg(),
+                icon: Assets.icons.transection.svg(),
                 label: 'Privacy policy',
                 onTap: () {
                   context.pushNamed(
@@ -136,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
               ),
 
               ProfileCardRow(
-                icon: Assets.icons.mail.svg(),
+                icon: Assets.icons.help.svg(),
                 label: 'Help Center',
                 onTap: () {
                   context.pushNamed(
@@ -146,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
               ),
 
               ProfileCardRow(
-                icon: Assets.icons.mail.svg(),
+                icon: Assets.icons.transection.svg(),
                 label: ' Terms & Conditions',
                 onTap: () {
                   context.pushNamed(
@@ -156,7 +156,7 @@ class ProfileScreen extends StatelessWidget {
               ),
 
               ProfileCardRow(
-                icon: Assets.icons.mail.svg(),
+                icon: Assets.icons.lock.svg(),
                 label: 'Change password',
                 onTap: () {
                   context.pushNamed(
@@ -178,3 +178,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+
