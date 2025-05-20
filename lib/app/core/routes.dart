@@ -35,6 +35,7 @@ import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/terms_conditions/terms_condition_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/transaction/transaction_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
+import '../view/screens/vendor/orders/pending_details/pending_details_screen.dart';
 import '../view/screens/vendor/product/add_product/add_product_screen.dart';
 import '../view/screens/vendor/profile/business_documents/business_documents_screen.dart';
 import 'route_path.dart';
@@ -381,6 +382,16 @@ class AppRouter {
             child:  ProductScreen(),
             state: state,
             disableAnimation: true
+          ),
+        ),
+
+        ///=======================  PendingDetailsScreen =======================
+        GoRoute(
+          name: RoutePath.pendingDetailsScreen,
+          path: RoutePath.pendingDetailsScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const PendingDetailsScreen(),
+            state: state,
           ),
         ),
 
