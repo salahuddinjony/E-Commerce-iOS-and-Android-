@@ -37,6 +37,7 @@ import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart'
 import '../view/screens/user/user_home/custom_design/custom_design_screen.dart';
 import '../view/screens/user/user_home/custom_design/custom_order/custom_order_screen.dart';
 import '../view/screens/user/user_home/shop_details/shop_details_screen.dart';
+import '../view/screens/user/user_home/user_profile/faq_screen/faq_screen.dart';
 import '../view/screens/user/user_home/user_profile/payment_methods/payment_methods_screen.dart';
 import '../view/screens/vendor/home/view_order/view_order_details/view_order_details.dart';
 import '../view/screens/vendor/home/view_order/view_order_screen.dart';
@@ -350,6 +351,13 @@ class AppRouter {
           path: RoutePath.customDesignScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child: const CustomDesignScreen(),
+            state: state,
+          ),
+        ),    GoRoute(
+          name: RoutePath.faqScreen,
+          path: RoutePath.faqScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  FaqScreen(),
             state: state,
           ),
         ),

@@ -49,6 +49,7 @@ class RoutePath {
   static const String inboxScreen = 'InboxScreen';
   static const String customOrderScreen = 'CustomOrderScreen';
   static const String paymentMethodsScreen = 'PaymentMethodsScreen';
+  static const String faqScreen = 'FaqScreen';
   static const String
   customDesignScreen = 'CustomDesignScreen';
 }

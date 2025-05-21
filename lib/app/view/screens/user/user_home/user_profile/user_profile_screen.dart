@@ -95,28 +95,31 @@ class UserProfileScreen extends StatelessWidget {
                     icon: Icons.history,
                     label: "Order History",
                     onTap: () {
-                      // Navigate to Order History screen
+                      context.pushNamed(RoutePath.orderHistoryScreen);
+
                     },
                   ),
                   _buildListItem(
                     icon: Icons.support_agent,
                     label: "Support",
                     onTap: () {
-                      // Navigate to Support screen
+                      context.pushNamed(RoutePath.helpCenterScreen);
+
                     },
                   ),
                   _buildListItem(
                     icon: Icons.help_outline,
                     label: "FAQ",
                     onTap: () {
-                      // Navigate to FAQ screen
+                      context.pushNamed(RoutePath.faqScreen);
+
                     },
                   ),
                   _buildListItem(
                     icon: Icons.lock_outline,
                     label: "Change password",
                     onTap: () {
-                      // Navigate to Change Password screen
+                      context.pushNamed(RoutePath.changePasswordScreen);
                     },
                   ),
                 ],
