@@ -6,7 +6,6 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
 
@@ -39,6 +38,8 @@ class NextScreen extends StatelessWidget {
                 color: AppColors.darkNaturalGray,
               ),
               CustomTextField(
+                inputTextStyle: const TextStyle(color: AppColors.black),
+
                 isPassword: true,
                 fieldBorderColor: AppColors.borderColor,
                 textEditingController: TextEditingController(),
@@ -59,6 +60,8 @@ class NextScreen extends StatelessWidget {
                 color: AppColors.darkNaturalGray,
               ),
               CustomTextField(
+                inputTextStyle: const TextStyle(color: AppColors.black),
+
                 isPassword: true,
                 fieldBorderColor: AppColors.borderColor,
                 textEditingController: TextEditingController(),

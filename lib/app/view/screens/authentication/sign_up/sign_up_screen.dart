@@ -6,7 +6,6 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
 
@@ -38,41 +37,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Toggle buttons for Client and Business Vendor
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ChoiceChip(
-                  label: const Text('Client'),
-                  selected: isClientSelected,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      isClientSelected = true;
-                    });
-                  },
-                  selectedColor: Colors.teal,
-                ),
-                SizedBox(width: 16.w),
-                ChoiceChip(
-                  label: const Text('Business Vendor'),
-                  selected: !isClientSelected,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      isClientSelected = false;
-                    });
-                  },
-                  selectedColor: Colors.teal,
-                ),
-              ],
-            ),
-            SizedBox(height: 20.h),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Toggle buttons for Client and Business Vendor
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ChoiceChip(
+                    label: const Text('Client'),
+                    selected: isClientSelected,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        isClientSelected = true;
+                      });
+                    },
+                    selectedColor: Colors.teal,
+                  ),
+                  SizedBox(width: 16.w),
+                  ChoiceChip(
+                    label: const Text('Business Vendor'),
+                    selected: !isClientSelected,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        isClientSelected = false;
+                      });
+                    },
+                    selectedColor: Colors.teal,
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
 
-            // Display corresponding form based on selection
-            isClientSelected ? _buildClientForm() : _buildBusinessVendorForm(),
-          ],
+              // Display corresponding form based on selection
+              isClientSelected ? _buildClientForm() : _buildBusinessVendorForm(),
+            ],
+          ),
         ),
       ),
     );
@@ -92,6 +93,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
           fieldBorderColor: AppColors.borderColor,
           textEditingController: nameController,
           prefixIcon: const Icon(Icons.person),
@@ -108,6 +110,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
+
           fieldBorderColor: AppColors.borderColor,
           textEditingController: emailPhoneController,
           prefixIcon: const Icon(Icons.email),
@@ -124,6 +128,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
+
           isPassword: true,
           fieldBorderColor: AppColors.borderColor,
           textEditingController: passwordController,
@@ -140,6 +146,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
+
           isPassword: true,
           fieldBorderColor: AppColors.borderColor,
           textEditingController: confirmPasswordController,
@@ -171,6 +179,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
+
           fieldBorderColor: AppColors.borderColor,
           textEditingController: nameController,
           prefixIcon: const Icon(
@@ -190,6 +200,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
+
           fieldBorderColor: AppColors.borderColor,
           textEditingController: emailPhoneController,
           prefixIcon: const Icon(Icons.person),
@@ -206,6 +218,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
+
           fieldBorderColor: AppColors.borderColor,
           textEditingController: passwordController,
           prefixIcon: const Icon(Icons.email),
@@ -221,6 +235,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
+
           fieldBorderColor: AppColors.borderColor,
           textEditingController: confirmPasswordController,
           prefixIcon: const Icon(Icons.image),
@@ -237,6 +253,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
+          inputTextStyle: const TextStyle(color: AppColors.black),
+
           fieldBorderColor: AppColors.borderColor,
           textEditingController: confirmPasswordController,
           prefixIcon: const Icon(Icons.image),

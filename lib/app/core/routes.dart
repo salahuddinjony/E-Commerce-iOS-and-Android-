@@ -21,8 +21,6 @@ import 'package:local/app/view/screens/user/user_home/user_profile/user_profile_
 import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.dart';
 import 'package:local/app/view/screens/user/user_order/user_order_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
-import 'package:local/app/view/screens/vendor/order_request/order_request_screen.dart';
-import 'package:local/app/view/screens/vendor/order_request/order_view/order_view_screen.dart';
 import 'package:local/app/view/screens/vendor/orders/orders_screen.dart';
 import 'package:local/app/view/screens/vendor/product/product_screen.dart' show ProductScreen;
 import 'package:local/app/view/screens/vendor/profile/about_us/about_us_screen.dart';
@@ -38,6 +36,7 @@ import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart'
 import '../view/screens/vendor/orders/pending_details/pending_details_screen.dart';
 import '../view/screens/vendor/product/add_product/add_product_screen.dart';
 import '../view/screens/vendor/profile/business_documents/business_documents_screen.dart';
+import '../view/screens/vendor/vendor_message/vendor_message_screen.dart';
 import 'route_path.dart';
 
 class AppRouter {
@@ -155,15 +154,6 @@ class AppRouter {
               ),
         ),
 
-        ///======================= OrderRequestScreen =======================
-        GoRoute(
-          name: RoutePath.orderRequestScreen,
-          path: RoutePath.orderRequestScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const OrderRequestScreen(),
-              state: state,
-              disableAnimation: true),
-        ),
 
         ///======================= ProfileScreen =======================
         GoRoute(
@@ -286,15 +276,7 @@ class AppRouter {
           ),
         ),
 
-        ///======================= OrderViewScreen =======================
-        GoRoute(
-          name: RoutePath.orderViewScreen,
-          path: RoutePath.orderViewScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const OrderViewScreen(),
-            state: state,
-          ),
-        ),
+
 
         ///======================= User Section =======================
         GoRoute(
@@ -392,6 +374,17 @@ class AppRouter {
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child:  const PendingDetailsScreen(),
             state: state,
+          ),
+        ),
+
+        ///=======================  PendingDetailsScreen =======================
+        GoRoute(
+          name: RoutePath.vendorMessageScreen,
+          path: RoutePath.vendorMessageScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const VendorMessageScreen(),
+            state: state,
+            disableAnimation: true
           ),
         ),
 

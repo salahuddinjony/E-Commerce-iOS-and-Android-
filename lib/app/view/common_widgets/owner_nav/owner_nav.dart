@@ -53,11 +53,11 @@ class _CustomNavBarState extends State<OwnerNav> {
 
     //===============================
     (
-    route: RoutePath.orderRequestScreen,
+    route: RoutePath.vendorMessageScreen,
     selectedIcon:
-    Assets.images.checkOut.image(color: AppColors.brightCyan),
-    unselectedIcon: Assets.images.checkOut.image(),
-    label: "Checkout",
+    Assets.images.message.image(color: AppColors.brightCyan,height: 35.h),
+    unselectedIcon: Assets.images.message.image(),
+    label: AppStrings.chat,
     ),
     //===============================
     (

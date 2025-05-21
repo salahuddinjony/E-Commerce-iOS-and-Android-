@@ -22,62 +22,64 @@ class ResetPasswordScreen extends StatelessWidget {
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 26.h,
-              ),
-              CustomText(
-                textAlign: TextAlign.start ,
-                text: AppStrings.setANewPassword,
-                font: CustomFont.poppins,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkNaturalGray,
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 26.h,
+                ),
+                CustomText(
+                  textAlign: TextAlign.start ,
+                  text: AppStrings.setANewPassword,
+                  font: CustomFont.poppins,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkNaturalGray,
+                ),
 
-              CustomText(
-                top: 5,
-                maxLines: 2,
-                textAlign: TextAlign.start ,
-                text: AppStrings.createANewPassword,
-                font: CustomFont.inter,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.naturalGray,
-              ),
-              SizedBox(
-                height: 100.h,
-              ),
-              CustomFromCard(
-                isPassword: true,
-                  hinText: AppStrings.enterYourNewPassword,
-                  title: AppStrings.password,
-                  controller: TextEditingController(),
-                  validator: (v) {}),
-              SizedBox(
-                height: 12.h,
-              ),
+                CustomText(
+                  top: 5,
+                  maxLines: 2,
+                  textAlign: TextAlign.start ,
+                  text: AppStrings.createANewPassword,
+                  font: CustomFont.inter,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.naturalGray,
+                ),
+                SizedBox(
+                  height: 100.h,
+                ),
+                CustomFromCard(
+                  isPassword: true,
+                    hinText: AppStrings.enterYourNewPassword,
+                    title: AppStrings.password,
+                    controller: TextEditingController(),
+                    validator: (v) {}),
+                SizedBox(
+                  height: 12.h,
+                ),
 
-              CustomFromCard(
-                isPassword: true,
-                  hinText: AppStrings.reEnterPassword,
-                  title: AppStrings.confirmPassword,
-                  controller: TextEditingController(),
-                  validator: (v) {}),
-              SizedBox(
-                height: 12.h,
-              ),
-              CustomButton(
-                onTap: () {
-                  context.goNamed(
-                    RoutePath.signInScreen,
-                  );
-                },
-                title: AppStrings.updatePassword,
-              )
-            ],
+                CustomFromCard(
+                  isPassword: true,
+                    hinText: AppStrings.reEnterPassword,
+                    title: AppStrings.confirmPassword,
+                    controller: TextEditingController(),
+                    validator: (v) {}),
+                SizedBox(
+                  height: 12.h,
+                ),
+                CustomButton(
+                  onTap: () {
+                    context.goNamed(
+                      RoutePath.signInScreen,
+                    );
+                  },
+                  title: AppStrings.updatePassword,
+                )
+              ],
+            ),
           ),
         ));
   }

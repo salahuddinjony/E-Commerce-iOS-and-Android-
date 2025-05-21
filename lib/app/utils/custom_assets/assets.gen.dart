@@ -104,6 +104,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
+  /// File path: assets/images/message.png
+  AssetGenImage get message => const AssetGenImage('assets/images/message.png');
+
   /// File path: assets/images/notification.png
   AssetGenImage get notification =>
       const AssetGenImage('assets/images/notification.png');
@@ -155,6 +158,7 @@ class $AssetsImagesGen {
         google,
         homeSelected,
         logo,
+        message,
         notification,
         onboard1,
         onboard2,
