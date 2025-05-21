@@ -35,6 +35,7 @@ class RoutePath {
   static const String vendorMessageScreen = 'VendorMessageScreen';
   static const String viewOrderScreen = 'ViewOrderScreen';
   static const String viewOrderDetails = 'ViewOrderDetails';
+  static const String shopDetailsScreen = 'ShopDetailsScreen';
 
   ///======================= User Section =======================
   static const String userHomeScreen = 'UserHomeScreen';
@@ -46,4 +47,8 @@ class RoutePath {
   static const String nextScreen = 'NextScreen';
   static const String userOrderScreen = 'UserOrderScreen';
   static const String inboxScreen = 'InboxScreen';
+  static const String customOrderScreen = 'CustomOrderScreen';
+  static const String paymentMethodsScreen = 'PaymentMethodsScreen';
+  static const String
+  customDesignScreen = 'CustomDesignScreen';
 }

@@ -190,7 +190,6 @@ class UserHomeScreen extends StatelessWidget {
                     ),
                     GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
-                      // Prevent inner scroll
                       shrinkWrap: true,
                       itemCount: 8,
                       gridDelegate:
@@ -202,6 +201,11 @@ class UserHomeScreen extends StatelessWidget {
                       ),
                       itemBuilder: (context, index) {
                         return  ProfileCard(
+                          onTap: (){
+                            context.pushNamed(
+                              RoutePath.shopDetailsScreen,
+                            );
+                          },
                           name: 'Alex Carter',
                           location: 'USA',
                           imageUrl:AppConstants.demoImage ,

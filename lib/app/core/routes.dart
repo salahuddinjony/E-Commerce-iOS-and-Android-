@@ -22,7 +22,8 @@ import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.d
 import 'package:local/app/view/screens/user/user_order/user_order_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/orders/orders_screen.dart';
-import 'package:local/app/view/screens/vendor/product/product_screen.dart' show ProductScreen;
+import 'package:local/app/view/screens/vendor/product/product_screen.dart'
+    show ProductScreen;
 import 'package:local/app/view/screens/vendor/profile/about_us/about_us_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/change_password/change_password_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/help_center/help_center_screen.dart';
@@ -33,6 +34,10 @@ import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/terms_conditions/terms_condition_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/transaction/transaction_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
+import '../view/screens/user/user_home/custom_design/custom_design_screen.dart';
+import '../view/screens/user/user_home/custom_design/custom_order/custom_order_screen.dart';
+import '../view/screens/user/user_home/shop_details/shop_details_screen.dart';
+import '../view/screens/user/user_home/user_profile/payment_methods/payment_methods_screen.dart';
 import '../view/screens/vendor/home/view_order/view_order_details/view_order_details.dart';
 import '../view/screens/vendor/home/view_order/view_order_screen.dart';
 import '../view/screens/vendor/orders/pending_details/pending_details_screen.dart';
@@ -92,10 +97,9 @@ class AppRouter {
           name: RoutePath.signInScreen,
           path: RoutePath.signInScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const SignInScreen(),
-            state: state,
-            transitionType: TransitionType.detailsScreen
-          ),
+              child: const SignInScreen(),
+              state: state,
+              transitionType: TransitionType.detailsScreen),
         ),
 
         ///=======================  =======================
@@ -151,11 +155,10 @@ class AppRouter {
           name: RoutePath.addProductScreen,
           path: RoutePath.addProductScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const AddProductScreen(),
-              state: state,
-              ),
+            child: const AddProductScreen(),
+            state: state,
+          ),
         ),
-
 
         ///======================= ProfileScreen =======================
         GoRoute(
@@ -237,7 +240,6 @@ class AppRouter {
           ),
         ),
 
-
         ///======================= BusinessDocumentsScreen =======================
         GoRoute(
           name: RoutePath.businessDocumentsScreen,
@@ -278,16 +280,12 @@ class AppRouter {
           ),
         ),
 
-
-
         ///======================= User Section =======================
         GoRoute(
           name: RoutePath.userHomeScreen,
           path: RoutePath.userHomeScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child:  UserHomeScreen(),
-              state: state,
-              disableAnimation: true),
+              child: UserHomeScreen(), state: state, disableAnimation: true),
         ),
 
         ///======================= ChatScreen Section =======================
@@ -338,12 +336,46 @@ class AppRouter {
           ),
         ),
 
+        ///=======================  ShopDetailsScreen =======================
+        GoRoute(
+          name: RoutePath.shopDetailsScreen,
+          path: RoutePath.shopDetailsScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const ShopDetailsScreen(),
+            state: state,
+          ),
+        ),    ///=======================  CustomDesignScreen =======================
+        GoRoute(
+          name: RoutePath.customDesignScreen,
+          path: RoutePath.customDesignScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const CustomDesignScreen(),
+            state: state,
+          ),
+        ),
+
+        GoRoute(
+          name: RoutePath.customOrderScreen,
+          path: RoutePath.customOrderScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const CustomOrderScreen(),
+            state: state,
+          ),
+        ),   GoRoute(
+          name: RoutePath.paymentMethodsScreen,
+          path: RoutePath.paymentMethodsScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  PaymentMethodsScreen(),
+            state: state,
+          ),
+        ),
+
         ///=======================  ViewMapScreen =======================
         GoRoute(
           name: RoutePath.viewMapScreen,
           path: RoutePath.viewMapScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  ViewMapScreen(),
+            child: ViewMapScreen(),
             state: state,
           ),
         ),
@@ -363,10 +395,7 @@ class AppRouter {
           name: RoutePath.productScreen,
           path: RoutePath.productScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  ProductScreen(),
-            state: state,
-            disableAnimation: true
-          ),
+              child: ProductScreen(), state: state, disableAnimation: true),
         ),
 
         ///=======================  PendingDetailsScreen =======================
@@ -374,7 +403,7 @@ class AppRouter {
           name: RoutePath.pendingDetailsScreen,
           path: RoutePath.pendingDetailsScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const PendingDetailsScreen(),
+            child: const PendingDetailsScreen(),
             state: state,
           ),
         ),
@@ -384,10 +413,9 @@ class AppRouter {
           name: RoutePath.vendorMessageScreen,
           path: RoutePath.vendorMessageScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const VendorMessageScreen(),
-            state: state,
-            disableAnimation: true
-          ),
+              child: const VendorMessageScreen(),
+              state: state,
+              disableAnimation: true),
         ),
 
         ///=======================  PendingDetailsScreen =======================
@@ -395,7 +423,7 @@ class AppRouter {
           name: RoutePath.viewOrderScreen,
           path: RoutePath.viewOrderScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const ViewOrderScreen(),
+            child: const ViewOrderScreen(),
             state: state,
           ),
         ),
@@ -405,7 +433,7 @@ class AppRouter {
           name: RoutePath.viewOrderDetails,
           path: RoutePath.viewOrderDetails.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  const ViewOrderDetails(),
+            child: const ViewOrderDetails(),
             state: state,
           ),
         ),

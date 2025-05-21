@@ -33,6 +33,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/eye_off.svg
   SvgGenImage get eyeOff => const SvgGenImage('assets/icons/eye_off.svg');
 
+  /// File path: assets/icons/gg.png
+  AssetGenImage get gg => const AssetGenImage('assets/icons/gg.png');
+
   /// File path: assets/icons/help.svg
   SvgGenImage get help => const SvgGenImage('assets/icons/help.svg');
 
@@ -45,6 +48,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/mail.svg
   SvgGenImage get mail => const SvgGenImage('assets/icons/mail.svg');
 
+  /// File path: assets/icons/pay.png
+  AssetGenImage get pay => const AssetGenImage('assets/icons/pay.png');
+
+  /// File path: assets/icons/paypal.png
+  AssetGenImage get paypal => const AssetGenImage('assets/icons/paypal.png');
+
   /// File path: assets/icons/transection.svg
   SvgGenImage get transection =>
       const SvgGenImage('assets/icons/transection.svg');
@@ -52,23 +61,30 @@ class $AssetsIconsGen {
   /// File path: assets/icons/user.svg
   SvgGenImage get user => const SvgGenImage('assets/icons/user.svg');
 
+  /// File path: assets/icons/vissa.svg
+  SvgGenImage get vissa => const SvgGenImage('assets/icons/vissa.svg');
+
   /// File path: assets/icons/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/icons/wallet.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [
+  List<dynamic> get values => [
         arrow,
         arrowBack,
         business,
         edit,
         eye,
         eyeOff,
+        gg,
         help,
         lock,
         logout,
         mail,
+        pay,
+        paypal,
         transection,
         user,
+        vissa,
         wallet
       ];
 }
@@ -85,6 +101,14 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/apple.png
   AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
+
+  /// File path: assets/images/apple_pay.png
+  AssetGenImage get applePay =>
+      const AssetGenImage('assets/images/apple_pay.png');
+
+  /// File path: assets/images/bacground.png
+  AssetGenImage get bacground =>
+      const AssetGenImage('assets/images/bacground.png');
 
   /// File path: assets/images/chat_unselected.png
   AssetGenImage get chatUnselected =>
@@ -131,6 +155,10 @@ class $AssetsImagesGen {
   AssetGenImage get ownerHomeSelected =>
       const AssetGenImage('assets/images/owner_home_selected.png');
 
+  /// File path: assets/images/payoniar.png
+  AssetGenImage get payoniar =>
+      const AssetGenImage('assets/images/payoniar.png');
+
   /// File path: assets/images/profile.png
   AssetGenImage get profile => const AssetGenImage('assets/images/profile.png');
 
@@ -148,11 +176,16 @@ class $AssetsImagesGen {
   /// File path: assets/images/upload.png
   AssetGenImage get upload => const AssetGenImage('assets/images/upload.png');
 
+  /// File path: assets/images/visa.png
+  AssetGenImage get visa => const AssetGenImage('assets/images/visa.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
         simplification,
         add,
         apple,
+        applePay,
+        bacground,
         chatUnselected,
         checkOut,
         google,
@@ -165,11 +198,13 @@ class $AssetsImagesGen {
         onboard3,
         orderUnselected,
         ownerHomeSelected,
+        payoniar,
         profile,
         supportUnselected,
         uTee,
         unselected,
-        upload
+        upload,
+        visa
       ];
 }
 
