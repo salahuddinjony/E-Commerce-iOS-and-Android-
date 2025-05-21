@@ -343,7 +343,7 @@ class AppRouter {
           name: RoutePath.viewMapScreen,
           path: RoutePath.viewMapScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ViewMapScreen(),
+            child:  ViewMapScreen(),
             state: state,
           ),
         ),

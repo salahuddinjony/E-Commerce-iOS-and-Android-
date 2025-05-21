@@ -173,7 +173,9 @@ class UserHomeScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: (){
-
+                        context.pushNamed(
+                          RoutePath.viewMapScreen,
+                        );
                       },
                       child: CustomText(
                         top: 24.h,
