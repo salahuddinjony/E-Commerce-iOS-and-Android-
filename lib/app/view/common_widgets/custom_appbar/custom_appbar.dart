@@ -36,6 +36,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      surfaceTintColor:AppColors.white,
       backgroundColor: widget.appBarBgColor,
       automaticallyImplyLeading: false,
       title: Padding(
