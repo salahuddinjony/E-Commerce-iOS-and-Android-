@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 
-
+import '../../../../../core/route_path.dart';
 import '../../../../common_widgets/order_card/order_card.dart';
 
 class ViewOrderScreen extends StatelessWidget {
@@ -11,8 +12,6 @@ class ViewOrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const CustomAppBar(
@@ -20,10 +19,10 @@ class ViewOrderScreen extends StatelessWidget {
         iconData: Icons.arrow_back,
       ),
       body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-        itemCount:15,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        itemCount: 15,
         itemBuilder: (context, index) {
-          return  OrderCard(
+          return OrderCard(
             parcelId: '#626365',
             date: '10-03-2025',
             addressLine1: 'America',
@@ -31,11 +30,14 @@ class ViewOrderScreen extends StatelessWidget {
             amount: 10,
             timeAgo: '04 Hours ago',
             imageUrl: AppConstants.demoImage,
+            onTap: () {
+              context.pushNamed(
+                RoutePath.viewOrderDetails,
+              );
+            },
           );
         },
       ),
     );
   }
 }
-
-

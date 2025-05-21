@@ -34,6 +34,7 @@ class RoutePath {
   static const String pendingDetailsScreen = 'PendingDetailsScreen';
   static const String vendorMessageScreen = 'VendorMessageScreen';
   static const String viewOrderScreen = 'ViewOrderScreen';
+  static const String viewOrderDetails = 'ViewOrderDetails';
 
   ///======================= User Section =======================
   static const String userHomeScreen = 'UserHomeScreen';

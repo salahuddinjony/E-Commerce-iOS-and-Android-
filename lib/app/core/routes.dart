@@ -33,6 +33,7 @@ import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/terms_conditions/terms_condition_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/transaction/transaction_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
+import '../view/screens/vendor/home/view_order/view_order_details/view_order_details.dart';
 import '../view/screens/vendor/home/view_order/view_order_screen.dart';
 import '../view/screens/vendor/orders/pending_details/pending_details_screen.dart';
 import '../view/screens/vendor/product/add_product/add_product_screen.dart';
@@ -395,6 +396,16 @@ class AppRouter {
           path: RoutePath.viewOrderScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
             child:  const ViewOrderScreen(),
+            state: state,
+          ),
+        ),
+
+        ///=======================  ViewOrderDetails =======================
+        GoRoute(
+          name: RoutePath.viewOrderDetails,
+          path: RoutePath.viewOrderDetails.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  const ViewOrderDetails(),
             state: state,
           ),
         ),
