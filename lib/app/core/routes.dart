@@ -14,6 +14,7 @@ import 'package:local/app/view/screens/onboarding_screen/onboarding_screen.dart'
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/user/chat/chat_screen.dart';
 import 'package:local/app/view/screens/user/chat/inbox/inbox_screen.dart';
+import 'package:local/app/view/screens/user/support/order_mangement/order_manegment_screen.dart';
 import 'package:local/app/view/screens/user/support/support_screen.dart';
 import 'package:local/app/view/screens/user/user_home/user_home_screen.dart';
 import 'package:local/app/view/screens/user/user_home/user_profile/order_history/order_history_screen.dart';
@@ -34,6 +35,8 @@ import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/terms_conditions/terms_condition_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/transaction/transaction_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
+import '../view/screens/user/support/account_security/account_security_screen.dart';
+import '../view/screens/user/support/u_tee_hub_account/u_tee_hub_account.dart';
 import '../view/screens/user/user_home/custom_design/custom_design_screen.dart';
 import '../view/screens/user/user_home/custom_design/custom_order/custom_order_screen.dart';
 import '../view/screens/user/user_home/shop_details/shop_details_screen.dart';
@@ -345,7 +348,9 @@ class AppRouter {
             child: const ShopDetailsScreen(),
             state: state,
           ),
-        ),    ///=======================  CustomDesignScreen =======================
+        ),
+
+        ///=======================  CustomDesignScreen =======================
         GoRoute(
           name: RoutePath.customDesignScreen,
           path: RoutePath.customDesignScreen.addBasePath,
@@ -353,11 +358,37 @@ class AppRouter {
             child: const CustomDesignScreen(),
             state: state,
           ),
-        ),    GoRoute(
+        ),
+
+        GoRoute(
           name: RoutePath.faqScreen,
           path: RoutePath.faqScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  FaqScreen(),
+            child: FaqScreen(),
+            state: state,
+          ),
+        ),
+        GoRoute(
+          name: RoutePath.orderManegmentScreen,
+          path: RoutePath.orderManegmentScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const OrderManegmentScreen(),
+            state: state,
+          ),
+        ),
+        GoRoute(
+          name: RoutePath.accountSecurityScreen,
+          path: RoutePath.accountSecurityScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const AccountSecurityScreen(),
+            state: state,
+          ),
+        ),
+        GoRoute(
+          name: RoutePath.uTeeHubAccount,
+          path: RoutePath.uTeeHubAccount.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const UTeeHubAccount(),
             state: state,
           ),
         ),
@@ -369,11 +400,12 @@ class AppRouter {
             child: const CustomOrderScreen(),
             state: state,
           ),
-        ),   GoRoute(
+        ),
+        GoRoute(
           name: RoutePath.paymentMethodsScreen,
           path: RoutePath.paymentMethodsScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  PaymentMethodsScreen(),
+            child: PaymentMethodsScreen(),
             state: state,
           ),
         ),

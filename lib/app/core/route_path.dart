@@ -50,6 +50,9 @@ class RoutePath {
   static const String customOrderScreen = 'CustomOrderScreen';
   static const String paymentMethodsScreen = 'PaymentMethodsScreen';
   static const String faqScreen = 'FaqScreen';
+  static const String uTeeHubAccount = 'UTeeHubAccount';
+  static const String accountSecurityScreen = 'AccountSecurityScreen';
+  static const String orderManegmentScreen = 'OrderManegmentScreen';
   static const String
   customDesignScreen = 'CustomDesignScreen';
 }
