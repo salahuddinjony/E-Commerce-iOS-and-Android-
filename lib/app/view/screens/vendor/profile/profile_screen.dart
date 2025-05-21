@@ -76,15 +76,7 @@ class ProfileScreen extends StatelessWidget {
                 height: 10.h,
               ),
 
-              ProfileCardRow(
-                icon: Assets.icons.mail.svg(),
-                label: 'chat',
-                onTap: () {
-                  context.pushNamed(
-                    RoutePath.chatScreen,
-                  );
-                },
-              ),
+
 
               ProfileCardRow(
                 icon: Assets.icons.business.svg(),
