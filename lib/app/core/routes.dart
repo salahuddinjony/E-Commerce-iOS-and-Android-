@@ -285,7 +285,7 @@ class AppRouter {
           name: RoutePath.userHomeScreen,
           path: RoutePath.userHomeScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const UserHomeScreen(),
+              child:  UserHomeScreen(),
               state: state,
               disableAnimation: true),
         ),
