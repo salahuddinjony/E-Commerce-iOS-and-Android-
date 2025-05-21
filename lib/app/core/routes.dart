@@ -483,7 +483,7 @@ class AppRouter {
           name: RoutePath.userOrderScreen,
           path: RoutePath.userOrderScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const UserOrderScreen(),
+              child:  UserOrderScreen(),
               state: state,
               disableAnimation: true),
         ),
