@@ -53,6 +53,9 @@ class RoutePath {
   static const String uTeeHubAccount = 'UTeeHubAccount';
   static const String accountSecurityScreen = 'AccountSecurityScreen';
   static const String orderManegmentScreen = 'OrderManegmentScreen';
+  static const String productDetailsScreen = 'ProductDetailsScreen';
+  static const String addAddressScreen = 'AddAddressScreen';
+  static const String userOrderDetailsScreen = 'UserOrderDetailsScreen';
   static const String
   customDesignScreen = 'CustomDesignScreen';
 }

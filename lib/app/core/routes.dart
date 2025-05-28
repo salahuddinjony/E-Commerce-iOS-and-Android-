@@ -39,9 +39,12 @@ import '../view/screens/user/support/account_security/account_security_screen.da
 import '../view/screens/user/support/u_tee_hub_account/u_tee_hub_account.dart';
 import '../view/screens/user/user_home/custom_design/custom_design_screen.dart';
 import '../view/screens/user/user_home/custom_design/custom_order/custom_order_screen.dart';
+import '../view/screens/user/user_home/shop_details/add_address/add_address_screen.dart';
+import '../view/screens/user/user_home/shop_details/product_details/product_details_screen.dart';
 import '../view/screens/user/user_home/shop_details/shop_details_screen.dart';
 import '../view/screens/user/user_home/user_profile/faq_screen/faq_screen.dart';
 import '../view/screens/user/user_home/user_profile/payment_methods/payment_methods_screen.dart';
+import '../view/screens/user/user_order/user_order_details/user_order_details_screen.dart';
 import '../view/screens/vendor/home/view_order/view_order_details/view_order_details.dart';
 import '../view/screens/vendor/home/view_order/view_order_screen.dart';
 import '../view/screens/vendor/orders/pending_details/pending_details_screen.dart';
@@ -478,14 +481,39 @@ class AppRouter {
           ),
         ),
 
+        ///=======================  ViewOrderDetails =======================
+        GoRoute(
+          name: RoutePath.productDetailsScreen,
+          path: RoutePath.productDetailsScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const ProductDetailsScreen(),
+            state: state,
+          ),
+        ),    ///=======================  userOrderDetailsScreen =======================
+        GoRoute(
+          name: RoutePath.userOrderDetailsScreen,
+          path: RoutePath.userOrderDetailsScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const UserOrderDetailsScreen(),
+            state: state,
+          ),
+        ),
+        ///=======================  ViewOrderDetails =======================
+        GoRoute(
+          name: RoutePath.addAddressScreen,
+          path: RoutePath.addAddressScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child: const AddAddressScreen(),
+            state: state,
+          ),
+        ),
+
         ///=======================  UserOrderScreen =======================
         GoRoute(
           name: RoutePath.userOrderScreen,
           path: RoutePath.userOrderScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child:  UserOrderScreen(),
-              state: state,
-              disableAnimation: true),
+              child: UserOrderScreen(), state: state, disableAnimation: true),
         ),
       ]);
 

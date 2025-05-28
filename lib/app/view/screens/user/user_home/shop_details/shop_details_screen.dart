@@ -174,7 +174,7 @@ class ShopDetailsScreen extends StatelessWidget {
                       color: AppColors.brightCyan,
                       fontSize: 20.sp,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     SizedBox(
                       height: 180, // height to fit the card + padding
@@ -185,49 +185,57 @@ class ShopDetailsScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return SizedBox(
                             width: 140.w, // fixed card width
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(12),
+                            child: GestureDetector(
+                              onTap: (){
+                                context.pushNamed(
+                                  RoutePath.productDetailsScreen,
+                                );
+                              },
+                              child: Card(
+                                color: AppColors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(12),
+                                      ),
+                                      child: Image.network(
+                                        AppConstants.teeShirt,
+                                        height: 110,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                    child: Image.network(
-                                      AppConstants.teeShirt,
-                                      height: 110,
-                                      fit: BoxFit.cover,
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            'Nature Vibes',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            '100% Cotton',
+                                            style: TextStyle(color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          'Nature Vibes',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          '100% Cotton',
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  // You can add more content here if needed, like text below the image
-                                ],
+                                    // You can add more content here if needed, like text below the image
+                                  ],
+                                ),
                               ),
                             ),
                           );
                         },
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     CustomText(
                       text: 'Our Top Tee-Shirt Designer',
@@ -236,7 +244,32 @@ class ShopDetailsScreen extends StatelessWidget {
                       color: AppColors.brightCyan,
                       fontSize: 20.sp,
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
+                    DesignerCard(
+                      imageUrl: 'https://i.pravatar.cc/150?img=2',
+                      name: 'UrbanTee Lab',
+                      subtitle: 'T-Shirt Designs',
+                      rating: 4.4,
+                      reviews: '1.5K+ reviews',
+                      onTap: () {
+                        context.pushNamed(
+                          RoutePath.productDetailsScreen,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+
+                    DesignerCard(
+                      imageUrl: 'https://i.pravatar.cc/150?img=2',
+                      name: 'UrbanTee Lab',
+                      subtitle: 'T-Shirt Designs',
+                      rating: 4.4,
+                      reviews: '1.5K+ reviews',
+                      onTap: () {  context.pushNamed(
+                        RoutePath.productDetailsScreen,
+                      );},
+                    ),
+                    const SizedBox(height: 12),
                     CustomText(
                       text: 'Shop Details',
                       fontWeight: FontWeight.w600,
@@ -274,7 +307,7 @@ class ShopDetailsScreen extends StatelessWidget {
                       color: AppColors.brightCyan,
                       fontSize: 16.sp,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     CustomText(
                       text: 'Shipping Time',
                       fontWeight: FontWeight.w600,
@@ -310,25 +343,127 @@ class ShopDetailsScreen extends StatelessWidget {
                       color: AppColors.naturalGray,
                       fontSize: 16.sp,
                     ),
-                    SizedBox(height: 40),
-                    CustomButton(onTap: (){
-                      context.pushNamed(
-                        RoutePath.customDesignScreen,
-                      );
-                    },title: "Make A Custom",),
-                    SizedBox(height: 12),
-                    CustomButton(onTap: (){
-                      context.pushNamed(
-                        RoutePath.chatScreen,
-                      );
-                    },title: "Chat",),
-
+                    const SizedBox(height: 40),
+                    CustomButton(
+                      onTap: () {
+                        context.pushNamed(
+                          RoutePath.customDesignScreen,
+                        );
+                      },
+                      title: "Make A Custom",
+                    ),
+                    const SizedBox(height: 12),
+                    CustomButton(
+                      onTap: () {
+                        context.pushNamed(
+                          RoutePath.chatScreen,
+                        );
+                      },
+                      title: "Chat",
+                    ),
                   ],
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DesignerCard extends StatelessWidget {
+  final String imageUrl;
+  final String name;
+  final String subtitle;
+  final double rating;
+  final String reviews;
+  final VoidCallback onTap;
+
+  const DesignerCard({
+    super.key,
+    required this.imageUrl,
+    required this.name,
+    required this.subtitle,
+    required this.rating,
+    required this.reviews,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        color: AppColors.white,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  imageUrl,
+                  width: 90,
+                  height: 90,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    Text(
+                      '($subtitle)',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Text(
+                          'Rating:',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(Icons.star, color: Colors.orange[400], size: 20),
+                        Text(
+                          rating.toString(),
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 6, horizontal: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.blue),
+                      ),
+                      child: Text(
+                        reviews,
+                        style:
+                            const TextStyle(color: Colors.blue, fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

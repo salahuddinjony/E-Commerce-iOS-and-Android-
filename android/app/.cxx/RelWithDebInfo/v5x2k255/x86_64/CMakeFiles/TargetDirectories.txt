@@ -1,0 +1,2 @@
+C:/Users/bdcalling/StudioProjects/local/android/app/.cxx/RelWithDebInfo/v5x2k255/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/bdcalling/StudioProjects/local/android/app/.cxx/RelWithDebInfo/v5x2k255/x86_64/CMakeFiles/rebuild_cache.dir

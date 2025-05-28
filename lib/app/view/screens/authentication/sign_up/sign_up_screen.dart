@@ -111,14 +111,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         CustomTextField(
           inputTextStyle: const TextStyle(color: AppColors.black),
-
           fieldBorderColor: AppColors.borderColor,
           textEditingController: emailPhoneController,
           prefixIcon: const Icon(Icons.email),
-          hintText: "Enter Your Name",
+          hintText: "Enter Your E-mail or Phone Number",
         ),
 
-        //==========Name=============
+        //==========Password=============
         CustomText(
           top: 8.h,
           text: AppStrings.password,
@@ -129,14 +128,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         CustomTextField(
           inputTextStyle: const TextStyle(color: AppColors.black),
-
           isPassword: true,
           fieldBorderColor: AppColors.borderColor,
           textEditingController: passwordController,
           prefixIcon: const Icon(Icons.lock),
           hintText: "Enter Your Password",
         ),
-        //==========Phone Number=============
+        SizedBox(height: 8.h),
+
+
+        //==========Confirm Password=============
         CustomText(
           top: 8.h,
           text: AppStrings.confirmPassword,
@@ -147,23 +148,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         CustomTextField(
           inputTextStyle: const TextStyle(color: AppColors.black),
-
           isPassword: true,
           fieldBorderColor: AppColors.borderColor,
           textEditingController: confirmPasswordController,
           prefixIcon: const Icon(Icons.lock),
-          hintText: "Enter Your ConfirmPassword",
+          hintText: "Enter Your Confirm Password",
         ),
+        SizedBox(height: 8.h),
+        // Password requirements text again or you can remove if unnecessary here
+        Text(
+          "• Minimum 8-12 characters\n"
+              "• At least one uppercase letter (A-Z)\n"
+              "• Special characters (!, @, #, \$, etc.)\n"
+              "• At least one number (0-9)",
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: AppColors.darkNaturalGray,
+          ),
+        ),
+
         SizedBox(
           height: 20.h,
         ),
         CustomButton(
-          onTap: () {},
+          onTap: () {
+            // Add validation logic here if you want
+          },
           title: AppStrings.continues,
         )
       ],
     );
   }
+
 
   // Business Vendor Sign-Up Form
   Widget _buildBusinessVendorForm() {

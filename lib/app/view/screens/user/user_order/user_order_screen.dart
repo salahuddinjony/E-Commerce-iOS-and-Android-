@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/common_widgets/nav_bar/nav_bar.dart';
+
+import '../../../../core/route_path.dart';
 
 class UserOrderScreen extends StatefulWidget {
   UserOrderScreen({super.key});
@@ -113,12 +116,19 @@ class _UserOrderScreenState extends State<UserOrderScreen> {
       separatorBuilder: (_, __) => SizedBox(height: 16.h),
       itemBuilder: (context, index) {
         final item = _myOrders[index];
-        return _OrderItemCard(
-          imagePath: item['image']!,
-          title: item['title']!,
-          subtitle: item['subtitle']!,
-          description: item['description']!,
-          isActive: item['isActive'] ?? false,
+        return GestureDetector(
+          onTap: (){
+            context.pushNamed(
+              RoutePath.userOrderDetailsScreen,
+            );
+          },
+          child: _OrderItemCard(
+            imagePath: item['image']!,
+            title: item['title']!,
+            subtitle: item['subtitle']!,
+            description: item['description']!,
+            isActive: item['isActive'] ?? false,
+          ),
         );
       },
     );
