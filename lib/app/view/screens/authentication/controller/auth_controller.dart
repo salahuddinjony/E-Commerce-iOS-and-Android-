@@ -3,15 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:local/app/utils/app_strings/app_strings.dart';
 
 import '../../../../core/route_path.dart';
 import '../../../../core/routes.dart';
-import '../../../../data/local/shared_prefs.dart';
 import '../../../../global/helper/toast_message/toast_message.dart';
 import '../../../../services/api_check.dart';
 import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
-import '../../../../utils/app_constants/app_constants.dart';
 
 class AuthController extends GetxController {
   final emailController = TextEditingController(text: "fahad123@gmail.com");
@@ -61,7 +60,42 @@ class AuthController extends GetxController {
         ApiChecker.checkApi(response);
       }
     } catch (e) {
-      toastMessage(message: "Something went wrong. Please try again.");
+      toastMessage(message: AppStrings.someThing);
+      debugPrint("SignIn Error: $e");
+    } finally {
+      isSignInLoading.value = false;
+    }
+  }
+
+
+  //>>>>>>>>>>>>>>>>>>✅✅Forget In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  RxBool isForgetLoading = false.obs;
+
+  Future<void> forgetMethod() async {
+    isForgetLoading.value = true;
+
+    try {
+      final body = {
+        "email": emailController.text.trim(),
+      };
+
+      final response = await ApiClient.postData(
+        ApiUrl.forgetPassword,
+        jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        AppRouter.route.goNamed(RoutePath.otpScreen);
+
+        toastMessage(message: response.body["message"]);
+      } else if (response.statusCode == 400) {
+        toastMessage(message: response.body["error"]);
+      } else {
+        ApiChecker.checkApi(response);
+      }
+    } catch (e) {
+      toastMessage(message: AppStrings.someThing);
       debugPrint("SignIn Error: $e");
     } finally {
       isSignInLoading.value = false;

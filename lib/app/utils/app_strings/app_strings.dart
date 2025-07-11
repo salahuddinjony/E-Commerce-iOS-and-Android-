@@ -16,6 +16,7 @@ class AppStrings {
   static const newAccount = "New Account";
   static const or = "Or";
   static const signUpWithGoogle = "Sign Up with Google";
+  static const someThing = "Something went wrong. Please try again.e";
   static const signUpWithApple = "Sign up with Apple";
   static const createAccount = "Create Account";
   static const registerToGetStarted = "Register to get started";

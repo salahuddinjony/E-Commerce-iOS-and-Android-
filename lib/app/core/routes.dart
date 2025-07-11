@@ -114,7 +114,7 @@ class AppRouter {
           name: RoutePath.forgetPasswordScreen,
           path: RoutePath.forgetPasswordScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ForgetPasswordScreen(),
+            child:  ForgetPasswordScreen(),
             state: state,
           ),
         ),

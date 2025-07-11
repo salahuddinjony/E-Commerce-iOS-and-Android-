@@ -3,6 +3,7 @@ class ApiUrl {
 
   ///================================= User Authentication url==========================
   static const login = "/user/auth/login";
+  static const forgetPassword = "/user/auth/forget-password/send-otp";
 
 
   // static String getCategories({required String name}) {
