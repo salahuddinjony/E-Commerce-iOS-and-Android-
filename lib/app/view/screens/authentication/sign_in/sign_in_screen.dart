@@ -5,12 +5,11 @@ import 'package:local/app/global/helper/validators/validators.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
-import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 import 'package:local/app/view/screens/authentication/sign_in/widget/forget_section.dart';
 import 'package:local/app/view/screens/authentication/sign_in/widget/google_apple_section.dart';
+import '../../../common_widgets/loading_button/loading_button.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -56,23 +55,23 @@ class SignInScreen extends StatelessWidget {
                     height: 12.h,
                   ),
                   //=================Button==============
-                  Obx(() {
-                    return controller.isSignInLoading.value
-                        ? const CustomLoader()
-                        : CustomButton(
-                            onTap: () {
-                              if (_formKey.currentState!.validate()) {
-                                controller.signIn();
-                              }
-                            },
-                            title: AppStrings.continues,
-                          );
-                  }),
+                  LoadingButton(
+                    isLoading: controller.isSignInLoading,
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        controller.signIn();
+                      }
+                    },
+                    title: AppStrings.continues,
+                  ),
+
+
+
                   SizedBox(
                     height: 25.h,
                   ),
-                //==============Google Apple Section===============
-                const GoogleAppleSection()
+                  //==============Google Apple Section===============
+                  const GoogleAppleSection()
                 ],
               ),
             ),
@@ -80,7 +79,3 @@ class SignInScreen extends StatelessWidget {
         ));
   }
 }
-
-
-
-

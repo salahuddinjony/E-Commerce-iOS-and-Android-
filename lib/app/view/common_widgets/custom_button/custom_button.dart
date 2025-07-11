@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
@@ -10,14 +9,15 @@ class CustomButton extends StatelessWidget {
     this.height = 48,
     this.width = double.maxFinite,
     required this.onTap,
-    this.title = 'Welcome',
+    this.title,
+    this.child,
     this.marginVertical = 0,
     this.marginHorizontal = 0,
     this.fillColor = AppColors.brightCyan,
     this.textColor = AppColors.white,
     this.borderColor = Colors.transparent,
     this.isRadius = false,
-  });
+  }) : assert(title != null || child != null, 'Either title or child must be provided');
 
   final double height;
   final double width;
@@ -26,7 +26,8 @@ class CustomButton extends StatelessWidget {
   final Color textColor;
   final bool isRadius;
   final VoidCallback? onTap;
-  final String title;
+  final String? title;
+  final Widget? child;
   final double marginVertical;
   final double marginHorizontal;
 
@@ -47,14 +48,15 @@ class CustomButton extends StatelessWidget {
           border: Border.all(color: borderColor),
           borderRadius: isRadius ? BorderRadius.circular(25.r) : BorderRadius.circular(10.r),
         ),
-        child: CustomText(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: textColor,
-          font: CustomFont.inter,
-          textAlign: TextAlign.center,
-          text: title,
-        ),
+        child: child ??
+            CustomText(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: textColor,
+              font: CustomFont.inter,
+              textAlign: TextAlign.center,
+              text: title!,
+            ),
       ),
     );
   }
