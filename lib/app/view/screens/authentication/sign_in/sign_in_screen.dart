@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
-import 'package:local/app/core/route_path.dart';
+import 'package:local/app/global/helper/validators/validators.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
-import 'package:local/app/utils/custom_assets/assets.gen.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/custom_auth_container/custom_auth_container.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
-import 'package:local/app/view/common_widgets/custom_rich_text/custom_rich_text.dart';
-import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
+import 'package:local/app/view/screens/authentication/sign_in/widget/forget_section.dart';
+import 'package:local/app/view/screens/authentication/sign_in/widget/google_apple_section.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
 
   final AuthController controller = Get.find<AuthController>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,90 +28,59 @@ class SignInScreen extends StatelessWidget {
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 25.w),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 100.h,
-              ),
-              CustomFromCard(
-                  hinText: AppStrings.enterYourEmail,
-                  title: AppStrings.yourEmail,
-                  controller: controller.emailController,
-                  validator: (v) {}),
-              CustomFromCard(
-                  isPassword: true,
-                  hinText: "Enter Your Password",
-                  title: AppStrings.password,
-                  controller: controller.passWordController,
-                  validator: (v) {}),
-              Row(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
                 children: [
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      context.pushNamed(
-                        RoutePath.forgetPasswordScreen,
-                      );
-                    },
-                    child: CustomText(
-                      text: AppStrings.forgotPassword,
-                      font: CustomFont.inter,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.brightCyan,
-                    ),
-                  )
+                  SizedBox(
+                    height: 100.h,
+                  ),
+
+                  //==================Email=============
+                  CustomFromCard(
+                      hinText: AppStrings.enterYourEmail,
+                      title: AppStrings.yourEmail,
+                      controller: controller.emailController,
+                      validator: Validators.emailValidator),
+                  //==============Password===========
+                  CustomFromCard(
+                      isPassword: true,
+                      hinText: "Enter Your Password",
+                      title: AppStrings.password,
+                      controller: controller.passWordController,
+                      validator: Validators.passwordValidator),
+                  //==============Forget============
+                  const ForgetPassword(),
+                  SizedBox(
+                    height: 12.h,
+                  ),
+                  //=================Button==============
+                  Obx(() {
+                    return controller.isSignInLoading.value
+                        ? const CustomLoader()
+                        : CustomButton(
+                            onTap: () {
+                              if (_formKey.currentState!.validate()) {
+                                controller.signIn();
+                              }
+                            },
+                            title: AppStrings.continues,
+                          );
+                  }),
+                  SizedBox(
+                    height: 25.h,
+                  ),
+                //==============Google Apple Section===============
+                const GoogleAppleSection()
                 ],
               ),
-              SizedBox(
-                height: 12.h,
-              ),
-              Obx(() {
-                return controller.isSignInLoading.value
-                    ? const CustomLoader()
-                    : CustomButton(
-                        onTap: () {
-                          controller.signIn();
-
-                        },
-                        title: AppStrings.continues,
-                      );
-              }),
-              SizedBox(
-                height: 25.h,
-              ),
-              CustomAuthContainer(
-                buttonText: AppStrings.signUpWithGoogle, // Text for the button
-                onPressed: () {
-                  // Handle Google authentication logic here
-                  print('Google Sign-Up button pressed');
-                },
-                image: Assets.images.google.image(),
-              ),
-              SizedBox(
-                height: 14.h,
-              ),
-              CustomAuthContainer(
-                buttonText: AppStrings.signUpWithApple, // Text for the button
-                onPressed: () {
-                  // Handle Google authentication logic here
-                  print('Google Sign-Up button pressed');
-                },
-                image: Assets.images.apple.image(),
-              ),
-              SizedBox(
-                height: 14.h,
-              ),
-              CustomRichText(
-                  firstText: AppStrings.dontHaveAnAccount,
-                  secondText: AppStrings.signUp,
-                  onTapAction: () {
-                    context.pushNamed(
-                      RoutePath.signUpScreen,
-                    );
-                  })
-            ],
+            ),
           ),
         ));
   }
 }
+
+
+
+
