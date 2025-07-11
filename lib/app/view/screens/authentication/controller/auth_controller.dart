@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import '../../../../core/route_path.dart';
 import '../../../../core/routes.dart';
@@ -10,6 +11,7 @@ import '../../../../global/helper/toast_message/toast_message.dart';
 import '../../../../services/api_check.dart';
 import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
+import '../../../../utils/app_constants/app_constants.dart';
 
 class AuthController extends GetxController {
   final emailController = TextEditingController(text: "fahad123@gmail.com");
@@ -34,7 +36,18 @@ class AuthController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        AppRouter.route.goNamed(RoutePath.userHomeScreen);
+        Map<String, dynamic> decodedToken =
+            JwtDecoder.decode(response.body["data"]['accessToken']);
+        print("Decoded Token:========================== $decodedToken");
+        String role = decodedToken['role'];
+
+        print('Role:============================ $role');
+        if (role == 'vendor') {
+          AppRouter.route.goNamed(RoutePath.homeScreen);
+        } else if (role == 'client') {
+          AppRouter.route.goNamed(RoutePath.userHomeScreen);
+        }
+
         // Save access token
         // SharePrefsHelper.setString(
         //   AppConstants.bearerToken,
@@ -54,9 +67,4 @@ class AuthController extends GetxController {
       isSignInLoading.value = false;
     }
   }
-
-
-
-
-
 }
