@@ -86,7 +86,7 @@ class AuthController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        AppRouter.route.goNamed(RoutePath.otpScreen);
+        AppRouter.route.pushNamed(RoutePath.otpScreen);
 
         toastMessage(message: response.body["message"]);
       } else if (response.statusCode == 400) {

@@ -46,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ChoiceChip(
-                    label: const Text('Client'),
+                    label: const Text('Client',style: TextStyle(color: AppColors.white),),
                     selected: isClientSelected,
                     onSelected: (bool selected) {
                       setState(() {
