@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
@@ -9,11 +10,15 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_auth_container/custom_auth_container.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
+import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/common_widgets/custom_rich_text/custom_rich_text.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
+import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+  SignInScreen({super.key});
+
+  final AuthController controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +38,17 @@ class SignInScreen extends StatelessWidget {
               CustomFromCard(
                   hinText: AppStrings.enterYourEmail,
                   title: AppStrings.yourEmail,
-                  controller: TextEditingController(),
+                  controller: controller.emailController,
                   validator: (v) {}),
               CustomFromCard(
                   isPassword: true,
                   hinText: "Enter Your Password",
                   title: AppStrings.password,
-                  controller: TextEditingController(),
+                  controller: controller.passWordController,
                   validator: (v) {}),
               Row(
                 children: [
-                  Spacer(),
+                  const Spacer(),
                   GestureDetector(
                     onTap: () {
                       context.pushNamed(
@@ -63,14 +68,17 @@ class SignInScreen extends StatelessWidget {
               SizedBox(
                 height: 12.h,
               ),
-              CustomButton(
-                onTap: () {
-                  context.goNamed(
-                    RoutePath.userHomeScreen,
-                  );
-                },
-                title: AppStrings.continues,
-              ),
+              Obx(() {
+                return controller.isSignInLoading.value
+                    ? const CustomLoader()
+                    : CustomButton(
+                        onTap: () {
+                          controller.signIn();
+
+                        },
+                        title: AppStrings.continues,
+                      );
+              }),
               SizedBox(
                 height: 25.h,
               ),
@@ -100,8 +108,9 @@ class SignInScreen extends StatelessWidget {
                   firstText: AppStrings.dontHaveAnAccount,
                   secondText: AppStrings.signUp,
                   onTapAction: () {
-                    context.pushNamed(RoutePath.signUpScreen,);
-
+                    context.pushNamed(
+                      RoutePath.signUpScreen,
+                    );
                   })
             ],
           ),
