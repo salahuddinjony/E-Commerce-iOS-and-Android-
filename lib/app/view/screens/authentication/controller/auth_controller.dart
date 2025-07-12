@@ -15,6 +15,7 @@ import '../../../../services/app_url.dart';
 class AuthController extends GetxController {
   final emailController = TextEditingController(text: "fahad123@gmail.com");
   final passWordController = TextEditingController(text: "12345678");
+  final confirmPasswordController = TextEditingController();
 
   //>>>>>>>>>>>>>>>>>>✅✅SIgn In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -126,11 +127,41 @@ class AuthController extends GetxController {
     if (response.statusCode == 200) {
       AppRouter.route.goNamed(RoutePath.resetPasswordScreen);
       toastMessage(message: response.body["message"]);
+    } else if (response.statusCode == 400) {
+      toastMessage(message: response.body["error"]);
     } else {
       ApiChecker.checkApi(response);
       debugPrint("Error: ${response.body["message"]}");
     }
     isForgetOtp.value = false;
+    refresh();
+  }
+
+  //>>>>>>>>>>>>>>>>>>✅✅Reset Password✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  RxBool isResetLoading = false.obs;
+
+  Future<void> resetPassword() async {
+    isResetLoading.value = true;
+    refresh();
+    Map<String, String> body = {
+      "email": emailController.text.trim(),
+      "newPassword": passWordController.text.trim()
+    };
+    var response = await ApiClient.postData(
+      ApiUrl.resetPassword,
+      jsonEncode(body),
+    );
+    if (response.statusCode == 200) {
+      AppRouter.route.goNamed(
+        RoutePath.signInScreen,
+      );
+      toastMessage(
+        message: response.body["message"],
+      );
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    isResetLoading.value = false;
     refresh();
   }
 }

@@ -134,7 +134,7 @@ class AppRouter {
           name: RoutePath.resetPasswordScreen,
           path: RoutePath.resetPasswordScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ResetPasswordScreen(),
+            child:  ResetPasswordScreen(),
             state: state,
           ),
         ),
