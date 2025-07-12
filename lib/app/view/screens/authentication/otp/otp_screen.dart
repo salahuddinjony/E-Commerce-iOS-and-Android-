@@ -5,21 +5,20 @@ import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
+import 'package:local/app/view/screens/authentication/otp/widgets/otp_header.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../common_widgets/custom_rich_text/custom_rich_text.dart';
 import '../../../common_widgets/loading_button/loading_button.dart';
 
 class OtpScreen extends StatelessWidget {
-   OtpScreen({super.key});
+  OtpScreen({super.key});
 
   final AuthController controller = Get.find<AuthController>();
-   final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-   @override
+  @override
   Widget build(BuildContext context) {
     final extra = GoRouter.of(context).state.extra as Map<String, dynamic>?;
     final bool isForgetValue = extra?['isForget'] ?? false;
@@ -36,26 +35,7 @@ class OtpScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(
-                top: 26.h,
-                text: "Check Your email",
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.darkNaturalGray,
-                font: CustomFont.poppins,
-              ),
-              CustomText(
-                maxLines: 3,
-                text:
-                    "We sent a reset link to contact@dscode...com enter 5 digit code that mentioned in the email",
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.naturalGray,
-                font: CustomFont.inter,
-              ),
-              SizedBox(
-                height: 38.h,
-              ),
+              OtpHeader(email: email),
 
               ///: <<<<<<====== OTP Pin Code Field ======>>>>>>>>
               PinCodeTextField(
@@ -113,6 +93,7 @@ class OtpScreen extends StatelessWidget {
               SizedBox(
                 height: 36.h,
               ),
+
               CustomRichText(
                   firstText: AppStrings.haveEntGotTheEmail,
                   secondText: AppStrings.resendEmail,
@@ -124,3 +105,5 @@ class OtpScreen extends StatelessWidget {
     );
   }
 }
+
+

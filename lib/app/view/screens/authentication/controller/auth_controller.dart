@@ -86,7 +86,13 @@ class AuthController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        AppRouter.route.pushNamed(RoutePath.otpScreen);
+        AppRouter.route.pushNamed(
+          RoutePath.otpScreen,
+          extra: {
+            "isForget": false,
+            "email": emailController.text,
+          },
+        );
 
         toastMessage(message: response.body["message"]);
       } else if (response.statusCode == 400) {
