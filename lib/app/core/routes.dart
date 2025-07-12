@@ -124,7 +124,7 @@ class AppRouter {
           name: RoutePath.otpScreen,
           path: RoutePath.otpScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const OtpScreen(),
+            child:  OtpScreen(),
             state: state,
           ),
         ),

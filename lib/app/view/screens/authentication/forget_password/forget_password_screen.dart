@@ -64,7 +64,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                       controller.forgetMethod();
                     }
                   },
-                  title: AppStrings.verifyCode,
+                  title: "Send Code",
                 ),
 
               ],

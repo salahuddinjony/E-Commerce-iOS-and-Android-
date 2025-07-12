@@ -67,7 +67,6 @@ class AuthController extends GetxController {
     }
   }
 
-
   //>>>>>>>>>>>>>>>>>>✅✅Forget In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   RxBool isForgetLoading = false.obs;
@@ -100,5 +99,38 @@ class AuthController extends GetxController {
     } finally {
       isSignInLoading.value = false;
     }
+  }
+
+  //>>>>>>>>>>>>>>>>>>✅✅Forget Otp ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  String resetCode = "";
+  RxBool isForgetOtp = false.obs;
+  final pinCodeController = TextEditingController();
+
+  Future<void> forgetOtp() async {
+    if (resetCode.isEmpty) {
+      toastMessage(message: "Please enter the activation code.");
+      return;
+    }
+
+    isForgetOtp.value = true;
+    refresh();
+
+    Map<String, String> body = {
+      "email": emailController.text.trim(),
+      "otp": resetCode
+    };
+    var response = await ApiClient.postData(ApiUrl.forgetOtp, jsonEncode(body));
+    isForgetOtp.value = false;
+    refresh();
+
+    if (response.statusCode == 200) {
+      AppRouter.route.goNamed(RoutePath.resetPasswordScreen);
+      toastMessage(message: response.body["message"]);
+    } else {
+      ApiChecker.checkApi(response);
+      debugPrint("Error: ${response.body["message"]}");
+    }
+    isForgetOtp.value = false;
+    refresh();
   }
 }
