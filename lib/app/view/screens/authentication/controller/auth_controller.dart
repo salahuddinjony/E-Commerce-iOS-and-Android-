@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
-
 import '../../../../core/route_path.dart';
 import '../../../../core/routes.dart';
 import '../../../../global/helper/toast_message/toast_message.dart';
@@ -170,4 +169,7 @@ class AuthController extends GetxController {
     isResetLoading.value = false;
     refresh();
   }
+
+
+
 }

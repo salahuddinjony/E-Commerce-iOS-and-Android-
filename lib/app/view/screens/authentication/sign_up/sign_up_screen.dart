@@ -17,7 +17,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  bool isClientSelected = true; // Default to 'Client'
+  bool isClientSelected = true;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailPhoneController = TextEditingController();
@@ -46,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ChoiceChip(
-                    label: const Text('Client',style: TextStyle(color: AppColors.white),),
+                    label: const Text('Client',style: TextStyle(),),
                     selected: isClientSelected,
                     onSelected: (bool selected) {
                       setState(() {
