@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:local/app/utils/app_strings/app_strings.dart';
+import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 
 import '../../../../../core/route_path.dart';
 import '../../../../common_widgets/custom_log_out_button/custom_log_out_button.dart';
@@ -12,32 +14,11 @@ class UserProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          "Profile",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Colors.black,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/sunset_background.png"),
-              // Your background image path
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
+      appBar: const CustomAppBar(
+        appBarContent: AppStrings.profile,
+        iconData: Icons.arrow_back,
       ),
+
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
         child: Column(
@@ -78,12 +59,9 @@ class UserProfileScreen extends StatelessWidget {
                     icon: Icons.person,
                     label: "Personal Information",
                     onTap: () {
-
                       context.pushNamed(RoutePath.personalInfoScreen);
-
                     },
                   ),
-
                   _buildListItem(
                     icon: Icons.payment,
                     label: "Payment Methods",
@@ -96,7 +74,6 @@ class UserProfileScreen extends StatelessWidget {
                     label: "Order History",
                     onTap: () {
                       context.pushNamed(RoutePath.orderHistoryScreen);
-
                     },
                   ),
                   _buildListItem(
@@ -104,7 +81,6 @@ class UserProfileScreen extends StatelessWidget {
                     label: "Support",
                     onTap: () {
                       context.pushNamed(RoutePath.helpCenterScreen);
-
                     },
                   ),
                   _buildListItem(
@@ -112,7 +88,6 @@ class UserProfileScreen extends StatelessWidget {
                     label: "FAQ",
                     onTap: () {
                       context.pushNamed(RoutePath.faqScreen);
-
                     },
                   ),
                   _buildListItem(

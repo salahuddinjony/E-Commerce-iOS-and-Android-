@@ -12,6 +12,7 @@ import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
 import '../../../../utils/enums/status.dart';
 import '../model/about_us.dart';
+import '../model/faq_model.dart';
 import '../model/terms.dart';
 
 class InfoController extends GetxController {
@@ -134,5 +135,36 @@ class InfoController extends GetxController {
     refresh();
   }
 
+//>>>>>>>>>>>>>>>>>>✅✅Get Faq ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  RxList<FaqList> faqList = <FaqList>[].obs;
+
+  Future<void> getFaq() async {
+    setRxRequestStatus(Status.loading);
+    refresh();
+    var response = await ApiClient.getData(ApiUrl.faq);
+
+    if (response.statusCode == 200) {
+      faqList.value = List<FaqList>.from(
+          response.body["data"].map((x) => FaqList.fromJson(x)));
+
+      setRxRequestStatus(Status.completed);
+      refresh();
+    } else {
+      if (response.statusText == ApiClient.noInternetMessage) {
+        setRxRequestStatus(Status.internetError);
+      } else {
+        setRxRequestStatus(Status.error);
+      }
+      ApiChecker.checkApi(response);
+    }
+  }
+
+
+  @override
+  void onInit() {
+    getFaq();
+    super.onInit();
+  }
 
 }
