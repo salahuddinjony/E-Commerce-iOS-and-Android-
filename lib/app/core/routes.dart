@@ -232,7 +232,7 @@ class AppRouter {
           name: RoutePath.privacyPolicyScreen,
           path: RoutePath.privacyPolicyScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const PrivacyPolicyScreen(),
+              child:  PrivacyPolicyScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
         ),

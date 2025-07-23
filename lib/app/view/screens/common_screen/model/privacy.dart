@@ -4,7 +4,7 @@ class PrivacyModel {
   int? statusCode;
   String? status;
   String? message;
-  Data? data;
+  PrivacyData? data;
 
   PrivacyModel({
     this.statusCode,
@@ -21,7 +21,7 @@ class PrivacyModel {
     statusCode: json["statusCode"],
     status: json["status"],
     message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    data: json["data"] == null ? null : PrivacyData.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,14 +32,14 @@ class PrivacyModel {
   };
 }
 
-class Data {
+class PrivacyData {
   String? id;
   String? privacyPolicy;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
 
-  Data({
+  PrivacyData({
     this.id,
     this.privacyPolicy,
     this.createdAt,
@@ -47,11 +47,11 @@ class Data {
     this.v,
   });
 
-  factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
+  factory PrivacyData.fromRawJson(String str) => PrivacyData.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory PrivacyData.fromJson(Map<String, dynamic> json) => PrivacyData(
     id: json["_id"],
     privacyPolicy: json["privacyPolicy"],
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),

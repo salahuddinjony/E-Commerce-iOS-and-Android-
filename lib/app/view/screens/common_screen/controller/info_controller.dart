@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:local/app/view/screens/common_screen/model/privacy.dart';
 
 import '../../../../services/api_check.dart';
 import '../../../../services/api_client.dart';
@@ -42,9 +43,34 @@ class InfoController extends GetxController {
     }
   }
 
+  //>>>>>>>>>>>>>>>>>>✅✅Get Privacy ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  Rx<PrivacyData> privacyData = PrivacyData().obs;
+
+  Future<void> getPrivacy() async {
+    setRxRequestStatus(Status.loading);
+    refresh();
+    var response = await ApiClient.getData(ApiUrl.privacyPolicy);
+    setRxRequestStatus(Status.completed);
+
+    if (response.statusCode == 200) {
+      privacyData.value = PrivacyData.fromJson(response.body['data']);
+      debugPrint(
+          'PrivacyData========================"${privacyData.value.privacyPolicy}"');
+    } else {
+      if (response.statusText == ApiClient.noInternetMessage) {
+        setRxRequestStatus(Status.internetError);
+      } else {
+        setRxRequestStatus(Status.error);
+      }
+      ApiChecker.checkApi(response);
+    }
+  }
+
   @override
   void onInit() {
     getTerms();
+    getPrivacy();
     super.onInit();
   }
 }

@@ -26,7 +26,8 @@ class TermsConditionScreen extends StatelessWidget {
         appBarContent: AppStrings.termsOfService,
         iconData: Icons.arrow_back,
       ),
-      body: Obx(() {
+      body:
+      Obx(() {
         switch (controller.rxRequestStatus.value) {
           case Status.loading:
             return const CustomLoader();
