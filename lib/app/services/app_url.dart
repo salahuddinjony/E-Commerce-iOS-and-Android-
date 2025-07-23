@@ -1,5 +1,5 @@
 class ApiUrl {
-  static const baseUrl = "http://10.0.60.55:5007/v1";
+  static const baseUrl = "http://10.10.10.74:5007/v1";
 
   ///================================= User Authentication url==========================
   static const login = "/user/auth/login";
