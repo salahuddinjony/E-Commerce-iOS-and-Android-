@@ -2,16 +2,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local/app/view/screens/user/user_home/user_profile/faq_screen/controller/faq_controller.dart';
+import 'package:local/app/view/screens/common_screen/controller/info_controller.dart';
 
-import '../../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../../utils/app_strings/app_strings.dart';
-import '../../../../../common_widgets/custom_appbar/custom_appbar.dart';
-import '../../../../../common_widgets/custom_text/custom_text.dart';
+import '../../../../utils/app_colors/app_colors.dart';
+import '../../../../utils/app_strings/app_strings.dart';
+import '../../../common_widgets/custom_appbar/custom_appbar.dart';
+import '../../../common_widgets/custom_text/custom_text.dart';
+
 
 class FaqScreen extends StatelessWidget {
   FaqScreen({super.key});
-  final FaqController infoController = Get.find<FaqController>();
+  final InfoController infoController = Get.find<InfoController>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class FaqScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
 
       ///============================ Header ===============================
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         appBarBgColor: AppColors.white,
         appBarContent: AppStrings.faq,
         iconData: Icons.arrow_back,

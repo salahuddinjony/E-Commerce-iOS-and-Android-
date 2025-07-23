@@ -25,6 +25,10 @@ class ApiUrl {
   static const termsAndCondition = "/terms-condition/retrive";
   static const aboutUs = "/about-us/retrive";
   static const faq = "/faq/retrieve";
+  static String notification({required String userId}) {
+    return "/notification/retrive/consumer/$userId";
+  }
+
 
 
 

@@ -9,8 +9,6 @@ import 'package:local/app/view/screens/authentication/reset_password/reset_passw
 import 'package:local/app/view/screens/authentication/sign_in/sign_in_screen.dart';
 import 'package:local/app/view/screens/authentication/sign_up/next.dart';
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
-import 'package:local/app/view/screens/notification/notification_screen.dart';
-import 'package:local/app/view/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/user/chat/chat_screen.dart';
 import 'package:local/app/view/screens/user/chat/inbox/inbox_screen.dart';
@@ -33,6 +31,9 @@ import 'package:local/app/view/screens/vendor/profile/transaction/transaction_sc
 import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
 import '../view/screens/common_screen/about_us/about_us_screen.dart';
 import '../view/screens/common_screen/change_password/change_password_screen.dart';
+import '../view/screens/common_screen/faq_screen/faq_screen.dart';
+import '../view/screens/common_screen/notification/notification_screen.dart';
+import '../view/screens/common_screen/onboarding_screen/onboarding_screen.dart';
 import '../view/screens/common_screen/privacy/privacy_policy_screen.dart';
 import '../view/screens/common_screen/terms_conditions/terms_condition_screen.dart';
 import '../view/screens/user/support/account_security/account_security_screen.dart';
@@ -42,7 +43,6 @@ import '../view/screens/user/user_home/custom_design/custom_order/custom_order_s
 import '../view/screens/user/user_home/shop_details/add_address/add_address_screen.dart';
 import '../view/screens/user/user_home/shop_details/product_details/product_details_screen.dart';
 import '../view/screens/user/user_home/shop_details/shop_details_screen.dart';
-import '../view/screens/user/user_home/user_profile/faq_screen/faq_screen.dart';
 import '../view/screens/user/user_home/user_profile/payment_methods/payment_methods_screen.dart';
 import '../view/screens/user/user_order/user_order_details/user_order_details_screen.dart';
 import '../view/screens/vendor/home/view_order/view_order_details/view_order_details.dart';
