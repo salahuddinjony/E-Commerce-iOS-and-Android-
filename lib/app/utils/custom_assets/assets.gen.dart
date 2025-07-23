@@ -131,6 +131,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/message.png
   AssetGenImage get message => const AssetGenImage('assets/images/message.png');
 
+  /// File path: assets/images/noInternet.png
+  AssetGenImage get noInternet =>
+      const AssetGenImage('assets/images/noInternet.png');
+
   /// File path: assets/images/notification.png
   AssetGenImage get notification =>
       const AssetGenImage('assets/images/notification.png');
@@ -192,6 +196,7 @@ class $AssetsImagesGen {
         homeSelected,
         logo,
         message,
+        noInternet,
         notification,
         onboard1,
         onboard2,

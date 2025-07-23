@@ -262,7 +262,7 @@ class AppRouter {
           name: RoutePath.termsConditionScreen,
           path: RoutePath.termsConditionScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const TermsConditionScreen(),
+              child:  TermsConditionScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
         ),

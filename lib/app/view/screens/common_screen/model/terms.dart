@@ -4,7 +4,7 @@ class TermsModel {
   int? statusCode;
   String? status;
   String? message;
-  Data? data;
+  TermsData? data;
 
   TermsModel({
     this.statusCode,
@@ -21,7 +21,7 @@ class TermsModel {
     statusCode: json["statusCode"],
     status: json["status"],
     message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    data: json["data"] == null ? null : TermsData.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,14 +32,14 @@ class TermsModel {
   };
 }
 
-class Data {
+class TermsData {
   String? id;
   String? termsCondition;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
 
-  Data({
+  TermsData({
     this.id,
     this.termsCondition,
     this.createdAt,
@@ -47,11 +47,11 @@ class Data {
     this.v,
   });
 
-  factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
+  factory TermsData.fromRawJson(String str) => TermsData.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory TermsData.fromJson(Map<String, dynamic> json) => TermsData(
     id: json["_id"],
     termsCondition: json["termsCondition"],
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
