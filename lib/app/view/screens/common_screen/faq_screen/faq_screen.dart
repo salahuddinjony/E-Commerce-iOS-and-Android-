@@ -48,7 +48,8 @@ class FaqScreen extends StatelessWidget {
               },
             );
           case Status.completed:
-            return ListView.builder(
+            return
+              ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               itemCount: infoController.faqList.length,
               itemBuilder: (context, index) {
@@ -114,7 +115,8 @@ class FaqScreen extends StatelessWidget {
               },
             );
         }
-      }));
+      })
+    );
 
   }
 }

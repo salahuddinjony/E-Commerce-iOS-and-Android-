@@ -21,7 +21,8 @@ class MessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child:
+      Container(
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -37,7 +38,8 @@ class MessageCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
+        child:
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomNetworkImage(

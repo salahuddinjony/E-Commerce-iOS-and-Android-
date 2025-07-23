@@ -282,7 +282,7 @@ class AppRouter {
           name: RoutePath.notificationScreen,
           path: RoutePath.notificationScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const NotificationScreen(),
+            child:  NotificationScreen(),
             state: state,
           ),
         ),
@@ -292,7 +292,7 @@ class AppRouter {
           name: RoutePath.userHomeScreen,
           path: RoutePath.userHomeScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: UserHomeScreen(), state: state, disableAnimation: true),
+              child: const UserHomeScreen(), state: state, disableAnimation: true),
         ),
 
         ///======================= ChatScreen Section =======================

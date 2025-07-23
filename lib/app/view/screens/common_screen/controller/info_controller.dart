@@ -13,6 +13,7 @@ import '../../../../services/app_url.dart';
 import '../../../../utils/enums/status.dart';
 import '../model/about_us.dart';
 import '../model/faq_model.dart';
+import '../model/notification.dart';
 import '../model/terms.dart';
 
 class InfoController extends GetxController {
@@ -161,9 +162,36 @@ class InfoController extends GetxController {
   }
 
 
+  //>>>>>>>>>>>>>>>>>>✅✅NotificationList ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  RxList<NotificationList> notificationList = <NotificationList>[].obs;
+
+  Future<void> getNotification() async {
+    setRxRequestStatus(Status.loading);
+    refresh();
+    var response = await ApiClient.getData(ApiUrl.notification(userId: "684d19381e5cb9958084f4fd"));
+
+    if (response.statusCode == 200) {
+      notificationList.value = List<NotificationList>.from(
+          response.body["data"].map((x) => NotificationList.fromJson(x)));
+
+      setRxRequestStatus(Status.completed);
+      refresh();
+    } else {
+      if (response.statusText == ApiClient.noInternetMessage) {
+        setRxRequestStatus(Status.internetError);
+      } else {
+        setRxRequestStatus(Status.error);
+      }
+      ApiChecker.checkApi(response);
+    }
+  }
+
+
   @override
   void onInit() {
     getFaq();
+    getNotification();
     super.onInit();
   }
 
