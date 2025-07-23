@@ -43,6 +43,7 @@ class AuthController extends GetxController {
         print('Role:============================ $role');
         if (role == 'vendor') {
           AppRouter.route.goNamed(RoutePath.homeScreen);
+          // AppRouter.route.goNamed(RoutePath.userHomeScreen);
         } else if (role == 'client') {
           AppRouter.route.goNamed(RoutePath.userHomeScreen);
         }
