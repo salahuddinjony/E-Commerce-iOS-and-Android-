@@ -6,6 +6,7 @@ import '../../../../services/api_check.dart';
 import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
 import '../../../../utils/enums/status.dart';
+import '../model/about_us.dart';
 import '../model/terms.dart';
 
 class InfoController extends GetxController {
@@ -19,9 +20,11 @@ class InfoController extends GetxController {
     selectedIndex.value = selectedIndex.value == index ? null : index;
   }
 
-//>>>>>>>>>>>>>>>>>>✅✅Get Terms ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
   Rx<TermsData> termsData = TermsData().obs;
+  Rx<PrivacyData> privacyData = PrivacyData().obs;
+  Rx<AboutUsData> aboutUsData = AboutUsData().obs;
+
+//>>>>>>>>>>>>>>>>>>✅✅Get Terms ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   Future<void> getTerms() async {
     setRxRequestStatus(Status.loading);
@@ -45,8 +48,6 @@ class InfoController extends GetxController {
 
   //>>>>>>>>>>>>>>>>>>✅✅Get Privacy ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  Rx<PrivacyData> privacyData = PrivacyData().obs;
-
   Future<void> getPrivacy() async {
     setRxRequestStatus(Status.loading);
     refresh();
@@ -67,10 +68,34 @@ class InfoController extends GetxController {
     }
   }
 
-  @override
-  void onInit() {
-    getTerms();
-    getPrivacy();
-    super.onInit();
+
+  //>>>>>>>>>>>>>>>>>>✅✅About Us ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  Future<void> getAbout() async {
+    setRxRequestStatus(Status.loading);
+    refresh();
+    var response = await ApiClient.getData(ApiUrl.aboutUs);
+    setRxRequestStatus(Status.completed);
+
+    if (response.statusCode == 200) {
+      aboutUsData.value = AboutUsData.fromJson(response.body['data']);
+      debugPrint(
+          'AboutUsData========================"${aboutUsData.value.description}"');
+    } else {
+      if (response.statusText == ApiClient.noInternetMessage) {
+        setRxRequestStatus(Status.internetError);
+      } else {
+        setRxRequestStatus(Status.error);
+      }
+      ApiChecker.checkApi(response);
+    }
   }
+
+  // @override
+  // void onInit() {
+  //   getTerms();
+  //   getPrivacy();
+  //   getAbout();
+  //   super.onInit();
+  // }
 }

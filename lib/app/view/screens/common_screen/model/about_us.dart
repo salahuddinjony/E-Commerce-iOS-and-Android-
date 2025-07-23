@@ -4,7 +4,7 @@ class AboutUsModel {
   int? statusCode;
   String? status;
   String? message;
-  Data? data;
+  AboutUsData? data;
 
   AboutUsModel({
     this.statusCode,
@@ -21,7 +21,7 @@ class AboutUsModel {
     statusCode: json["statusCode"],
     status: json["status"],
     message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    data: json["data"] == null ? null : AboutUsData.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,14 +32,14 @@ class AboutUsModel {
   };
 }
 
-class Data {
+class AboutUsData {
   String? id;
   String? description;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
 
-  Data({
+  AboutUsData({
     this.id,
     this.description,
     this.createdAt,
@@ -47,11 +47,11 @@ class Data {
     this.v,
   });
 
-  factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
+  factory AboutUsData.fromRawJson(String str) => AboutUsData.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory AboutUsData.fromJson(Map<String, dynamic> json) => AboutUsData(
     id: json["_id"],
     description: json["description"],
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),

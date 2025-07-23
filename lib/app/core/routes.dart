@@ -222,7 +222,7 @@ class AppRouter {
           name: RoutePath.aboutUsScreen,
           path: RoutePath.aboutUsScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const AboutUsScreen(),
+              child:  AboutUsScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
         ),
