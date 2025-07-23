@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
+import 'package:local/app/view/screens/common_screen/controller/info_controller.dart';
+
+import '../../../common_widgets/loading_button/loading_button.dart';
 
 
 
@@ -19,9 +23,7 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _currentPasswordController = TextEditingController();
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _repeatPasswordController = TextEditingController();
+final InfoController controller = Get.find<InfoController>();
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) return 'Password cannot be empty';
@@ -34,27 +36,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   String? _validateRepeatPassword(String? value) {
     if (value == null || value.isEmpty) return 'Repeat Password cannot be empty';
-    if (value != _newPasswordController.text) return 'Passwords do not match';
+    if (value != controller.newPasswordController.text) return 'Passwords do not match';
     return null;
   }
 
-  void _onSave() {
-    if (_formKey.currentState!.validate()) {
-      context.pop();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password updated successfully!')),
-      );
-    }
-  }
 
-  @override
-  void dispose() {
-    _currentPasswordController.dispose();
-    _newPasswordController.dispose();
-    _repeatPasswordController.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +64,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   hinText: "Current Password",
                   isPassword: true,
                   title: AppStrings.currentPassword,
-                  controller: _currentPasswordController,
+                  controller: controller.currentPasswordController,
                   validator: (v) {
                     if (v == null || v.isEmpty) {
                       return 'Please enter current password';
@@ -89,7 +77,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   hinText: "New Password",
                   isPassword: true,
                   title: AppStrings.newPassword,
-                  controller: _newPasswordController,
+                  controller: controller.newPasswordController,
                   validator: _validatePassword,
                 ),
 
@@ -97,12 +85,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   hinText: "Repeat Password",
                   isPassword: true,
                   title: AppStrings.repeatPassword,
-                  controller: _repeatPasswordController,
+                  controller: controller.repeatPasswordController,
                   validator: _validateRepeatPassword,
                 ),
                 SizedBox(height: 24.h),
 
-                CustomButton(onTap: _onSave, title: AppStrings.save),
+
+                //=================Button==============
+                LoadingButton(
+                  isLoading: controller.isChange,
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      controller.changePassword(context);
+                    }
+                  },
+                  title: AppStrings.save,
+                ),
+
 
                 SizedBox(height: 24.h),
 

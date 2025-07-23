@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 import 'package:local/app/view/screens/common_screen/model/privacy.dart';
 
+import '../../../../global/helper/toast_message/toast_message.dart';
 import '../../../../services/api_check.dart';
 import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
@@ -19,6 +24,10 @@ class InfoController extends GetxController {
   void toggleItem(int index) {
     selectedIndex.value = selectedIndex.value == index ? null : index;
   }
+  final TextEditingController currentPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController repeatPasswordController = TextEditingController();
+  final AuthController authController = Get.find<AuthController>();
 
   Rx<TermsData> termsData = TermsData().obs;
   Rx<PrivacyData> privacyData = PrivacyData().obs;
@@ -91,11 +100,39 @@ class InfoController extends GetxController {
     }
   }
 
-  // @override
-  // void onInit() {
-  //   getTerms();
-  //   getPrivacy();
-  //   getAbout();
-  //   super.onInit();
-  // }
+//>>>>>>>>>>>>>>>>>>✅✅Change password ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  RxBool isChange = false.obs;
+
+ Future<void> changePassword(BuildContext context) async {
+    isChange.value = true;
+    refresh();
+    Map<String, String> body = {
+      "email": authController.emailController.text.trim(),
+      "oldPassword": currentPasswordController.text.trim(),
+      "newPassword": newPasswordController.text.trim()
+    };
+    var response = await ApiClient.postData(
+      ApiUrl.changePassword,
+      jsonEncode(body),
+    );
+    if (response.statusCode == 200) {
+      currentPasswordController.clear();
+      newPasswordController.clear();
+      repeatPasswordController.clear();
+      context.pop();
+      toastMessage(
+        message: response.body["message"],
+      );
+    } else if (response.statusCode == 400) {
+      toastMessage(
+        message: response.body["error"],
+      );
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    isChange.value = false;
+    refresh();
+  }
+
+
 }

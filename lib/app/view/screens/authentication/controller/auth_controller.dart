@@ -13,7 +13,7 @@ import '../../../../services/app_url.dart';
 
 class AuthController extends GetxController {
   final emailController = TextEditingController(text: "fahad123@gmail.com");
-  final passWordController = TextEditingController(text: "12345678");
+  final passWordController = TextEditingController(text: "Masum017@");
   final confirmPasswordController = TextEditingController();
 
   //>>>>>>>>>>>>>>>>>>✅✅SIgn In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -42,8 +42,8 @@ class AuthController extends GetxController {
 
         print('Role:============================ $role');
         if (role == 'vendor') {
-          AppRouter.route.goNamed(RoutePath.homeScreen);
-          // AppRouter.route.goNamed(RoutePath.userHomeScreen);
+          // AppRouter.route.goNamed(RoutePath.homeScreen);
+          AppRouter.route.goNamed(RoutePath.userHomeScreen);
         } else if (role == 'client') {
           AppRouter.route.goNamed(RoutePath.userHomeScreen);
         }
