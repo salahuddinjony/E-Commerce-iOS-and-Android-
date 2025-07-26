@@ -28,7 +28,7 @@ class ClientSignUpForm extends StatelessWidget {
               icon: Icons.person,
               validator: Validators.nameValidator),
           LabeledTextField(
-              label: AppStrings.name,
+              label: AppStrings.email,
               hintText: 'Enter Your Email',
               controller: controller.clientEmailController,
               icon: Icons.email,

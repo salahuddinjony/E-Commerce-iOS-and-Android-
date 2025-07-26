@@ -220,7 +220,7 @@ class AuthController extends GetxController {
     var responseData = jsonDecode(response.body);
 
     if (response.statusCode == 201) {
-
+      // AppRouter.route.goNamed(RoutePath.userHomeScreen);
       toastMessage(message: responseData["message"]);
 
     } else if (response.statusCode == 400) {
