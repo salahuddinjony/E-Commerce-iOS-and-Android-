@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
@@ -19,8 +20,8 @@ class ViewOrderScreen extends StatelessWidget {
         iconData: Icons.arrow_back,
       ),
       body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        itemCount: 15,
+        padding:  EdgeInsets.symmetric(horizontal: 20.h, vertical: 10.w),
+        itemCount: 5,
         itemBuilder: (context, index) {
           return OrderCard(
             parcelId: '#626365',
