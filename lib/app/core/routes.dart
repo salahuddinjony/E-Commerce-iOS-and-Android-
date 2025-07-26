@@ -94,7 +94,7 @@ class AppRouter {
           name: RoutePath.signUpScreen,
           path: RoutePath.signUpScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const SignUpScreen(),
+            child:  SignUpScreen(),
             state: state,
           ),
         ),

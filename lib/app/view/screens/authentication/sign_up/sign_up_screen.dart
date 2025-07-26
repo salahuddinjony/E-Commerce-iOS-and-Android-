@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:local/app/core/route_path.dart';
+import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
+import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
+import 'package:local/app/view/screens/authentication/sign_up/widgets/business_vendor_from.dart';
+import 'package:local/app/view/screens/authentication/sign_up/widgets/client_sign_up_from.dart';
+import 'package:local/app/view/screens/authentication/sign_up/widgets/sign_up_tab.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({super.key});
 
-  @override
-  _SignUpScreenState createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  bool isClientSelected = true;
-
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailPhoneController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-
-  bool isPasswordVisible = false;
+  final AuthController controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,256 +25,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Toggle buttons for Client and Business Vendor
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          child: Obx(() => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ChoiceChip(
-                    label: const Text('Client',style: TextStyle(),),
-                    selected: isClientSelected,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        isClientSelected = true;
-                      });
-                    },
-                    selectedColor: Colors.teal,
-                  ),
-                  SizedBox(width: 16.w),
-                  ChoiceChip(
-                    label: const Text('Business Vendor'),
-                    selected: !isClientSelected,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        isClientSelected = false;
-                      });
-                    },
-                    selectedColor: Colors.teal,
-                  ),
+                  //=============+Sign up Tab============
+                  SIgnUpTab(controller: controller),
+                  SizedBox(height: 20.h),
+                  controller.isClientSelected.value
+                      ? ClientSignUpForm(controller: controller)
+                      : BusinessVendorForm(controller: controller),
                 ],
-              ),
-              SizedBox(height: 20.h),
-
-              // Display corresponding form based on selection
-              isClientSelected ? _buildClientForm() : _buildBusinessVendorForm(),
-            ],
-          ),
+              )),
         ),
       ),
-    );
-  }
-
-  // Client Sign-Up Form
-  Widget _buildClientForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //==========Name=============
-        CustomText(
-          text: AppStrings.name,
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: nameController,
-          prefixIcon: const Icon(Icons.person),
-          hintText: "Enter Your Name",
-        ),
-
-        //==========Email=============
-        CustomText(
-          top: 8.h,
-          text: 'E-mail/phone number',
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: emailPhoneController,
-          prefixIcon: const Icon(Icons.email),
-          hintText: "Enter Your E-mail or Phone Number",
-        ),
-
-        //==========Password=============
-        CustomText(
-          top: 8.h,
-          text: AppStrings.password,
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-          isPassword: true,
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: passwordController,
-          prefixIcon: const Icon(Icons.lock),
-          hintText: "Enter Your Password",
-        ),
-        SizedBox(height: 8.h),
-
-
-        //==========Confirm Password=============
-        CustomText(
-          top: 8.h,
-          text: AppStrings.confirmPassword,
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-          isPassword: true,
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: confirmPasswordController,
-          prefixIcon: const Icon(Icons.lock),
-          hintText: "Enter Your Confirm Password",
-        ),
-        SizedBox(height: 8.h),
-        // Password requirements text again or you can remove if unnecessary here
-        Text(
-          "• Minimum 8-12 characters\n"
-              "• At least one uppercase letter (A-Z)\n"
-              "• Special characters (!, @, #, \$, etc.)\n"
-              "• At least one number (0-9)",
-          style: TextStyle(
-            fontSize: 12.sp,
-            color: AppColors.darkNaturalGray,
-          ),
-        ),
-
-        SizedBox(
-          height: 20.h,
-        ),
-        CustomButton(
-          onTap: () {
-            // Add validation logic here if you want
-          },
-          title: AppStrings.continues,
-        )
-      ],
-    );
-  }
-
-
-  // Business Vendor Sign-Up Form
-  Widget _buildBusinessVendorForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //==========Name=============
-        CustomText(
-          text: 'Business Name',
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: nameController,
-          prefixIcon: const Icon(
-            Icons.business_center_rounded,
-            color: Colors.grey,
-          ),
-          hintText: "Business Name",
-        ),
-
-        //==========Email=============
-        CustomText(
-          top: 8.h,
-          text: 'Owner\'s Name',
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: emailPhoneController,
-          prefixIcon: const Icon(Icons.person),
-          hintText: "Owner\'s Name",
-        ),
-
-        //==========Name=============
-        CustomText(
-          top: 8.h,
-          text: 'Business E-mail',
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: passwordController,
-          prefixIcon: const Icon(Icons.email),
-          hintText: "Business E-mail",
-        ),
-        //==========Phone Number=============
-        CustomText(
-          top: 8.h,
-          text: ' Federal ID',
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: confirmPasswordController,
-          prefixIcon: const Icon(Icons.image),
-          hintText: "Upload Federal ID",
-        ),
-
-        //==========Phone Number=============
-        CustomText(
-          top: 8.h,
-          text: ' Both State License',
-          fontSize: 16.sp,
-          bottom: 8.h,
-          fontWeight: FontWeight.w500,
-          color: AppColors.darkNaturalGray,
-        ),
-        CustomTextField(
-          inputTextStyle: const TextStyle(color: AppColors.black),
-
-          fieldBorderColor: AppColors.borderColor,
-          textEditingController: confirmPasswordController,
-          prefixIcon: const Icon(Icons.image),
-          hintText: "Upload  both state license",
-        ),
-        SizedBox(
-          height: 20.h,
-        ),
-        CustomButton(
-          onTap: () {
-            context.goNamed(
-              RoutePath.nextScreen,
-            );
-          },
-          title: "Next",
-        )
-      ],
     );
   }
 }

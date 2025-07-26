@@ -15,6 +15,16 @@ class AuthController extends GetxController {
   final emailController = TextEditingController(text: "fahad123@gmail.com");
   final passWordController = TextEditingController(text: "Masum017@");
   final confirmPasswordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController clientEmailController = TextEditingController();
+  final TextEditingController clientPasswordController = TextEditingController();
+  final TextEditingController clientConfirmPasswordController = TextEditingController();
+  final TextEditingController businessNameController = TextEditingController();
+  final TextEditingController ownerNameController = TextEditingController();
+  final TextEditingController businessEmailController = TextEditingController();
+  final TextEditingController federalIdController = TextEditingController();
+  final TextEditingController stateLicenseController = TextEditingController();
+
 
   //>>>>>>>>>>>>>>>>>>✅✅SIgn In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -171,6 +181,17 @@ class AuthController extends GetxController {
     refresh();
   }
 
+
+
+  //>>>>>>>>>>>>>>>>>>✅✅SIgn up✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  // form type toggle
+  RxBool isClientSelected = true.obs;
+
+
+  void toggleClientVendor(bool isClient) {
+    isClientSelected.value = isClient;
+  }
 
 
 }
