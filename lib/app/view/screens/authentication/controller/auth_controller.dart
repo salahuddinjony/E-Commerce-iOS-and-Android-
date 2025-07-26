@@ -224,7 +224,7 @@ class AuthController extends GetxController {
       toastMessage(message: responseData["message"]);
 
     } else if (response.statusCode == 400) {
-      toastMessage(message: responseData["message"]);
+      toastMessage(message: responseData["error"]);
     } else {
       ApiChecker.checkApi(response);
     }
