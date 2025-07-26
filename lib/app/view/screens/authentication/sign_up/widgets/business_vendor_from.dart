@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:local/app/core/route_path.dart';
-import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
+import 'package:local/app/global/helper/validators/validators.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
-
-import '../../../../../core/routes.dart';
+import '../../../../common_widgets/loading_button/loading_button.dart';
+import 'label_text_field.dart';
 
 class BusinessVendorForm extends StatelessWidget {
   final AuthController controller;
 
-   BusinessVendorForm({super.key, required this.controller});
+  BusinessVendorForm({super.key, required this.controller});
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -23,94 +19,95 @@ class BusinessVendorForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomText(
-            text: 'Business Name',
-            fontSize: 16.sp,
-            bottom: 8.h,
-            fontWeight: FontWeight.w500,
-            color: AppColors.darkNaturalGray,
+          LabeledTextField(
+            label: 'Business Name',
+            hintText: 'Business Name',
+            controller: controller.businessNameController,
+            icon: Icons.business_center,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Business name is required';
+              }
+              return null;
+            },
           ),
-          CustomTextField(
-            inputTextStyle: const TextStyle(color: AppColors.black),
-            fieldBorderColor: AppColors.borderColor,
-            textEditingController: TextEditingController(),
-            prefixIcon: const Icon(Icons.business_center_rounded),
-            hintText: "Business Name",
+          LabeledTextField(
+            label: 'Business E-mail',
+            hintText: 'Business E-mail',
+            controller: controller.businessEmailController,
+            icon: Icons.email,
+            validator: Validators.emailValidator
           ),
-
-          CustomText(
-            top: 8.h,
-            text: 'Owner\'s Name',
-            fontSize: 16.sp,
-            bottom: 8.h,
-            fontWeight: FontWeight.w500,
-            color: AppColors.darkNaturalGray,
+          LabeledTextField(
+            label: 'Business Phone Number',
+            hintText: 'Phone Number',
+            controller: controller.businessPhoneController,
+            icon: Icons.phone,
+            validator: Validators.phoneNumberValidator,
           ),
-          CustomTextField(
-            inputTextStyle: const TextStyle(color: AppColors.black),
-            fieldBorderColor: AppColors.borderColor,
-            textEditingController: TextEditingController(),
-            prefixIcon: const Icon(Icons.person),
-            hintText: "Owner's Name",
+          LabeledTextField(
+            label: 'Delivery Option',
+            hintText: 'Select',
+            controller: controller.businessDeliveryOptionController,
+            icon: Icons.delivery_dining,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Select Delivery Option';
+              }
+              return null;
+            },
           ),
-
-          CustomText(
-            top: 8.h,
-            text: 'Business E-mail',
-            fontSize: 16.sp,
-            bottom: 8.h,
-            fontWeight: FontWeight.w500,
-            color: AppColors.darkNaturalGray,
+          LabeledTextField(
+            label: 'Description',
+            hintText: 'Type here',
+            controller: controller.businessDescriptionController,
+            icon: Icons.description,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Description here';
+              }
+              return null;
+            },
           ),
-          CustomTextField(
-            inputTextStyle: const TextStyle(color: AppColors.black),
-            fieldBorderColor: AppColors.borderColor,
-            textEditingController: TextEditingController(),
-            prefixIcon: const Icon(Icons.email),
-            hintText: "Business E-mail",
+          LabeledTextField(
+            label: 'Address',
+            hintText: 'Type here',
+            controller: controller.businessAddressController,
+            icon: Icons.location_on,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'Address is Required';
+              }
+              return null;
+            },
           ),
-
-          CustomText(
-            top: 8.h,
-            text: 'Federal ID',
-            fontSize: 16.sp,
-            bottom: 8.h,
-            fontWeight: FontWeight.w500,
-            color: AppColors.darkNaturalGray,
+          LabeledTextField(
+            label: 'Documents',
+            hintText: 'Upload documents',
+            controller: TextEditingController(),
+            // Consider using a separate controller if needed
+            icon: Icons.upload_file,
+            readOnly: true,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'documents  is required';
+              }
+              return null;
+            },
           ),
-          CustomTextField(
-            inputTextStyle: const TextStyle(color: AppColors.black),
-            fieldBorderColor: AppColors.borderColor,
-            textEditingController: TextEditingController(),
-            prefixIcon: const Icon(Icons.image),
-            hintText: "Upload Federal ID",
-          ),
-
-          CustomText(
-            top: 8.h,
-            text: 'Both State License',
-            fontSize: 16.sp,
-            bottom: 8.h,
-            fontWeight: FontWeight.w500,
-            color: AppColors.darkNaturalGray,
-          ),
-          CustomTextField(
-            inputTextStyle: const TextStyle(color: AppColors.black),
-            fieldBorderColor: AppColors.borderColor,
-            textEditingController: TextEditingController(),
-            prefixIcon: const Icon(Icons.image),
-            hintText: "Upload both state license",
-          ),
-
           SizedBox(height: 20.h),
 
-          CustomButton(
+          /// Submit Button
+          LoadingButton(
+            isLoading: controller.isVendorLoading,
             onTap: () {
-              AppRouter.route.pushNamed(RoutePath.nextScreen);
-
+              if (_formKey.currentState!.validate()) {
+                controller.vendorSIgnUp(context);
+              }
             },
             title: "Next",
           ),
+          SizedBox(height: 20.h),
         ],
       ),
     );

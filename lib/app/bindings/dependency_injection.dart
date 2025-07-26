@@ -1,6 +1,7 @@
 
 import 'package:get/get.dart';
 import 'package:local/app/global/controller/Onboarding_Controller.dart';
+import 'package:local/app/global/controller/genarel_controller.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 import 'package:local/app/view/screens/splash/controller/splash_controller.dart';
 
@@ -13,6 +14,7 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => OnboardingController(), fenix: true);
     Get.lazyPut(() => InfoController(), fenix: true);
+    Get.lazyPut(() => GeneralController(), fenix: true);
 
 
   }

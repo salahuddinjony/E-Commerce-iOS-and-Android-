@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:local/app/global/controller/genarel_controller.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import '../../../../core/route_path.dart';
 import '../../../../core/routes.dart';
@@ -12,6 +14,7 @@ import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
 
 class AuthController extends GetxController {
+
   final emailController = TextEditingController(text: "fahad123@gmail.com");
   final passWordController = TextEditingController(text: "Masum017@");
   final confirmPasswordController = TextEditingController();
@@ -19,11 +22,8 @@ class AuthController extends GetxController {
   final TextEditingController clientEmailController = TextEditingController();
   final TextEditingController clientPasswordController = TextEditingController();
   final TextEditingController clientConfirmPasswordController = TextEditingController();
-  final TextEditingController businessNameController = TextEditingController();
-  final TextEditingController ownerNameController = TextEditingController();
-  final TextEditingController businessEmailController = TextEditingController();
-  final TextEditingController federalIdController = TextEditingController();
-  final TextEditingController stateLicenseController = TextEditingController();
+  final TextEditingController clientPhoneNumberController = TextEditingController();
+
 
 
   //>>>>>>>>>>>>>>>>>>✅✅SIgn In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -183,7 +183,7 @@ class AuthController extends GetxController {
 
 
 
-  //>>>>>>>>>>>>>>>>>>✅✅SIgn up✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  //>>>>>>>>>>>>>>>>>>✅✅SIgn up Client✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   // form type toggle
   RxBool isClientSelected = true.obs;
@@ -194,4 +194,95 @@ class AuthController extends GetxController {
   }
 
 
+
+  RxBool isClient = false.obs;
+
+  Future<void> clientSIgnUp(BuildContext context) async {
+    isClient.value = true;
+    refresh();
+
+    Map<String, dynamic> body = {
+      "name": nameController.text.trim(),
+      "email": clientEmailController.text.trim(),
+      "password": clientPasswordController.text.trim(),
+      "phone": clientPhoneNumberController.text.trim(),
+      "role": "client",
+      "isSocial": "false",
+    };
+
+    var response = await ApiClient.postMultipartData(
+      ApiUrl.register,
+      body,
+      // multipartBody: [
+      //   MultipartBody("image", File(generalController.image.value)),
+      // ],
+    );
+    var responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 201) {
+
+      toastMessage(message: responseData["message"]);
+
+    } else if (response.statusCode == 400) {
+      toastMessage(message: responseData["message"]);
+    } else {
+      ApiChecker.checkApi(response);
+    }
+
+    isClient.value = false;
+    refresh();
+  }
+
+//>>>>>>>>>>>>>>>>>>✅✅SIgn up Vendor✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  final GeneralController generalController = Get.find<GeneralController>();
+  final TextEditingController businessNameController = TextEditingController();
+  final TextEditingController businessEmailController = TextEditingController();
+  final TextEditingController businessPhoneController = TextEditingController();
+  final TextEditingController businessPasswordController = TextEditingController();
+  final TextEditingController businessConfirmPasswordController = TextEditingController();
+  final TextEditingController businessAddressController = TextEditingController();
+  final TextEditingController businessDescriptionController = TextEditingController();
+  final TextEditingController businessDeliveryOptionController = TextEditingController();
+
+  RxBool isVendorLoading = false.obs;
+
+  Future<void> vendorSIgnUp(BuildContext context) async {
+    isVendorLoading.value = true;
+    refresh();
+
+    Map<String, dynamic> body = {
+      "name": businessNameController.text.trim(),
+      "email": businessEmailController.text.trim(),
+      "password": businessPasswordController.text.trim(),
+      "phone": businessPhoneController.text.trim(),
+      "role": "vendor",
+      "isSocial": "false",
+      "address": businessAddressController.text.trim(),
+      "description": businessDescriptionController.text.trim(),
+      "deliveryOption": businessDeliveryOptionController.text.trim(),
+    };
+
+    var response = await ApiClient.postMultipartData(
+      ApiUrl.register,
+      body,
+      multipartBody: [
+        MultipartBody("documents", File(generalController.image.value)),
+      ],
+    );
+    var responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 201) {
+      // AppRouter.route.pushNamed(RoutePath.nextScreen);
+      toastMessage(message: responseData["message"]);
+
+    } else if (response.statusCode == 400) {
+      toastMessage(message: responseData["error"]);
+    } else {
+      ApiChecker.checkApi(response);
+    }
+
+    isVendorLoading.value = false;
+    refresh();
+  }
 }
