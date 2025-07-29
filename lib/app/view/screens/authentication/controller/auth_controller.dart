@@ -297,7 +297,7 @@ class AuthController extends GetxController {
       AppRouter.route.pushNamed(
         RoutePath.otpScreen,
         extra: {
-          "isForget": true,
+          "isVendor": true,
           "email": businessEmailController.text,
         },
       );
@@ -312,7 +312,7 @@ class AuthController extends GetxController {
     refresh();
   }
 
-  //>>>>>>>>>>>>>>>>>>✅✅Account Active Otp ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  //>>>>>>>>>>>>>>>>>>✅✅Client Account Active Otp ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   String activationCode = "";
   RxBool isActiveLoading = false.obs;
 
@@ -348,6 +348,50 @@ class AuthController extends GetxController {
     isActiveLoading.value = false;
     refresh();
   }
+
+
+
+
+  //>>>>>>>>>>>>>>>>>>✅✅Vendor Account Active ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  String vendorActivationCode = "";
+  RxBool vendorIsActiveLoading = false.obs;
+
+  Future<void> vendorAccountActiveOtp() async {
+    if (vendorActivationCode.isEmpty) {
+      toastMessage(message: "Please enter the activation code.");
+      return;
+    }
+
+    vendorIsActiveLoading.value = true;
+    refresh();
+
+    Map<String, String> body = {
+      "email": businessEmailController.text.trim(),
+      "code": vendorActivationCode
+    };
+    var response =
+        await ApiClient.postData(ApiUrl.emailVerify, jsonEncode(body));
+    vendorIsActiveLoading.value = false;
+    refresh();
+
+    if (response.statusCode == 200) {
+      businessEmailController.clear();
+
+      AppRouter.route.goNamed(RoutePath.homeScreen);
+      toastMessage(message: response.body["message"]);
+    } else if (response.statusCode == 400) {
+      toastMessage(message: response.body["error"]);
+    } else {
+      ApiChecker.checkApi(response);
+      debugPrint("Error: ${response.body["message"]}");
+    }
+    vendorIsActiveLoading.value = false;
+    refresh();
+  }
+
+
+
+
 
 
 }

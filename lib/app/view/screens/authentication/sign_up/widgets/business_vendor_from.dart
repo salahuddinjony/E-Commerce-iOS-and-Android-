@@ -66,7 +66,7 @@ final AuthController authController = Get.find<AuthController>();
             controller: widget.controller.businessDeliveryOptionController,
             icon: Icons.delivery_dining,
             isDropdown: true,
-            dropdownOptions: const ['Pickup', 'Courier', 'pickupAndCourier'],
+            dropdownOptions: const ['pickup', 'courier', 'pickupAndCourier'],
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Select Delivery Option';

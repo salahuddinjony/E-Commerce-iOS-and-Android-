@@ -22,10 +22,14 @@ class OtpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final extra = GoRouter.of(context).state.extra as Map<String, dynamic>?;
     final bool isForgetValue = extra?['isForget'] ?? false;
+    final bool isVendor = extra?['isVendor'] ?? false;
     final String email = extra?['email'] ?? '';
+
+
 
     debugPrint("================$isForgetValue");
     debugPrint("================$email");
+    debugPrint("================$isVendor");
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const CustomAppBar(
@@ -51,15 +55,16 @@ class OtpScreen extends StatelessWidget {
                 onCompleted: (value) {
                   if (isForgetValue == true) {
                     controller.activationCode = value;
-                  } else if (isForgetValue == false) {
-                    controller.resetCode = value;
+                  } else if (isVendor == true) {
+                    controller.vendorActivationCode = value;
                   } else {
-                    debugPrint('object');
+                    controller.resetCode = value;
                   }
                 },
+
                 validator: (value) {
                   if (value == null || value.length != 4) {
-                    return "Please enter a 6-digit OTP code";
+                    return "Please enter a 4-digit OTP code";
                   }
                   return null;
                 },
@@ -70,7 +75,6 @@ class OtpScreen extends StatelessWidget {
                   fieldWidth: 40.w,
                   borderWidth: 1.5,
                   borderRadius: BorderRadius.circular(12.r),
-                  // <-- Added border radius
                   activeColor: AppColors.brightCyan,
                   inactiveColor: AppColors.brightCyan,
                   selectedColor: AppColors.brightCyan,
@@ -86,11 +90,15 @@ class OtpScreen extends StatelessWidget {
               LoadingButton(
                 isLoading: isForgetValue == true
                     ? controller.isActiveLoading
-                    : controller.isForgetOtp,
+                    : isVendor == true
+                        ? controller.vendorIsActiveLoading
+                        : controller.isForgetOtp,
                 onTap: () {
                   if (formKey.currentState!.validate()) {
                     if (isForgetValue == true) {
                       controller.accountActiveOtp();
+                    } else if (isVendor == true) {
+                      controller.vendorAccountActiveOtp();
                     } else {
                       controller.forgetOtp();
                     }
