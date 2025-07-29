@@ -6,6 +6,7 @@ import 'package:local/app/view/screens/authentication/controller/auth_controller
 import 'package:local/app/view/screens/splash/controller/splash_controller.dart';
 
 import '../view/screens/common_screen/controller/info_controller.dart';
+import '../view/screens/vendor/product/controller/vendor_product_controller.dart';
 
 class DependencyInjection extends Bindings {
   @override
@@ -15,6 +16,7 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => OnboardingController(), fenix: true);
     Get.lazyPut(() => InfoController(), fenix: true);
     Get.lazyPut(() => GeneralController(), fenix: true);
+    Get.lazyPut(() => VendorProductController(), fenix: true);
 
 
   }

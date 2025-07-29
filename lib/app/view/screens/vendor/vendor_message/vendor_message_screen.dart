@@ -18,10 +18,10 @@ class VendorMessageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Scaffold(
       backgroundColor: AppColors.white,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         appBarContent: AppStrings.chatList,
       ),
-      bottomNavigationBar: OwnerNav(
+      bottomNavigationBar: const OwnerNav(
         currentIndex:3 ,
       ),
       body: Padding(
@@ -51,7 +51,7 @@ class VendorMessageScreen extends StatelessWidget {
                           senderName: 'Geopart Etdsien',
                           message: 'Your Order Just Arrived!',
                           onTap: () {
-                            print('object');
+                            debugPrint('object');
                             context.pushNamed(
                               RoutePath.chatScreen,
                             );

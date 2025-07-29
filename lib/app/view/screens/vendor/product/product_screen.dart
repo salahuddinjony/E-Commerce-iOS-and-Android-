@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
-import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
+import 'package:local/app/view/screens/vendor/product/widgets/product_cards.dart';
 
 import '../../../../core/route_path.dart';
 import '../../../../utils/app_colors/app_colors.dart';
@@ -36,7 +36,7 @@ class ProductScreen extends StatelessWidget {
       sold: 'Sold (1.7k)',
     ),
     Product(
-      image:AppConstants.teeShirt,
+      image: AppConstants.teeShirt,
       title: 'Party Mode Tee',
       subtitle: 'Top Rated Price',
       price: '\$22.20',
@@ -85,70 +85,40 @@ class ProductScreen extends StatelessWidget {
                 },
               ),
             ),
-            CustomButton(
-              title: "Add Product",
-              onTap: () {
-                context.pushNamed(
-                  RoutePath.addProductScreen,
-                );
-              },
-              textColor: AppColors.white,
-              fillColor: AppColors.brightCyan,
+            Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: CustomButton(
+                    title: "Add Product",
+                    onTap: () {
+                      context.pushNamed(
+                        RoutePath.addProductScreen,
+                      );
+                    },
+                    textColor: AppColors.white,
+                    fillColor: AppColors.brightCyan,
+                  ),
+                ),
+                SizedBox(
+                  width: 12.w,
+                ),
+                Expanded(
+                  flex: 5,
+                  child: CustomButton(
+                    title: "Add Category",
+                    onTap: () {
+
+                    },
+                    textColor: AppColors.white,
+                    fillColor: AppColors.brightCyan,
+                  ),
+                ),
+              ],
             )
           ],
         ),
       ),
     );
   }
-}
-
-class ProductCard extends StatelessWidget {
-  final Product product;
-
-  const ProductCard({super.key, required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-            child: CustomNetworkImage(
-                imageUrl: product.image, height: 119.h, width: 119.w)),
-        const SizedBox(height: 6),
-        Text(
-          product.title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Text(
-          product.subtitle,
-          style: TextStyle(color: Colors.grey[600], fontSize: 12),
-        ),
-        Text(
-          product.price,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Text(
-          product.sold,
-          style: TextStyle(color: Colors.grey[600], fontSize: 12),
-        ),
-      ],
-    );
-  }
-}
-
-class Product {
-  final String image;
-  final String title;
-  final String subtitle;
-  final String price;
-  final String sold;
-
-  Product({
-    required this.image,
-    required this.title,
-    required this.subtitle,
-    required this.price,
-    required this.sold,
-  });
 }
