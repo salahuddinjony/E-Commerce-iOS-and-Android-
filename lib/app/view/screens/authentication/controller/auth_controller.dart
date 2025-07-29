@@ -243,7 +243,6 @@ class AuthController extends GetxController {
 
 //>>>>>>>>>>>>>>>>>>✅✅SIgn up Vendor✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  final GeneralController generalController = Get.find<GeneralController>();
   final TextEditingController businessNameController = TextEditingController();
   final TextEditingController businessEmailController = TextEditingController();
   final TextEditingController businessPhoneController = TextEditingController();
@@ -257,13 +256,21 @@ class AuthController extends GetxController {
       TextEditingController();
   final TextEditingController businessDeliveryOptionController =
       TextEditingController();
+  TextEditingController docController = TextEditingController();
+
+  Rx<File?> selectedDocument = Rx<File?>(null);
 
   RxBool isVendorLoading = false.obs;
 
   Future<void> vendorSIgnUp(BuildContext context) async {
     isVendorLoading.value = true;
     refresh();
-
+    if (selectedDocument.value == null) {
+      isVendorLoading.value = false;
+      refresh();
+      toastMessage(message: "Please upload a document before proceeding.");
+      return;
+    }
     Map<String, dynamic> body = {
       "name": businessNameController.text.trim(),
       "email": businessEmailController.text.trim(),
@@ -280,13 +287,20 @@ class AuthController extends GetxController {
       ApiUrl.register,
       body,
       multipartBody: [
-        MultipartBody("documents", File(generalController.image.value)),
+        MultipartBody("documents", selectedDocument.value!),
+
       ],
     );
     var responseData = jsonDecode(response.body);
 
     if (response.statusCode == 201) {
-      // AppRouter.route.pushNamed(RoutePath.nextScreen);
+      AppRouter.route.pushNamed(
+        RoutePath.otpScreen,
+        extra: {
+          "isForget": true,
+          "email": businessEmailController.text,
+        },
+      );
       toastMessage(message: responseData["message"]);
     } else if (response.statusCode == 400) {
       toastMessage(message: responseData["error"]);

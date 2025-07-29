@@ -41,4 +41,8 @@ class GeneralController extends GetxController {
     image.value = ""; // Clears the image path
     imageFile.value = File(""); // Clears the image file
   }
+
+
+
+
 }

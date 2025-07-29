@@ -7,7 +7,7 @@ import 'package:local/app/view/screens/authentication/forget_password/forget_pas
 import 'package:local/app/view/screens/authentication/otp/otp_screen.dart';
 import 'package:local/app/view/screens/authentication/reset_password/reset_password_screen.dart';
 import 'package:local/app/view/screens/authentication/sign_in/sign_in_screen.dart';
-import 'package:local/app/view/screens/authentication/sign_up/next.dart';
+import 'package:local/app/view/screens/authentication/sign_up/widgets/next.dart';
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/user/chat/chat_screen.dart';
