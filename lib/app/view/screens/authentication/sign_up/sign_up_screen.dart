@@ -30,6 +30,7 @@ class SignUpScreen extends StatelessWidget {
                 children: [
                   //=============+Sign up Tab============
                   SIgnUpTab(controller: controller),
+
                   SizedBox(height: 20.h),
                   controller.isClientSelected.value
                       ? ClientSignUpForm(controller: controller)

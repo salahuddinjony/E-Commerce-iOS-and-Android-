@@ -14,17 +14,17 @@ import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
 
 class AuthController extends GetxController {
-
   final emailController = TextEditingController(text: "fahad123@gmail.com");
   final passWordController = TextEditingController(text: "Masum017@");
   final confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController clientEmailController = TextEditingController();
-  final TextEditingController clientPasswordController = TextEditingController();
-  final TextEditingController clientConfirmPasswordController = TextEditingController();
-  final TextEditingController clientPhoneNumberController = TextEditingController();
-
-
+  final TextEditingController clientPasswordController =
+      TextEditingController();
+  final TextEditingController clientConfirmPasswordController =
+      TextEditingController();
+  final TextEditingController clientPhoneNumberController =
+      TextEditingController();
 
   //>>>>>>>>>>>>>>>>>>✅✅SIgn In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -181,21 +181,23 @@ class AuthController extends GetxController {
     refresh();
   }
 
-
-
   //>>>>>>>>>>>>>>>>>>✅✅SIgn up Client✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   // form type toggle
   RxBool isClientSelected = true.obs;
 
-
   void toggleClientVendor(bool isClient) {
     isClientSelected.value = isClient;
   }
 
-
-
   RxBool isClient = false.obs;
+
+  void clearClientSIgnUpMethodFromClear(){
+    nameController.clear();
+    clientPasswordController.clear();
+    clientConfirmPasswordController.clear();
+    clientPhoneNumberController.clear();
+  }
 
   Future<void> clientSIgnUp(BuildContext context) async {
     isClient.value = true;
@@ -220,9 +222,15 @@ class AuthController extends GetxController {
     var responseData = jsonDecode(response.body);
 
     if (response.statusCode == 201) {
-      // AppRouter.route.goNamed(RoutePath.userHomeScreen);
+      clearClientSIgnUpMethodFromClear();
+      AppRouter.route.pushNamed(
+        RoutePath.otpScreen,
+        extra: {
+          "isForget": true,
+          "email": clientEmailController.text,
+        },
+      );
       toastMessage(message: responseData["message"]);
-
     } else if (response.statusCode == 400) {
       toastMessage(message: responseData["error"]);
     } else {
@@ -239,11 +247,16 @@ class AuthController extends GetxController {
   final TextEditingController businessNameController = TextEditingController();
   final TextEditingController businessEmailController = TextEditingController();
   final TextEditingController businessPhoneController = TextEditingController();
-  final TextEditingController businessPasswordController = TextEditingController();
-  final TextEditingController businessConfirmPasswordController = TextEditingController();
-  final TextEditingController businessAddressController = TextEditingController();
-  final TextEditingController businessDescriptionController = TextEditingController();
-  final TextEditingController businessDeliveryOptionController = TextEditingController();
+  final TextEditingController businessPasswordController =
+      TextEditingController();
+  final TextEditingController businessConfirmPasswordController =
+      TextEditingController();
+  final TextEditingController businessAddressController =
+      TextEditingController();
+  final TextEditingController businessDescriptionController =
+      TextEditingController();
+  final TextEditingController businessDeliveryOptionController =
+      TextEditingController();
 
   RxBool isVendorLoading = false.obs;
 
@@ -275,7 +288,6 @@ class AuthController extends GetxController {
     if (response.statusCode == 201) {
       // AppRouter.route.pushNamed(RoutePath.nextScreen);
       toastMessage(message: responseData["message"]);
-
     } else if (response.statusCode == 400) {
       toastMessage(message: responseData["error"]);
     } else {
@@ -285,4 +297,43 @@ class AuthController extends GetxController {
     isVendorLoading.value = false;
     refresh();
   }
+
+  //>>>>>>>>>>>>>>>>>>✅✅Account Active Otp ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  String activationCode = "";
+  RxBool isActiveLoading = false.obs;
+
+  Future<void> accountActiveOtp() async {
+    if (activationCode.isEmpty) {
+      toastMessage(message: "Please enter the activation code.");
+      return;
+    }
+
+    isActiveLoading.value = true;
+    refresh();
+
+    Map<String, String> body = {
+      "email": clientEmailController.text.trim(),
+      "code": activationCode
+    };
+    var response =
+        await ApiClient.postData(ApiUrl.emailVerify, jsonEncode(body));
+    isActiveLoading.value = false;
+    refresh();
+
+    if (response.statusCode == 200) {
+      clientEmailController.clear();
+
+      AppRouter.route.goNamed(RoutePath.userHomeScreen);
+      toastMessage(message: response.body["message"]);
+    } else if (response.statusCode == 400) {
+      toastMessage(message: response.body["error"]);
+    } else {
+      ApiChecker.checkApi(response);
+      debugPrint("Error: ${response.body["message"]}");
+    }
+    isActiveLoading.value = false;
+    refresh();
+  }
+
+
 }

@@ -23,6 +23,9 @@ class OtpScreen extends StatelessWidget {
     final extra = GoRouter.of(context).state.extra as Map<String, dynamic>?;
     final bool isForgetValue = extra?['isForget'] ?? false;
     final String email = extra?['email'] ?? '';
+
+    debugPrint("================$isForgetValue");
+    debugPrint("================$email");
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const CustomAppBar(
@@ -46,14 +49,13 @@ class OtpScreen extends StatelessWidget {
                 appContext: context,
                 controller: controller.pinCodeController,
                 onCompleted: (value) {
-                  controller.resetCode = value;
-                  // if (isForgetValue == true) {
-                  //   // controller.activationCode = value;
-                  // } else if (isForgetValue == false) {
-                  //   // controller.resetCode = value;
-                  // } else {
-                  //   print('object');
-                  // }
+                  if (isForgetValue == true) {
+                    controller.activationCode = value;
+                  } else if (isForgetValue == false) {
+                    controller.resetCode = value;
+                  } else {
+                    debugPrint('object');
+                  }
                 },
                 validator: (value) {
                   if (value == null || value.length != 4) {
@@ -82,10 +84,16 @@ class OtpScreen extends StatelessWidget {
                 height: 26.h,
               ),
               LoadingButton(
-                isLoading: controller.isForgetOtp,
+                isLoading: isForgetValue == true
+                    ? controller.isActiveLoading
+                    : controller.isForgetOtp,
                 onTap: () {
                   if (formKey.currentState!.validate()) {
-                    controller.forgetOtp();
+                    if (isForgetValue == true) {
+                      controller.accountActiveOtp();
+                    } else {
+                      controller.forgetOtp();
+                    }
                   }
                 },
                 title: AppStrings.verifyCode,
@@ -105,5 +113,3 @@ class OtpScreen extends StatelessWidget {
     );
   }
 }
-
-
