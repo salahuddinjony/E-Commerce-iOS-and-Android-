@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:local/app/global/controller/genarel_controller.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import '../../../../core/route_path.dart';
 import '../../../../core/routes.dart';
@@ -16,8 +15,8 @@ import '../../../../services/app_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
 
 class AuthController extends GetxController {
-  final emailController = TextEditingController(text: "fahad123@gmail.com");
-  final passWordController = TextEditingController(text: "Masum017@");
+  final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
+  final passWordController = TextEditingController(text: "12345678");
   final confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController clientEmailController = TextEditingController();

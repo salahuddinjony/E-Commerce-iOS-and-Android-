@@ -69,12 +69,17 @@ class ProfileScreen extends StatelessWidget {
                   case Status.completed:
                     return Column(
                       children: [
-                        CustomNetworkImage(
-                          imageUrl:
-                              "${ApiUrl.networkUrl}${profileController.profileModel.value.profile?.id?.image ?? ""}",
-                          height: 125.h,
-                          width: 126.w,
-                          boxShape: BoxShape.circle,
+                        GestureDetector(
+                          onTap:(){
+                            debugPrint(profileController.profileModel.value.profile?.id?.image ?? "");
+                          },
+                          child: CustomNetworkImage(
+                            imageUrl:
+                                profileController.profileModel.value.profile?.id?.image ?? "",
+                            height: 125.h,
+                            width: 126.w,
+                            boxShape: BoxShape.circle,
+                          ),
                         ),
                         CustomText(
                           text: profileController

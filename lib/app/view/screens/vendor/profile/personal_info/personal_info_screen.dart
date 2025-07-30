@@ -57,7 +57,7 @@ class PersonalInfoScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ProfileHeader(
-                    image: "${ApiUrl.networkUrl}${controller.profileModel.value.profile?.id?.image??""}",
+                    image: controller.profileModel.value.profile?.id?.image??"",
                     name: controller.profileModel.value.profile?.id?.name??""
                         ""
                   ),

@@ -69,7 +69,7 @@ class UserProfileScreen extends StatelessWidget {
                     children: [
                       CustomNetworkImage(
                         imageUrl:
-                            "${ApiUrl.networkUrl}${profileController.profileModel.value.profile?.id?.image ?? ""}",
+                            profileController.profileModel.value.profile?.id?.image ?? "",
                         height: 125.h,
                         width: 126.w,
                         boxShape: BoxShape.circle,

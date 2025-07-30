@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:local/app/view/screens/common_screen/controller/info_controller.dart';
 
 import '../../../../utils/app_colors/app_colors.dart';
