@@ -8,10 +8,12 @@ import 'package:local/app/global/controller/genarel_controller.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import '../../../../core/route_path.dart';
 import '../../../../core/routes.dart';
+import '../../../../data/local/shared_prefs.dart';
 import '../../../../global/helper/toast_message/toast_message.dart';
 import '../../../../services/api_check.dart';
 import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
+import '../../../../utils/app_constants/app_constants.dart';
 
 class AuthController extends GetxController {
   final emailController = TextEditingController(text: "fahad123@gmail.com");
@@ -59,10 +61,12 @@ class AuthController extends GetxController {
         }
 
         // Save access token
-        // SharePrefsHelper.setString(
-        //   AppConstants.bearerToken,
-        //   response.body['data']["accessToken"],
-        // );
+        SharePrefsHelper.setString(
+          AppConstants.id,
+          response.body['data']["_id"],
+        );
+
+        debugPrint("Id================${response.body['data']["_id"]}");
 
         toastMessage(message: response.body["message"]);
       } else if (response.statusCode == 400) {

@@ -1,18 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/utils/app_constants/app_constants.dart';
-import 'package:local/app/utils/app_strings/app_strings.dart';
-import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
-import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
-import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
+import 'package:local/app/services/app_url.dart';
+import 'package:local/app/view/screens/vendor/profile/personal_info/widgets/profile_header.dart';
 
 import '../../../../../core/route_path.dart';
+import '../../../../../data/local/shared_prefs.dart';
+import '../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../utils/app_constants/app_constants.dart';
+import '../../../../../utils/app_strings/app_strings.dart';
+import '../../../../../utils/enums/status.dart';
+import '../../../../common_widgets/custom_appbar/custom_appbar.dart';
+import '../../../../common_widgets/custom_from_card/custom_from_card.dart';
+import '../../../../common_widgets/custom_loader/custom_loader.dart';
+import '../../../../common_widgets/genarel_screen/genarel_screen.dart';
+import '../../../../common_widgets/no_internet/no_internet.dart';
+import 'controller/profile_controller.dart';
 
-class PersonalInfoScreen extends StatelessWidget {
+class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({super.key});
+
+  @override
+  State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
+}
+
+class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
+  final ProfileController controller = Get.find<ProfileController>();
+
+
+  @override
+  void initState() {
+    getUserId();
+    super.initState();
+  }
+
+
+  Future<void> getUserId() async {
+    String? userId = await SharePrefsHelper.getString(AppConstants.id);
+    debugPrint("Saved ID from SharedPreferences: $userId");
+
+    controller.getProfile(userId: userId ?? "");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,68 +57,59 @@ class PersonalInfoScreen extends StatelessWidget {
         appBarContent: AppStrings.profile,
         iconData: Icons.arrow_back,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          children: [
-            Center(
+      body: Obx(() {
+        switch (controller.rxRequestStatus.value) {
+          case Status.loading:
+            return const CustomLoader();
+          case Status.internetError:
+            return NoInternetScreen(
+              onTap: () {
+                getUserId();
+              },
+            );
+          case Status.error:
+            return GeneralErrorScreen(
+              onTap: () {
+                getUserId();
+              },
+            );
+          case Status.completed:
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(
                 children: [
-                  CustomNetworkImage(
-                      boxShape: BoxShape.circle,
-                      imageUrl: AppConstants.demoImage,
-                      height: 125,
-                      width: 126),
-                  CustomText(
-                    text: 'Gwen Stacy',
-                    fontWeight: FontWeight.w800,
-                    font: CustomFont.poppins,
-                    fontSize: 24.sp,
-                    color: AppColors.black,
+                  ProfileHeader(
+                    image: "${ApiUrl.networkUrl}${controller.profileModel.value.profile?.id?.image??""}",
+                    name: controller.profileModel.value.profile?.id?.name??""
+                        ""
                   ),
-                  CustomText(
-                    text: '@GwenStacy31',
-                    fontWeight: FontWeight.w400,
-                    font: CustomFont.poppins,
-                    fontSize: 16.sp,
-                    color: AppColors.black,
+                  SizedBox(height: 20.h),
+                  CustomFromCard(
+                    isRead: true,
+                    hinText: controller.profileModel.value.profile?.id?.name??"",
+                    title: AppStrings.fullName,
+                    controller: TextEditingController(),
+                    validator: (v) => null,
+                  ),
+                  CustomFromCard(
+                    isRead: true,
+                    hinText: controller.profileModel.value.phone??"",
+                    title: AppStrings.phone,
+                    controller: TextEditingController(),
+                    validator: (v) => null,
+                  ),
+                  CustomFromCard(
+                    isRead: true,
+                    hinText: controller.profileModel.value.email??"",
+                    title: AppStrings.email,
+                    controller: TextEditingController(),
+                    validator: (v) => null,
                   ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            CustomFromCard(
-                 isRead: true,
-              hinText: "Albert Stevano Bajefski",
-                title: AppStrings.fullName,
-                controller: TextEditingController(),
-                validator: (v) {}),
-
-            CustomFromCard(
-                 isRead: true,
-              hinText: "Male",
-                title: AppStrings.gender,
-                controller: TextEditingController(),
-                validator: (v) {}),
-
-            CustomFromCard(
-                 isRead: true,
-              hinText: "+01722983926",
-                title: AppStrings.phone,
-                controller: TextEditingController(),
-                validator: (v) {}),
-
-            CustomFromCard(
-                 isRead: true,
-              hinText: "masu@gmail.com",
-                title: AppStrings.email,
-                controller: TextEditingController(),
-                validator: (v) {}),
-          ],
-        ),
-      ),
+            );
+        }
+      }),
     );
   }
 }
