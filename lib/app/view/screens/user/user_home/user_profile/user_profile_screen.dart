@@ -7,12 +7,22 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 
 import '../../../../../core/route_path.dart';
 import '../../../../../data/local/shared_prefs.dart';
+import '../../../../../services/app_url.dart';
+import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_constants/app_constants.dart';
+import '../../../../../utils/enums/status.dart';
+import '../../../../common_widgets/custom_loader/custom_loader.dart';
 import '../../../../common_widgets/custom_log_out_button/custom_log_out_button.dart';
+import '../../../../common_widgets/custom_network_image/custom_network_image.dart';
+import '../../../../common_widgets/custom_text/custom_text.dart';
+import '../../../../common_widgets/genarel_screen/genarel_screen.dart';
+import '../../../../common_widgets/no_internet/no_internet.dart';
 import '../../../vendor/profile/personal_info/controller/profile_controller.dart';
 
 class UserProfileScreen extends StatelessWidget {
-  const UserProfileScreen({super.key});
+  UserProfileScreen({super.key});
+
+  final ProfileController profileController = Get.find<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,39 +32,69 @@ class UserProfileScreen extends StatelessWidget {
         appBarContent: AppStrings.profile,
         iconData: Icons.arrow_back,
       ),
-
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
         child: Column(
           children: [
-            // Profile picture
-            CircleAvatar(
-              radius: 50.r,
-              backgroundColor: Colors.pink.shade100,
-              child: CircleAvatar(
-                radius: 47.r,
-                backgroundImage: const NetworkImage(
-                    "https://i.pravatar.cc/150?img=5"), // Sample profile picture
-              ),
-            ),
-            SizedBox(height: 15.h),
-            // Name
-            const Text(
-              "Gwen Stacy",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
-            ),
-            SizedBox(height: 5.h),
-            // Username
-            const Text(
-              "@GwenStacy31",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
+            Obx(() {
+              switch (profileController.rxRequestStatus.value) {
+                case Status.loading:
+                  return const CustomLoader();
+                case Status.internetError:
+                  return GestureDetector(
+                    onTap: () {
+                      profileController.getUserId();
+                    },
+                    child: CustomText(
+                      text: 'No Internet',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.sp,
+                      color: AppColors.black,
+                    ),
+                  );
+                case Status.error:
+                  return GestureDetector(
+                    onTap: () {
+                      profileController.getUserId();
+                    },
+                    child: CustomText(
+                      text: 'Error',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.sp,
+                      color: AppColors.black,
+                    ),
+                  );
+                case Status.completed:
+                  return Column(
+                    children: [
+                      CustomNetworkImage(
+                        imageUrl:
+                            "${ApiUrl.networkUrl}${profileController.profileModel.value.profile?.id?.image ?? ""}",
+                        height: 125.h,
+                        width: 126.w,
+                        boxShape: BoxShape.circle,
+                      ),
+                      CustomText(
+                        text: profileController
+                                .profileModel.value.profile?.id?.name ??
+                            "",
+                        font: CustomFont.inter,
+                        color: AppColors.darkNaturalGray,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 24.sp,
+                      ),
+                      CustomText(
+                        text: profileController.profileModel.value.email ?? "",
+                        font: CustomFont.inter,
+                        color: AppColors.darkNaturalGray,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.sp,
+                        bottom: 10,
+                      ),
+                    ],
+                  );
+              }
+            }),
             SizedBox(height: 25.h),
             Expanded(
               child: ListView(
@@ -105,7 +145,7 @@ class UserProfileScreen extends StatelessWidget {
               ),
             ),
             CustomLogoutButton(
-              onTap: () async{
+              onTap: () async {
                 await SharePrefsHelper.remove(AppConstants.id);
                 Get.delete<ProfileController>();
 

@@ -43,16 +43,28 @@ class ProfileScreen extends StatelessWidget {
                   case Status.loading:
                     return const CustomLoader();
                   case Status.internetError:
-                    return NoInternetScreen(
+                    return GestureDetector(
                       onTap: () {
                         profileController.getUserId();
                       },
+                      child: CustomText(
+                        text: 'No Internet',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                        color: AppColors.black,
+                      ),
                     );
                   case Status.error:
-                    return GeneralErrorScreen(
+                    return GestureDetector(
                       onTap: () {
                         profileController.getUserId();
                       },
+                      child: CustomText(
+                        text: 'Error',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                        color: AppColors.black,
+                      ),
                     );
                   case Status.completed:
                     return Column(
