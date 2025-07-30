@@ -6,9 +6,7 @@ import 'package:local/app/services/app_url.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/widgets/profile_header.dart';
 
 import '../../../../../core/route_path.dart';
-import '../../../../../data/local/shared_prefs.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../utils/app_constants/app_constants.dart';
 import '../../../../../utils/app_strings/app_strings.dart';
 import '../../../../../utils/enums/status.dart';
 import '../../../../common_widgets/custom_appbar/custom_appbar.dart';
@@ -18,30 +16,10 @@ import '../../../../common_widgets/genarel_screen/genarel_screen.dart';
 import '../../../../common_widgets/no_internet/no_internet.dart';
 import 'controller/profile_controller.dart';
 
-class PersonalInfoScreen extends StatefulWidget {
-  const PersonalInfoScreen({super.key});
+class PersonalInfoScreen extends StatelessWidget {
+   PersonalInfoScreen({super.key});
 
-  @override
-  State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
-}
-
-class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final ProfileController controller = Get.find<ProfileController>();
-
-
-  @override
-  void initState() {
-    getUserId();
-    super.initState();
-  }
-
-
-  Future<void> getUserId() async {
-    String? userId = await SharePrefsHelper.getString(AppConstants.id);
-    debugPrint("Saved ID from SharedPreferences: $userId");
-
-    controller.getProfile(userId: userId ?? "");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +42,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           case Status.internetError:
             return NoInternetScreen(
               onTap: () {
-                getUserId();
+                controller.getUserId();
               },
             );
           case Status.error:
             return GeneralErrorScreen(
               onTap: () {
-                getUserId();
+                controller.getUserId();
               },
             );
           case Status.completed:

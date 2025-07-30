@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 
 import '../../../../../core/route_path.dart';
+import '../../../../../data/local/shared_prefs.dart';
+import '../../../../../utils/app_constants/app_constants.dart';
 import '../../../../common_widgets/custom_log_out_button/custom_log_out_button.dart';
+import '../../../vendor/profile/personal_info/controller/profile_controller.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
@@ -101,7 +105,10 @@ class UserProfileScreen extends StatelessWidget {
               ),
             ),
             CustomLogoutButton(
-              onTap: () {
+              onTap: () async{
+                await SharePrefsHelper.remove(AppConstants.id);
+                Get.delete<ProfileController>();
+
                 context.goNamed(RoutePath.signInScreen);
               },
             ),

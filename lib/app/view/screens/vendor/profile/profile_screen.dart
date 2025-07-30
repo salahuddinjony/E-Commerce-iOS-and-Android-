@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/utils/custom_assets/assets.gen.dart' show Assets;
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
@@ -10,12 +10,22 @@ import 'package:local/app/view/common_widgets/custom_log_out_button/custom_log_o
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
+import 'package:local/app/view/screens/vendor/profile/personal_info/controller/profile_controller.dart';
 
 import '../../../../core/route_path.dart';
+import '../../../../data/local/shared_prefs.dart';
+import '../../../../services/app_url.dart';
+import '../../../../utils/app_constants/app_constants.dart';
+import '../../../../utils/enums/status.dart';
+import '../../../common_widgets/custom_loader/custom_loader.dart';
+import '../../../common_widgets/genarel_screen/genarel_screen.dart';
+import '../../../common_widgets/no_internet/no_internet.dart';
 import '../../../common_widgets/profile_card_row/profile_card_row.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  ProfileScreen({super.key});
+
+  final ProfileController profileController = Get.find<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,32 +38,57 @@ class ProfileScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CustomNetworkImage(
-                imageUrl: AppConstants.demoImage,
-                height: 125,
-                width: 126,
-                boxShape: BoxShape.circle,
-              ),
-
-              CustomText(
-                text: "Gwen Stacy",
-                font: CustomFont.inter,
-                color: AppColors.darkNaturalGray,
-                fontWeight: FontWeight.w800,
-                fontSize: 24.sp,
-              ),
-
-              CustomText(
-                text: "masum@gmail.com",
-                font: CustomFont.inter,
-                color: AppColors.darkNaturalGray,
-                fontWeight: FontWeight.w400,
-                fontSize: 16.sp,
-                bottom: 10,
-              ),
+              Obx(() {
+                switch (profileController.rxRequestStatus.value) {
+                  case Status.loading:
+                    return const CustomLoader();
+                  case Status.internetError:
+                    return NoInternetScreen(
+                      onTap: () {
+                        profileController.getUserId();
+                      },
+                    );
+                  case Status.error:
+                    return GeneralErrorScreen(
+                      onTap: () {
+                        profileController.getUserId();
+                      },
+                    );
+                  case Status.completed:
+                    return Column(
+                      children: [
+                        CustomNetworkImage(
+                          imageUrl:
+                              "${ApiUrl.networkUrl}${profileController.profileModel.value.profile?.id?.image ?? ""}",
+                          height: 125.h,
+                          width: 126.w,
+                          boxShape: BoxShape.circle,
+                        ),
+                        CustomText(
+                          text: profileController
+                                  .profileModel.value.profile?.id?.name ??
+                              "",
+                          font: CustomFont.inter,
+                          color: AppColors.darkNaturalGray,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 24.sp,
+                        ),
+                        CustomText(
+                          text:
+                              profileController.profileModel.value.email ?? "",
+                          font: CustomFont.inter,
+                          color: AppColors.darkNaturalGray,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16.sp,
+                          bottom: 10,
+                        ),
+                      ],
+                    );
+                }
+              }),
 
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   context.pushNamed(
                     RoutePath.personalInfoScreen,
                   );
@@ -75,8 +110,6 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(
                 height: 10.h,
               ),
-
-
 
               ProfileCardRow(
                 icon: Assets.icons.business.svg(),
@@ -159,8 +192,10 @@ class ProfileScreen extends StatelessWidget {
 
               //===================Log Out ==================
               CustomLogoutButton(
-                onTap: () {
-                  context.goNamed(RoutePath.signInScreen);
+                onTap: () async{
+                   await SharePrefsHelper.remove(AppConstants.id);
+                   Get.delete<ProfileController>();
+                   context.goNamed(RoutePath.signInScreen);
                 },
               ),
             ],
@@ -170,7 +205,3 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
