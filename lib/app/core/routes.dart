@@ -84,7 +84,7 @@ class AppRouter {
           name: RoutePath.chooseAuthScreen,
           path: RoutePath.chooseAuthScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ChooseAuthScreen(),
+            child: const HomeScreen(),
             state: state,
           ),
         ),
