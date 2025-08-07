@@ -1,0 +1,96 @@
+import 'package:flutter/material.dart';
+import 'package:local/app/view/common_widgets/confirm_dialog_box.dart/confirm_dialog.dart';
+import 'package:local/app/view/screens/vendor/produtcs_and_category/category/add_category/add_category.dart';
+import '../controller/category_controller.dart';
+import 'dart:io';
+
+class CategoryCard extends StatelessWidget {
+  final Category category;
+  const CategoryCard({super.key, required this.category});
+
+  @override
+  Widget build(BuildContext context) {
+    final isAsset = !category.imagePath.startsWith('/');
+    return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: isAsset
+                      ? Image.asset(
+                          category.imagePath,
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          File(category.imagePath),
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
+                ),
+                const SizedBox(height: 8),
+                Flexible(
+                  child: Text(
+                    category.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            right: -10,
+            top: 0,
+            child: PopupMenuButton<String>(
+              color: Colors.white,
+              icon: Icon(Icons.more_vert, size: 20, color: Colors.grey[800]),
+              onSelected: (value) {
+                if (value == 'edit') {
+                  Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  AddCategory()),
+            );
+                
+                } else if (value == 'delete') {
+                  showDialog(
+                    context: context,
+                    builder: (context) => ConfirmDialog(  title: 'Delete Category',
+                          content:
+                              'Are you sure you want to delete this category?', onConfirm: () { 
+                      //  Navigator.pop(context);
+
+
+                     },)
+                  );
+                }
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'edit',
+                  child: Text('Edit'),
+                ),
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: Text('Delete'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
