@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
+import 'package:local/app/view/screens/vendor/product/controller/vendor_product_controller.dart';
 import 'package:local/app/view/screens/vendor/product/widgets/product_cards.dart';
 
 import '../../../../core/route_path.dart';
@@ -12,6 +15,9 @@ import '../../../common_widgets/owner_nav/owner_nav.dart';
 
 class ProductScreen extends StatelessWidget {
   ProductScreen({super.key});
+
+  final VendorProductController vendorProductController =
+      Get.put(VendorProductController());
 
   final List<Product> products = [
     Product(
@@ -70,21 +76,33 @@ class ProductScreen extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            Expanded(
-              child: GridView.builder(
-                itemCount: products.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 0.65,
-                ),
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return ProductCard(product: product);
-                },
-              ),
-            ),
+            products.isEmpty
+                ? Center(
+                    child: Text(
+                      "No Products Found",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  )
+                : Obx(()=>
+                vendorProductController.userIndex.value=='product' ? Expanded(
+                    child: GridView.builder(
+                      gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 12.h,
+                        crossAxisSpacing: 12.w,
+                        childAspectRatio: 0.7,
+                      ),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        return ProductCard(product: products[index]);
+                      },
+                    ),
+                  ) : Text("Here Show the producs"),
+                  ),
             Row(
               children: [
                 Expanded(
@@ -92,9 +110,8 @@ class ProductScreen extends StatelessWidget {
                   child: CustomButton(
                     title: "Add Product",
                     onTap: () {
-                      context.pushNamed(
-                        RoutePath.addProductScreen,
-                      );
+                       vendorProductController.toggleUserIndex(selectedIndex: 'category');
+                      // context.pushNamed(RoutePath.addProductScreen);
                     },
                     textColor: AppColors.white,
                     fillColor: AppColors.brightCyan,
@@ -108,7 +125,7 @@ class ProductScreen extends StatelessWidget {
                   child: CustomButton(
                     title: "Add Category",
                     onTap: () {
-
+                      vendorProductController.toggleUserIndex(selectedIndex: 'product');
                     },
                     textColor: AppColors.white,
                     fillColor: AppColors.brightCyan,
