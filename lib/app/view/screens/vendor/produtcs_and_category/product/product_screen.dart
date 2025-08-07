@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
 import 'package:local/app/view/screens/vendor/produtcs_and_category/category/screen/categories_screen.dart';
 import 'package:local/app/view/screens/vendor/produtcs_and_category/product/controller/vendor_product_controller.dart';
 import 'package:local/app/view/screens/vendor/produtcs_and_category/product/widgets/products_grid_section.dart';
-
+import '../../../../../utils/app_colors/app_colors.dart';
+import '../../../../common_widgets/custom_appbar/custom_appbar.dart';
+import '../../../../common_widgets/owner_nav/owner_nav.dart';
 
 class ProductScreen extends StatelessWidget {
   ProductScreen({super.key});
