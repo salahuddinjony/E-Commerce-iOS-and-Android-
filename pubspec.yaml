@@ -61,6 +61,7 @@ dependencies:
   mime: ^2.0.0
   jwt_decoder: ^2.0.1
   flutter_html: ^3.0.0
+  flutter_easyloading: ^3.0.5
 
 
 dev_dependencies:

@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoryGridSection extends StatelessWidget {
   CategoryGridSection({super.key});
-  final CategoryController categoryController = Get.find();
+  final CategoryController categoryController = Get.put(CategoryController());
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class CategoryGridSection extends StatelessWidget {
         SizedBox(height: 12.h),
         Expanded(
           child: Obx(() {
-            final categories = categoryController.categories;
+            final categories = categoryController.categoriesData;
             if (categories.isEmpty) {
               return const Center(child: Text('No Categories Found'));
             }
@@ -39,6 +39,7 @@ class CategoryGridSection extends StatelessWidget {
         SizedBox(height: 20.h),
          CustomButton(
           onTap: () {
+           categoryController.fetchCategoires();
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => AddCategory()),

@@ -42,12 +42,7 @@ class ProductScreen extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: TabBarView(
             children: [
-             ProductsGridSection(
-              productsList:vendorProductController.productsData,
-              onAddProduct: () {
-                // Get.toNamed(RoutePath.addProductScreen);
-              },
-              ),
+             ProductsGridSection(),
               CategoriesScreen(),
             ],
           ),

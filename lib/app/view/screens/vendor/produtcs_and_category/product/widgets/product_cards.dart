@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:local/app/view/common_widgets/confirm_dialog_box.dart/confirm_dialog.dart';
 import 'package:local/app/view/screens/vendor/produtcs_and_category/product/add_product/add_product_screen.dart';
-
+import 'package:local/app/view/screens/vendor/produtcs_and_category/product/model/product_response.dart';
 import '../../../../../common_widgets/custom_network_image/custom_network_image.dart';
-import '../model/product.dart';
 
 class ProductCard extends StatelessWidget {
-  final Product productData;
+  final ProductItem productData;
 
   const ProductCard({super.key, required this.productData});
 
@@ -26,7 +24,7 @@ class ProductCard extends StatelessWidget {
               children: [
                 CustomNetworkImage(
                   imageUrl:
-                      productData.image, // fallback to empty string if null
+                      productData.images.toString(), // fallback to empty string if null
                   height: 90.h,
                   width: 119.w,
                 ),
@@ -72,23 +70,25 @@ class ProductCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              productData.title,
+              productData.name,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              productData.subtitle,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              productData.size.isNotEmpty
+                  ? 'Size: ${productData.size.join(', ')}'
+                  : 'Size: Not specified',
+              style: TextStyle(color: Colors.grey[600], fontSize:10),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  productData.price,
+                  '${productData.price} ${productData.currency}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 12),
                 ),
                 Text(
-                  productData.sold,
+                  '${productData.quantity.toString()} in stock',
                   style: TextStyle(color: Colors.grey[600], fontSize: 10),
                 ),
               ],

@@ -1,5 +1,5 @@
 class ApiUrl {
-  static const baseUrl = "http://10.10.20.19:5007/v1";
+  static const baseUrl = "http://10.10.20.19:5007/v1"; //
   static const networkUrl = "http://10.10.20.19:5007/v1/";
 
   ///================================= User Authentication url==========================
@@ -32,8 +32,17 @@ class ApiUrl {
 
 
 
+//=================Vendor=================
 
 
+  //=================Product=================
+
+  
+  static const productList = "$baseUrl/product/retrieve";
+ 
+   //=================Category==========
+
+  static const categoryList = "$baseUrl/category/retrieve";
 
 
 
