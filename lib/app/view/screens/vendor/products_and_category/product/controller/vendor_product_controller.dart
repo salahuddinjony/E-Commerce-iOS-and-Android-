@@ -4,7 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:local/app/services/app_url.dart';
-import 'package:local/app/view/screens/vendor/produtcs_and_category/product/model/product_response.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
 
 class VendorProductController extends GetxController {
   var userIndex = "product".obs;

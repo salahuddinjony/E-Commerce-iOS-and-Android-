@@ -44,6 +44,12 @@ class ApiUrl {
 
   static const categoryList = "$baseUrl/category/retrieve";
 
+  static String createCategory="$baseUrl/category/create";
+
+  static String categoryDelete({required String categoryId}) {
+    return "$baseUrl/category/delete/$categoryId";
+  }
+
 
 
 

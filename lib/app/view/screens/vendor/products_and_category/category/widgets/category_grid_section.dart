@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../controller/category_controller.dart';
 import 'category_card.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/screens/vendor/produtcs_and_category/category/add_category/add_category.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/category/add_category/add_category.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoryGridSection extends StatelessWidget {
@@ -39,10 +39,13 @@ class CategoryGridSection extends StatelessWidget {
         SizedBox(height: 20.h),
          CustomButton(
           onTap: () {
-           categoryController.fetchCategoires();
+           categoryController.fetchCategories();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AddCategory()),
+              MaterialPageRoute(builder: (context) => AddCategory(
+                imagePath: categoryController.imagePath.value,
+                categoryName: categoryController.nameController.text,
+              )),
             );
           },
           title: "Add Category",

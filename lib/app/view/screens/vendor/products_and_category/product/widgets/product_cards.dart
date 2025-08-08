@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/view/common_widgets/confirm_dialog_box.dart/confirm_dialog.dart';
-import 'package:local/app/view/screens/vendor/produtcs_and_category/product/add_product/add_product_screen.dart';
-import 'package:local/app/view/screens/vendor/produtcs_and_category/product/model/product_response.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/add_product_screen.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
 import '../../../../../common_widgets/custom_network_image/custom_network_image.dart';
 
 class ProductCard extends StatelessWidget {
@@ -23,8 +23,8 @@ class ProductCard extends StatelessWidget {
             Stack(
               children: [
                 CustomNetworkImage(
-                  imageUrl:
-                      productData.images.toString(), // fallback to empty string if null
+                  imageUrl: productData.images
+                      .toString(), // fallback to empty string if null
                   height: 90.h,
                   width: 119.w,
                 ),
@@ -43,15 +43,17 @@ class ProductCard extends StatelessWidget {
                                 builder: (context) =>
                                     const AddProductScreen()));
                       } else if (value == 'delete') {
-                         showDialog(
-                    context: context,
-                    builder: (context) => ConfirmDialog(  title: 'Delete Category',
-                          content:
-                              'Are you sure you want to delete this category?', onConfirm: () { 
-                      //  Navigator.pop(context);
-
-                     },)
-                  );
+                        showDialog(
+                            context: context,
+                            builder: (context) => ConfirmDialog(
+                                  title: 'Delete Category',
+                                  content:
+                                      'Are you sure you want to delete this category?',
+                                  onConfirm: () {
+                                    
+                                    Navigator.pop(context);
+                                  },
+                                ));
                       }
                     },
                     itemBuilder: (context) => [
@@ -77,7 +79,7 @@ class ProductCard extends StatelessWidget {
               productData.size.isNotEmpty
                   ? 'Size: ${productData.size.join(', ')}'
                   : 'Size: Not specified',
-              style: TextStyle(color: Colors.grey[600], fontSize:10),
+              style: TextStyle(color: Colors.grey[600], fontSize: 10),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

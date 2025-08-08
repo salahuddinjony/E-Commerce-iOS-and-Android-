@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:local/app/view/common_widgets/confirm_dialog_box.dart/confirm_dialog.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/add_category/add_category.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/model/category_response.dart';
 import '../controller/category_controller.dart';
-import 'dart:io';
+
 
 class CategoryCard extends StatelessWidget {
   final CategoryData category;
-  const CategoryCard({super.key, required this.category});
+   CategoryCard({super.key, required this.category});
+    final CategoryController controller = Get.put(CategoryController());
 
   @override
   Widget build(BuildContext context) {
-    
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -27,24 +28,25 @@ class CategoryCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                 Expanded(
-                   child: CustomNetworkImage(
+                  Expanded(
+                    child: CustomNetworkImage(
                       imageUrl:
                           category.image, // fallback to empty string if null
                       height: 119.h,
                       width: 119.w,
                     ),
-                 ),
+                  ),
                   const SizedBox(height: 8),
-                 Expanded(
-                   child: Text(
-                        category.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                 ),
+                  Expanded(
+                    child: Text(
+                      category.name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -56,22 +58,24 @@ class CategoryCard extends StatelessWidget {
                 icon: Icon(Icons.more_vert, size: 20, color: Colors.grey[800]),
                 onSelected: (value) {
                   if (value == 'edit') {
+
                     Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  AddCategory()),
-              );
-                  
+                      context,
+                      MaterialPageRoute(builder: (context) => AddCategory(imagePath:category.image, categoryName:category.name ,)),
+                    );
                   } else if (value == 'delete') {
                     showDialog(
-                      context: context,
-                      builder: (context) => ConfirmDialog(  title: 'Delete Category',
-                            content:
-                                'Are you sure you want to delete this category?', onConfirm: () { 
-                        //  Navigator.pop(context);
-        
-        
-                       },)
-                    );
+                        context: context,
+                        builder: (context) => ConfirmDialog(
+                              title: 'Delete Category',
+                              content:
+                                  'Are you sure you want to delete this category?',
+                              onConfirm: () async{
+                                await controller.deleteCategory(category.id);
+                                controller.reFresehData();
+                                // Navigator.pop(context); // Close the dialog
+                              },
+                            ));
                   }
                 },
                 itemBuilder: (context) => [
