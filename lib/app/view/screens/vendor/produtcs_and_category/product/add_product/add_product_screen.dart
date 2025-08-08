@@ -5,8 +5,6 @@ import 'package:local/app/utils/custom_assets/assets.gen.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
 import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
-import 'package:local/app/view/screens/vendor/produtcs_and_category/product/model/product.dart';
-
 import '../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../common_widgets/custom_appbar/custom_appbar.dart';
 import '../../../../../common_widgets/custom_text/custom_text.dart';

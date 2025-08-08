@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         routeInformationParser: AppRouter.route.routeInformationParser,
         routerDelegate: AppRouter.route.routerDelegate,
         routeInformationProvider: AppRouter.route.routeInformationProvider,
+        builder: EasyLoading.init(),
       ),
     );
   }
