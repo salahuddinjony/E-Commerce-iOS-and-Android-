@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/screens/vendor/produtcs_and_category/category/controller/category_controller.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/category/controller/category_controller.dart';
 import 'package:get/get.dart';
 
 class AddCategory extends StatelessWidget {
