@@ -4,12 +4,14 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:local/app/core/routes.dart';
 import 'package:local/app/services/app_url.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/category/controller/mixin_create_category.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/category/controller/mixin_create_and_update_category.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/controller/mixin_delete_category.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/model/category_response.dart';
 
-class CategoryController extends GetxController with DeleteCategoryMixin,MixinCreateCategory {
+class CategoryController extends GetxController
+    with DeleteCategoryMixin, MixinCreateAndUpdateCategory {
   var name = ''.obs;
   var imagePath = ''.obs;
   final nameController = TextEditingController();
@@ -34,12 +36,19 @@ class CategoryController extends GetxController with DeleteCategoryMixin,MixinCr
   }
 
   Future<void> pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      print("New image picked: ${pickedFile.path}");
-      imagePath.value = pickedFile.path;
-      isNetworkImage.value = false; // New image is a local file
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        print("New image picked: ${pickedFile.path}");
+        imagePath.value = pickedFile.path;
+        isNetworkImage.value = false;
+      } else {
+        print("No image selected");
+      }
+    } catch (e) {
+      print("Error picking image: $e");
+      EasyLoading.showError('Failed to pick image: $e');
     }
   }
 
@@ -68,7 +77,6 @@ class CategoryController extends GetxController with DeleteCategoryMixin,MixinCr
       );
 
       if (response.statusCode == 200) {
-        // EasyLoading.showSuccess('Categories loaded successfully');
         final responseData = json.decode(response.body);
         final categoryResponse = CategoryResponse.fromJson(responseData);
         categoriesData.value = categoryResponse.data;
@@ -91,18 +99,46 @@ class CategoryController extends GetxController with DeleteCategoryMixin,MixinCr
       EasyLoading.dismiss();
     }
   }
-  Future<void> createCategoryPost() async {
-    String name = nameController.text.trim();
-    String imagePath = this.imagePath.value.trim();
-    print("Creating category with name: $name and imagePath: $imagePath");
-    await super.createCategory(name, imagePath);
+
+  void reFresehData() {
+    print("Refreshing data");
     fetchCategories();
     clear();
   }
 
-  void reFresehData(){
-    print("Refreshing data");
-    fetchCategories();
-    clear();
+  Future<void> createCategoryPost(String method, String id, String passedImage, String passedName) async {
+    String name = nameController.text.trim();
+    String imagePath = this.imagePath.value.trim();
+
+   
+    if (method == 'PATCH') {
+      if (name == passedName && imagePath == passedImage) {
+        EasyLoading.showError('No changes detected');
+        print("Validation failed: No changes detected (name=$name, imagePath=$imagePath)");
+        return;
+      }
+    }
+
+   
+    if (name.isEmpty) {
+      EasyLoading.showError('Category name cannot be empty');
+      print("Validation failed: name is empty");
+      return;
+    }
+    if (method == 'POST' && imagePath.isEmpty) {
+      EasyLoading.showError('Please select an image for the category');
+      print("Validation failed: imagePath is empty for POST");
+      return;
+    }
+    if (method == 'PATCH' && (id.isEmpty || id == 'null')) {
+      EasyLoading.showError('Category ID is required for updating');
+      print("Validation failed: categoryId is empty for PATCH");
+      return;
+    }
+
+    print("Creating/Updating category: method=$method, id=$id, name=$name, imagePath=$imagePath, isNetworkImage=${isNetworkImage.value}");
+    await super.createUpdateCategory(name, imagePath, method, id);
+    reFresehData();
+    AppRouter.route.pop();
   }
 }

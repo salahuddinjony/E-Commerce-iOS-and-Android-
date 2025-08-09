@@ -61,10 +61,11 @@ class CategoryCard extends StatelessWidget {
 
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AddCategory(imagePath:category.image, categoryName:category.name ,)),
+                      MaterialPageRoute(builder: (context) => AddCategory(imagePath:category.image, categoryName:category.name ,method: 'PATCH',categoryId: category.id,)),
                     );
                   } else if (value == 'delete') {
                     showDialog(
+                      barrierDismissible: false,
                         context: context,
                         builder: (context) => ConfirmDialog(
                               title: 'Delete Category',

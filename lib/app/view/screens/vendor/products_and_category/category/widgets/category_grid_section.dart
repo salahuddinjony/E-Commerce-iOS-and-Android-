@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:local/app/core/route_path.dart';
+import 'package:local/app/core/routes.dart';
 import '../controller/category_controller.dart';
 import 'category_card.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
@@ -44,9 +46,16 @@ class CategoryGridSection extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (context) => AddCategory(
                 imagePath: categoryController.imagePath.value,
-                categoryName: categoryController.nameController.text,
+                categoryName: categoryController.nameController.text, method: 'POST', categoryId: null,
               )),
             );
+            // AppRouter.route.goNamed(
+            //   RoutePath.addCategory,
+            //   queryParameters: {
+            //     "imagePath": categoryController.imagePath.value,
+            //     "categoryName": categoryController.nameController.text,
+            //   },
+            // );
           },
           title: "Add Category",
           isRadius: true,
