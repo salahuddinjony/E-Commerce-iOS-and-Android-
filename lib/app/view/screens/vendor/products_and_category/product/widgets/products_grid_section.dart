@@ -11,7 +11,7 @@ class ProductsGridSection extends StatelessWidget {
   ProductsGridSection({super.key});
 
   VendorProductController vendorProductController =
-      Get.put(VendorProductController());
+      Get.find<VendorProductController>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +52,11 @@ class ProductsGridSection extends StatelessWidget {
         CustomButton(
           onTap: () {
             print("Add Product Button Pressed");
-            vendorProductController.fetchProducts();
+            // vendorProductController.fetchProducts();
+            vendorProductController.fetchCategories();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AddProductScreen()),
+              MaterialPageRoute(builder: (context) =>  AddProductScreen()),
             );
           },
           title: "Add Product",

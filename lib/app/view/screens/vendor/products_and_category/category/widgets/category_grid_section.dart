@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoryGridSection extends StatelessWidget {
   CategoryGridSection({super.key});
-  final CategoryController categoryController = Get.put(CategoryController());
+  final CategoryController categoryController = Get.find<CategoryController>();
 
   @override
   Widget build(BuildContext context) {

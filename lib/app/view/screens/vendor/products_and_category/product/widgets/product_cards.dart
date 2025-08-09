@@ -41,7 +41,7 @@ class ProductCard extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const AddProductScreen()));
+                                     AddProductScreen()));
                       } else if (value == 'delete') {
                         showDialog(
                             context: context,

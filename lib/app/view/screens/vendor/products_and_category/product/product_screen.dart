@@ -42,8 +42,8 @@ class ProductScreen extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: TabBarView(
             children: [
-             ProductsGridSection(),
-              CategoriesScreen(),
+            ProductsGridSection(),
+            const CategoriesScreen(),
             ],
           ),
         ),

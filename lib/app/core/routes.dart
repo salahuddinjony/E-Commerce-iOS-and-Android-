@@ -177,7 +177,7 @@ class AppRouter {
           name: RoutePath.addProductScreen,
           path: RoutePath.addProductScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const AddProductScreen(),
+            child:  AddProductScreen(),
             state: state,
           ),
         ),
