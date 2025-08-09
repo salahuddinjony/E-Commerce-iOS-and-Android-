@@ -4,6 +4,7 @@ import 'package:local/app/global/controller/Onboarding_Controller.dart';
 import 'package:local/app/global/controller/genarel_controller.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 import 'package:local/app/view/screens/splash/controller/splash_controller.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/category/controller/category_controller.dart';
 
 import '../view/screens/common_screen/controller/info_controller.dart';
 import '../view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
@@ -19,6 +20,8 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => GeneralController(), fenix: true);
     Get.lazyPut(() => VendorProductController(), fenix: true);
     Get.lazyPut(() => ProfileController(), fenix: true);
+    Get.lazyPut(()=> VendorProductController(), fenix: true);
+    Get.lazyPut(() => CategoryController(), fenix: true);
 
 
   }
