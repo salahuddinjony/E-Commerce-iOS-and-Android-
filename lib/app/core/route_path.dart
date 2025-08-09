@@ -37,6 +37,16 @@ class RoutePath {
   static const String viewOrderDetails = 'ViewOrderDetails';
   static const String shopDetailsScreen = 'ShopDetailsScreen';
 
+
+    ///======================= Categpry =======================
+  static const String categoryScreen = 'CategoryScreen';
+  static const String addCategory = 'AddCategory';
+
+
+     ///======================= product =======================
+  static const String productListScreen = 'ProductListScreen';
+  // static const String addProductScreen = 'AddProductScreen';
+
   ///======================= User Section =======================
   static const String userHomeScreen = 'UserHomeScreen';
   static const String chatScreen = 'ChatScreen';

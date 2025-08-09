@@ -15,6 +15,7 @@ import 'package:local/app/view/screens/user/chat/inbox/inbox_screen.dart';
 import 'package:local/app/view/screens/user/support/order_mangement/order_manegment_screen.dart';
 import 'package:local/app/view/screens/user/support/support_screen.dart';
 import 'package:local/app/view/screens/user/user_home/user_home_screen.dart';
+import 'package:local/app/view/screens/user/user_home/user_profile/category/category_screen.dart';
 import 'package:local/app/view/screens/user/user_home/user_profile/order_history/order_history_screen.dart';
 import 'package:local/app/view/screens/user/user_home/user_profile/user_profile_screen.dart';
 import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.dart';
@@ -147,7 +148,9 @@ class AppRouter {
               child: const HomeScreen(), state: state, disableAnimation: true),
         ),
 
-        ///======================= ordersScreen =======================
+
+
+      ///======================= ordersScreen =======================
         GoRoute(
           name: RoutePath.ordersScreen,
           path: RoutePath.ordersScreen.addBasePath,
@@ -155,6 +158,18 @@ class AppRouter {
               child: const OrdersScreen(),
               state: state,
               disableAnimation: true),
+        ),
+
+        ///======================= Category =======================
+        GoRoute(
+          name: RoutePath.categoryScreen,
+          path: RoutePath.categoryScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+              child: const CategoryScreen(),
+              state: state,
+              disableAnimation: true
+              
+              ),
         ),
 
         ///======================= AddProductScreen =======================

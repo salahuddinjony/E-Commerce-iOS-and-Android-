@@ -3,18 +3,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/controller/category_controller.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/category/screen/categories_screen.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/widgets/category_name_input.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/widgets/image_upload_widget.dart';
 
 class AddCategory extends StatelessWidget {
   final String imagePath;
   final String categoryName;
+  final String method;
+  final String? categoryId;
 
-  AddCategory({super.key, required this.imagePath, required this.categoryName});
+  AddCategory({
+    super.key,
+    required this.imagePath,
+    required this.categoryName,
+    required this.method,
+    this.categoryId,
+  });
 
-  final CategoryController categoryController =
-      Get.put(CategoryController(), tag: UniqueKey().toString());
+  final CategoryController categoryController = Get.find<CategoryController>();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +33,7 @@ class AddCategory extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text('Add Category'),
+        title: Text(method == 'POST' ? 'Add Category' : 'Edit Category'),
       ),
       body: SafeArea(
         child: Padding(
@@ -41,19 +47,12 @@ class AddCategory extends StatelessWidget {
               SizedBox(height: 32.h),
               CustomButton(
                 onTap: () async {
-                  print(
-                      "Category Name: ${categoryController.nameController.text}");
+                  print("Category Name: ${categoryController.nameController.text}");
                   print("Image Path: ${categoryController.imagePath.value}");
-                  print(
-                      "Is Network Image: ${categoryController.isNetworkImage.value}");
-                  await categoryController.createCategoryPost();
-                
-                  categoryController.reFresehData();
-                  categoryController.nameController.clear();
-                  categoryController.clearImage();
-                    Get.to(const CategoriesScreen());
+                  print("Is Network Image: ${categoryController.isNetworkImage.value}");
+                  await categoryController.createCategoryPost(method, categoryId ?? '',imagePath, categoryName );
                 },
-                title: "Add",
+                title: method == 'POST' ? 'Add' : 'Update',
                 isRadius: true,
               ),
             ],

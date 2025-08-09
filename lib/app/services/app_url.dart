@@ -48,6 +48,10 @@ class ApiUrl {
 
   static String categoryDelete({required String categoryId}) {
     return "$baseUrl/category/delete/$categoryId";
+  
+  }
+  static String updateCategory({required String categoryId}) {
+    return "$baseUrl/category/update/$categoryId";
   }
 
 
