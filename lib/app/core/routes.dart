@@ -22,7 +22,7 @@ import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.d
 import 'package:local/app/view/screens/user/user_order/user_order_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/orders/orders_screen.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/product/product_screen.dart'
+import 'package:local/app/view/screens/vendor/products_and_category/product/screen/product_screen.dart'
     show ProductScreen;
 import 'package:local/app/view/screens/vendor/profile/help_center/help_center_screen.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile/edit_profile_screen.dart';
@@ -49,7 +49,7 @@ import '../view/screens/user/user_order/user_order_details/user_order_details_sc
 import '../view/screens/vendor/home/view_order/view_order_details/view_order_details.dart';
 import '../view/screens/vendor/home/view_order/view_order_screen.dart';
 import '../view/screens/vendor/orders/pending_details/pending_details_screen.dart';
-import '../view/screens/vendor/products_and_category/product/add_product/add_product_screen.dart';
+import '../view/screens/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import '../view/screens/vendor/profile/business_documents/business_documents_screen.dart';
 import '../view/screens/vendor/vendor_message/vendor_message_screen.dart';
 import 'route_path.dart';
@@ -85,7 +85,8 @@ class AppRouter {
           name: RoutePath.chooseAuthScreen,
           path: RoutePath.chooseAuthScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const HomeScreen(),
+            // child: const HomeScreen(),
+            child: const  ChooseAuthScreen(),
             state: state,
           ),
         ),

@@ -39,7 +39,15 @@ class ApiUrl {
 
   
   static const productList = "$baseUrl/product/retrieve";
- 
+
+  static String createProduct = "$baseUrl/product/create";
+  
+  static String productDelete({required String productId}) {
+    return "$baseUrl/product/delete/$productId";
+  }
+  static String updateProduct({required String productId}) {
+    return "$baseUrl/product/update/$productId";
+  }
    //=================Category==========
 
   static const categoryList = "$baseUrl/category/retrieve";
