@@ -11,15 +11,11 @@ import 'package:local/app/view/common_widgets/custom_network_image/custom_networ
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/controller/profile_controller.dart';
-
 import '../../../../core/route_path.dart';
 import '../../../../data/local/shared_prefs.dart';
-import '../../../../services/app_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
 import '../../../../utils/enums/status.dart';
 import '../../../common_widgets/custom_loader/custom_loader.dart';
-import '../../../common_widgets/genarel_screen/genarel_screen.dart';
-import '../../../common_widgets/no_internet/no_internet.dart';
 import '../../../common_widgets/profile_card_row/profile_card_row.dart';
 
 class ProfileScreen extends StatelessWidget {

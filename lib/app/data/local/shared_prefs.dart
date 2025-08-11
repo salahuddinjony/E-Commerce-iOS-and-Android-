@@ -1,11 +1,26 @@
 
 
+import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharePrefsHelper {
+
+    static late SharedPreferences _preferences;
+
+  /// Initialize once in main() before using
+  static Future<void> init() async {
+    _preferences = await SharedPreferences.getInstance();
+  }
+
   //===========================Get Data From Shared Preference===================
 
   static Future<String> getString(String key) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    return preferences.getString(key) ?? "";
+  }
+  
+  static Future<String> getRole(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
 
     return preferences.getString(key) ?? "";
@@ -33,6 +48,11 @@ class SharePrefsHelper {
 //===========================Save Data To Shared Preference===================
 
   static Future setString(String key, value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setString(key, value);
+  }
+
+   static Future setRole(String key, value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.setString(key, value);
   }
@@ -65,6 +85,7 @@ class SharePrefsHelper {
   static Future<void> remove(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(key);
+    await prefs.remove(AppConstants.bearerToken);
   }
 
 }

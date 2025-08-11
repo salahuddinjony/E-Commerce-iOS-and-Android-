@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/add_product_screen.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/widgets/product_cards.dart';
 

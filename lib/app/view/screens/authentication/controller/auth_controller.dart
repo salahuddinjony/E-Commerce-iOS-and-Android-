@@ -46,8 +46,19 @@ class AuthController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+
+
+        print("Response:========================== $response.body");
+        print("Auth token:========================== ${response.body["data"]['accessToken']}");
+        SharePrefsHelper.setString(
+          AppConstants.bearerToken,
+          response.body["data"]['accessToken'],
+        );
+        print("Bearer Tokensss:========================== ${await SharePrefsHelper.getString(AppConstants.bearerToken)}");
         Map<String, dynamic> decodedToken =
             JwtDecoder.decode(response.body["data"]['accessToken']);
+    
+
         print("Decoded Token:========================== $decodedToken");
         String role = decodedToken['role'];
 
@@ -64,6 +75,8 @@ class AuthController extends GetxController {
           AppConstants.id,
           response.body['data']["_id"],
         );
+        final token =await SharePrefsHelper.getString(AppConstants.bearerToken);
+        print("Access Token:========================== $token");
 
         debugPrint("Id================${response.body['data']["_id"]}");
 
