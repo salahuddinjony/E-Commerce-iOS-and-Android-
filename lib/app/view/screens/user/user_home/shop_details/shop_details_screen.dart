@@ -405,11 +405,11 @@ class DesignerCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  imageUrl,
+                child: CustomNetworkImage(
+                  imageUrl: imageUrl,
                   width: 90,
                   height: 90,
-                  fit: BoxFit.cover,
+                  boxShape: BoxShape.rectangle,
                 ),
               ),
               const SizedBox(width: 15),

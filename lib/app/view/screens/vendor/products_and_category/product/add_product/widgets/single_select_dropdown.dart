@@ -22,6 +22,9 @@ class SingleSelectDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure options are unique to prevent dropdown errors
+    final uniqueOptions = options.toSet().toList();
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,7 +38,9 @@ class SingleSelectDropdown extends StatelessWidget {
         ),
         Obx(
           () => DropdownButtonFormField<String>(
-            value: selectedValue.value.isEmpty ? null : selectedValue.value,
+            value: selectedValue.value.isEmpty || !uniqueOptions.contains(selectedValue.value) 
+                ? null 
+                : selectedValue.value,
             decoration: InputDecoration(
               filled: true,
               fillColor: AppColors.white,
@@ -46,7 +51,7 @@ class SingleSelectDropdown extends StatelessWidget {
             ),
             dropdownColor: AppColors.white,
             hint: Text(hintText),
-            items: options.map((String option) {
+            items: uniqueOptions.map((String option) {
               return DropdownMenuItem<String>(
                 value: option,
                 child: Text(option),

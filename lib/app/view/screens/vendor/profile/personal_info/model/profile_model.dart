@@ -170,7 +170,7 @@ class Id {
     description: json["description"],
     deliveryOption: json["deliveryOption"] == null ? [] : List<String>.from(json["deliveryOption"]!.map((x) => x)),
     documents: json["documents"] == null ? [] : List<String>.from(json["documents"]!.map((x) => x)),
-    image: json["image"],
+    image: json["image"]?.toString().replaceAll('\\', '/'),
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
