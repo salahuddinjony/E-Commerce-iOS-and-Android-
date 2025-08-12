@@ -36,14 +36,20 @@ class ProductsGridSection extends StatelessWidget {
             }
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: 3, //it would be 2
                 mainAxisSpacing: 2.h,
                 crossAxisSpacing: 2.w,
                 childAspectRatio: 0.7,
               ),
               itemCount: products.length,
               itemBuilder: (context, index) {
-                return ProductCard(productData: products[index]);
+                return ProductCard(
+                  productData: products[index],
+                  onProductDeleted: () {
+                    // Refresh the products list after deletion
+                    vendorProductController.fetchProducts();
+                  },
+                );
               },
             );
           }),
@@ -56,7 +62,7 @@ class ProductsGridSection extends StatelessWidget {
             vendorProductController.fetchCategories();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) =>  AddProductScreen()),
+              MaterialPageRoute(builder: (context) =>  AddProductScreen(method: 'POST',)),
             );
           },
           title: "Add Product",

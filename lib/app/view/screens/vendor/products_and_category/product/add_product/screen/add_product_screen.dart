@@ -14,18 +14,49 @@ import 'package:local/app/view/screens/vendor/products_and_category/product/cont
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AddProductScreen extends StatelessWidget {
-  AddProductScreen({super.key});
+
+  final String ? method;
+  final String? productId;
+  final String? productName;
+  final String? imageUrl;
+  final String? categoryId;
+  final String ? categoryName;
+  final List<String>? selectedColor;
+  final List<String>? selectedSize;
+  final String? price;
+  final String? quantity;
+  final String? isFeatured;
+
+
+  AddProductScreen({super.key, this.method, this.productId, this.categoryId, this.categoryName, this.productName, this.imageUrl, this.price, this.quantity, this.isFeatured, this.selectedColor, this.selectedSize});
 
   final VendorProductController controller =
       Get.find<VendorProductController>();
 
   @override
   Widget build(BuildContext context) {
+     // Initialize controller fields when the widget is built
+    if (method == 'PATCH') {
+      controller.initializeForEdit(
+        productName: productName,
+        colors: selectedColor,
+        sizes: selectedSize,
+        price: price,
+        quantity: quantity,
+        isFeaturedValue: isFeatured,
+        categoryId: categoryId,
+        categoryName: categoryName,
+        image: imageUrl!,
+      );
+    } else {
+      // Clear fields for new product
+      controller.initializeForEdit(image: '');
+    }
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const CustomAppBar(
+      appBar:  CustomAppBar(
         iconData: Icons.arrow_back,
-        appBarContent: "Add Product",
+        appBarContent: method=='POST' ? "Add Product" : "Edit Product",
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -39,7 +70,7 @@ class AddProductScreen extends StatelessWidget {
 
               /// Product Name
               CustomFromCard(
-                hinText: "U Tee Hub",
+                hinText: "Enter product name",
                 title: "Product Name",
                 controller: controller.productNameController,
                 validator: (v) {},
@@ -81,18 +112,23 @@ class AddProductScreen extends StatelessWidget {
               /// Customizable
               SingleSelectDropdown(
                 title: 'Customizable',
-                options: controller.isFeatured.isEmpty
-                    ? ['Yes', 'No']
-                    : ['No', 'Yes'],
+                options: const ['true', 'false'],
                 selectedValue: controller.isFeatured,
                 hintText: 'Select Customizable',
-                onChanged: controller.isFeatured,
+                onChanged: controller.setIsFeatured,
+              ),
+              SizedBox(height: 20.h),
+              CustomFromCard(
+                hinText: "Enter quantity",
+                title: "Qunatity",
+                controller: controller.quantityController,
+                validator: (v) {},
               ),
               SizedBox(height: 20.h),
 
               /// Price
               CustomFromCard(
-                hinText: "20\$",
+                hinText: "Enter price",
                 title: "Price (\$)",
                 controller: controller.priceController,
                 validator: (v) {},
@@ -101,16 +137,17 @@ class AddProductScreen extends StatelessWidget {
 
               /// Submit Button
               CustomButton(
-                title: "Submit",
-                onTap: () {
-                  controller.createProduct();
-                  controller.getAllData();
-                  controller.selectedColor.clear();
-                  controller.selectedSize.clear();
-                  // Add submission logic here
-                  context.pop();
+                title:method=='POST' ? "Submit" : "Update",
+                onTap: () async {
+                  bool success = await controller.createOrUpdateProduct(method: method!,productId: productId);
+
+                  if (success) {
+                    controller.fetchProducts();
+                    context.pop();
+                  }
                 },
               ),
+
               SizedBox(height: 20.h),
             ],
           ),

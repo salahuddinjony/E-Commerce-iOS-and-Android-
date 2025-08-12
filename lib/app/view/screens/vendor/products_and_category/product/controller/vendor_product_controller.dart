@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
+import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/services/app_url.dart';
+import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/services/category_services.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/services/create_product.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
@@ -20,32 +21,12 @@ class VendorProductController extends GetxController with CategoryServices,Creat
  final searchController = TextEditingController();
   final RxList<dynamic> filteredCategories = <dynamic>[].obs; 
 
-  
-  // final productNameController = TextEditingController();
-  // final priceController = TextEditingController();
-
-  // //For category selection
-  // final searchController = TextEditingController();
-  // final RxList<dynamic> filteredCategories = <dynamic>[].obs; 
-  // RxString selectedCategory = ''.obs;
-
-  // //For color, size, and customizable options
-  // RxList<String> selectedColor = <String>[].obs; 
-  // RxList<String> selectedSize = <String>[].obs; 
-  // RxString selectedCustomizable = ''.obs;
-
-  // RxString selectedImagePath = ''.obs;
-  // RxString selectedProductId = ''.obs;
-
-  // RxBool isLoading = false.obs;
-
-  // final isNetworkImage = false.obs;
-  // var imagePath = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchProducts();
+    fetchCategories();
     filteredCategories.assignAll(categoriesData);
   }
 
@@ -62,97 +43,39 @@ class VendorProductController extends GetxController with CategoryServices,Creat
       );
     }
   }
+  void initializeForEdit({
+    String? productName,
+    List<String>? colors,
+    List<String>? sizes,
+    String? price,
+    String? quantity,
+    String? isFeaturedValue,
+    String? categoryId,
+    String? categoryName,
+    required String image,
+  }) {
+   
+    productNameController.text = productName ?? '';
+    selectedColor.value = colors ?? [];
+    selectedSize.value = sizes ?? [];
+    priceController.text = price ?? '';
+    quantityController.text = quantity ?? '';
+    isFeatured.value = isFeaturedValue ?? 'false';
+    selectedCategory.value = categoryId ?? '';
+    categoryNameIs.value = categoryName?? '';
+    imagePath.value = image;
+    isNetworkImage.value = image.startsWith('http');
+    
+  }
 
 
 
-
-//   final Map<String, String> colors = {
-//     "Black": "#000000",
-//     "White": "#FFFFFF",
-//     "Red": "#FF0000",
-//     "Green": "#00FF00",
-//     "Blue": "#0000FF",
-//     "Yellow": "#FFFF00",
-//     "Pink": "#FFC0CB",
-//     "Purple": "#800080",
-//     "Orange": "#FFA500",
-//   };
-//   final List<String> sizes = [
-//     "S",
-//     "M",
-//     "L",
-//     "XL",
-//     "XXL",
-//   ];
-//   final List<String> customizable = [
-//     "Yes",
-//     "No",
-//   ];
-//   Future<void> pickImage() async {
-//     try {
-//       final picker = ImagePicker();
-//       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-//       if (pickedFile != null) {
-//         print("New image picked: ${pickedFile.path}");
-//         imagePath.value = pickedFile.path;
-//         isNetworkImage.value = false;
-//       } else {
-//         print("No image selected");
-//       }
-//     } catch (e) {
-//       print("Error picking image: $e");
-//       EasyLoading.showError('Failed to pick image: $e');
-//     }
-//   }
-
-
-//   void setSelectedCategory(String category) {
-//     selectedCategory.value = category;
-//   }
-
-//   void setSelectedColor(List<String> color) {
-//     selectedColor.assignAll(color);
-//   }
-
-//   void setSelectedSize(List<String> size) {
-//     selectedSize.assignAll(size);
-//   }
-
-//   void setSelectedCustomizable(String customizable) {
-//     selectedCustomizable.value = customizable;
-//   }
-
-//   void getAllData(){
-//     print("Selected Category: ${selectedCategory.value}");
-//     print("Selected Colors: ${selectedColor.join(', ')}");
-//     print("Selected Sizes: ${selectedSize.join(', ')}");
-//     print("Selected Customizable: ${selectedCustomizable.value}");
-//     print("Image Path: ${imagePath.value}");
-//     print("Product Name: ${productNameController.text}");
-//     print("Price: ${priceController.text}");
-//   }
-//   void clearImage() {
-//   imagePath.value = '';
-//   isNetworkImage.value = false;
-// }
-
-
-
-//   void clear() {
-//     productNameController.clear();
-//     priceController.clear();
-//     selectedCategory.value = '';
-//     selectedColor.clear();
-//     selectedSize.clear();
-//     selectedCustomizable.value = '';
-//     imagePath.value = '';
-//     isNetworkImage.value = false;
-//   }
 
   @override
   void onClose() {
     productNameController.dispose();
     priceController.dispose();
+    quantityController.dispose();
     searchController.dispose();
     super.onClose();
   }
@@ -163,14 +86,33 @@ class VendorProductController extends GetxController with CategoryServices,Creat
       maskType: EasyLoadingMaskType.black,
     );
     try {
+      // Get the authentication token
+      final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
+      
+      if (token.isEmpty) {
+        EasyLoading.showError('Authentication token is missing. Please log in again.');
+        return;
+      }
+      
       final response = await http.get(
         Uri.parse(ApiUrl.productList),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       );
 
       if (response.statusCode == 200) {
         EasyLoading.showSuccess('Products loaded successfully');
         final responseData = json.decode(response.body);
+        
+        // Check if the response has the expected structure
+        if (responseData['data'] == null) {
+          print("Warning: Response data is null or missing");
+          print("Full response: $responseData");
+          return;
+        }
+        
         final productResponse = ProductResponse.fromJson(responseData['data']);
         print(responseData['message']);
         print(
@@ -178,13 +120,26 @@ class VendorProductController extends GetxController with CategoryServices,Creat
         print("Product Response: ${responseData['data']}");
         print("Product Items: ${productResponse.data}");
         print("Product Items Value: ${productItems.value}");
+        
+        // Debug: Check individual product images
+        for (int i = 0; i < productResponse.data.length; i++) {
+          final product = productResponse.data[i];
+          print("Product $i (${product.name}):");
+          print("  - Images count: ${product.images.length}");
+          print("  - Images: ${product.images}");
+          if (product.images.isNotEmpty) {
+            print("  - First image: ${product.images.first}");
+          }
+        }
 
         productItems.value = productResponse.data;
       } else if (response.statusCode == 404) {
-        EasyLoading.showError('Failed to load(Randomly picked an emoji to add some fun 😄) products');
+        EasyLoading.showError('No products found');
         print("No products found");
       } else {
+        EasyLoading.showError('Failed to load products (Status: ${response.statusCode})');
         print("Error: ${response.statusCode}");
+        print("Response body: ${response.body}");
       }
     } catch (e) {
       EasyLoading.showError('Failed to load products: $e');

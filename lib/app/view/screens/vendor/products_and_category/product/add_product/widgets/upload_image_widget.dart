@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
+import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 
 class ImageUploadWidget extends StatelessWidget {
   final VendorProductController controller;
@@ -41,26 +42,11 @@ class ImageUploadWidget extends StatelessWidget {
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(16),
                           child: controller.isNetworkImage.value
-                              ? Image.network(
-                                  controller.imagePath.value,
+                              ? CustomNetworkImage(
+                                  imageUrl: controller.imagePath.value,
                                   width: 160.w,
                                   height: 120.w,
-                                  fit: BoxFit.cover,
-                                  loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded /
-                                                (loadingProgress.expectedTotalBytes ?? 1)
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    print("Network image error: $error");
-                                    return _buildErrorWidget();
-                                  },
+                                  boxShape: BoxShape.rectangle,
                                 )
                               : Image.file(
                                   File(controller.imagePath.value),

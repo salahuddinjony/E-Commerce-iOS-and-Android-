@@ -76,7 +76,7 @@ class ProductItem {
       currency: json['currency'],
       quantity: json['quantity'],
       size: List<String>.from(json['size']),
-      images: List<String>.from(json['images']),
+      images: (json['images'] as List).map((image) => image.toString().replaceAll('\\', '/')).toList(),
       colors: List<String>.from(json['colors']),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),

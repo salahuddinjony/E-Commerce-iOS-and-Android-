@@ -28,8 +28,31 @@ class CustomNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Fix any backslashes and remove square brackets from the image URL
+    String fixedImageUrl = imageUrl.replaceAll('\\', '/');
+    
+    // Remove square brackets if they exist (common when URLs are stored as lists)
+    if (fixedImageUrl.startsWith('[') && fixedImageUrl.endsWith(']')) {
+      fixedImageUrl = fixedImageUrl.substring(1, fixedImageUrl.length - 1);
+    }
+    
+    // Additional safety check: ensure the URL is not empty and is valid
+    if (fixedImageUrl.isEmpty || !fixedImageUrl.startsWith('http')) {
+      return Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          border: border,
+          color: backgroundColor ?? Colors.grey[300],
+          borderRadius: borderRadius,
+          shape: boxShape,
+        ),
+        child: const Icon(Icons.image_not_supported, color: Colors.grey),
+      );
+    }
+    
     return CachedNetworkImage(
-      imageUrl: imageUrl,
+      imageUrl: fixedImageUrl,
       imageBuilder: (context, imageProvider) => Container(
         height: height,
         width: width,
