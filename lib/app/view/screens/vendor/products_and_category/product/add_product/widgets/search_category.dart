@@ -10,8 +10,6 @@ class SearchCategory extends StatelessWidget {
 
   const SearchCategory({super.key, required this.controller});
 
-
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -85,16 +83,21 @@ class SearchCategory extends StatelessWidget {
                   ),
                   itemBuilder: (context, index) {
                     final category = controller.filteredCategories[index];
+                    final bool isSelected =controller.selectedCategory.value == category.id;
                     return ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10.w),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
                       title: Text(
                         "${index + 1}. ${category.name}",
                         style: TextStyle(
-                          color: AppColors.darkNaturalGray,
+                          color: isSelected
+                          ? Colors.green : AppColors.darkNaturalGray,
                           fontSize: 14.sp,
+                          fontWeight: isSelected ? FontWeight.w600 : null
                         ),
                       ),
+                      trailing:isSelected
+                          ? const Icon(Icons.check, color: Colors.green,)
+                          : null,
                       onTap: () {
                         controller.setSelectedCategory(category.id);
                         Navigator.pop(context);

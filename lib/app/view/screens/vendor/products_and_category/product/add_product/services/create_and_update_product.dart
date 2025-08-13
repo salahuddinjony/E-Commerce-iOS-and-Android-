@@ -11,7 +11,7 @@ import 'package:local/app/services/app_url.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:http/http.dart' as http;
 
-mixin class CreateProduct {
+mixin class CreateAndUpdateProduct {
   final productNameController = TextEditingController();
   final priceController = TextEditingController();
   final quantityController = TextEditingController(); // Added for quantity

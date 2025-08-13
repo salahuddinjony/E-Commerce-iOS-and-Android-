@@ -15,9 +15,9 @@ class SharePrefsHelper {
   //===========================Get Data From Shared Preference===================
 
   static Future<String> getString(String key) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    // SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    return preferences.getString(key) ?? "";
+    return _preferences.getString(key) ?? "";
   }
   
   static Future<String> getRole(String key) async {
@@ -85,7 +85,8 @@ class SharePrefsHelper {
   static Future<void> remove(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(key);
-    await prefs.remove(AppConstants.bearerToken);
+    await prefs.remove(AppConstants.bearerToken);  //Delete the saved token 
+    await prefs.remove(AppConstants.role);  //Delete the saved token 
   }
 
 }

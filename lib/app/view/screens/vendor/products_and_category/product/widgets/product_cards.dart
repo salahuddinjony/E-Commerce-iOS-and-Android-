@@ -82,6 +82,7 @@ class ProductCard extends StatelessWidget {
                                         : 'false')));
                       } else if (value == 'delete') {
                         showDialog(
+                          
                           context: context,
                           builder: (context) => ConfirmDialog(
                             title: 'Delete Product',

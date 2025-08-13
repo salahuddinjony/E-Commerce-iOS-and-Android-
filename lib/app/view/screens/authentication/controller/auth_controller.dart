@@ -15,7 +15,8 @@ import '../../../../services/app_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
 
 class AuthController extends GetxController {
-  final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
+  final emailController =
+      TextEditingController(text: "fahadhossaim24@gmail.com");
   final passWordController = TextEditingController(text: "12345678");
   final confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -46,23 +47,43 @@ class AuthController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-
-
         print("Response:========================== $response.body");
-        print("Auth token:========================== ${response.body["data"]['accessToken']}");
+        print(
+            "Auth token:========================== ${response.body["data"]['accessToken']}");
+
+        print(
+            "======######============Token , User Id , User role========================######");
+
+        //____Save token at SharedPreferences
         SharePrefsHelper.setString(
           AppConstants.bearerToken,
           response.body["data"]['accessToken'],
         );
-        print("Bearer Tokensss:========================== ${await SharePrefsHelper.getString(AppConstants.bearerToken)}");
+        print("Bearer Tokensss:${await SharePrefsHelper.getString(AppConstants.bearerToken)}");
+
+        // _____Save UserId at SharedPreferences
+        SharePrefsHelper.setString(
+          AppConstants.id,
+          response.body['data']["_id"],
+        );
+        final userId = await SharePrefsHelper.getString(AppConstants.id);
+        print("UsderId here: $userId");
+
+        //______Save User Role at SharedPreferences
+        SharePrefsHelper.setString(
+          AppConstants.role,
+          response.body['data']["role"],
+        );
+        final userRole = await SharePrefsHelper.getString(AppConstants.role);
+        print("User Role here: $userRole");
+
         Map<String, dynamic> decodedToken =
             JwtDecoder.decode(response.body["data"]['accessToken']);
-    
 
         print("Decoded Token:========================== $decodedToken");
         String role = decodedToken['role'];
-
         print('Role:============================ $role');
+
         if (role == 'vendor') {
           AppRouter.route.goNamed(RoutePath.homeScreen);
           // AppRouter.route.goNamed(RoutePath.userHomeScreen);
@@ -70,12 +91,8 @@ class AuthController extends GetxController {
           AppRouter.route.goNamed(RoutePath.userHomeScreen);
         }
 
-        // Save access token
-        SharePrefsHelper.setString(
-          AppConstants.id,
-          response.body['data']["_id"],
-        );
-        final token =await SharePrefsHelper.getString(AppConstants.bearerToken);
+        final token =
+            await SharePrefsHelper.getString(AppConstants.bearerToken);
         print("Access Token:========================== $token");
 
         debugPrint("Id================${response.body['data']["_id"]}");
@@ -93,6 +110,26 @@ class AuthController extends GetxController {
       isSignInLoading.value = false;
     }
   }
+
+
+//==============Initial route for the app lunching-============
+
+static Future<String> getInitialRoute() async {
+  await SharePrefsHelper.init();
+
+  final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
+  final role = await SharePrefsHelper.getString(AppConstants.role);
+
+  if (token.isNotEmpty) {
+    if (role == 'vendor') {
+      return RoutePath.homeScreen;
+    } else if (role == 'client') {
+      return RoutePath.userHomeScreen;
+    }
+  }
+  return RoutePath.signInScreen; 
+}
+
 
   //>>>>>>>>>>>>>>>>>>✅✅Forget In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -197,7 +234,7 @@ class AuthController extends GetxController {
     refresh();
   }
 
-  //>>>>>>>>>>>>>>>>>>✅✅SIgn up Client✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  //>>>>>>>>>>>>>>>>>>✅✅Sign up Client✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   // form type toggle
   RxBool isClientSelected = true.obs;
@@ -208,7 +245,7 @@ class AuthController extends GetxController {
 
   RxBool isClient = false.obs;
 
-  void clearClientSIgnUpMethodFromClear(){
+  void clearClientSIgnUpMethodFromClear() {
     nameController.clear();
     clientPasswordController.clear();
     clientConfirmPasswordController.clear();
@@ -304,7 +341,6 @@ class AuthController extends GetxController {
       body,
       multipartBody: [
         MultipartBody("documents", selectedDocument.value!),
-
       ],
     );
     var responseData = jsonDecode(response.body);
@@ -365,9 +401,6 @@ class AuthController extends GetxController {
     refresh();
   }
 
-
-
-
   //>>>>>>>>>>>>>>>>>>✅✅Vendor Account Active ✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   String vendorActivationCode = "";
   RxBool vendorIsActiveLoading = false.obs;
@@ -404,10 +437,4 @@ class AuthController extends GetxController {
     vendorIsActiveLoading.value = false;
     refresh();
   }
-
-
-
-
-
-
 }

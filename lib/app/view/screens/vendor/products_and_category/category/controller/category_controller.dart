@@ -110,7 +110,7 @@ class CategoryController extends GetxController
    
     if (method == 'PATCH') {
       if (name == passedName && imagePath == passedImage) {
-        EasyLoading.showError('No changes detected');
+        EasyLoading.showInfo('No changes detected');
         print("Validation failed: No changes detected (name=$name, imagePath=$imagePath)");
         return;
       }
