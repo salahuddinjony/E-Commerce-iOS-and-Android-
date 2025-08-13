@@ -7,10 +7,11 @@ import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/services/app_url.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/services/category_services.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/services/create_product.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/services/create_and_update_product.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
 
-class VendorProductController extends GetxController with CategoryServices,CreateProduct {
+class VendorProductController extends GetxController
+    with CategoryServices,CreateAndUpdateProduct {
   var userIndex = "product".obs;
 
   void toggleUserIndex({required String selectedIndex}) {
@@ -18,9 +19,8 @@ class VendorProductController extends GetxController with CategoryServices,Creat
   }
 
   RxList<ProductItem> productItems = <ProductItem>[].obs;
- final searchController = TextEditingController();
-  final RxList<dynamic> filteredCategories = <dynamic>[].obs; 
-
+  final searchController = TextEditingController();
+  final RxList<dynamic> filteredCategories = <dynamic>[].obs;
 
   @override
   void onInit() {
@@ -29,6 +29,7 @@ class VendorProductController extends GetxController with CategoryServices,Creat
     fetchCategories();
     filteredCategories.assignAll(categoriesData);
   }
+  
 
   // Method to filter categories based on search input
   void filterCategories(String query) {
@@ -43,6 +44,7 @@ class VendorProductController extends GetxController with CategoryServices,Creat
       );
     }
   }
+
   void initializeForEdit({
     String? productName,
     List<String>? colors,
@@ -54,7 +56,6 @@ class VendorProductController extends GetxController with CategoryServices,Creat
     String? categoryName,
     required String image,
   }) {
-   
     productNameController.text = productName ?? '';
     selectedColor.value = colors ?? [];
     selectedSize.value = sizes ?? [];
@@ -62,14 +63,11 @@ class VendorProductController extends GetxController with CategoryServices,Creat
     quantityController.text = quantity ?? '';
     isFeatured.value = isFeaturedValue ?? 'false';
     selectedCategory.value = categoryId ?? '';
-    categoryNameIs.value = categoryName?? '';
+    categoryNameIs.value = categoryName ?? '';
     imagePath.value = image;
     isNetworkImage.value = image.startsWith('http');
     
   }
-
-
-
 
   @override
   void onClose() {
@@ -88,12 +86,13 @@ class VendorProductController extends GetxController with CategoryServices,Creat
     try {
       // Get the authentication token
       final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
-      
+
       if (token.isEmpty) {
-        EasyLoading.showError('Authentication token is missing. Please log in again.');
+        EasyLoading.showError(
+            'Authentication token is missing. Please log in again.');
         return;
       }
-      
+
       final response = await http.get(
         Uri.parse(ApiUrl.productList),
         headers: {
@@ -105,14 +104,14 @@ class VendorProductController extends GetxController with CategoryServices,Creat
       if (response.statusCode == 200) {
         EasyLoading.showSuccess('Products loaded successfully');
         final responseData = json.decode(response.body);
-        
+
         // Check if the response has the expected structure
         if (responseData['data'] == null) {
           print("Warning: Response data is null or missing");
           print("Full response: $responseData");
           return;
         }
-        
+
         final productResponse = ProductResponse.fromJson(responseData['data']);
         print(responseData['message']);
         print(
@@ -120,7 +119,7 @@ class VendorProductController extends GetxController with CategoryServices,Creat
         print("Product Response: ${responseData['data']}");
         print("Product Items: ${productResponse.data}");
         print("Product Items Value: ${productItems.value}");
-        
+
         // Debug: Check individual product images
         for (int i = 0; i < productResponse.data.length; i++) {
           final product = productResponse.data[i];
@@ -137,7 +136,8 @@ class VendorProductController extends GetxController with CategoryServices,Creat
         EasyLoading.showError('No products found');
         print("No products found");
       } else {
-        EasyLoading.showError('Failed to load products (Status: ${response.statusCode})');
+        EasyLoading.showError(
+            'Failed to load products (Status: ${response.statusCode})');
         print("Error: ${response.statusCode}");
         print("Response body: ${response.body}");
       }

@@ -206,7 +206,12 @@ class ProfileScreen extends StatelessWidget {
               //===================Log Out ==================
               CustomLogoutButton(
                 onTap: () async{
+                    // final tokenBefore =await SharePrefsHelper.getString(AppConstants.bearerToken);
                    await SharePrefsHelper.remove(AppConstants.id);
+                  //  final tokenAfter =await SharePrefsHelper.getString(AppConstants.bearerToken);
+                  //  print("Before logout-->token:$tokenBefore");
+                  //  print("After logout-->token :$tokenAfter");
+                   
                    Get.delete<ProfileController>();
                    context.goNamed(RoutePath.signInScreen);
                 },

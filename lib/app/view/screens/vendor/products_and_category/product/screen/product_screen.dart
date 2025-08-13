@@ -39,6 +39,7 @@ class ProductScreen extends StatelessWidget {
           ),
         ),
         body: Padding(
+          
           padding: const EdgeInsets.all(12),
           child: TabBarView(
             children: [
