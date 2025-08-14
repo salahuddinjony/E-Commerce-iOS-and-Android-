@@ -34,6 +34,10 @@ class ApiUrl {
 
 //=================Vendor=================
 
+static String getWallet({required String id}){
+  return "$baseUrl/wallet/retrieve/user/$id";
+
+}
 
   //=================Product=================
 

@@ -117,16 +117,17 @@ class ProductCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              (productData.name).length > 15
-                  ? "${productData.name.substring(0, 15)}.."
-                  : productData.name,
+             productData.name,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              overflow: TextOverflow.ellipsis,
             ),
             Text(
+
               productData.size.isNotEmpty
                   ? 'Size: ${productData.size.join(', ')}'
                   : 'Size: Not specified',
               style: TextStyle(color: Colors.grey[600], fontSize: 10),
+              
             ),
             Container(
               decoration: BoxDecoration(

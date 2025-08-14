@@ -146,7 +146,7 @@ class AppRouter {
           name: RoutePath.homeScreen,
           path: RoutePath.homeScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const HomeScreen(), state: state, disableAnimation: true),
+              child:  HomeScreen(), state: state, disableAnimation: true),
         ),
 
 
@@ -156,7 +156,7 @@ class AppRouter {
           name: RoutePath.ordersScreen,
           path: RoutePath.ordersScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const OrdersScreen(),
+              child: OrdersScreen(),
               state: state,
               disableAnimation: true),
         ),

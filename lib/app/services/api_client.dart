@@ -24,20 +24,21 @@ class ApiClient extends GetxService {
 
   static Future<Response> getData(String uri,
       {Map<String, dynamic>? query, Map<String, String>? headers}) async {
+
     bearerToken = await SharePrefsHelper.getString(AppConstants.bearerToken);
 
     var mainHeaders = {
       // 'Content-Type': 'application/x-www-form-urlencoded',
       'Content-Type': 'application/json',
 
-      'Authorization': 'Bearer $bearerToken'
+      // 'Authorization': 'Bearer $bearerToken'
     };
     try {
       debugPrint('====> API Call: $uri\nHeader: ${headers ?? mainHeaders}');
 
       http.Response response = await client
           .get(
-            Uri.parse(ApiUrl.baseUrl + uri),
+            Uri.parse(uri),
             headers: headers ?? mainHeaders,
           )
           .timeout(const Duration(seconds: timeoutInSeconds));
