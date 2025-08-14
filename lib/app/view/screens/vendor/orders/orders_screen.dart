@@ -1,58 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
+import 'controller/order_controller.dart';
 
-import '../../../../core/route_path.dart';
+class OrdersScreen extends StatelessWidget {
+  OrdersScreen({super.key});
+  final OrdersController controller = Get.find<OrdersController>();
 
-class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key});
-
-  @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
-}
-
-class _OrdersScreenState extends State<OrdersScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  final List<String> _tabs = ['Pending', 'All Orders', 'Completed', 'Rejected'];
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  final List<Map<String, String>> pendingOrders = [
-    {
-      'name': 'Geopart Etdsien',
-      'parcelId': '#526365',
-      'orderNumber': '562',
-      'locationLine1': 'USA Nouth-2',
-      'locationLine2': 'America',
-      'imageUrl': 'https://i.pravatar.cc/150?img=3'
-    },
-    {
-      'name': 'Geopart Etdsien',
-      'parcelId': '#526365',
-      'orderNumber': '562',
-      'locationLine1': 'USA Nouth-2',
-      'locationLine2': 'America',
-      'imageUrl': 'https://i.pravatar.cc/150?img=3'
-    },
-  ];
-
-  Widget _buildOrderCard(Map<String, String> order,VoidCallback onTap) {
+  Widget _buildOrderCard(Map<String, String> order, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -74,85 +33,99 @@ class _OrdersScreenState extends State<OrdersScreen>
               children: [
                 Row(
                   children: [
-                    Text(
-                      order['name']!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),const Spacer(),
-                    Text(
-                      'Parcel ID:${order['parcelId']}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text(order['name']!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16)),
+                    const Spacer(),
+                    Text('Parcel ID:${order['parcelId']}',
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Text(
-                      'Your Order Number:',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
-                    ),const Spacer(),
-                    Text(
-                      order['orderNumber']!,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
+                    const Text('Your Order Number:',
+                        style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    const Spacer(),
+                    Text(order['orderNumber']!,
+                        style: const TextStyle(color: Colors.grey)),
                   ],
                 ),
                 const SizedBox(height: 4),
-
                 Row(
                   children: [
-                    Text(
-                      order['locationLine1']!,
-                      style: const TextStyle(color: Colors.grey),
-                    ),const Spacer(),
+                    Text(order['locationLine1']!,
+                        style: const TextStyle(color: Colors.grey)),
+                    const Spacer(),
                     GestureDetector(
                       onTap: onTap,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 6),
                         decoration: BoxDecoration(
                           color: Colors.teal[300],
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Text(
-                          'Pending',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: const Text('Pending',
+                            style: TextStyle(color: Colors.white)),
                       ),
                     )
                   ],
                 ),
-                SizedBox(height: 15.h,),
-
+                SizedBox(height: 15.h),
               ],
             ),
           ),
-
         ],
       ),
     );
   }
 
   Widget _buildTabContent(String tab) {
-    if (tab == 'Pending') {
-      return ListView.builder(
-        padding: const EdgeInsets.only(top: 16),
-        itemCount: pendingOrders.length,
-        itemBuilder: (context, index) {
-          return _buildOrderCard(pendingOrders[index],(){
-            context.pushNamed(
-              RoutePath.pendingDetailsScreen,
-            );
-          });
-        },
-      );
+    List<Map<String, String>> orders;
+
+    if (controller.isCustomOrder.value) {
+      // Custom orders
+      if (tab == 'Pending') {
+        orders = controller.pendingCustomOrders;
+      } else {
+        orders = []; // Replace with other custom order data if available
+      }
+    } else {
+      // General orders
+      switch (tab) {
+        case 'All Orders':
+          orders = controller
+              .pendingGeneralOrders; // combine all general orders here
+          break;
+        case 'Pending':
+          orders = controller.pendingGeneralOrders;
+          break;
+        case 'Completed':
+          orders = []; // Add completed orders data
+          break;
+        case 'Rejected':
+          orders = []; // Add rejected orders data
+          break;
+        default:
+          orders = [];
+      }
     }
-    // Placeholder for other tabs
-    return Center(child: Text('No orders for $tab'));
+
+    if (orders.isEmpty) {
+      return Center(child: Text('No orders for $tab'));
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.only(top: 16),
+      itemCount: orders.length,
+      itemBuilder: (context, index) {
+        return _buildOrderCard(
+          orders[index],
+          () => controller.onPendingOrderTap(context),
+        );
+      },
+    );
   }
 
   @override
@@ -160,29 +133,72 @@ class _OrdersScreenState extends State<OrdersScreen>
     return Scaffold(
       backgroundColor: AppColors.white,
       bottomNavigationBar: const OwnerNav(currentIndex: 1),
-      appBar: const CustomAppBar(
-        appBarContent: AppStrings.order,
-      ),
+      appBar: const CustomAppBar(appBarContent: AppStrings.order),
       body: Column(
         children: [
-          // TabBar at the top
-          Container(
-            color: Colors.white,
-            child: TabBar(
-              controller: _tabController,
-              labelColor: Colors.teal,
-              unselectedLabelColor: Colors.black,
-              indicatorColor: Colors.teal,
-              tabs: _tabs.map((e) => Tab(text: e)).toList(),
-            ),
+          // Toggle Switch
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical:0),
+            child: Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ChoiceChip(
+                      checkmarkColor: Colors.white,
+                      label: const Text('General Orders'),
+                      selected: !controller.isCustomOrder.value,
+                      onSelected: (val) =>
+                          controller.isCustomOrder.value = false,
+                      selectedColor: AppColors.brightCyan,
+                      backgroundColor: Colors.white,
+                      labelStyle: TextStyle(
+                        color: !controller.isCustomOrder.value
+                            ? Colors.white
+                            : Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ChoiceChip(
+                      checkmarkColor: Colors.white,
+                      label: const Text('Custom Orders'),
+                      selected: controller.isCustomOrder.value,
+                      onSelected: (val) =>
+                          controller.isCustomOrder.value = true,
+                      selectedColor: AppColors.brightCyan,
+                      backgroundColor: Colors.white,
+                      labelStyle: TextStyle(
+                        color: controller.isCustomOrder.value
+                            ? Colors.white
+                            : Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                )),
           ),
-          // TabBarView fills remaining space
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: _tabs.map((tab) => _buildTabContent(tab)).toList(),
-            ),
-          ),
+
+          // Tab Bar
+          Obx(() => Container(
+                color: Colors.white,
+                child: TabBar(
+                  labelPadding: const EdgeInsets.only(right: 50),
+                  isScrollable: true,
+                  controller: controller.tabController,
+                  labelColor: Colors.teal,
+                  unselectedLabelColor: Colors.black,
+                  indicatorColor: Colors.teal,
+                  tabs: controller.tabs.map((e) => Tab(text: e)).toList(),
+                ),
+              )),
+          // Tab Content
+          Obx(() => Expanded(
+                child: TabBarView(
+                  controller: controller.tabController,
+                  children: controller.tabs
+                      .map((tab) => _buildTabContent(tab))
+                      .toList(),
+                ),
+              )),
         ],
       ),
     );

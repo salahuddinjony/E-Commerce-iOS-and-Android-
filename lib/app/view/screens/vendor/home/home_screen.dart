@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/owner_appbar/owner_appbar.dart'
     show OwnerAppbar;
+import 'package:local/app/view/screens/vendor/home/controller/home_page_controller.dart';
 import 'package:local/app/view/screens/vendor/home/widgets/best_selling_products.dart';
 import 'package:local/app/view/screens/vendor/home/widgets/stock_alert.dart';
 import 'package:local/app/view/screens/vendor/home/widgets/vendor_total_earnings.dart';
@@ -14,7 +17,9 @@ import '../../../common_widgets/owner_nav/owner_nav.dart';
 import '../../../common_widgets/status_card/status_card.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final HomePageController controller = Get.find<HomePageController>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +41,15 @@ class HomeScreen extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 20.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.h),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //=================Total Earnings==========
-                     VendorTotalEarnings(amount: '\$10', onTap: () {  },),
+                    VendorTotalEarnings(
+                      controller: controller,
+                    ),
 
                     SizedBox(
                       height: 32.h,
@@ -135,9 +142,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
