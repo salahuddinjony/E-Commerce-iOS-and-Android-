@@ -8,9 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
-
-
-
 import '../data/local/shared_prefs.dart';
 import '../utils/app_constants/app_constants.dart';
 import 'app_url.dart';
@@ -23,6 +20,7 @@ class ApiClient extends GetxService {
   static const int timeoutInSeconds = 30;
 
   static String bearerToken = "";
+  ///================================================================Get Method============================///
 
   static Future<Response> getData(String uri,
       {Map<String, dynamic>? query, Map<String, String>? headers}) async {
@@ -117,8 +115,8 @@ class ApiClient extends GetxService {
   static Future<Response> postMultipartData(
       String uri, Map<String, dynamic> body,
       {List<MultipartBody>? multipartBody,
-        String requestType = "POST",
-        Map<String, String>? headers}) async {
+      String requestType = "POST",
+      Map<String, String>? headers}) async {
     try {
       bearerToken = await SharePrefsHelper.getString(AppConstants.bearerToken);
 
@@ -131,12 +129,14 @@ class ApiClient extends GetxService {
       debugPrint('====> API Body: $body with ${multipartBody?.length} picture');
 
       var request =
-      http.MultipartRequest(requestType, Uri.parse(ApiUrl.baseUrl + uri));
+          http.MultipartRequest(requestType, Uri.parse(ApiUrl.baseUrl + uri));
 
       // ✅ Convert `body` to `Map<String, String>`
-      Map<String, String> stringBody = body.map((key, value) =>
-          MapEntry(key, value is List || value is Map ? jsonEncode(value) : value.toString())
-      );
+      Map<String, String> stringBody = body.map((key, value) => MapEntry(
+          key,
+          value is List || value is Map
+              ? jsonEncode(value)
+              : value.toString()));
 
       request.fields.addAll(stringBody); // ✅ Now it will work
 
@@ -144,7 +144,8 @@ class ApiClient extends GetxService {
         for (var element in multipartBody) {
           debugPrint("path : ${element.file.path}");
 
-          var mimeType = lookupMimeType(element.file.path) ?? 'application/octet-stream';
+          var mimeType =
+              lookupMimeType(element.file.path) ?? 'application/octet-stream';
           debugPrint("MimeType================$mimeType");
 
           var multipartImg = await http.MultipartFile.fromPath(
@@ -171,15 +172,13 @@ class ApiClient extends GetxService {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
-
 
   //>>>>>>>>>>>>>>>>>>✅✅Patch Multipart✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  static Future<Response> patchMultipart(
-      String uri, Map<String, dynamic> body,
+  static Future<Response> patchMultipart(String uri, Map<String, dynamic> body,
       {List<MultipartBody>? multipartBody,
-        String requestType = "PATCH",
-        Map<String, String>? headers}) async {
+      String requestType = "PATCH",
+      Map<String, String>? headers}) async {
     try {
       bearerToken = await SharePrefsHelper.getString(AppConstants.bearerToken);
 
@@ -192,12 +191,14 @@ class ApiClient extends GetxService {
       debugPrint('====> API Body: $body with ${multipartBody?.length} picture');
 
       var request =
-      http.MultipartRequest(requestType, Uri.parse(ApiUrl.baseUrl + uri));
+          http.MultipartRequest(requestType, Uri.parse(ApiUrl.baseUrl + uri));
 
       // ✅ Convert `body` to `Map<String, String>`
-      Map<String, String> stringBody = body.map((key, value) =>
-          MapEntry(key, value is List || value is Map ? jsonEncode(value) : value.toString())
-      );
+      Map<String, String> stringBody = body.map((key, value) => MapEntry(
+          key,
+          value is List || value is Map
+              ? jsonEncode(value)
+              : value.toString()));
 
       request.fields.addAll(stringBody); // ✅ Now it will work
 
@@ -205,7 +206,8 @@ class ApiClient extends GetxService {
         for (var element in multipartBody) {
           debugPrint("path : ${element.file.path}");
 
-          var mimeType = lookupMimeType(element.file.path) ?? 'application/octet-stream';
+          var mimeType =
+              lookupMimeType(element.file.path) ?? 'application/octet-stream';
           debugPrint("MimeType================$mimeType");
 
           var multipartImg = await http.MultipartFile.fromPath(
@@ -232,8 +234,6 @@ class ApiClient extends GetxService {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
-
-
 
   ///=============================Put data===================
 
@@ -262,16 +262,10 @@ class ApiClient extends GetxService {
     }
   }
 
-
-
-
-
-
-
-
-
-  static Future<Response> deleteData(String uri,
-      {Map<String, String>? headers,}) async {
+  static Future<Response> deleteData(
+    String uri, {
+    Map<String, String>? headers,
+  }) async {
     bearerToken = await SharePrefsHelper.getString(AppConstants.bearerToken);
 
     var mainHeaders = {
@@ -283,19 +277,16 @@ class ApiClient extends GetxService {
       // debugPrint('====> API Call: $uri\n Body: $body');
 
       http.Response response = await http
-          .delete(Uri.parse(ApiUrl.baseUrl + uri),
-              headers: headers ?? mainHeaders,)
+          .delete(
+            Uri.parse(ApiUrl.baseUrl + uri),
+            headers: headers ?? mainHeaders,
+          )
           .timeout(const Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
     } catch (e) {
       return const Response(statusCode: 1, statusText: noInternetMessage);
     }
   }
-
-
-
-
-
 
   static Response handleResponse(http.Response response, String uri) {
     dynamic body;

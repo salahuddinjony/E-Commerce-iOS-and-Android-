@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:local/app/view/common_widgets/confirm_dialog_box.dart/confirm_dialog.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/add_category/add_category.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/model/category_response.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/common_widgets/dialog/confirm_dialog.dart';
 import '../controller/category_controller.dart';
 
 

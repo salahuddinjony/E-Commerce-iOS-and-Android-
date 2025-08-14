@@ -32,10 +32,16 @@ class CategoryController extends GetxController
     nameController.text = initialCategoryName;
   }
 
-  Future<void> pickImage() async {
+
+  Future<void> pickImage({required String source}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final pickedFile = await picker.pickImage(
+       source: source == "camera"
+          ? ImageSource.camera
+          : ImageSource.gallery,
+        );
+        
       if (pickedFile != null) {
         print("New image picked: ${pickedFile.path}");
         imagePath.value = pickedFile.path;

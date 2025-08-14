@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/controller/category_controller.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/widgets/category_name_input.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/category/widgets/image_upload_widget.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/common_widgets/image_upload_widget/image_upload_widget.dart';
 
 class AddCategory extends StatelessWidget {
   final String imagePath;
@@ -28,7 +28,7 @@ class AddCategory extends StatelessWidget {
     categoryController.setInitialValues(imagePath, categoryName);
 
     return Scaffold(
-     backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -43,16 +43,27 @@ class AddCategory extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ImageUploadWidget(categoryController: categoryController),
+              // ImageUploadWidget(categoryController: categoryController),
+              ImageUploadWidget<CategoryController>(
+                controller: categoryController,
+                imagePath: categoryController.imagePath,
+                isNetworkImage: categoryController.isNetworkImage,
+                onPickImage: (ctrl, source) => ctrl.pickImage(source: source),
+                onClearImage: () => categoryController.clearImage(),
+              ),
+
               SizedBox(height: 28.h),
               CategoryNameInputWidget(categoryController: categoryController),
               SizedBox(height: 32.h),
               CustomButton(
                 onTap: () async {
-                  print("Category Name: ${categoryController.nameController.text}");
+                  print(
+                      "Category Name: ${categoryController.nameController.text}");
                   print("Image Path: ${categoryController.imagePath.value}");
-                  print("Is Network Image: ${categoryController.isNetworkImage.value}");
-                  await categoryController.createCategoryPost(method, categoryId ?? '',imagePath, categoryName );
+                  print(
+                      "Is Network Image: ${categoryController.isNetworkImage.value}");
+                  await categoryController.createCategoryPost(
+                      method, categoryId ?? '', imagePath, categoryName);
                 },
                 title: method == 'POST' ? 'Add' : 'Update',
                 isRadius: true,
