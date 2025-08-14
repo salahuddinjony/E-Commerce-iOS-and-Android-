@@ -6,10 +6,10 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_from_card/custom_from_card.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/common_widgets/image_upload_widget/image_upload_widget.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/widgets/category_select_widget.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/widgets/multi_selected_field.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/widgets/single_select_dropdown.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/widgets/upload_image_widget.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -64,8 +64,17 @@ class AddProductScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              
               /// Upload image
-              ImageUploadWidget(controller: controller),
+             ImageUploadWidget<VendorProductController>(
+                controller: controller,
+                imagePath: controller.imagePath,
+                isNetworkImage: controller.isNetworkImage,
+                onPickImage: (ctrl, source) => ctrl.pickImage(source: source),
+                onClearImage: () => controller.clearImage(),
+              ),
+
+
               SizedBox(height: 20.h),
 
               /// Product Name

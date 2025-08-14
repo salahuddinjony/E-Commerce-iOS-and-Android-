@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:local/app/view/common_widgets/confirm_dialog_box.dart/confirm_dialog.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/common_widgets/dialog/confirm_dialog.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';

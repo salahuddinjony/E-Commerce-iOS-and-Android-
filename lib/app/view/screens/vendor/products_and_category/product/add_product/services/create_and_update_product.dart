@@ -48,10 +48,31 @@ mixin class CreateAndUpdateProduct {
     "false"
   ];
 
-  Future<void> pickImage() async {
+  // Future<void> pickImage() async {
+  //   try {
+  //     final picker = ImagePicker();
+  //     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  //     if (pickedFile != null) {
+  //       print("New image picked: ${pickedFile.path}");
+  //       imagePath.value = pickedFile.path;
+  //       isNetworkImage.value = false;
+  //     } else {
+  //       print("No image selected");
+  //     }
+  //   } catch (e) {
+  //     print("Error picking image: $e");
+  //     EasyLoading.showError('Failed to pick image: $e');
+  //   }
+  // }
+    Future<void> pickImage({required String source}) async {
     try {
       final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final pickedFile = await picker.pickImage(
+       source: source == "camera"
+          ? ImageSource.camera
+          : ImageSource.gallery,
+        );
+        
       if (pickedFile != null) {
         print("New image picked: ${pickedFile.path}");
         imagePath.value = pickedFile.path;
