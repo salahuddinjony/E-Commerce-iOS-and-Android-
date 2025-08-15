@@ -461,10 +461,19 @@ class AppRouter {
         GoRoute(
           name: RoutePath.pendingDetailsScreen,
           path: RoutePath.pendingDetailsScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const PendingDetailsScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            final orderData = extra?['orderData'];
+            final isCustomOrder = extra?['isCustomOrder'] ?? false;
+            
+            return _buildPageWithAnimation(
+              child: PendingDetailsScreen(
+                orderData: orderData,
+                isCustomOrder: isCustomOrder,
+              ),
+              state: state,
+            );
+          },
         ),
 
         ///=======================  PendingDetailsScreen =======================

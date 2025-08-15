@@ -41,6 +41,26 @@ static String getWallet({required String id}){
 
 }
 
+
+  //=================Order=================
+
+
+         //=========Custom Order========//
+
+  static const customOrder="$baseUrl/order/retrieve/all";
+
+         //=========Generel Order========//
+
+  static const generalOrder="$baseUrl/general-order/retrieve";
+  
+
+
+  
+
+
+
+
+
   //=================Product=================
 
   

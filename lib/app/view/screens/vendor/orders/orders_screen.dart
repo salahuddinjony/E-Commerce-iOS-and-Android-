@@ -4,76 +4,335 @@ import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
+import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
 import 'controller/order_controller.dart';
+import 'models/custom_order_response_model.dart';
+import 'models/general_order_response_model.dart';
 
 class OrdersScreen extends StatelessWidget {
   OrdersScreen({super.key});
   final OrdersController controller = Get.find<OrdersController>();
 
-  Widget _buildOrderCard(Map<String, String> order, VoidCallback onTap) {
+  Widget _buildCustomOrderCard(Order order, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row with order ID and status
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Order: ${order.orderId}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Color(controller.getStatusColor(order.status)),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  controller.getStatusDisplayText(order.status),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          // Order details
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailRow('Price', '${order.currency} ${order.price}'),
+                    _buildDetailRow('Quantity', '${order.quantity}'),
+                    _buildDetailRow('Type', 'Custom'),
+                    if (order.deliveryDate != null)
+                      _buildDetailRow('Delivery Date', 
+                        '${order.deliveryDate!.day}/${order.deliveryDate!.month}/${order.deliveryDate!.year}'),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailRow('Payment', controller.getPaymentStatusDisplayText(order.paymentStatus)),
+                    _buildDetailRow('Delivery', order.deliveryOption),
+                    _buildDetailRow('Address', order.shippingAddress),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Summary
+          if (order.summery.isNotEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                order.summery,
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          
+          const SizedBox(height: 12),
+          
+          // Action button
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: onTap,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.brightCyan,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'View Details',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGeneralOrderCard(GeneralOrder order, VoidCallback onTap) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row with order ID and status
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Order: ${order.id.substring(0, 8)}...',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Color(controller.getGeneralOrderStatusColor(order.status)),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  controller.getGeneralOrderStatusDisplayText(order.status),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          // Client and vendor info
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: order.clientImage != null 
+                    ? NetworkImage(order.clientImage!) 
+                    : null,
+                child: order.clientImage == null 
+                    ? Text(order.clientName[0].toUpperCase())
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Client: ${order.clientName}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      'Vendor: ${order.vendorName}',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Order details
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailRow('Price', '${order.currency} ${order.price}'),
+                    _buildDetailRow('Products', controller.getGeneralOrderSummary(order)),
+                    _buildDetailRow('Date', controller.getGeneralOrderDateDisplay(order)),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailRow('Payment', controller.getGeneralOrderPaymentStatusDisplayText(order.paymentStatus)),
+                    _buildDetailRow('Address', order.shippingAddress),
+                    if (controller.isRecentOrder(order))
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.green[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'New',
+                          style: TextStyle(
+                            color: Colors.green[800],
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: onTap,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.brightCyan,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'View Details',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 28,
-            backgroundImage: NetworkImage(order['imageUrl']!),
+          SizedBox(
+            width: 80,
+            child: Text(
+              '$label:',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
-          const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(order['name']!,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
-                    const Spacer(),
-                    Text('Parcel ID:${order['parcelId']}',
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Text('Your Order Number:',
-                        style: TextStyle(color: Colors.grey, fontSize: 12)),
-                    const Spacer(),
-                    Text(order['orderNumber']!,
-                        style: const TextStyle(color: Colors.grey)),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(order['locationLine1']!,
-                        style: const TextStyle(color: Colors.grey)),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: onTap,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.teal[300],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Text('Pending',
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 15.h),
-              ],
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -82,50 +341,122 @@ class OrdersScreen extends StatelessWidget {
   }
 
   Widget _buildTabContent(String tab) {
-    List<Map<String, String>> orders;
-
-    if (controller.isCustomOrder.value) {
-      // Custom orders
-      if (tab == 'Pending') {
-        orders = controller.pendingCustomOrders;
-      } else {
-        orders = []; // Replace with other custom order data if available
+    return Obx(() {
+      if (controller.isAnyLoading) {
+        return const Center(child: CustomLoader());
       }
-    } else {
-      // General orders
-      switch (tab) {
-        case 'All Orders':
-          orders = controller
-              .pendingGeneralOrders; // combine all general orders here
-          break;
-        case 'Pending':
-          orders = controller.pendingGeneralOrders;
-          break;
-        case 'Completed':
-          orders = []; // Add completed orders data
-          break;
-        case 'Rejected':
-          orders = []; // Add rejected orders data
-          break;
-        default:
-          orders = [];
-      }
-    }
 
-    if (orders.isEmpty) {
-      return Center(child: Text('No orders for $tab'));
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.only(top: 16),
-      itemCount: orders.length,
-      itemBuilder: (context, index) {
-        return _buildOrderCard(
-          orders[index],
-          () => controller.onPendingOrderTap(context),
+      if (controller.isAnyError) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: Colors.grey[400],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                controller.combinedErrorMessage,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: controller.refreshOrders,
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
         );
-      },
-    );
+      }
+
+      if (controller.isCustomOrder.value) {
+        // Custom orders
+        final orders = controller.getOrdersForTab(tab, true);
+        
+        if (orders.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.inbox_outlined,
+                  size: 48,
+                  color: Colors.grey[400],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No custom orders found for $tab',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => controller.refreshOrdersByType(true),
+          child: ListView.builder(
+            padding: const EdgeInsets.only(top: 16),
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              return _buildCustomOrderCard(
+                orders[index],
+                () => controller.onCustomOrderTap(context, orders[index]),
+              );
+            },
+          ),
+        );
+      } else {
+        // General orders
+        final orders = controller.getSortedGeneralOrdersForTab(tab);
+        
+        if (orders.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.inbox_outlined,
+                  size: 48,
+                  color: Colors.grey[400],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No general orders found for $tab',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => controller.refreshOrdersByType(false),
+          child: ListView.builder(
+            padding: const EdgeInsets.only(top: 16),
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              return _buildGeneralOrderCard(
+                orders[index],
+                () => controller.onGeneralOrderTap(context, orders[index]),
+              );
+            },
+          ),
+        );
+      }
+    });
   }
 
   @override
@@ -138,7 +469,7 @@ class OrdersScreen extends StatelessWidget {
         children: [
           // Toggle Switch
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical:0),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Obx(() => Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -146,8 +477,10 @@ class OrdersScreen extends StatelessWidget {
                       checkmarkColor: Colors.white,
                       label: const Text('General Orders'),
                       selected: !controller.isCustomOrder.value,
-                      onSelected: (val) =>
-                          controller.isCustomOrder.value = false,
+                      onSelected: (val) {
+                        controller.isCustomOrder.value = false;
+                        controller.refreshOrdersByType(false);
+                      },
                       selectedColor: AppColors.brightCyan,
                       backgroundColor: Colors.white,
                       labelStyle: TextStyle(
@@ -162,8 +495,10 @@ class OrdersScreen extends StatelessWidget {
                       checkmarkColor: Colors.white,
                       label: const Text('Custom Orders'),
                       selected: controller.isCustomOrder.value,
-                      onSelected: (val) =>
-                          controller.isCustomOrder.value = true,
+                      onSelected: (val) {
+                        controller.isCustomOrder.value = true;
+                        controller.refreshOrdersByType(true);
+                      },
                       selectedColor: AppColors.brightCyan,
                       backgroundColor: Colors.white,
                       labelStyle: TextStyle(
@@ -190,6 +525,7 @@ class OrdersScreen extends StatelessWidget {
                   tabs: controller.tabs.map((e) => Tab(text: e)).toList(),
                 ),
               )),
+          
           // Tab Content
           Obx(() => Expanded(
                 child: TabBarView(

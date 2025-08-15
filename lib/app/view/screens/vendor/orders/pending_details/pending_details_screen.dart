@@ -2,19 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
-import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
+import '../models/custom_order_response_model.dart';
+import '../models/general_order_response_model.dart';
+import '../constants/order_constants.dart';
 
 class PendingDetailsScreen extends StatelessWidget {
-  const PendingDetailsScreen({super.key});
+  final dynamic orderData; // Can be either Order or GeneralOrder
+  final bool isCustomOrder;
+
+  const PendingDetailsScreen({
+    super.key,
+    required this.orderData,
+    required this.isCustomOrder,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Order Details'),
+        title: Text('${isCustomOrder ? 'Custom' : 'General'} Order Details'),
         backgroundColor: Colors.white,
         elevation: 0,
         foregroundColor: Colors.black,
@@ -24,69 +32,8 @@ class PendingDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Product Info
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomNetworkImage(
-                    imageUrl: AppConstants.teeShirt, height: 127, width: 119),
-                const SizedBox(width: 16),
-                // Text details
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Guitar Soul Tee',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      const Text(
-                        'Supreme Soft Cotton',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      RichText(
-                        text: TextSpan(
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.black87,
-                          ),
-                          children: [
-                            const TextSpan(text: 'These '),
-                            TextSpan(
-                              text: 'T-shirts',
-                              style: TextStyle(
-                                color: Colors.blue.shade700,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                            const TextSpan(
-                              text:
-                                  ' are dominating the fashion scene with their unique designs and top-quality fabric. Pick your favorite now!',
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        '\$20.22',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            // Order Header with Status
+            _buildOrderHeader(),
             const SizedBox(height: 24),
 
             // Order Details Section
@@ -98,25 +45,11 @@ class PendingDetailsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const OrderDetailRow(label: 'Order ID', value: '#123456'),
-            const OrderDetailRow(label: 'Customer', value: 'John Doe'),
-            const OrderDetailRow(label: 'Payment', value: 'Cash on Delivery'),
+            _buildOrderDetails(),
             const SizedBox(height: 20),
 
             // Date & Price Row
-            Container(
-              color: Colors.grey.shade200,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('March: 25, 12:50 PM',
-                      style: TextStyle(fontWeight: FontWeight.w500)),
-                  Text('\$20', style: TextStyle(fontWeight: FontWeight.w500)),
-                ],
-              ),
-            ),
-
+            _buildDatePriceRow(),
             const SizedBox(height: 24),
 
             // Delivery Route Section
@@ -128,54 +61,266 @@ class PendingDetailsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const DeliveryRouteItem(
-              iconData: Icons.location_on_outlined,
-              label: 'Pickup',
-              value: 'U Tee Hub Store',
-            ),
-            const DeliveryRouteItem(
-              iconData: Icons.location_on_outlined,
-              label: 'Drop-off',
-              value: '123 Main Street, NY',
-            ),
-            SizedBox(
-              height: 50.h,
-            ),
+            _buildDeliveryRoute(),
+            SizedBox(height: 50.h),
 
-            Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: CustomButton(
-                    onTap: () {
-                      toastMessage(message: 'This Product is Approved');
-                      context.pop();
-                    },
-                    title: "Approved",
-                    isRadius: true,
-                  ),
-                ),
-                SizedBox(
-                  width: 10.w,
-                ),
-                Expanded(
-                  flex: 5,
-                  child: CustomButton(
-                    fillColor: Colors.red,
-                    onTap: () {
-                      toastMessage(message: 'This Product is Rejected');
-                      context.pop();
-                    },
-                    title: "Rejected",
-                    isRadius: true,
-                  ),
-                ),
-              ],
-            )
+            // Action Buttons
+            _buildActionButtons(context),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildOrderHeader() {
+    String orderId = '';
+    String status = '';
+    int statusColor = 0xFF757575; // Default grey color
+
+    if (isCustomOrder) {
+      final order = orderData as Order;
+      orderId = order.orderId;
+      status = OrderConstants.getStatusDisplayText(order.status);
+      statusColor = OrderConstants.getStatusColor(order.status);
+    } else {
+      final order = orderData as GeneralOrder;
+      orderId = order.id.substring(0, 8);
+      status = OrderConstants.getStatusDisplayText(order.status);
+      statusColor = OrderConstants.getStatusColor(order.status);
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Order ID: $orderId',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Status: $status',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Color(statusColor),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              status,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOrderDetails() {
+    if (isCustomOrder) {
+      final order = orderData as Order;
+      return Column(
+        children: [
+          OrderDetailRow(label: 'Order ID', value: order.orderId),
+          OrderDetailRow(label: 'Type', value: 'Custom Order'),
+          OrderDetailRow(label: 'Price', value: '${order.currency} ${order.price}'),
+          OrderDetailRow(label: 'Quantity', value: '${order.quantity}'),
+          OrderDetailRow(label: 'Payment Status', value: OrderConstants.getPaymentStatusDisplayText(order.paymentStatus)),
+          OrderDetailRow(label: 'Delivery Option', value: order.deliveryOption),
+          if (order.deliveryDate != null)
+            OrderDetailRow(
+              label: 'Delivery Date', 
+              value: '${order.deliveryDate!.day}/${order.deliveryDate!.month}/${order.deliveryDate!.year}'
+            ),
+          OrderDetailRow(label: 'Shipping Address', value: order.shippingAddress),
+          if (order.summery.isNotEmpty)
+            OrderDetailRow(label: 'Summary', value: order.summery),
+        ],
+      );
+    } else {
+      final order = orderData as GeneralOrder;
+      return Column(
+        children: [
+          OrderDetailRow(label: 'Order ID', value: order.id.substring(0, 8)),
+          OrderDetailRow(label: 'Type', value: 'General Order'),
+          OrderDetailRow(label: 'Client', value: order.clientName),
+          OrderDetailRow(label: 'Vendor', value: order.vendorName),
+          OrderDetailRow(label: 'Price', value: '${order.currency} ${order.price}'),
+          OrderDetailRow(label: 'Products', value: '${order.products.length} products, ${order.totalQuantity} items'),
+          OrderDetailRow(label: 'Payment Status', value: OrderConstants.getPaymentStatusDisplayText(order.paymentStatus)),
+          OrderDetailRow(label: 'Shipping Address', value: order.shippingAddress),
+        ],
+      );
+    }
+  }
+
+  Widget _buildDatePriceRow() {
+    String date = '';
+    String price = '';
+
+    if (isCustomOrder) {
+      final order = orderData as Order;
+      date = '${order.createdAt.day}/${order.createdAt.month}/${order.createdAt.year}';
+      price = '${order.currency} ${order.price}';
+    } else {
+      final order = orderData as GeneralOrder;
+      date = '${order.createdAt.day}/${order.createdAt.month}/${order.createdAt.year}';
+      price = '${order.currency} ${order.price}';
+    }
+
+    return Container(
+      color: Colors.grey.shade200,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(date, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(price, style: const TextStyle(fontWeight: FontWeight.w500)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeliveryRoute() {
+    if (isCustomOrder) {
+      final order = orderData as Order;
+      return Column(
+        children: [
+          DeliveryRouteItem(
+            iconData: Icons.store,
+            label: 'Vendor',
+            value: 'U Tee Hub Store',
+          ),
+          DeliveryRouteItem(
+            iconData: Icons.location_on_outlined,
+            label: 'Drop-off',
+            value: order.shippingAddress,
+          ),
+        ],
+      );
+    } else {
+      final order = orderData as GeneralOrder;
+      return Column(
+        children: [
+          DeliveryRouteItem(
+            iconData: Icons.store,
+            label: 'Vendor',
+            value: order.vendorName,
+          ),
+          DeliveryRouteItem(
+            iconData: Icons.location_on_outlined,
+            label: 'Drop-off',
+            value: order.shippingAddress,
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    if (isCustomOrder) {
+      final order = orderData as Order;
+      // Show action buttons based on order status
+      if (order.status == 'offered' || order.status == 'pending') {
+        return Row(
+          children: [
+            Expanded(
+              flex: 5,
+              child: CustomButton(
+                onTap: () {
+                  toastMessage(message: 'Custom Order Approved');
+                  context.pop();
+                },
+                title: "Approve",
+                isRadius: true,
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              flex: 5,
+              child: CustomButton(
+                fillColor: Colors.red,
+                onTap: () {
+                  toastMessage(message: 'Custom Order Rejected');
+                  context.pop();
+                },
+                title: "Reject",
+                isRadius: true,
+              ),
+            ),
+          ],
+        );
+      } else {
+        return CustomButton(
+          onTap: () => context.pop(),
+          title: "Back",
+          isRadius: true,
+        );
+      }
+    } else {
+      final order = orderData as GeneralOrder;
+      // Show action buttons based on order status
+      if (order.status == 'offered' || order.status == 'pending') {
+        return Row(
+          children: [
+            Expanded(
+              flex: 5,
+              child: CustomButton(
+                onTap: () {
+                  toastMessage(message: 'General Order Approved');
+                  context.pop();
+                },
+                title: "Approve",
+                isRadius: true,
+              ),
+            ),
+            SizedBox(width: 10.w),
+            Expanded(
+              flex: 5,
+              child: CustomButton(
+                fillColor: Colors.red,
+                onTap: () {
+                  toastMessage(message: 'General Order Rejected');
+                  context.pop();
+                },
+                title: "Reject",
+                isRadius: true,
+              ),
+            ),
+          ],
+        );
+      } else {
+        return CustomButton(
+          onTap: () => context.pop(),
+          title: "Back",
+          isRadius: true,
+        );
+      }
+    }
   }
 }
 
@@ -190,12 +335,23 @@ class OrderDetailRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$label: ',
+          SizedBox(
+            width: 120,
+            child: Text(
+              '$label: ',
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
-              )),
-          Text(value),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
         ],
       ),
     );
