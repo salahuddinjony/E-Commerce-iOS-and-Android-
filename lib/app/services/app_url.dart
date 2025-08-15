@@ -1,6 +1,8 @@
 class ApiUrl {
-  static const baseUrl = "http://10.10.20.19:5007/v1"; //
-  static const networkUrl = "http://10.10.20.19:5007/v1/";
+  // static const baseUrl = "http://10.10.20.19:5007/v1";
+  static const baseUrl = "https://gmosley-uteehub-backend.onrender.com/v1/"; //
+  // static const networkUrl = "http://10.10.20.19:5007/v1/";
+  static const networkUrl = "https://gmosley-uteehub-backend.onrender.com/v1/";
 
   ///================================= User Authentication url==========================
   static const login = "/user/auth/login";

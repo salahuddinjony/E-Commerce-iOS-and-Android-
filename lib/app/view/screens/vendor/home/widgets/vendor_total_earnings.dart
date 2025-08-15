@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:go_router/go_router.dart';
@@ -96,76 +97,113 @@ class VendorTotalEarnings extends StatelessWidget {
           //   title: "Withdraw",
           // )
           CustomButton(
-  borderColor: AppColors.white,
-  onTap: () {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Withdraw",
-      barrierColor: Colors.black.withOpacity(0.5), // semi-transparent background
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, anim1, anim2) {
-        return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: Center(
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                width: 300.w,
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        const Text("Enter Amount"),
-                        const Spacer(),
-                        IconButton(
-                          onPressed: () => context.pop(),
-                          icon: Icon(Icons.cancel, size: 35),
+            borderColor: AppColors.white,
+            onTap: () {
+              showGeneralDialog(
+                context: context,
+                barrierDismissible: true,
+                barrierLabel: "Withdraw",
+                barrierColor: Colors.black.withValues(alpha: .5),
+                transitionDuration: const Duration(milliseconds: 100),
+                pageBuilder: (context, anim1, anim2) {
+                  return BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Center(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          width: 300.w,
+                          padding: EdgeInsets.all(16.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text("Enter Amount"),
+                                  const Spacer(),
+                                  IconButton(
+                                    onPressed: () {
+                                      controller.message.value =
+                                          ''; // Clear message when canceling
+                                      controller.withdrawAmount
+                                          .clear(); // Clear input field
+                                      context.pop();
+                                    },
+                                    icon: const Icon(Icons.cancel, size: 35),
+                                  ),
+                                ],
+                              ),
+                              TextField(
+                                controller: controller.withdrawAmount,
+                                decoration: InputDecoration(
+                                  hintText: "Enter Amount",
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14.sp,
+                                  ),
+                                  filled: true,
+                                  fillColor: AppColors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey.shade300),
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 12.w, vertical: 8.h),
+                                ),
+                                style: TextStyle(
+                                  color: AppColors.darkNaturalGray,
+                                  fontSize: 14.sp,
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ], // Restrict to digits
+                              ),
+                              SizedBox(height: 8.h),
+                              Obx(() => controller.message.value.isNotEmpty
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12.w),
+                                      child: Text(
+                                        controller.message.value,
+                                        style: TextStyle(
+                                          color: controller.message.value
+                                                      .contains("error") ||
+                                                  controller.message.value
+                                                      .contains(
+                                                          "Insufficient") ||
+                                                  controller.message.value
+                                                      .contains("valid")
+                                              ? Colors.red
+                                              : Colors.green,
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink()),
+                              SizedBox(height: 8.h),
+                              CustomButton(
+                                title: "Get Withdraw",
+                                onTap: () {
+                                  controller.withdraw();
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                    TextField(
-                      controller: controller.widrawAmount,
-                      decoration: InputDecoration(
-                        hintText: "Enter Amount",
-                        hintStyle: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14.sp,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 12.w, vertical: 8.h),
                       ),
-                      style: TextStyle(
-                        color: AppColors.darkNaturalGray,
-                        fontSize: 14.sp,
-                      ),
                     ),
-                    SizedBox(height: 16.h),
-                    CustomButton(title: "Get Withdraw", onTap: () {}),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  },
-  title: "Withdraw",
-)
-
+                  );
+                },
+              );
+            },
+            title: "Withdraw",
+          )
         ],
       ),
     );
