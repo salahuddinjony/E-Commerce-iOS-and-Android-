@@ -91,7 +91,7 @@ class HomePageController extends GetxController {
   }
 
   void withdraw() {
-    // _validateWithdrawAmount(); // Validate before proceeding
+    // validateWithdrawAmount(); // Validate before proceeding
     if (message.value.isNotEmpty) {
       return; // Stop if there’s an error
     }
