@@ -1,8 +1,7 @@
-
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:local/app/core/routes.dart';
 import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
@@ -12,53 +11,98 @@ import 'package:local/app/view/screens/vendor/home/model/wallet_data_model.dart'
 class HomePageController extends GetxController {
   RxInt amount = 0.obs;
   RxList<WalletData> walletData = <WalletData>[].obs;
-
-  final widrawAmount=TextEditingController();
-
-
+  final withdrawAmount = TextEditingController();
+  RxString message = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchWalletData();
+
+    // Add listener for real-time validation
+    withdrawAmount.addListener(validateWithdrawAmount);
   }
 
-Future<void> fetchWalletData() async {
-  try {
-    final id = await SharePrefsHelper.getString(AppConstants.id);
-    final response = await ApiClient.getData(ApiUrl.getWallet(id: id));
+  @override
+  void onClose() {
+    withdrawAmount.removeListener(validateWithdrawAmount);
+    withdrawAmount.dispose();
+    super.onClose();
+  }
 
-    print("API Response: ${response.body}");
+  Future<void> fetchWalletData() async {
+    try {
+      final id = await SharePrefsHelper.getString(AppConstants.id);
 
-    if (response.statusCode == 200) {
-      final body = response.body; // Already a Map
-      final data = body['data'];
+      final response = await ApiClient.getData(ApiUrl.getWallet(id: id));
+      print("API Response: ${response.body}");
 
-      if (data == null) {
-        print("No wallet data found");
-        return;
-      }
+      if (response.statusCode == 200) {
+        final body = response.body; // Assuming body is already a Map
+        final data = body['data'];
 
-      // Balance
-      amount.value = data['balance']?['amount'] ?? 0;
-      print("Balance amount: ${amount.value}");
+        if (data == null) {
+          print("No wallet data found");
+          message.value = "No wallet data available";
+          return;
+        }
 
-      // Transaction history
-      final history = data['transactionHistory'] ?? [];
-      if (history is List) {
-        walletData.assignAll(
-          history.map((json) => WalletData.fromJson(json)).toList(),
-        );
+        // Balance
+        amount.value = data['balance']?['amount'] ?? 0;
+        print("Balance amount: ${amount.value}");
+
+        // Transaction history
+        final history = data['transactionHistory'];
+        if (history is List) {
+          walletData.assignAll(
+            history.map((json) => WalletData.fromJson(json)).toList(),
+          );
+        } else {
+          walletData.clear();
+        }
       } else {
-        walletData.clear();
+        print("Failed to fetch wallet data, status: ${response.statusCode}");
+        message.value = "Failed to fetch wallet data";
       }
-    } else {
-      print("Failed to fetch wallet data, status: ${response.statusCode}");
+    } catch (e) {
+      print("Error fetching wallet data: $e");
     }
-  } catch (e) {
-    print("Error fetching wallet data: $e");
   }
-}
 
+  void validateWithdrawAmount() {
+    final text = withdrawAmount.text;
+    if (text.isEmpty) {
+      message.value = "Please enter a withdrawal amount";
+      return;
+    }
 
+    final amountToWithdraw = int.tryParse(text);
+    if (amountToWithdraw == null || amountToWithdraw <= 0) {
+      message.value = "Please enter a valid amount";
+      return;
+    }
+
+    if (amountToWithdraw > amount.value) {
+      message.value = "Insufficient balance";
+      return;
+    }
+
+    message.value = "";
+  }
+
+  void withdraw() {
+    // _validateWithdrawAmount(); // Validate before proceeding
+    if (message.value.isNotEmpty) {
+      return; // Stop if there’s an error
+    }
+
+    try {
+      EasyLoading.showSuccess("Withdrawal request submitted");
+      message.value = '';
+      withdrawAmount.clear();
+      AppRouter.route.pop();
+    } catch (e) {
+      message.value = "Error processing withdrawal: $e";
+    }
+  }
 }
