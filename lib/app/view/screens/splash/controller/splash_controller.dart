@@ -8,10 +8,10 @@ class SplashController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    _checkLogin();
+    checkLogin();
   }
 
-  void _checkLogin() async {
+  void checkLogin() async {
     
     // Wait a bit to show splash
     await Future.delayed(const Duration(seconds: 1));
