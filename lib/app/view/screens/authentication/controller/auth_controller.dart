@@ -127,7 +127,7 @@ static Future<String> getInitialRoute() async {
       return RoutePath.userHomeScreen;
     }
   }
-  return RoutePath.signInScreen; 
+  return RoutePath.chooseAuthScreen; 
 }
 
 
