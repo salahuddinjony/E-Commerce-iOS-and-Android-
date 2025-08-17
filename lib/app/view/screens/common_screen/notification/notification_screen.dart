@@ -72,11 +72,7 @@ final NotificationController controller = Get.find<NotificationController>();
                 backgroundColor: AppColors.brightCyan,
                 child: const Icon(Icons.clear_all, color: Colors.white),
               )
-            : FloatingActionButton(
-                onPressed: () => controller.reloadDummyNotifications(),
-                backgroundColor: AppColors.brightCyan,
-                child: const Icon(Icons.add, color: Colors.white),
-              )),
+            : const SizedBox.shrink()),
       );
   }
 

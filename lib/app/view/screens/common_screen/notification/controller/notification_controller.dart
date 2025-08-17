@@ -30,7 +30,7 @@ class NotificationController extends GetxController with NotificationMixin {
         await getNotifications(consumerId: consumerId!);
         
         // Add dummy notifications for testing
-        _addDummyNotifications();
+        // _addDummyNotifications(); // Commented out for production
       } else {
         debugPrint("No user ID found in shared preferences");
         setRxRequestStatus(Status.error);
@@ -42,53 +42,53 @@ class NotificationController extends GetxController with NotificationMixin {
   }
 
   // Add dummy notifications for testing
-  void _addDummyNotifications() {
-    final dummyNotifications = [
-      NotificationData(
-        content: NotificationContent(
-          source: NotificationSource(type: "order"),
-          title: "New Order Received",
-          message: "You have received a new order #ORD-2024-001 for 5 custom t-shirts",
-        ),
-        id: "dummy_1",
-        consumer: consumerId,
-        isDismissed: false,
-        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-        updatedAt: DateTime.now().subtract(const Duration(hours: 2)),
-        v: 0,
-      ),
-      NotificationData(
-        content: NotificationContent(
-          source: NotificationSource(type: "payment"),
-          title: "Payment Successful",
-          message: "Payment of \$150.00 has been processed successfully for order #ORD-2024-002",
-        ),
-        id: "dummy_2",
-        consumer: consumerId,
-        isDismissed: false,
-        createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-        updatedAt: DateTime.now().subtract(const Duration(hours: 1)),
-        v: 0,
-      ),
-      NotificationData(
-        content: NotificationContent(
-          source: NotificationSource(type: "delivery"),
-          title: "Order Shipped",
-          message: "Your order #ORD-2024-003 has been shipped and is on its way to you",
-        ),
-        id: "dummy_3",
-        consumer: consumerId,
-        isDismissed: false,
-        createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
-        updatedAt: DateTime.now().subtract(const Duration(minutes: 30)),
-        v: 0,
-      ),
-    ];
+  // void _addDummyNotifications() {
+  //   final dummyNotifications = [
+  //     NotificationData(
+  //       content: NotificationContent(
+  //       source: NotificationSource(type: "order"),
+  //       title: "New Order Received",
+  //       message: "You have received a new order #ORD-2024-001 for 5 custom t-shirts",
+  //     ),
+  //     id: "dummy_1",
+  //     consumer: consumerId,
+  //     isDismissed: false,
+  //     createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+  //     updatedAt: DateTime.now().subtract(const Duration(hours: 2)),
+  //     v: 0,
+  //   ),
+  //   NotificationData(
+  //     content: NotificationContent(
+  //       source: NotificationSource(type: "payment"),
+  //       title: "Payment Successful",
+  //       message: "Payment of \$150.00 has been processed successfully for order #ORD-2024-002",
+  //     ),
+  //     id: "dummy_2",
+  //     consumer: consumerId,
+  //     isDismissed: false,
+  //     createdAt: DateTime.now().subtract(const Duration(hours: 1)),
+  //     updatedAt: DateTime.now().subtract(const Duration(hours: 1)),
+  //     v: 0,
+  //   ),
+  //   NotificationData(
+  //     content: NotificationContent(
+  //       source: NotificationSource(type: "delivery"),
+  //       title: "Order Shipped",
+  //       message: "Your order #ORD-2024-003 has been shipped and is on its way to you",
+  //     ),
+  //     id: "dummy_3",
+  //     consumer: consumerId,
+  //     isDismissed: false,
+  //     createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
+  //     updatedAt: DateTime.now().subtract(const Duration(minutes: 30)),
+  //     v: 0,
+  //   ),
+  // ];
 
-    // Add dummy notifications to the list
-    notificationList.addAll(dummyNotifications);
-    debugPrint("Added ${dummyNotifications.length} dummy notifications");
-  }
+  //   // Add dummy notifications to the list
+  //   notificationList.addAll(dummyNotifications);
+  //   debugPrint("Added ${dummyNotifications.length} dummy notifications");
+  // }
 
 
 
@@ -112,8 +112,8 @@ class NotificationController extends GetxController with NotificationMixin {
   }
 
   // Method to reload dummy notifications for testing
-  void reloadDummyNotifications() {
-    notificationList.clear();
-    _addDummyNotifications();
-  }
+  // void reloadDummyNotifications() {
+  //   notificationList.clear();
+  //   _addDummyNotifications();
+  // }
 }
