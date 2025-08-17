@@ -32,6 +32,19 @@ class ApiUrl {
     return "/notification/retrive/consumer/$userId";
   }
 
+  // New notification URLs
+  static String getNotifications({required String consumerId}) {
+    return "/notification/retrive/consumer/$consumerId";
+  }
+
+  static String dismissNotification({required String notificationId}) {
+    return "/notification/dismiss/$notificationId";
+  }
+
+  static String clearAllNotifications({required String consumerId}) {
+    return "/notification/clear/consumer/$consumerId";
+  }
+
 
 
 //=================Vendor=================
