@@ -5,8 +5,8 @@ import '../models/general_order_response_model.dart';
 class GeneralOrderService {
   /// Fetch all general orders for a vendor
   Future<GeneralOrderResponseModel> fetchGeneralOrders({
-    int page = 1,
-    int limit = 10,
+    int? page,
+    int? limit,
     String? status,
   }) async {
     try {

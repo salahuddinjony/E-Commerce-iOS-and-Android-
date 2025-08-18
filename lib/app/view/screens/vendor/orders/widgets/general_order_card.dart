@@ -51,11 +51,11 @@ class GeneralOrderCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Color(controller.getGeneralOrderStatusColor(order.status)),
+                  color: Color(controller.getStatusColor(order.status)),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  controller.getGeneralOrderStatusDisplayText(order.status),
+                  controller.getStatusDisplayText(order.status),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -112,7 +112,7 @@ class GeneralOrderCard extends StatelessWidget {
               Expanded(
                 child: OrderDetailRow(
                   label: 'Payment',
-                  value: controller.getGeneralOrderPaymentStatusDisplayText(order.paymentStatus),
+                  value: controller.getPaymentStatusDisplayText(order.paymentStatus),
                 ),
               ),
             ],
@@ -124,19 +124,19 @@ class GeneralOrderCard extends StatelessWidget {
               Expanded(
                 child: OrderDetailRow(
                   label: 'Products',
-                  value: controller.getGeneralOrderSummary(order),
+                  value: controller.getOrderSummary<GeneralOrder>(order),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: OrderDetailRow(
                   label: 'Date',
-                  value: controller.getGeneralOrderDateDisplay(order),
+                  value: controller.getOrderDateDisplay<GeneralOrder>(order),
                 ),
               ),
             ],
           ),
-          if (controller.isRecentOrder(order)) ...[
+          if (controller.isRecentOrder<GeneralOrder>(order)) ...[
             const SizedBox(height: 6),
             Align(
               alignment: Alignment.centerLeft,

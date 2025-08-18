@@ -2,36 +2,17 @@ import 'package:get/get.dart';
 import '../models/custom_order_response_model.dart';
 import '../constants/order_constants.dart';
 
-mixin CustomOrderMixin on GetxController {
+mixin OrderMixin on GetxController {
   // Observable variables
   final RxList<Order> allOrders = <Order>[].obs;
-  final RxList<Order> customOrders = <Order>[].obs;
-  final RxList<Order> generalOrders = <Order>[].obs;
-  
+  final RxList<Order> customOrders = <Order>[].obs; // Custom orders data
+  final RxList<Order> generalOrders = <Order>[].obs; // General orders data
+
   // Loading states
   final RxBool isLoading = false.obs;
   final RxBool isError = false.obs;
   final RxString errorMessage = ''.obs;
 
-  // Filtered orders by status
-  List<Order> getOrdersByStatus(String status) {
-    return allOrders.where((order) => order.status == status).toList();
-  }
-
-  // Get custom orders by status
-  List<Order> getCustomOrdersByStatus(String status) {
-    return customOrders.where((order) => order.status == status).toList();
-  }
-
-  // Get general orders by status
-  List<Order> getGeneralOrdersByStatus(String status) {
-    return generalOrders.where((order) => order.status == status).toList();
-  }
-
-  // Filter orders by type (custom or general)
-  List<Order> getOrdersByType(bool isCustom) {
-    return allOrders.where((order) => order.isCustom == isCustom).toList();
-  }
 
   // Get orders for specific tab
   List<Order> getOrdersForTab(String tab, bool isCustomOrder) {
@@ -87,6 +68,50 @@ mixin CustomOrderMixin on GetxController {
         return [];
     }
   }
+
+
+
+  // Get order summary text
+  String getOrderSummary<T>(order) {
+    final productCount = order.products.length;
+    final totalQuantity = order.totalQuantity;
+    
+    if (productCount == 1) {
+      return '${totalQuantity} item'; 
+    } else {
+      return '${productCount} products, ${totalQuantity} items total';
+    }
+  }
+
+  // Get order date display text
+  String getOrderDateDisplay<T>(order) {
+    final now = DateTime.now();
+    final orderDate = order.createdAt;
+    final difference = now.difference(orderDate); 
+
+    if (difference.inSeconds < 60) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}hr ago';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    } else {
+      return '${orderDate.day}/${orderDate.month}/${orderDate.year}';
+    }
+  }
+
+  // Check if order is recent (within last 24 hours)
+  bool isRecentOrder<T>( order) {
+    final now = DateTime.now();
+    final orderDate = order.createdAt;
+    final difference = now.difference(orderDate);
+    return difference.inHours < 24;
+  }
+  
 
   // Process API response
   void processOrderResponse(CustomOrderResponseModel response) {

@@ -51,62 +51,6 @@ mixin GeneralOrderMixin on GetxController {
     }
   }
 
-  // Get status display text for general orders
-  String getGeneralOrderStatusDisplayText(String status) {
-    return OrderConstants.getStatusDisplayText(status);
-  }
-
-  // Get status color for general orders
-  int getGeneralOrderStatusColor(String status) {
-    return OrderConstants.getStatusColor(status);
-  }
-
-  // Get payment status display text for general orders
-  String getGeneralOrderPaymentStatusDisplayText(String paymentStatus) {
-    return OrderConstants.getPaymentStatusDisplayText(paymentStatus);
-  }
-
-  // Get payment status color for general orders
-  int getGeneralOrderPaymentStatusColor(String paymentStatus) {
-    return OrderConstants.getPaymentStatusColor(paymentStatus);
-  }
-
-  // Get order summary text
-  String getGeneralOrderSummary(GeneralOrder order) {
-    final productCount = order.products.length;
-    final totalQuantity = order.totalQuantity;
-    
-    if (productCount == 1) {
-      return '${totalQuantity} item';
-    } else {
-      return '${productCount} products, ${totalQuantity} items total';
-    }
-  }
-
-  // Get order date display text
-  String getGeneralOrderDateDisplay(GeneralOrder order) {
-    final now = DateTime.now();
-    final orderDate = order.createdAt;
-    final difference = now.difference(orderDate);
-
-    if (difference.inDays == 0) {
-      return 'Today';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return '${orderDate.day}/${orderDate.month}/${orderDate.year}';
-    }
-  }
-
-  // Check if order is recent (within last 24 hours)
-  bool isRecentOrder(GeneralOrder order) {
-    final now = DateTime.now();
-    final orderDate = order.createdAt;
-    final difference = now.difference(orderDate);
-    return difference.inHours < 24;
-  }
 
   // Get order priority (for sorting)
   int getOrderPriority(GeneralOrder order) {

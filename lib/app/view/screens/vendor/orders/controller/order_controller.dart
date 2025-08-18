@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
-import '../mixins/custom_order_mixin.dart';
+import '../mixins/order_mixin.dart';
 import '../mixins/general_order_mixin.dart';
 import '../models/custom_order_response_model.dart';
 import '../models/general_order_response_model.dart';
@@ -10,10 +10,13 @@ import '../services/custom_order_service.dart';
 import '../services/general_order_service.dart';
 import '../constants/order_constants.dart';
 
-class OrdersController extends GetxController with GetTickerProviderStateMixin, CustomOrderMixin, GeneralOrderMixin {
+class OrdersController extends GetxController with GetTickerProviderStateMixin, OrderMixin, GeneralOrderMixin {
+  
   late TabController tabController;
-  final CustomOrderService _orderService = CustomOrderService();
-  final GeneralOrderService _generalOrderService = GeneralOrderService();
+
+  //Create instances of services
+  final CustomOrderService customerOrderService = CustomOrderService();
+  final GeneralOrderService generalOrderService = GeneralOrderService();
 
   var isCustomOrder = false.obs; // toggle state
 
@@ -51,7 +54,7 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
       isLoading.value = true;
       isError.value = false;
       
-      final response = await _orderService.fetchVendorOrders();
+      final response = await customerOrderService.fetchVendorOrders();
       processOrderResponse(response);
     } catch (e) {
       isLoading.value = false;
@@ -66,7 +69,7 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
       isGeneralOrdersLoading.value = true;
       isGeneralOrdersError.value = false;
       
-      final response = await _generalOrderService.fetchGeneralOrders();
+      final response = await generalOrderService.fetchGeneralOrders();
       processGeneralOrderResponse(response);
     } catch (e) {
       isGeneralOrdersLoading.value = false;
@@ -87,7 +90,7 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
   // Update custom order status
   Future<void> updateCustomOrderStatus(String orderId, String status) async {
     try {
-      await _orderService.updateOrderStatus(orderId, status);
+      await customerOrderService.updateOrderStatus(orderId, status);
       // Refresh custom orders after status update
       await fetchCustomOrders();
       Get.snackbar(
@@ -111,7 +114,7 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
   // Update general order status
   Future<void> updateGeneralOrderStatus(String orderId, String status) async {
     try {
-      await _generalOrderService.updateGeneralOrderStatus(orderId, status);
+      await generalOrderService.updateGeneralOrderStatus(orderId, status);
       // Refresh general orders after status update
       await fetchGeneralOrders();
       Get.snackbar(

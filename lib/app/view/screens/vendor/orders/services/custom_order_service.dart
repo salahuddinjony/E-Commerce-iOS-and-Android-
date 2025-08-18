@@ -5,8 +5,8 @@ import '../models/custom_order_response_model.dart';
 class CustomOrderService {
   /// Fetch all orders for a vendor
   Future<CustomOrderResponseModel> fetchVendorOrders({
-    int page = 1,
-    int limit = 10,
+    int? page,
+    int? limit,
     String? status,
     bool? isCustom,
   }) async {
