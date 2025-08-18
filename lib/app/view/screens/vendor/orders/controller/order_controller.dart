@@ -6,13 +6,13 @@ import '../mixins/custom_order_mixin.dart';
 import '../mixins/general_order_mixin.dart';
 import '../models/custom_order_response_model.dart';
 import '../models/general_order_response_model.dart';
-import '../services/order_service.dart';
+import '../services/custom_order_service.dart';
 import '../services/general_order_service.dart';
 import '../constants/order_constants.dart';
 
 class OrdersController extends GetxController with GetTickerProviderStateMixin, CustomOrderMixin, GeneralOrderMixin {
   late TabController tabController;
-  final OrderService _orderService = OrderService();
+  final CustomOrderService _orderService = CustomOrderService();
   final GeneralOrderService _generalOrderService = GeneralOrderService();
 
   var isCustomOrder = false.obs; // toggle state

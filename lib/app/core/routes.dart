@@ -21,7 +21,7 @@ import 'package:local/app/view/screens/user/user_home/user_profile/user_profile_
 import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.dart';
 import 'package:local/app/view/screens/user/user_order/user_order_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
-import 'package:local/app/view/screens/vendor/orders/orders_screen.dart';
+import 'package:local/app/view/screens/vendor/orders/screen/orders_screen.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/screen/product_screen.dart'
     show ProductScreen;
 import 'package:local/app/view/screens/vendor/profile/help_center/help_center_screen.dart';

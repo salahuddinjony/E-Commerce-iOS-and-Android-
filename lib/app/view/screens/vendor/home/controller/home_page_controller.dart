@@ -10,6 +10,7 @@ import 'package:local/app/view/screens/vendor/home/model/wallet_data_model.dart'
 
 class HomePageController extends GetxController {
   RxInt amount = 0.obs;
+  RxBool balanceFetch = false.obs;
   RxList<WalletData> walletData = <WalletData>[].obs;
   final withdrawAmount = TextEditingController();
   RxString message = ''.obs;
@@ -48,7 +49,8 @@ class HomePageController extends GetxController {
         }
 
         // Balance
-        amount.value = data['balance']?['amount'] ?? 0;
+        amount.value = data['balance']['amount'] ?? 0;
+        balanceFetch.value = true;
         print("Balance amount: ${amount.value}");
 
         // Transaction history
@@ -66,6 +68,9 @@ class HomePageController extends GetxController {
       }
     } catch (e) {
       print("Error fetching wallet data: $e");
+    } finally {
+      // Ensure loading state is reset
+      // EasyLoading.dismiss();
     }
   }
 
@@ -97,10 +102,22 @@ class HomePageController extends GetxController {
     }
 
     try {
-      EasyLoading.showSuccess("Withdrawal request submitted");
-      message.value = '';
-      withdrawAmount.clear();
-      AppRouter.route.pop();
+      if (withdrawAmount.text.isEmpty) {
+        message.value = "Please enter a withdrawal amount";
+        return;
+      }
+      // Proceed with withdrawal
+      EasyLoading.show(status: 'Processing withdrawal...');
+
+      // Simulate API call for withdrawal
+      Future.delayed(Duration(seconds: 2), () {
+        EasyLoading.dismiss();
+        withdrawAmount.clear();
+        message.value = '';
+        fetchWalletData(); // Refresh wallet data after withdrawal
+        EasyLoading.showSuccess("Withdrawal request submitted");
+        AppRouter.route.pop();
+      });
     } catch (e) {
       message.value = "Error processing withdrawal: $e";
     }

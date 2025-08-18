@@ -2,7 +2,7 @@ import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
 import '../models/custom_order_response_model.dart';
 
-class OrderService {
+class CustomOrderService {
   /// Fetch all orders for a vendor
   Future<CustomOrderResponseModel> fetchVendorOrders({
     int page = 1,

@@ -38,9 +38,9 @@ class VendorTotalEarnings extends StatelessWidget {
             () => CustomText(
               font: CustomFont.poppins,
               color: AppColors.white,
-              text: controller.amount.toString(),
+              text: controller.balanceFetch.value ? controller.amount.toString() : "Loading...",
               fontWeight: FontWeight.w600,
-              fontSize: 30.sp,
+              fontSize: controller.balanceFetch.value ? 24.sp : 15.sp,
               bottom: 10.h,
             ),
           ),
