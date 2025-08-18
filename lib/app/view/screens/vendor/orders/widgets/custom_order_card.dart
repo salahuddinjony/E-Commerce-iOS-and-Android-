@@ -114,7 +114,7 @@ class CustomOrderCard extends StatelessWidget {
                     Expanded(
                       child: OrderDetailRow(
                         label: 'Delivery Date',
-                        value: '${order.deliveryDate!.day}/${order.deliveryDate!.month}/${order.deliveryDate!.year}',
+                        value: controller.getOrderDateDisplay<Order>(order),
                       ),
                     ),
                   ],

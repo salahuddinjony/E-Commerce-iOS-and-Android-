@@ -15,7 +15,7 @@ class OrdersScreen extends StatelessWidget {
 
   // Order cards are now separate widgets under widgets/ directory.
 
-  Widget _buildTabContent(String tab) {
+  Widget buildTabContent(String tab) {
     return Obx(() {
       if (controller.isAnyLoading) {
         return const Center(child: CustomLoader());
@@ -140,6 +140,8 @@ class OrdersScreen extends StatelessWidget {
     });
   }
 
+
+// Tab Content 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,7 +214,7 @@ class OrdersScreen extends StatelessWidget {
                 child: TabBarView(
                   controller: controller.tabController,
                   children: controller.tabs
-                      .map((tab) => _buildTabContent(tab))
+                      .map((tab) => buildTabContent(tab))
                       .toList(),
                 ),
               )),

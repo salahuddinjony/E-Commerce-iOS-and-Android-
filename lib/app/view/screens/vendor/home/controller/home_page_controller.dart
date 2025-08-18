@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -95,10 +97,10 @@ class HomePageController extends GetxController {
     message.value = "";
   }
 
-  void withdraw() {
+  Future<void> withdraw() async {
     // validateWithdrawAmount(); // Validate before proceeding
     if (message.value.isNotEmpty) {
-      return; // Stop if there’s an error
+      return;
     }
 
     try {
@@ -106,20 +108,35 @@ class HomePageController extends GetxController {
         message.value = "Please enter a withdrawal amount";
         return;
       }
-      // Proceed with withdrawal
       EasyLoading.show(status: 'Processing withdrawal...');
+      final body = {
+        'amount': double.parse(withdrawAmount.text),
+        "currency": "usd",
+      };
+      final response =
+          await ApiClient.postData(ApiUrl.withdrawWallet, jsonEncode(body));
 
-      // Simulate API call for withdrawal
-      Future.delayed(Duration(seconds: 2), () {
-        EasyLoading.dismiss();
-        withdrawAmount.clear();
-        message.value = '';
-        fetchWalletData(); // Refresh wallet data after withdrawal
+      if (response.statusCode == 200) {
+        // Refresh wallet data after withdrawal
+         fetchWalletData();
         EasyLoading.showSuccess("Withdrawal request submitted");
+        clearWithdrawAmount();
         AppRouter.route.pop();
-      });
+      } else {
+        message.value = "Error processing withdrawal, Try again later";
+      }
     } catch (e) {
-      message.value = "Error processing withdrawal: $e";
+      print("Error processing withdrawal: $e");
+      EasyLoading.showError("Error processing withdrawal, Try again later");
+      AppRouter.route.pop();
+      message.value = "Error processing withdrawal, Try again later";
+    } finally {
+      EasyLoading.dismiss();
     }
+  }
+
+  void clearWithdrawAmount() {
+    withdrawAmount.clear();
+    message.value = '';
   }
 }
