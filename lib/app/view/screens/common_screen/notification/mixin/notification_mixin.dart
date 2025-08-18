@@ -19,8 +19,8 @@ mixin NotificationMixin on GetxController {
   // Get notifications for a specific consumer
   Future<void> getNotifications({required String consumerId}) async {
     setRxRequestStatus(Status.loading);
-    
-    final url = ApiUrl.baseUrl + ApiUrl.getNotifications(consumerId: consumerId);
+
+    final url = ApiUrl.getNotifications(consumerId: consumerId);
     debugPrint("Fetching notifications from: $url");
     
     var response = await ApiClient.getData(url);

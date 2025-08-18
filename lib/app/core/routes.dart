@@ -48,7 +48,7 @@ import '../view/screens/user/user_home/user_profile/payment_methods/payment_meth
 import '../view/screens/user/user_order/user_order_details/user_order_details_screen.dart';
 import '../view/screens/vendor/home/view_order/view_order_details/view_order_details.dart';
 import '../view/screens/vendor/home/view_order/view_order_screen.dart';
-import '../view/screens/vendor/orders/pending_details/pending_details_screen.dart';
+import '../view/screens/vendor/orders/order_details/order_details_screen.dart';
 import '../view/screens/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import '../view/screens/vendor/profile/business_documents/business_documents_screen.dart';
 import '../view/screens/vendor/vendor_message/vendor_message_screen.dart';
@@ -467,7 +467,7 @@ class AppRouter {
             final isCustomOrder = extra?['isCustomOrder'] ?? false;
             
             return _buildPageWithAnimation(
-              child: PendingDetailsScreen(
+              child: OrderDetailsScreen(
                 orderData: orderData,
                 isCustomOrder: isCustomOrder,
               ),

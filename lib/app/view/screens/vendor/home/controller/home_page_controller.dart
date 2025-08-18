@@ -17,6 +17,7 @@ class HomePageController extends GetxController {
   final withdrawAmount = TextEditingController();
   RxString message = ''.obs;
 
+
   @override
   void onInit() {
     super.onInit();
