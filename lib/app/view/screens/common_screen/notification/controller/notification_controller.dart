@@ -4,7 +4,6 @@ import '../../../../../data/local/shared_prefs.dart';
 import '../../../../../utils/app_constants/app_constants.dart';
 import '../../../../../utils/enums/status.dart';
 import '../mixin/notification_mixin.dart';
-import '../model/notification_model.dart';
 
 class NotificationController extends GetxController with NotificationMixin {
   
@@ -15,10 +14,10 @@ class NotificationController extends GetxController with NotificationMixin {
   void onInit() {
     super.onInit();
     // Load user ID and then load notifications
-    _loadUserIdAndNotifications();
+    loadUserIdAndNotifications();
   }
 
-  Future<void> _loadUserIdAndNotifications() async {
+  Future<void> loadUserIdAndNotifications() async {
     try {
       // Get user ID from shared preferences
       consumerId = await SharePrefsHelper.getString(AppConstants.id);

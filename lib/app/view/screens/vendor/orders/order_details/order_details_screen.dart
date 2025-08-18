@@ -7,11 +7,11 @@ import '../models/custom_order_response_model.dart';
 import '../models/general_order_response_model.dart';
 import '../constants/order_constants.dart';
 
-class PendingDetailsScreen extends StatelessWidget {
+class OrderDetailsScreen extends StatelessWidget {
   final dynamic orderData; // Can be either Order or GeneralOrder
   final bool isCustomOrder;
 
-  const PendingDetailsScreen({
+  const OrderDetailsScreen({
     super.key,
     required this.orderData,
     required this.isCustomOrder,

@@ -34,15 +34,16 @@ class ApiUrl {
 
   // New notification URLs
   static String getNotifications({required String consumerId}) {
-    return "/notification/retrive/consumer/$consumerId";
+    return "$baseUrl/notification/retrive/consumer/$consumerId";
+    
   }
 
   static String dismissNotification({required String notificationId}) {
-    return "/notification/dismiss/$notificationId";
+    return "$baseUrl/notification/dismiss/$notificationId";
   }
 
   static String clearAllNotifications({required String consumerId}) {
-    return "/notification/clear/consumer/$consumerId";
+    return "$baseUrl/notification/clear/consumer/$consumerId";
   }
 
 
