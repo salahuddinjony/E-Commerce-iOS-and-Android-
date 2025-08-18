@@ -18,6 +18,8 @@ class WalletResponse {
         data: WalletData.fromJson(json['data']),
       );
 
+  get balance => null;
+
   Map<String, dynamic> toJson() => {
         'statusCode': statusCode,
         'status': status,
