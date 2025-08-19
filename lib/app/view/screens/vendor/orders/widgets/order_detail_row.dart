@@ -4,12 +4,14 @@ class OrderDetailRow extends StatelessWidget {
   final String label;
   final String value;
   final double labelWidth;
+   final TextStyle? valueStyle;
 
   const OrderDetailRow({
     super.key,
     required this.label,
     required this.value,
     this.labelWidth = 80,
+    this.valueStyle,
   });
 
   @override
@@ -32,12 +34,14 @@ class OrderDetailRow extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            value,
+            style: valueStyle ??
+                const TextStyle( // default style
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
+            overflow: TextOverflow.ellipsis,
+          ),
           ),
         ],
       ),

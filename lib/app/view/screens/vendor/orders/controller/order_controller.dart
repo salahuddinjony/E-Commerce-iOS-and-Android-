@@ -5,13 +5,12 @@ import 'package:local/app/core/route_path.dart';
 import '../mixins/order_mixin.dart';
 import '../mixins/general_order_mixin.dart';
 import '../models/custom_order_response_model.dart';
-import '../models/general_order_response_model.dart';
 import '../services/custom_order_service.dart';
 import '../services/general_order_service.dart';
 import '../constants/order_constants.dart';
 
-class OrdersController extends GetxController with GetTickerProviderStateMixin, OrderMixin, GeneralOrderMixin {
-  
+class OrdersController extends GetxController
+    with GetTickerProviderStateMixin, OrderMixin, GeneralOrderMixin {
   late TabController tabController;
 
   //Create instances of services
@@ -53,7 +52,7 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
     try {
       isLoading.value = true;
       isError.value = false;
-      
+
       final response = await customerOrderService.fetchVendorOrders();
       processOrderResponse(response);
     } catch (e) {
@@ -68,7 +67,7 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
     try {
       isGeneralOrdersLoading.value = true;
       isGeneralOrdersError.value = false;
-      
+
       final response = await generalOrderService.fetchGeneralOrders();
       processGeneralOrderResponse(response);
     } catch (e) {
@@ -88,26 +87,17 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
   }
 
   // Update custom order status
-  Future<void> updateCustomOrderStatus(String orderId, String status) async {
+  Future<bool> updateCustomOrderStatus(String orderId, String status) async {
     try {
-      await customerOrderService.updateOrderStatus(orderId, status);
+      print('Updating custom order status: $orderId to $status');
+      final result = await customerOrderService.updateOrderStatus(orderId, status);
       // Refresh custom orders after status update
-      await fetchCustomOrders();
-      Get.snackbar(
-        'Success',
-        'Custom order status updated successfully',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+       refreshOrdersByType(true);
+      return result;
+
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to update custom order status: $e',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      print('Failed to update custom order status: $e');
+      return false; 
     }
   }
 
@@ -177,7 +167,8 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
 
   // Mark general order as delivered
   Future<void> markGeneralOrderDelivered(String orderId) async {
-    await updateGeneralOrderStatus(orderId, OrderConstants.statusDeliveryConfirmed);
+    await updateGeneralOrderStatus(
+        orderId, OrderConstants.statusDeliveryConfirmed);
   }
 
   void onPendingOrderTap(BuildContext context) {
@@ -185,25 +176,42 @@ class OrdersController extends GetxController with GetTickerProviderStateMixin, 
   }
 
   // Navigate to order details for custom orders
-  void onCustomOrderTap(BuildContext context, Order order) {
+  void onOrderTap<T>(BuildContext context, T order) {
     context.pushNamed(
       RoutePath.pendingDetailsScreen,
       extra: {
         'orderData': order,
-        'isCustomOrder': true,
+        'isCustomOrder': T == Order ? true : false,
       },
     );
   }
 
-  // Navigate to order details for general orders
-  void onGeneralOrderTap(BuildContext context, GeneralOrder order) {
-    context.pushNamed(
-      RoutePath.pendingDetailsScreen,
-      extra: {
-        'orderData': order,
-        'isCustomOrder': false,
-      },
-    );
+  // Countdown stream for order delivery
+  Stream<String> countdownStream(
+      DateTime orderTime, DateTime deliveryTime) async* {
+    while (true) {
+      final now = DateTime.now();
+
+      if (now.isAfter(deliveryTime)) {
+        yield "Expired";
+        break; // stop the stream when delivered
+      } else if (now.isBefore(orderTime)) {
+        yield "Not started";
+      } else {
+        final remaining = deliveryTime.difference(now);
+        final days = remaining.inDays;
+        final hours = remaining.inHours % 24;
+        final minutes = remaining.inMinutes % 60;
+        final seconds = remaining.inSeconds % 60;
+
+        yield "${days == 0 ? '' : '${days.toString().padLeft(2, '0')} days '}"
+          "${hours.toString().padLeft(2, '0')} hours "
+          "${minutes.toString().padLeft(2, '0')} minutes "
+          "${seconds.toString().padLeft(2, '0')} seconds";
+      }
+
+      await Future.delayed(const Duration(seconds: 1));
+    }
   }
 
   // Refresh all orders

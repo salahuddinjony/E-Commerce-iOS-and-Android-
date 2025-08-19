@@ -63,6 +63,10 @@ static String withdrawWallet= "$baseUrl/wallet/withdraw";
          //=========Custom Order========//
 
   static const customOrder="$baseUrl/order/retrieve/all";
+  
+  static String updateCustomOrderStatus({required String orderId}) {
+    return "$baseUrl}order/update/$orderId";
+  }
 
          //=========Generel Order========//
 

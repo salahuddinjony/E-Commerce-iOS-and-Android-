@@ -69,9 +69,10 @@ class ApiClient extends GetxService {
 
       http.Response response = await client
           .patch(
-            Uri.parse(ApiUrl.baseUrl + uri),
+            // Uri.parse(ApiUrl.baseUrl + uri),
+              Uri.parse(uri),
             body: isBody ? body : null,
-            headers: headers ?? mainHeaders,
+            headers: headers ?? mainHeaders, 
           )
           .timeout(const Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
@@ -279,7 +280,8 @@ class ApiClient extends GetxService {
 
       http.Response response = await http
           .delete(
-            Uri.parse(ApiUrl.baseUrl + uri),
+            Uri.parse(uri),
+              // Uri.parse(ApiUrl.baseUrl + uri),
             headers: headers ?? mainHeaders,
           )
           .timeout(const Duration(seconds: timeoutInSeconds));

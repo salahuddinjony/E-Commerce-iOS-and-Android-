@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
+import 'package:local/app/view/screens/vendor/orders/controller/order_controller.dart';
 import '../models/custom_order_response_model.dart';
 import '../models/general_order_response_model.dart';
 import '../constants/order_constants.dart';
@@ -10,11 +11,13 @@ import '../constants/order_constants.dart';
 class OrderDetailsScreen extends StatelessWidget {
   final dynamic orderData; // Can be either Order or GeneralOrder
   final bool isCustomOrder;
+  final OrdersController controller;
 
   const OrderDetailsScreen({
     super.key,
     required this.orderData,
     required this.isCustomOrder,
+    required this.controller,
   });
 
   @override
@@ -251,9 +254,15 @@ class OrderDetailsScreen extends StatelessWidget {
             Expanded(
               flex: 5,
               child: CustomButton(
-                onTap: () {
-                  toastMessage(message: 'Custom Order Approved');
-                  context.pop();
+                onTap: () async {
+
+                  if (await controller.updateCustomOrderStatus(order.id, 'completed')) {
+                    await controller.updateCustomOrderStatus(order.id, 'completed');
+                    toastMessage(message: 'Custom Order Approved');
+                    context.pop();
+                  }else {
+                    toastMessage(message: 'Failed to approve order');
+                  }
                 },
                 title: "Approve",
                 isRadius: true,
@@ -264,9 +273,13 @@ class OrderDetailsScreen extends StatelessWidget {
               flex: 5,
               child: CustomButton(
                 fillColor: Colors.red,
-                onTap: () {
-                  toastMessage(message: 'Custom Order Rejected');
-                  context.pop();
+                onTap: () async {
+                  if (await controller.updateCustomOrderStatus(order.id, 'completed')) {
+                    toastMessage(message: 'Custom Order Approved');
+                    context.pop();
+                  }else {
+                    toastMessage(message: 'Failed to approve order');
+                  }
                 },
                 title: "Reject",
                 isRadius: true,
@@ -291,6 +304,7 @@ class OrderDetailsScreen extends StatelessWidget {
               flex: 5,
               child: CustomButton(
                 onTap: () {
+                 
                   toastMessage(message: 'General Order Approved');
                   context.pop();
                 },
