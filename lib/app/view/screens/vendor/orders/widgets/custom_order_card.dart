@@ -31,7 +31,7 @@ class CustomOrderCard extends StatelessWidget {
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
-        ],
+        ], 
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +48,8 @@ class CustomOrderCard extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Color(controller.getStatusColor(order.status)),
                   borderRadius: BorderRadius.circular(20),
@@ -80,7 +81,8 @@ class CustomOrderCard extends StatelessWidget {
                   Expanded(
                     child: OrderDetailRow(
                       label: 'Payment',
-                      value: controller.getPaymentStatusDisplayText(order.paymentStatus),
+                      value: controller
+                          .getPaymentStatusDisplayText(order.paymentStatus),
                     ),
                   ),
                 ],
@@ -113,33 +115,89 @@ class CustomOrderCard extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: OrderDetailRow(
-                        label: 'Delivery Date',
+                        label: 'Order Date',
                         value: controller.getOrderDateDisplay<Order>(order),
+                        valueStyle: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.green,
+                        ),
                       ),
                     ),
                   ],
                 ],
               ),
+              const SizedBox(height: 4),
+              order.status.toLowerCase() == 'offered' ||
+                      order.status.toLowerCase() == 'pending' ||
+                      order.status.toLowerCase() == 'in-progress'
+                  ? Card(
+                      elevation: 0.1,
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 3),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            StreamBuilder<String>(
+                              stream: controller.countdownStream(
+                                  order.createdAt, order.deliveryDate!),
+                              builder: (context, snapshot) {
+                                final value = snapshot.data ?? "";
+                                final isExpired = value == 'Expired';
+
+                                return Row(
+                                  children: [
+                                    Icon(
+                                      isExpired
+                                          ? Icons.warning
+                                          : Icons.delivery_dining,
+                                      color:
+                                          isExpired ? Colors.red : Colors.black,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      value,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: isExpired
+                                            ? Colors.red
+                                            : Colors.blue,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink()
             ],
           ),
           const SizedBox(height: 12),
-          if (order.summery.isNotEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                order.summery,
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          const SizedBox(height: 12),
+          // if (order.summery.isNotEmpty)
+          //   Container(
+          //     width: double.infinity,
+          //     padding: const EdgeInsets.all(12),
+          //     decoration: BoxDecoration(
+          //       color: Colors.grey[50],
+          //       borderRadius: BorderRadius.circular(8),
+          //     ),
+          //     child: Text(
+          //       order.summery,
+          //       style: TextStyle(
+          //         color: Colors.grey[700],
+          //         fontSize: 14,
+          //       ),
+          //     ),
+          //   ),
+          // const SizedBox(height: 5),
           Row(
             children: [
               Expanded(

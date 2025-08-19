@@ -5,6 +5,8 @@ import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
+import 'package:local/app/view/screens/vendor/orders/models/custom_order_response_model.dart';
+import 'package:local/app/view/screens/vendor/orders/models/general_order_response_model.dart';
 import '../controller/order_controller.dart';
 import '../widgets/custom_order_card.dart';
 import '../widgets/general_order_card.dart';
@@ -88,7 +90,7 @@ class OrdersScreen extends StatelessWidget {
               return CustomOrderCard(
                 order: orders[index],
                 controller: controller,
-                onTap: () => controller.onCustomOrderTap(context, orders[index]),
+                onTap: () => controller.onOrderTap<Order>(context, orders[index]),
               );
             },
           ),
@@ -131,7 +133,7 @@ class OrdersScreen extends StatelessWidget {
               return GeneralOrderCard(
                 order: orders[index],
                 controller: controller,
-                onTap: () => controller.onGeneralOrderTap(context, orders[index]),
+                onTap: () => controller.onOrderTap<GeneralOrder>(context, orders[index]),
               );
             },
           ),

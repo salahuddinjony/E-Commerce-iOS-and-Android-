@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
 import '../models/custom_order_response_model.dart';
@@ -55,18 +58,34 @@ class CustomOrderService {
   }
 
   /// Update order status
-  Future<void> updateOrderStatus(String orderId, String status) async {
+  Future<bool> updateOrderStatus(String orderId, String status) async {
+    print('Updating order status: $orderId to $status');
     try {
-      final response = await ApiClient.patchData(
-        '/order/update/$orderId/status',
-        {'status': status},
-      );
+      final url = ApiUrl.updateCustomOrderStatus(orderId: orderId);
+      print('Sending PATCH request to: $url');
 
-      if (response.statusCode != 200) {
-        throw Exception('Failed to update order status: ${response.statusText}');
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'status': status}),
+      );
+      print('Response status code: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        // throw Exception('Failed to update order status: ${response.body}')
+       print('Order status updated successfully: $orderId to $status');
+       return true;
+      } else {
+         print('Failed to update order status: ${response.body}');  
+        return false;
+       
       }
     } catch (e) {
-      throw Exception('Failed to update order status: $e');
+      // throw Exception('Failed to update order status: $e');
+      print('Error updating order status: $e');
+      return false;
     }
   }
 
