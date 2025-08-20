@@ -44,10 +44,12 @@ mixin GeneralOrderMixin on GetxController {
       generalOrdersList.assignAll(response.data.data);
       isGeneralOrdersLoading.value = false;
       isGeneralOrdersError.value = false;
+      generalOrdersErrorMessage.value = '';
     } catch (e) {
       isGeneralOrdersLoading.value = false;
       isGeneralOrdersError.value = true;
       generalOrdersErrorMessage.value = 'Error processing general orders: $e';
+      print('General order processing error: $e');
     }
   }
 

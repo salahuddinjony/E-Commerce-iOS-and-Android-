@@ -25,7 +25,13 @@ class GeneralOrderService {
       );
 
       if (response.statusCode == 200) {
-        return GeneralOrderResponseModel.fromJson(response.body);
+        try {
+          return GeneralOrderResponseModel.fromJson(response.body);
+        } catch (e) {
+          print('Error parsing general orders response: $e');
+          print('Response body: ${response.body}');
+          throw Exception('Failed to parse general orders response: $e');
+        }
       } else {
         throw Exception('Failed to fetch general orders: ${response.statusText}');
       }
