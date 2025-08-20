@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final HomePageController controller = Get.find<HomePageController>();
-  final NotificationController notificationController = Get.find<NotificationController>();
+  final NotificationController notificationController = Get.find<NotificationController>(); //notification controller
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +51,7 @@ class HomeScreen extends StatelessWidget {
                     //=================Total Earnings==========
                     VendorTotalEarnings(
                       controller: controller,
+                      notificationController: notificationController,
                     ),
 
                     SizedBox(

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:go_router/go_router.dart';
+import 'package:local/app/view/screens/common_screen/notification/controller/notification_controller.dart';
 import 'package:local/app/view/screens/vendor/home/controller/home_page_controller.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -14,9 +15,10 @@ import '../../../../common_widgets/custom_text/custom_text.dart';
 
 class VendorTotalEarnings extends StatelessWidget {
   final HomePageController controller;
+ final NotificationController notificationController;
   const VendorTotalEarnings({
     super.key,
-    required this.controller,
+    required this.controller, required this.notificationController,
   });
 
   @override
@@ -43,8 +45,8 @@ class VendorTotalEarnings extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(right: 12.w),
                 child: IconButton(
-                 
-                  onPressed: () {
+                  onPressed: () async {
+                    await notificationController.loadUserIdAndNotifications();
                     controller.balanceFetch.value = false; // Show shimmer immediately
                     controller.fetchWalletData();
                   },

@@ -13,7 +13,7 @@ import 'package:local/app/view/screens/vendor/home/model/wallet_data_model.dart'
 class HomePageController extends GetxController {
   RxInt amount = 0.obs;
   RxBool balanceFetch = false.obs;
-  RxList<WalletData> walletData = <WalletData>[].obs;
+  RxList<TransactionHistory> walletData = <TransactionHistory>[].obs;
   final withdrawAmount = TextEditingController();
   RxString message = ''.obs;
 
@@ -60,7 +60,7 @@ class HomePageController extends GetxController {
         final history = data['transactionHistory'];
         if (history is List) {
           walletData.assignAll(
-            history.map((json) => WalletData.fromJson(json)).toList(),
+            history.map((json) => TransactionHistory.fromJson(json)).toList(),
           );
         } else {
           walletData.clear();

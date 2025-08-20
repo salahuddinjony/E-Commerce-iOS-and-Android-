@@ -176,7 +176,7 @@ final NotificationController controller = Get.find<NotificationController>();
                   controller.dismissNotificationById(notificationId);
                 }
               },
-              child: const Text("Dismiss"),
+              child: const Text("Yes,Dismiss"),
             ),
           ],
         );

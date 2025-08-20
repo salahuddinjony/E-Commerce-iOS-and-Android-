@@ -16,18 +16,18 @@ class ApiUrl {
 
   //=================Profile=================
   static String getProfile({required String userId}) {
-    return "/user/retrieve/$userId";
+    return "$baseUrl/user/retrieve/$userId";
   }
 
   static String updateProfile({required String userId}) {
-    return "/user/update/$userId";
+    return "$baseUrl/user/update/$userId";
   }
 
 //================Info=================
-  static const privacyPolicy = "/privacy-policy/retrive";
-  static const termsAndCondition = "/terms-condition/retrive";
-  static const aboutUs = "/about-us/retrive";
-  static const faq = "/faq/retrieve";
+  static const privacyPolicy = "$baseUrl/privacy-policy/retrive";
+  static const termsAndCondition = "$baseUrl/terms-condition/retrive";
+  static const aboutUs = "$baseUrl/about-us/retrive";
+  static const faq = "$baseUrl/faq/retrieve";
   static String notification({required String userId}) {
     return "/notification/retrive/consumer/$userId";
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/global/helper/extension/extension.dart';
 import '../models/custom_order_response_model.dart';
 import '../controller/order_controller.dart';
 import 'order_detail_row.dart';
@@ -99,7 +100,7 @@ class CustomOrderCard extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: OrderDetailRow(
-                      label: 'Delivery',
+                      label: 'Delivery Option',
                       value: order.deliveryOption,
                     ),
                   ),
@@ -108,8 +109,11 @@ class CustomOrderCard extends StatelessWidget {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  const Expanded(
-                    child: OrderDetailRow(label: 'Type', value: 'Custom'),
+                  Expanded(
+                    child: OrderDetailRow(
+                      label: 'Payment Status',
+                      value: order.paymentStatus.capitalizeFirstWord(),
+                    ),
                   ),
                   if (order.deliveryDate != null) ...[
                     const SizedBox(width: 12),
