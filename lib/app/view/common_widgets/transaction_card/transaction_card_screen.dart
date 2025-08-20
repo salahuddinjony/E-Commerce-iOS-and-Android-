@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 
 class TransactionCard extends StatelessWidget {
   final String title;
   final String date;
   final String time;
-  final String relativeTime;
+  final String type;
   final String amount;
   final Color primaryColor;
 
@@ -14,7 +15,7 @@ class TransactionCard extends StatelessWidget {
     required this.title,
     required this.date,
     required this.time,
-    required this.relativeTime,
+    required this.type,
     required this.amount,
     this.primaryColor = Colors.teal,
   });
@@ -24,11 +25,11 @@ class TransactionCard extends StatelessWidget {
     return Card(
       color: AppColors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(5),
       ),
-      elevation: 2,
+      elevation: 1,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -36,14 +37,33 @@ class TransactionCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+             Row(
+              children: [
+                  Text(
                   title,
                   style: TextStyle(
-                    color: primaryColor.withOpacity(0.7),
+                    color:type=='credit' ? AppColors.brightCyan :  Colors.red,
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
                   ),
                 ),
+                Card(
+                  elevation: 0.5,
+                  color:type=='credit' ? Colors.green :  Colors.red ,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Text(
+                      type.capitalizeFirstWord()+'ed',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                ),
+
+              ],
+             ),
                 const SizedBox(height: 6),
                 Text(
                   '$date ,$time',
@@ -53,13 +73,7 @@ class TransactionCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  relativeTime,
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 13,
-                  ),
-                ),
+                
               ],
             ),
             // Right side amount text
@@ -67,8 +81,8 @@ class TransactionCard extends StatelessWidget {
               amount,
               style: TextStyle(
                 color: primaryColor.withOpacity(0.7),
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                fontSize: 20,
               ),
             ),
           ],

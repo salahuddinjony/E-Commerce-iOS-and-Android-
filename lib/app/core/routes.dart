@@ -229,7 +229,7 @@ class AppRouter {
           name: RoutePath.transactionScreen,
           path: RoutePath.transactionScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const TransactionScreen(),
+            child:  TransactionScreen(),
             state: state,
           ),
         ),

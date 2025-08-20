@@ -31,7 +31,8 @@ mixin NotificationMixin on GetxController {
     if (response.statusCode == 200) {
       try {
         final notificationModel = NotificationModel.fromJson(response.body);
-        notificationList.value = notificationModel.data ?? [];
+        notificationList.value =
+            (notificationModel.data ?? []).where((notification) => notification.isDismissed != true).toList();
         setRxRequestStatus(Status.completed);
         debugPrint("Notifications loaded: ${notificationList.length}");
       } catch (e) {

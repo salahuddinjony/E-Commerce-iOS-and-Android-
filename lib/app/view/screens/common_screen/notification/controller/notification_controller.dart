@@ -40,55 +40,6 @@ class NotificationController extends GetxController with NotificationMixin {
     }
   }
 
-  // Add dummy notifications for testing
-  // void _addDummyNotifications() {
-  //   final dummyNotifications = [
-  //     NotificationData(
-  //       content: NotificationContent(
-  //       source: NotificationSource(type: "order"),
-  //       title: "New Order Received",
-  //       message: "You have received a new order #ORD-2024-001 for 5 custom t-shirts",
-  //     ),
-  //     id: "dummy_1",
-  //     consumer: consumerId,
-  //     isDismissed: false,
-  //     createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-  //     updatedAt: DateTime.now().subtract(const Duration(hours: 2)),
-  //     v: 0,
-  //   ),
-  //   NotificationData(
-  //     content: NotificationContent(
-  //       source: NotificationSource(type: "payment"),
-  //       title: "Payment Successful",
-  //       message: "Payment of \$150.00 has been processed successfully for order #ORD-2024-002",
-  //     ),
-  //     id: "dummy_2",
-  //     consumer: consumerId,
-  //     isDismissed: false,
-  //     createdAt: DateTime.now().subtract(const Duration(hours: 1)),
-  //     updatedAt: DateTime.now().subtract(const Duration(hours: 1)),
-  //     v: 0,
-  //   ),
-  //   NotificationData(
-  //     content: NotificationContent(
-  //       source: NotificationSource(type: "delivery"),
-  //       title: "Order Shipped",
-  //       message: "Your order #ORD-2024-003 has been shipped and is on its way to you",
-  //     ),
-  //     id: "dummy_3",
-  //     consumer: consumerId,
-  //     isDismissed: false,
-  //     createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
-  //     updatedAt: DateTime.now().subtract(const Duration(minutes: 30)),
-  //     v: 0,
-  //   ),
-  // ];
-
-  //   // Add dummy notifications to the list
-  //   notificationList.addAll(dummyNotifications);
-  //   debugPrint("Added ${dummyNotifications.length} dummy notifications");
-  // }
-
 
 
   // Method to refresh notifications
@@ -98,9 +49,12 @@ class NotificationController extends GetxController with NotificationMixin {
     }
   }
 
-  // Method to dismiss a specific notification
-  void dismissNotificationById(String notificationId) {
-    dismissNotification(notificationId: notificationId);
+  // Method to dismiss a specific notification and then re-fetch from backend
+  Future<void> dismissNotificationById(String notificationId) async {
+    await dismissNotification(notificationId: notificationId);
+    if (consumerId != null && consumerId!.isNotEmpty) {
+      await getNotifications(consumerId: consumerId!);
+    }
   }
 
   // Method to clear all notifications
