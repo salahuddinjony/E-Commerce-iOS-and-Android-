@@ -10,6 +10,7 @@ import 'package:local/app/view/screens/vendor/home/controller/home_page_controll
 import 'package:local/app/view/screens/vendor/home/widgets/best_selling_products.dart';
 import 'package:local/app/view/screens/vendor/home/widgets/stock_alert.dart';
 import 'package:local/app/view/screens/vendor/home/widgets/vendor_total_earnings.dart';
+import 'package:local/app/view/screens/common_screen/notification/controller/notification_controller.dart';
 
 import '../../../common_widgets/custom_text/custom_text.dart';
 import '../../../common_widgets/owner_nav/owner_nav.dart';
@@ -19,9 +20,12 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final HomePageController controller = Get.find<HomePageController>();
+  final NotificationController notificationController = Get.find<NotificationController>();
 
   @override
   Widget build(BuildContext context) {
+
+    
     return Scaffold(
       backgroundColor: AppColors.white,
       bottomNavigationBar: const OwnerNav(
@@ -30,14 +34,13 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         children: [
           //===============Top Appbar===========
-          OwnerAppbar(
-            scaffoldKey: GlobalKey<ScaffoldState>(),
-            notificationOnTap: () {
-              context.pushNamed(
-                RoutePath.notificationScreen,
-              );
-            },
-          ),
+         OwnerAppbar(
+          scaffoldKey: GlobalKey<ScaffoldState>(),
+          notificationOnTap: () {
+            context.pushNamed(RoutePath.notificationScreen);
+          },
+          controller: notificationController,
+         ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.h),

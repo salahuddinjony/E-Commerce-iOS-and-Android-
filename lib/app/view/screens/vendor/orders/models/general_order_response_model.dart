@@ -12,12 +12,35 @@ class GeneralOrderResponseModel {
   });
 
   factory GeneralOrderResponseModel.fromJson(Map<String, dynamic> json) {
-    return GeneralOrderResponseModel(
-      statusCode: json['statusCode'] ?? 0,
-      status: json['status'] ?? '',
-      message: json['message'] ?? '',
-      data: GeneralOrderData.fromJson(json['data'] ?? {}),
-    );
+    try {
+      return GeneralOrderResponseModel(
+        statusCode: json['statusCode'] ?? 0,
+        status: json['status'] ?? '',
+        message: json['message'] ?? '',
+        data: GeneralOrderData.fromJson(json['data'] ?? {}),
+      );
+    } catch (e) {
+      // If the standard structure fails, try alternative structure
+      print('Standard parsing failed, trying alternative structure: $e');
+      
+      // Check if the response has a different structure
+      if (json.containsKey('data') && json['data'] is List) {
+        // If data is directly a list, wrap it in the expected structure
+        return GeneralOrderResponseModel(
+          statusCode: json['statusCode'] ?? 200,
+          status: json['status'] ?? 'success',
+          message: json['message'] ?? '',
+          data: GeneralOrderData(
+            meta: Meta(page: 1, limit: 10, total: (json['data'] as List).length, totalPages: 1),
+            data: (json['data'] as List<dynamic>)
+                .map((e) => GeneralOrder.fromJson(e))
+                .toList(),
+          ),
+        );
+      }
+      
+      throw Exception('Failed to parse GeneralOrderResponseModel: $e');
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -40,13 +63,17 @@ class GeneralOrderData {
   });
 
   factory GeneralOrderData.fromJson(Map<String, dynamic> json) {
-    return GeneralOrderData(
-      meta: Meta.fromJson(json['meta'] ?? {}),
-      data: (json['data'] as List<dynamic>?)
-              ?.map((e) => GeneralOrder.fromJson(e))
-              .toList() ??
-          [],
-    );
+    try {
+      return GeneralOrderData(
+        meta: Meta.fromJson(json['meta'] ?? {}),
+        data: (json['data'] as List<dynamic>?)
+                ?.map((e) => GeneralOrder.fromJson(e))
+                .toList() ??
+            [],
+      );
+    } catch (e) {
+      throw Exception('Error parsing GeneralOrderData: $e');
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -121,24 +148,28 @@ class GeneralOrder {
   });
 
   factory GeneralOrder.fromJson(Map<String, dynamic> json) {
-    return GeneralOrder(
-      id: json['_id'] ?? '',
-      vendor: Vendor.fromJson(json['vendor'] ?? {}),
-      client: Client.fromJson(json['client'] ?? {}),
-      price: json['price'] ?? 0,
-      currency: json['currency'] ?? '',
-      products: (json['products'] as List<dynamic>?)
-              ?.map((e) => Product.fromJson(e))
-              .toList() ??
-          [],
-      status: json['status'] ?? '',
-      paymentStatus: json['paymentStatus'] ?? '',
-      shippingAddress: json['shippingAddress'] ?? '',
-      sessionId: json['sessionId'] ?? '',
-      tnxId: json['tnxId'] ?? '',
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-    );
+    try {
+      return GeneralOrder(
+        id: json['_id'] ?? '',
+        vendor: Vendor.fromJson(json['vendor'] ?? {}),
+        client: Client.fromJson(json['client'] ?? {}),
+        price: json['price'] ?? 0,
+        currency: json['currency'] ?? '',
+        products: (json['products'] as List<dynamic>?)
+                ?.map((e) => Product.fromJson(e))
+                .toList() ??
+            [],
+        status: json['status'] ?? '',
+        paymentStatus: json['paymentStatus'] ?? '',
+        shippingAddress: json['shippingAddress'] ?? '',
+        sessionId: json['sessionId'] ?? '',
+        tnxId: json['tnxId'] ?? '',
+        createdAt: DateTime.parse(json['createdAt']),
+        updatedAt: DateTime.parse(json['updatedAt']),
+      );
+    } catch (e) {
+      throw Exception('Error parsing GeneralOrder: $e');
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -267,9 +298,21 @@ class ProfileId {
   });
 
   factory ProfileId.fromJson(Map<String, dynamic> json) {
+    // Handle image field which might be a map or string
+    String? imageValue;
+    if (json['image'] != null) {
+      if (json['image'] is String) {
+        imageValue = json['image'];
+      } else if (json['image'] is Map<String, dynamic>) {
+        // If image is a map, try to extract URL or path
+        final imageMap = json['image'] as Map<String, dynamic>;
+        imageValue = imageMap['url'] ?? imageMap['path'] ?? imageMap['src'] ?? null;
+      }
+    }
+
     return ProfileId(
       name: json['name'] ?? '',
-      image: json['image'],
+      image: imageValue,
       gender: json['gender'],
     );
   }
@@ -295,8 +338,20 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
+    // Handle productId which might be a map or string
+    String? productIdValue;
+    if (json['productId'] != null) {
+      if (json['productId'] is String) {
+        productIdValue = json['productId'];
+      } else if (json['productId'] is Map<String, dynamic>) {
+        // If productId is a map, try to extract the ID
+        final productIdMap = json['productId'] as Map<String, dynamic>;
+        productIdValue = productIdMap['_id'] ?? productIdMap['id'] ?? null;
+      }
+    }
+
     return Product(
-      productId: json['productId'],
+      productId: productIdValue,
       quantity: json['quantity'] ?? 0,
       id: json['_id'] ?? '',
     );

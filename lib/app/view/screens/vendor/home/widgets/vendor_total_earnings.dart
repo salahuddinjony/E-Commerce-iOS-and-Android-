@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/view/screens/vendor/home/controller/home_page_controller.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../common_widgets/custom_button/custom_button.dart';
@@ -34,15 +35,68 @@ class VendorTotalEarnings extends StatelessWidget {
             fontWeight: FontWeight.w600,
             fontSize: 24.sp,
           ),
-          Obx(
-            () => CustomText(
-              font: CustomFont.poppins,
-              color: AppColors.white,
-              text: controller.balanceFetch.value ? controller.amount.toString() : "Loading...",
-              fontWeight: FontWeight.w600,
-              fontSize: controller.balanceFetch.value ? 24.sp : 15.sp,
-              bottom: 10.h,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Refresh icon - smaller and more subtle
+              Container(
+                margin: EdgeInsets.only(right: 12.w),
+                child: IconButton(
+                 
+                  onPressed: () {
+                    controller.balanceFetch.value = false; // Show shimmer immediately
+                    controller.fetchWalletData();
+                  },
+                  icon: Icon(
+                    Icons.refresh,
+                    color: AppColors.white.withValues(alpha: 0.8),
+                    size: 18.sp,
+                  ),
+                  padding: EdgeInsets.all(4.w),
+                  constraints: BoxConstraints(
+                    minWidth: 32.w,
+                    minHeight: 32.h,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                  ),
+                ),
+              ),
+              // Amount text - properly centered
+              Expanded(
+                child: Center(
+                  child: Obx(() => 
+                    controller.balanceFetch.value 
+                    ? CustomText(
+                        font: CustomFont.poppins,
+                        color: AppColors.white,
+                        text: "\$${controller.amount.toString()}",
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20.sp,
+                        textAlign: TextAlign.center,
+                      )
+                    : Shimmer.fromColors(
+                        baseColor: AppColors.white.withValues(alpha: .6),
+                        highlightColor: AppColors.white,
+                        child: Container(
+                          width: 80.w,
+                          height: 20.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                      )
+                  ),
+                ),
+              ),
+              // Invisible spacer to balance the refresh icon
+              SizedBox(width: 44.w),
+            ],
           ),
           // CustomButton(
           //   borderColor: AppColors.white,
