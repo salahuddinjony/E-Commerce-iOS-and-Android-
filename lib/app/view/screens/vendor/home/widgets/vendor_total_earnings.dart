@@ -41,7 +41,7 @@ class VendorTotalEarnings extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Refresh icon - smaller and more subtle
+              // Refresh icon
               Container(
                 margin: EdgeInsets.only(right: 12.w),
                 child: IconButton(

@@ -8,9 +8,9 @@ import 'package:local/app/view/screens/vendor/products_and_category/common_widge
 class ImageUploadWidget<T> extends StatelessWidget {
   final T controller;
   final RxString imagePath; 
-  final RxBool isNetworkImage; 
+  final RxBool? isNetworkImage; 
   final Future<void> Function(T controller, String source) onPickImage;
-  final VoidCallback onClearImage;
+  final VoidCallback? onClearImage;
 
   const ImageUploadWidget({
     super.key,
@@ -74,7 +74,7 @@ class ImageUploadWidget<T> extends StatelessWidget {
                       )
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: isNetworkImage.value
+                        child: isNetworkImage?.value ?? false
                             ? CustomNetworkImage(
                                 imageUrl: imagePath.value,
                                 width: 160.w,
