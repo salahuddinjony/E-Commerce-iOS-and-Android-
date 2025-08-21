@@ -33,9 +33,9 @@ class TransactionScreen extends StatelessWidget {
             if (!controller.balanceFetch.value && data.isEmpty) {
               return const CustomLoader();
             }
-            if (data.isEmpty && controller.message.value.isNotEmpty) {
-              return NoInternetScreen(onTap: controller.fetchWalletData);
-            }
+            // if (data.isEmpty && controller.message.value.isNotEmpty) {
+            //   return NoInternetScreen(onTap: controller.fetchWalletData);
+            // }
             if (data.isEmpty) {
               return const Center(child: Text('No transactions found'));
             }

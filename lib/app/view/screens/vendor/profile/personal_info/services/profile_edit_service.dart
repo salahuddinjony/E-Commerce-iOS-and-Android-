@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import '../../../../../../services/api_client.dart';
-import '../../../../../../services/app_url.dart';
+
 
 class ProfileEditService {
   static Future<Response> updateProfile({
@@ -21,8 +21,10 @@ class ProfileEditService {
       }
     }
 
+    // Updated endpoint: {{base-url}}/user/update/{userId}
+    final String endpoint = 'user/update/$userId';
     return ApiClient.patchMultipart(
-      ApiUrl.updateProfile(userId: userId),
+      endpoint,
       body,
       multipartBody: multipart.isEmpty ? null : multipart,
     );

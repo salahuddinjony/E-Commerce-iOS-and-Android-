@@ -46,6 +46,7 @@ class HomePageController extends GetxController {
         final data = body['data'];
 
         if (data == null) {
+          balanceFetch.value = true;
           print("No wallet data found");
           message.value = "No wallet data available";
           return;
@@ -66,10 +67,12 @@ class HomePageController extends GetxController {
           walletData.clear();
         }
       } else {
+        balanceFetch.value = true;
         print("Failed to fetch wallet data, status: ${response.statusCode}");
         message.value = "Failed to fetch wallet data";
       }
     } catch (e) {
+      balanceFetch.value = true;
       print("Error fetching wallet data: $e");
     } finally {
       // Ensure loading state is reset
