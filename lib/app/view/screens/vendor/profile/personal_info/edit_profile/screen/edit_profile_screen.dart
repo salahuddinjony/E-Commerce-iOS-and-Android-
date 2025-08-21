@@ -16,11 +16,11 @@ import 'package:local/app/view/screens/vendor/profile/personal_info/controller/p
 import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile/widgets/select_documents.dart';
 
 // New widget parts
-import 'widgets/profile_header.dart';
-import 'widgets/gender_dropdown.dart';
-import 'widgets/contact_address_section.dart';
-import 'widgets/location_field.dart';
-import 'widgets/delivery_dropdown.dart';
+import '../widgets/profile_header.dart';
+import '../widgets/gender_dropdown.dart';
+import '../widgets/contact_address_section.dart';
+import '../widgets/location_field.dart';
+import '../widgets/delivery_dropdown.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
