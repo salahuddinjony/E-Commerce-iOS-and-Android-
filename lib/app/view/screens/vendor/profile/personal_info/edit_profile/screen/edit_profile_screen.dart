@@ -13,7 +13,7 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/controller/profile_controller.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile/widgets/select_documents.dart';
+import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile/widgets/select_documents_button/select_documents.dart';
 
 // New widget parts
 import '../widgets/profile_header.dart';
