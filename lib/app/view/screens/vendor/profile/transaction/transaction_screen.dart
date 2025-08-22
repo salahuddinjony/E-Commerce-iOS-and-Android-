@@ -5,7 +5,6 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/screens/vendor/home/controller/home_page_controller.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
-import 'package:local/app/view/common_widgets/no_internet/no_internet.dart';
 
 import '../../../../common_widgets/transaction_card/transaction_card_screen.dart';
 
