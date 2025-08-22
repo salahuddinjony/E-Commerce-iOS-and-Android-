@@ -54,35 +54,52 @@ mixin DocumentMixin on ProfileStateMixin {
     }
 
     try {
-      EasyLoading.show(status: 'Downloading...');
-      final token =
-          await SharePrefsHelper.getString(AppConstants.bearerToken);
+      // Reset progress state
+      isDownloading.value = true;
+      downloadProgress.value = 0.0;
+      downloadingFileName.value = '';
+
+      final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
       final headers = {
         'Accept': '*/*',
         if (token.isNotEmpty) 'Authorization': 'Bearer $token',
       };
       final uri = Uri.parse(finalUrl);
-      final resp = await http.get(uri, headers: headers);
-      if (resp.statusCode != 200) {
-        EasyLoading.showError('Download failed (${resp.statusCode})');
+      final request = http.Request('GET', uri);
+      request.headers.addAll(headers);
+      final streamed = await request.send();
+      if (streamed.statusCode != 200) {
+        EasyLoading.showError('Download failed (${streamed.statusCode})');
+        isDownloading.value = false;
         return;
       }
 
-      String fileName = uri.pathSegments.isNotEmpty
-          ? uri.pathSegments.last
-          : 'document';
+      String fileName = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : 'document';
       if (!fileName.contains('.')) {
-        final ct = resp.headers['content-type'] ?? '';
+        final ct = streamed.headers['content-type'] ?? '';
         if (ct.contains('pdf')) fileName += '.pdf';
         else if (ct.contains('png')) fileName += '.png';
         else if (ct.contains('jpeg') || ct.contains('jpg')) fileName += '.jpg';
         else if (ct.contains('plain')) fileName += '.txt';
       }
+      downloadingFileName.value = fileName;
 
+      final contentLength = streamed.contentLength ?? 0;
       final dir = await getTemporaryDirectory();
       final path = '${dir.path}/$fileName';
-      await File(path).writeAsBytes(resp.bodyBytes);
-      EasyLoading.dismiss();
+      final file = File(path).openWrite();
+      int received = 0;
+      await for (final chunk in streamed.stream) {
+        received += chunk.length;
+        file.add(chunk);
+        if (contentLength > 0) {
+          downloadProgress.value = received / contentLength;
+        }
+      }
+      await file.flush();
+      await file.close();
+      downloadProgress.value = 1.0;
+      isDownloading.value = false;
 
       final result = await OpenFilex.open(path);
       if (result.type != ResultType.done) {
@@ -91,7 +108,7 @@ mixin DocumentMixin on ProfileStateMixin {
         }
       }
     } catch (_) {
-      EasyLoading.dismiss();
+      isDownloading.value = false;
       EasyLoading.showError('Open failed');
     }
   }

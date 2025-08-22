@@ -35,6 +35,44 @@ class SelectDocuments extends StatelessWidget {
             fontSize: 16.sp,
             bottom: 12.h,
           ),
+          // Download progress bar
+          Obx(() {
+            if (!profileController.isDownloading.value) return const SizedBox.shrink();
+            final pct = (profileController.downloadProgress.value * 100).clamp(0, 100).toStringAsFixed(0);
+            final name = profileController.downloadingFileName.value;
+            return Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            minHeight: 6,
+                            backgroundColor: Colors.grey.shade300,
+                            valueColor: AlwaysStoppedAnimation(AppColors.brightCyan),
+                            value: profileController.downloadProgress.value == 0 ? null : profileController.downloadProgress.value,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Text('$pct%', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                  SizedBox(height: 4.h),
+                  if (name.isNotEmpty)
+                    Text(
+                      name,
+                      style: TextStyle(fontSize: 12.sp, color: AppColors.darkNaturalGray),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            );
+          }),
           Row(
             children: [
               Expanded(
@@ -150,23 +188,59 @@ class SelectDocuments extends StatelessWidget {
                   ...existing.take(3).map((e) {
                     final url = e.toString();
                     final name = url.split('/').last;
-                    return InkWell(
-                      onTap: () => profileController.openDocument(url),
-                      child: Chip(
-                        backgroundColor: Colors.white,
-                        label: SizedBox(
-                          width: 120.w,
-                          child: Text(
-                            name,
-                            overflow: TextOverflow.ellipsis,
+                    return Obx(() {
+                      final isThisDownloading = profileController.isDownloading.value &&
+                          profileController.downloadingFileName.value == name;
+                      final progress = profileController.downloadProgress.value;
+                      final percent = (progress * 100).clamp(0, 100).toInt();
+                      return InkWell(
+                        onTap: () => profileController.openDocument(url),
+                        child: Chip(
+                          backgroundColor: Colors.white,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          label: ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: 170.w),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.insert_drive_file, size: 18),
+                                SizedBox(width: 4.w),
+                                Expanded(
+                                  child: Text(
+                                    name,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(width: 6.w),
+                                if (!isThisDownloading)
+                                  GestureDetector(
+                                    onTap: () => profileController.openDocument(url),
+                                    child: const Icon(Icons.download, size: 18),
+                                  )
+                                else
+                                  SizedBox(
+                                    width: 28,
+                                    height: 28,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                          value: progress == 0 ? null : progress,
+                                        ),
+                                        Text(
+                                          '$percent%',
+                                          style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w600),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
                         ),
-                        avatar: const Icon(Icons.insert_drive_file, size: 18),
-                        deleteIcon: const Icon(Icons.download, size: 18),
-                        onDeleted: () => profileController.openDocument(url),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                    );
+                      );
+                    });
                   }).toList(),
                   if (existing.length > 3)
                     Chip(

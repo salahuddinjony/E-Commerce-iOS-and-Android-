@@ -78,9 +78,9 @@ class TransactionCard extends StatelessWidget {
             ),
             // Right side amount text
             Text(
-              amount,
-              style: TextStyle(
-                color: primaryColor.withOpacity(0.7),
+              "${amount}\$",
+                style: TextStyle(
+                color: primaryColor.withValues(alpha: .7),
                 fontWeight: FontWeight.w800,
                 fontSize: 20,
               ),
