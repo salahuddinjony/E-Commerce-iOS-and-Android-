@@ -27,11 +27,14 @@ mixin ProfileStateMixin on GetxController {
   final RxList<String> serverDocuments = <String>[].obs;
   final RxString selectedDelivery = ''.obs;
   final RxBool isSaving = false.obs;
+
+
   // Download progress state
   final RxBool isDownloading = false.obs; // true while a document is downloading
   final RxDouble downloadProgress = 0.0.obs; // 0.0 - 1.0 progress fraction
   final RxString downloadingFileName = ''.obs; // current file being downloaded
   final RxBool isShow = false.obs;
+   final RxBool showAllExisting = false.obs;
 
   @override
   void onClose() {

@@ -11,8 +11,8 @@ import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile
 class SelectDocuments extends StatelessWidget {
   final ProfileController profileController;
   final dynamic data;
-  // Local reactive state for expanding/collapsing existing documents
-  final RxBool _showAllExisting = false.obs;
+ 
+ 
 
   SelectDocuments({
     Key? key,
@@ -82,7 +82,7 @@ class SelectDocuments extends StatelessWidget {
             if (picked.isNotEmpty || existing.isEmpty)
               return const SizedBox.shrink();
 
-            final showAll = _showAllExisting.value;
+            final showAll = profileController.showAllExisting.value;
             final visibleList = showAll ? existing : existing.take(3).toList();
 
             return Padding(
@@ -97,13 +97,13 @@ class SelectDocuments extends StatelessWidget {
                     ActionChip(
                       backgroundColor: Colors.white,
                       label: Text('+${existing.length - 3} more'),
-                      onPressed: () => _showAllExisting.toggle(),
+                      onPressed: () => profileController.showAllExisting.toggle(),
                     ),
                   if (showAll && existing.length > 3)
                     ActionChip(
                       backgroundColor: Colors.white,
                       label: const Text('Show less'),
-                      onPressed: () => _showAllExisting.toggle(),
+                      onPressed: () => profileController.showAllExisting.toggle(),
                     ),
                 ],
               ),
