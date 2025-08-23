@@ -124,6 +124,27 @@ class OrdersController extends GetxController
       );
     }
   }
+  // Delete general order
+  Future<bool> deleteGeneralOrder(String orderId) async {
+    try {
+      final ok = await generalOrderService.deleteGeneralOrder(orderId);
+      if (!ok) return false;
+
+      // Fetch fresh list only after confirmed deletion
+      await fetchGeneralOrders();
+     
+      return true;
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to delete general order: $e',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+  }
 
   // Accept custom order
   Future<void> acceptCustomOrder(String orderId) async {
