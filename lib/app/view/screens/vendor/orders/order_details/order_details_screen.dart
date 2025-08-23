@@ -317,9 +317,13 @@ class OrderDetailsScreen extends StatelessWidget {
               flex: 5,
               child: CustomButton(
                 fillColor: Colors.red,
-                onTap: () {
-                  toastMessage(message: 'General Order Rejected');
-                  context.pop();
+                onTap: () async {
+                  if (await controller.deleteGeneralOrder(order.id)) {
+                    toastMessage(message: 'General Order Deleted');
+                    context.pop();
+                  } else {
+                    toastMessage(message: 'Failed to delete order');
+                  }
                 },
                 title: "Reject",
                 isRadius: true,

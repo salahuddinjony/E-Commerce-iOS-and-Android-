@@ -60,6 +60,23 @@ class GeneralOrderService {
       throw Exception('Failed to update general order status: $e');
     }
   }
+  //Delete order
+  Future<bool> deleteGeneralOrder(String orderId) async {
+    try {
+      final response = await ApiClient.deleteData(
+        ApiUrl.deleteGeneralOrder(orderId: orderId),
+      );
+
+      if (response.statusCode != 200) {
+        // throw Exception('Failed to delete general order: ${response.statusText}');
+        return false;
+      }
+    } catch (e) {
+      // throw Exception('Failed to delete general order: $e');
+      return false;
+    }
+    return true;
+  }
 
   /// Accept general order
   Future<void> acceptGeneralOrder(String orderId) async {

@@ -71,6 +71,9 @@ static String withdrawWallet= "$baseUrl/wallet/withdraw";
          //=========Generel Order========//
 
   static const generalOrder="$baseUrl/general-order/retrieve";
+  static String deleteGeneralOrder({required String orderId}) {
+    return "$baseUrl/general-order/delete/$orderId";
+  }
   
 
 
