@@ -10,7 +10,7 @@ import 'profile_fetch_mixin.dart';
 mixin SaveProfileMixin on ProfileStateMixin, ProfileFetchMixin {
   Future<bool> saveProfile() async {
     if (isSaving.value) return false;
-    final userId = await SharePrefsHelper.getString(AppConstants.id);
+    final userId = await SharePrefsHelper.getString(AppConstants.userId);
     if (userId.isEmpty) return false;
 
     final data = profileModel.value;

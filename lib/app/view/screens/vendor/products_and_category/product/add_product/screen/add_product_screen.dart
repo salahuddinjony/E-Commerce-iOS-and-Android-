@@ -14,28 +14,38 @@ import 'package:local/app/view/screens/vendor/products_and_category/product/cont
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AddProductScreen extends StatelessWidget {
-
-  final String ? method;
+  final String? method;
   final String? productId;
   final String? productName;
   final String? imageUrl;
   final String? categoryId;
-  final String ? categoryName;
+  final String? categoryName;
   final List<String>? selectedColor;
   final List<String>? selectedSize;
   final String? price;
   final String? quantity;
   final String? isFeatured;
 
-
-  AddProductScreen({super.key, this.method, this.productId, this.categoryId, this.categoryName, this.productName, this.imageUrl, this.price, this.quantity, this.isFeatured, this.selectedColor, this.selectedSize});
+  AddProductScreen(
+      {super.key,
+      this.method,
+      this.productId,
+      this.categoryId,
+      this.categoryName,
+      this.productName,
+      this.imageUrl,
+      this.price,
+      this.quantity,
+      this.isFeatured,
+      this.selectedColor,
+      this.selectedSize});
 
   final VendorProductController controller =
       Get.find<VendorProductController>();
 
   @override
   Widget build(BuildContext context) {
-     // Initialize controller fields when the widget is built
+    // Initialize controller fields when the widget is built
     if (method == 'PATCH') {
       controller.initializeForEdit(
         productName: productName,
@@ -54,9 +64,9 @@ class AddProductScreen extends StatelessWidget {
     }
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar:  CustomAppBar(
+      appBar: CustomAppBar(
         iconData: Icons.arrow_back,
-        appBarContent: method=='POST' ? "Add Product" : "Edit Product",
+        appBarContent: method == 'POST' ? "Add Product" : "Edit Product",
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -64,16 +74,14 @@ class AddProductScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
               /// Upload image
-             ImageUploadWidget<VendorProductController>(
+              ImageUploadWidget<VendorProductController>(
                 controller: controller,
                 imagePath: controller.imagePath,
                 isNetworkImage: controller.isNetworkImage,
                 onPickImage: (ctrl, source) => ctrl.pickImage(source: source),
                 onClearImage: () => controller.clearImage(),
               ),
-
 
               SizedBox(height: 20.h),
 
@@ -146,9 +154,10 @@ class AddProductScreen extends StatelessWidget {
 
               /// Submit Button
               CustomButton(
-                title:method=='POST' ? "Submit" : "Update",
+                title: method == 'POST' ? "Submit" : "Update",
                 onTap: () async {
-                  bool success = await controller.createOrUpdateProduct(method: method!,productId: productId);
+                  bool success = await controller.createOrUpdateProduct(
+                      method: method!, productId: productId);
 
                   if (success) {
                     controller.fetchProducts();

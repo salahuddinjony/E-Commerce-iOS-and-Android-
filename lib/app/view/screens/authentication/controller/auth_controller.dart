@@ -15,9 +15,12 @@ import '../../../../services/app_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
 
 class AuthController extends GetxController {
-  final emailController =
-      TextEditingController(text: "videostore06@gmail.com");
+  final emailController = TextEditingController(text: "videostore06@gmail.com");
   final passWordController = TextEditingController(text: "salahAbc@1");
+/*
+fahadhossaim24@gmail.com
+12345678
+*/
   final confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController clientEmailController = TextEditingController();
@@ -59,14 +62,15 @@ class AuthController extends GetxController {
           AppConstants.bearerToken,
           response.body["data"]['accessToken'],
         );
-        print("Bearer Tokensss:${await SharePrefsHelper.getString(AppConstants.bearerToken)}");
+        print(
+            "Bearer Tokensss:${await SharePrefsHelper.getString(AppConstants.bearerToken)}");
 
         // _____Save UserId at SharedPreferences
         SharePrefsHelper.setString(
-          AppConstants.id,
+          AppConstants.userId,
           response.body['data']["_id"],
         );
-        final userId = await SharePrefsHelper.getString(AppConstants.id);
+        final userId = await SharePrefsHelper.getString(AppConstants.userId);
         print("UsderId here: $userId");
 
         //______Save User Role at SharedPreferences
@@ -111,25 +115,23 @@ class AuthController extends GetxController {
     }
   }
 
-
 //==============Initial route for the app lunching-============
 
-static Future<String> getInitialRoute() async {
-  await SharePrefsHelper.init();
+  static Future<String> getInitialRoute() async {
+    await SharePrefsHelper.init();
 
-  final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
-  final role = await SharePrefsHelper.getString(AppConstants.role);
+    final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
+    final role = await SharePrefsHelper.getString(AppConstants.role);
 
-  if (token.isNotEmpty) {
-    if (role == 'vendor') {
-      return RoutePath.homeScreen;
-    } else if (role == 'client') {
-      return RoutePath.userHomeScreen;
+    if (token.isNotEmpty) {
+      if (role == 'vendor') {
+        return RoutePath.homeScreen;
+      } else if (role == 'client') {
+        return RoutePath.userHomeScreen;
+      }
     }
+    return RoutePath.chooseAuthScreen;
   }
-  return RoutePath.chooseAuthScreen; 
-}
-
 
   //>>>>>>>>>>>>>>>>>>✅✅Forget In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

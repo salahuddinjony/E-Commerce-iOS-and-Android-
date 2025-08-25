@@ -146,7 +146,7 @@ class UserProfileScreen extends StatelessWidget {
             ),
             CustomLogoutButton(
               onTap: () async {
-                await SharePrefsHelper.remove(AppConstants.id);
+                await SharePrefsHelper.remove(AppConstants.userId);
                 Get.delete<ProfileController>();
 
                 context.goNamed(RoutePath.signInScreen);

@@ -85,8 +85,10 @@ static String withdrawWallet= "$baseUrl/wallet/withdraw";
 
   //=================Product=================
 
-  
-  static const productList = "$baseUrl/product/retrieve";
+
+  static String productList({required String userId}) {
+    return "$baseUrl/product/retrieve/vendor/$userId";
+  }
 
   static String createProduct = "$baseUrl/product/create";
   
@@ -98,9 +100,11 @@ static String withdrawWallet= "$baseUrl/wallet/withdraw";
   }
    //=================Category==========
 
-  static const categoryList = "$baseUrl/category/retrieve";
+  static String categoryList({required String userId}) {
+    return "$baseUrl/category/retrieve/vendor/$userId";
+  }
 
-  static String createCategory="$baseUrl/category/create";
+  static String createCategory = "$baseUrl/category/create";
 
   static String categoryDelete({required String categoryId}) {
     return "$baseUrl/category/delete/$categoryId";

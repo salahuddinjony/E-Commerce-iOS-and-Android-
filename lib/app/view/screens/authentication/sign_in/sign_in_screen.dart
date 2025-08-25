@@ -62,6 +62,7 @@ class SignInScreen extends StatelessWidget {
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         controller.signIn();
+                        Get.deleteAll(force: true);  //Its indicates to clear all controllers before navigating
                       }
                     },
                     title: AppStrings.continues,

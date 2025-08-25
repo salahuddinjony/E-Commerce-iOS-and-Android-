@@ -20,7 +20,7 @@ class NotificationController extends GetxController with NotificationMixin {
   Future<void> loadUserIdAndNotifications() async {
     try {
       // Get user ID from shared preferences
-      consumerId = await SharePrefsHelper.getString(AppConstants.id);
+      consumerId = await SharePrefsHelper.getString(AppConstants.userId);
       debugPrint("Retrieved user ID from shared preferences: '$consumerId'");
       
       if (consumerId != null && consumerId!.isNotEmpty) {

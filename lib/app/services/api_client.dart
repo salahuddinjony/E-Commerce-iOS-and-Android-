@@ -20,29 +20,33 @@ class ApiClient extends GetxService {
   static const int timeoutInSeconds = 30;
 
   static String bearerToken = "";
+
   ///================================================================Get Method============================///
 
   static Future<Response> getData(String uri,
       {Map<String, dynamic>? query, Map<String, String>? headers}) async {
-
     bearerToken = await SharePrefsHelper.getString(AppConstants.bearerToken);
 
-    var mainHeaders = {
-      // 'Content-Type': 'application/x-www-form-urlencoded',
+    final mainHeaders = {
       'Content-Type': 'application/json',
-
       'Authorization': 'Bearer $bearerToken'
     };
-    try {
-      debugPrint('====> API Call: $uri\nHeader: ${headers ?? mainHeaders}');
 
-      http.Response response = await client
+    // Build final URI with query params (merging any already present in uri)
+    Uri baseUri = Uri.parse(uri);
+    if (query != null) {
+      baseUri = baseUri.replace(queryParameters: query); 
+    }
+    try {
+      debugPrint('====> API Call: $baseUri\nHeader: ${headers ?? mainHeaders}');
+
+      final response = await client
           .get(
-            Uri.parse(uri),
+            baseUri,
             headers: headers ?? mainHeaders,
           )
           .timeout(const Duration(seconds: timeoutInSeconds));
-      return handleResponse(response, uri);
+      return handleResponse(response, baseUri.toString());
     } catch (e) {
       debugPrint('------------>>>${e.toString()}');
       return const Response(statusCode: 1, statusText: noInternetMessage);
@@ -70,9 +74,9 @@ class ApiClient extends GetxService {
       http.Response response = await client
           .patch(
             // Uri.parse(ApiUrl.baseUrl + uri),
-              Uri.parse(uri),
+            Uri.parse(uri),
             body: isBody ? body : null,
-            headers: headers ?? mainHeaders, 
+            headers: headers ?? mainHeaders,
           )
           .timeout(const Duration(seconds: timeoutInSeconds));
       return handleResponse(response, uri);
@@ -272,7 +276,7 @@ class ApiClient extends GetxService {
 
     var mainHeaders = {
       'Content-Type': 'application/json',
-      'Authorization': bearerToken
+      'Authorization':'Bearer $bearerToken', // FIX: add Bearer
     };
     try {
       debugPrint('====> API Call: $uri\nHeader: ${headers ?? mainHeaders}');
@@ -281,7 +285,7 @@ class ApiClient extends GetxService {
       http.Response response = await http
           .delete(
             Uri.parse(uri),
-              // Uri.parse(ApiUrl.baseUrl + uri),
+            // Uri.parse(ApiUrl.baseUrl + uri),
             headers: headers ?? mainHeaders,
           )
           .timeout(const Duration(seconds: timeoutInSeconds));

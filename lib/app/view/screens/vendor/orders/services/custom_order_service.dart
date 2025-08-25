@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
+import 'package:local/app/data/local/shared_prefs.dart';
+import 'package:local/app/utils/app_constants/app_constants.dart';
 import '../models/custom_order_response_model.dart';
 
 class CustomOrderService {
@@ -12,20 +14,24 @@ class CustomOrderService {
     int? limit,
     String? status,
     bool? isCustom,
+    String? vendorId, // added
   }) async {
     try {
-      final queryParams = <String, dynamic>{
-        'page': page,
-        'limit': limit,
-      };
+      // Fallback: load vendorId from prefs if not provided
+      vendorId ??= await SharePrefsHelper.getString(AppConstants.userId);
 
-      if (status != null) {
-        queryParams['status'] = status;
+      final queryParams = <String, dynamic>{};
+
+      // if (page != null) queryParams['page'] = page;
+      // if (limit != null) queryParams['limit'] = limit;
+      // if (status != null && status.isNotEmpty) queryParams['status'] = status;
+      // if (isCustom != null) queryParams['isCustom'] = isCustom;
+
+      if (vendorId.isNotEmpty) {
+        queryParams['vendor'] = vendorId; // key per Postman screenshot
       }
 
-      if (isCustom != null) {
-        queryParams['isCustom'] = isCustom;
-      }
+      print('Fetching orders with query: $queryParams');
 
       final response = await ApiClient.getData(
         ApiUrl.customOrder,
@@ -111,7 +117,7 @@ class CustomOrderService {
 
   /// Request delivery extension
   Future<void> requestDeliveryExtension(
-    String orderId,
+    String orderId, 
     DateTime newDate,
     String reason,
   ) async {
@@ -131,4 +137,4 @@ class CustomOrderService {
       throw Exception('Failed to request delivery extension: $e');
     }
   }
-} 
+}
