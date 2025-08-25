@@ -27,21 +27,26 @@ class ApiClient extends GetxService {
       {Map<String, dynamic>? query, Map<String, String>? headers}) async {
     bearerToken = await SharePrefsHelper.getString(AppConstants.bearerToken);
 
-    var mainHeaders = {
-      // 'Content-Type': 'application/x-www-form-urlencoded',
+    final mainHeaders = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $bearerToken'
     };
-    try {
-      debugPrint('====> API Call: $uri\nHeader: ${headers ?? mainHeaders}');
 
-      http.Response response = await client
+    // Build final URI with query params (merging any already present in uri)
+    Uri baseUri = Uri.parse(uri);
+    if (query != null) {
+      baseUri = baseUri.replace(queryParameters: query); 
+    }
+    try {
+      debugPrint('====> API Call: $baseUri\nHeader: ${headers ?? mainHeaders}');
+
+      final response = await client
           .get(
-            Uri.parse(uri),
+            baseUri,
             headers: headers ?? mainHeaders,
           )
           .timeout(const Duration(seconds: timeoutInSeconds));
-      return handleResponse(response, uri);
+      return handleResponse(response, baseUri.toString());
     } catch (e) {
       debugPrint('------------>>>${e.toString()}');
       return const Response(statusCode: 1, statusText: noInternetMessage);
@@ -271,7 +276,7 @@ class ApiClient extends GetxService {
 
     var mainHeaders = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $bearerToken', // FIX: add Bearer
+      'Authorization':'Bearer $bearerToken', // FIX: add Bearer
     };
     try {
       debugPrint('====> API Call: $uri\nHeader: ${headers ?? mainHeaders}');
