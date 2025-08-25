@@ -31,6 +31,8 @@ class CategoryController extends GetxController
   }
 
 
+
+// Image Picker
   Future<void> pickImage({required String source}) async {
     try {
       final picker = ImagePicker();
@@ -66,40 +68,7 @@ class CategoryController extends GetxController
     isNetworkImage.value = false;
   }
 
-  // Future<void> fetchCategories() async {
-  //   EasyLoading.show(
-  //     status: 'Loading categories...',
-  //     maskType: EasyLoadingMaskType.black,
-  //   );
-  //   try {
-  //     final response = await http.get(
-  //       Uri.parse(ApiUrl.categoryList),
-  //       headers: {'Content-Type': 'application/json'},
-  //     );
 
-  //     if (response.statusCode == 200) {
-  //       final responseData = json.decode(response.body);
-  //       final categoryResponse = CategoryResponse.fromJson(responseData);
-  //       categoriesData.value = categoryResponse.data;
-
-  //       print(responseData['message']);
-  //       print("Categories fetched successfully: ${categoryResponse.data.length} items");
-  //       print("Categories fetched successfully: ${categoryResponse.data} dataaa");
-  //       print("Category Response: ${responseData['data']}");
-  //     } else if (response.statusCode == 404) {
-  //       EasyLoading.showError('No categories found');
-  //       print("No categories found");
-  //     } else {
-  //       EasyLoading.showError('Error: ${response.statusCode}');
-  //       print("Error: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     EasyLoading.showError('Failed to load categories: $e');
-  //     print("Error fetching categories: $e");
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
 
   void reFresehData() async{
     print("Refreshing data");
@@ -107,6 +76,7 @@ class CategoryController extends GetxController
     clear();
   }
 
+// Create or Update Category
   Future<void> createCategoryPost(String method, String id, String passedImage, String passedName) async {
     String name = nameController.text.trim();
     String imagePath = this.imagePath.value.trim();
@@ -144,6 +114,7 @@ class CategoryController extends GetxController
       method: method,
       id: id,
     );
+    
     reFresehData();
     AppRouter.route.pop();
   }

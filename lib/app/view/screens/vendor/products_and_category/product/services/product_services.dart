@@ -13,6 +13,8 @@ import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
 
 mixin class ProductServices {
+
+  
 //create product and update product
   RxList<ProductItem> productItems = <ProductItem>[].obs;
   final productNameController = TextEditingController();

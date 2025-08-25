@@ -78,6 +78,7 @@ class ProductsGridSection extends StatelessWidget {
         SizedBox(height: 20.h),
         CustomButton(
           onTap: ()async {
+            
             await vendorProductController.fetchCategories();
 
             if (vendorProductController.categoriesData.isEmpty) {
