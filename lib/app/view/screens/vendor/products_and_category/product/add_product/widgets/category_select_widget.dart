@@ -49,16 +49,21 @@ class CategorySelectWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    controller.selectedCategory.value.isNotEmpty
-                        ? controller.categoriesData
-                            .firstWhere(
-                              (category) => category.id == controller.selectedCategory.value,
-                              orElse: () => controller.categoriesData.first,
+                    controller.categoriesData.length != 0
+                        ? controller.selectedCategory.value.isNotEmpty
+                            ? controller.categoriesData
+                                    .firstWhere(
+                                      (category) =>
+                                          category.id ==
+                                          controller.selectedCategory.value,
+                                      orElse: () =>
+                                          controller.categoriesData.first,
                             )
                             .name
-                        : "Select Category",
+                        : "Select Category"
+                        : "Please at first create a category",
                     style: TextStyle(
-                      color: AppColors.darkNaturalGray,
+                      color: controller.categoriesData.length != 0 ? AppColors.darkNaturalGray : Colors.red,
                       fontSize: 16.sp,
                     ),
                   ),

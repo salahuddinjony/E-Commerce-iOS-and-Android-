@@ -3,12 +3,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local/app/core/routes.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/category/controller/mixin_create_and_update_category.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/category/controller/mixin_delete_category.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/services/category_services.dart';
 
 class CategoryController extends GetxController
-    with DeleteCategoryMixin, MixinCreateAndUpdateCategory,CategoryServices {
+    with CategoryServices {
   var name = ''.obs;
   var imagePath = ''.obs;
   final nameController = TextEditingController();
@@ -140,7 +138,12 @@ class CategoryController extends GetxController
     }
 
     print("Creating/Updating category: method=$method, id=$id, name=$name, imagePath=$imagePath, isNetworkImage=${isNetworkImage.value}");
-    await createUpdateCategory(name, imagePath, method, id);
+    await createUpdateCategory(
+      name: name,
+      imagePath: imagePath,
+      method: method,
+      id: id,
+    );
     reFresehData();
     AppRouter.route.pop();
   }

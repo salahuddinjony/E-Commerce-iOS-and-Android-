@@ -36,7 +36,7 @@ class HomePageController extends GetxController {
 
   Future<void> fetchWalletData() async {
     try {
-      final id = await SharePrefsHelper.getString(AppConstants.id);
+      final id = await SharePrefsHelper.getString(AppConstants.userId);
 
       final response = await ApiClient.getData(ApiUrl.getWallet(id: id));
       print("API Response: ${response.body}");

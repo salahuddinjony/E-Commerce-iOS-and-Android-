@@ -38,7 +38,7 @@ mixin ProfileFetchMixin on ProfileStateMixin {
   }
 
   Future<void> getUserId() async {
-    final String userId = await SharePrefsHelper.getString(AppConstants.id);
+    final String userId = await SharePrefsHelper.getString(AppConstants.userId);
     if (userId.isEmpty) {
       debugPrint("No ID found, skipping profile load.");
       return;

@@ -1,15 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
 
-
-class CustomFromCard extends StatelessWidget {
+class CustomFromCard extends StatefulWidget {
   final String title;
   final String? hinText;
-  final TextEditingController controller;
+  final TextEditingController? controller; // now optional
   final String? Function(String?) validator;
   final bool isPassword;
   final bool isRead;
@@ -19,13 +17,34 @@ class CustomFromCard extends StatelessWidget {
   const CustomFromCard({
     super.key,
     required this.title,
-    required this.controller,
     required this.validator,
+    this.controller,
     this.isPassword = false,
     this.isRead = false,
     this.hinText,
-    this.maxLine, this.isBgColor = false,
+    this.maxLine,
+    this.isBgColor = false,
   });
+
+  @override
+  State<CustomFromCard> createState() => _CustomFromCardState();
+}
+
+class _CustomFromCardState extends State<CustomFromCard> {
+  TextEditingController? _ownedController;
+
+  TextEditingController get _effectiveController =>
+      widget.controller ?? (_ownedController ??= TextEditingController());
+
+  bool get _ownsController => widget.controller == null;
+
+  @override
+  void dispose() {
+    if (_ownsController) {
+      _ownedController?.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,26 +54,27 @@ class CustomFromCard extends StatelessWidget {
         CustomText(
           font: CustomFont.inter,
           color: AppColors.darkNaturalGray,
-          text: title,
-          fontWeight: FontWeight.w600,
+          text: widget.title,
+            fontWeight: FontWeight.w600,
           fontSize: 16.sp,
           bottom: 8.h,
         ),
         CustomTextField(
-          maxLines: isPassword ? 1 : (maxLine ?? 1), // Ensure single line for password
+          maxLines: widget.isPassword ? 1 : (widget.maxLine ?? 1),
           hintStyle: const TextStyle(color: AppColors.black),
-          readOnly: isRead,
-          validator: validator,
-          isPassword: isPassword,
-          textEditingController: controller,
-          hintText: hinText,
+          readOnly: widget.isRead,
+          validator: widget.validator,
+          isPassword: widget.isPassword,
+          textEditingController: _effectiveController,
+          hintText: widget.hinText,
           inputTextStyle: const TextStyle(color: AppColors.black),
-          fillColor:isBgColor ==true? AppColors.black:AppColors.white,
+          fillColor: widget.isBgColor == true ? AppColors.black : AppColors.white,
           fieldBorderColor: AppColors.borderColor,
-          keyboardType: isPassword ? TextInputType.visiblePassword : TextInputType.text,
+          keyboardType: widget.isPassword
+              ? TextInputType.visiblePassword
+              : TextInputType.text,
         ),
-
-        SizedBox(height: 14.h,)
+        SizedBox(height: 14.h),
       ],
     );
   }

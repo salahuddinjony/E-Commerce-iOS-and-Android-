@@ -82,11 +82,15 @@ class SharePrefsHelper {
   //   return preferences.remove(key);
   // }
 
-  static Future<void> remove(String key) async {
+  static Future<void> remove([String? key=null]) async {   
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove(key);
-    await prefs.remove(AppConstants.bearerToken);  //Delete the saved token 
-    await prefs.remove(AppConstants.role);  //Delete the saved token 
+    if (key != null) {
+      await prefs.remove(key);
+    } else {
+      await prefs.remove(AppConstants.userId);  //Delete the saved user id
+      await prefs.remove(AppConstants.bearerToken);  //Delete the saved token
+      await prefs.remove(AppConstants.role);  //Delete the saved token
+    }
   }
 
 }

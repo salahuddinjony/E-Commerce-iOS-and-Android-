@@ -13,7 +13,6 @@ import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/controller/profile_controller.dart';
 import '../../../../core/route_path.dart';
 import '../../../../data/local/shared_prefs.dart';
-import '../../../../utils/app_constants/app_constants.dart';
 import '../../../../utils/enums/status.dart';
 import '../../../common_widgets/custom_loader/custom_loader.dart';
 import '../../../common_widgets/profile_card_row/profile_card_row.dart';
@@ -207,12 +206,12 @@ class ProfileScreen extends StatelessWidget {
               CustomLogoutButton(
                 onTap: () async{
                     // final tokenBefore =await SharePrefsHelper.getString(AppConstants.bearerToken);
-                   await SharePrefsHelper.remove(AppConstants.id);
+                   await SharePrefsHelper.remove();
                   //  final tokenAfter =await SharePrefsHelper.getString(AppConstants.bearerToken);
                   //  print("Before logout-->token:$tokenBefore");
                   //  print("After logout-->token :$tokenAfter");
-                   
-                   Get.delete<ProfileController>();
+
+                   Get.deleteAll(force: true); //its indicates to clear all controllers before navigating
                    context.goNamed(RoutePath.signInScreen);
                 },
               ),
