@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
-import 'package:local/app/view/common_widgets/empty_state/empty_state_scrollable.dart';
 import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
-import 'package:local/app/view/screens/vendor/orders/models/custom_order_response_model.dart';
-import 'package:local/app/view/screens/vendor/orders/models/general_order_response_model.dart';
-import 'package:local/app/view/screens/vendor/orders/widgets/api_fialed_widget.dart';
 import 'package:local/app/view/screens/vendor/orders/widgets/build_tab_content.dart';
 import 'package:local/app/view/screens/vendor/orders/widgets/order_type_toggle.dart';
 import 'package:local/app/view/screens/vendor/orders/widgets/orders_appbar.dart';
 import '../controller/order_controller.dart';
-import '../widgets/custom_order_card.dart';
-import '../widgets/general_order_card.dart';
 
 class OrdersScreen extends StatelessWidget {
   OrdersScreen({super.key});

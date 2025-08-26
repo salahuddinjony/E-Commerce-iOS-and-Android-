@@ -1,5 +1,7 @@
+import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
+import 'package:local/app/utils/app_constants/app_constants.dart';
 import '../models/general_order_response_model.dart';
 
 class GeneralOrderService {
@@ -8,12 +10,14 @@ class GeneralOrderService {
     int? page,
     int? limit,
     String? status,
+    String? vendorId, // added
   }) async {
     try {
-      final queryParams = <String, dynamic>{
-        'page': page,
-        'limit': limit,
-      };
+      final queryParams = <String, dynamic>{ };
+        vendorId ??= await SharePrefsHelper.getString(AppConstants.userId);
+      if (vendorId.isNotEmpty) {
+        queryParams['vendor'] = vendorId; 
+      }
 
       if (status != null) {
         queryParams['status'] = status;
