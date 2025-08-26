@@ -28,7 +28,7 @@ class CustomOrderService {
       // if (isCustom != null) queryParams['isCustom'] = isCustom;
 
       if (vendorId.isNotEmpty) {
-        queryParams['vendor'] = vendorId; // key per Postman screenshot
+        queryParams['vendor'] = vendorId; 
       }
 
       print('Fetching orders with query: $queryParams');

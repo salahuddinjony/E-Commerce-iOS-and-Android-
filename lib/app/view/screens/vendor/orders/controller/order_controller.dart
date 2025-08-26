@@ -11,32 +11,56 @@ import '../constants/order_constants.dart';
 
 class OrdersController extends GetxController
     with GetTickerProviderStateMixin, OrderMixin, GeneralOrderMixin {
-  late TabController tabController;
+  late TabController generalTabController;
+  late TabController customTabController;
 
   //Create instances of services
   final CustomOrderService customerOrderService = CustomOrderService();
   final GeneralOrderService generalOrderService = GeneralOrderService();
 
   var isCustomOrder = false.obs; // toggle state
+  RxInt totalCustomOrder = 0.obs;
+  RxInt totalGeneralOrder = 0.obs;
 
   List<String> get generalTabs => OrderConstants.generalTabs;
   List<String> get customTabs => OrderConstants.customTabs;
-  List<String> get tabs => isCustomOrder.value ? customTabs : generalTabs;
+
+  // Get the current tabs
+  List<String> get currentTabs =>
+      isCustomOrder.value ? customTabs : generalTabs;
+
+  // Get the current tab controller
+  TabController get currentTabController =>
+      isCustomOrder.value ? customTabController : generalTabController;
 
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: tabs.length, vsync: this);
+    generalTabController =
+        TabController(length: generalTabs.length, vsync: this);
+    customTabController = TabController(length: customTabs.length, vsync: this);
 
-    // Recreate TabController whenever toggle changes
-    ever(isCustomOrder, (_) {
-      tabController.dispose();
-      tabController = TabController(length: tabs.length, vsync: this);
-      update();
-    });
+    // // Listen for tab changes
+    // generalTabController.addListener(() {
+    //   if (generalTabController.indexIsChanging) {
+    //     isCustomOrder.value = false;
+    //   }
+    // });
+    // customTabController.addListener(() {
+    //   if (customTabController.indexIsChanging) {
+    //     isCustomOrder.value = true;
+    //   }
+    // });
 
     // Load both types of orders
     fetchAllOrders();
+  }
+
+  @override
+  void onClose() {
+    generalTabController.dispose();
+    customTabController.dispose();
+    super.onClose();
   }
 
   // Fetch all orders (both custom and general)
@@ -54,6 +78,7 @@ class OrdersController extends GetxController
       isError.value = false;
 
       final response = await customerOrderService.fetchVendorOrders();
+      totalCustomOrder.value = response.data.meta.total;
       processOrderResponse(response);
     } catch (e) {
       isLoading.value = false;
@@ -69,6 +94,7 @@ class OrdersController extends GetxController
       isGeneralOrdersError.value = false;
 
       final response = await generalOrderService.fetchGeneralOrders();
+      totalGeneralOrder.value = response.data.meta.total;
       processGeneralOrderResponse(response);
     } catch (e) {
       isGeneralOrdersLoading.value = false;
@@ -90,14 +116,14 @@ class OrdersController extends GetxController
   Future<bool> updateCustomOrderStatus(String orderId, String status) async {
     try {
       print('Updating custom order status: $orderId to $status');
-      final result = await customerOrderService.updateOrderStatus(orderId, status);
+      final result =
+          await customerOrderService.updateOrderStatus(orderId, status);
       // Refresh custom orders after status update
-       refreshOrdersByType(true);
+      refreshOrdersByType(true);
       return result;
-
     } catch (e) {
       print('Failed to update custom order status: $e');
-      return false; 
+      return false;
     }
   }
 
@@ -124,6 +150,7 @@ class OrdersController extends GetxController
       );
     }
   }
+
   // Delete general order
   Future<bool> deleteGeneralOrder(String orderId) async {
     try {
@@ -132,7 +159,7 @@ class OrdersController extends GetxController
 
       // Fetch fresh list only after confirmed deletion
       await fetchGeneralOrders();
-     
+
       return true;
     } catch (e) {
       Get.snackbar(
@@ -226,9 +253,9 @@ class OrdersController extends GetxController
         final seconds = remaining.inSeconds % 60;
 
         yield "${days == 0 ? '' : '${days.toString().padLeft(2, '0')} days '}"
-          "${hours.toString().padLeft(2, '0')} hours "
-          "${minutes.toString().padLeft(2, '0')} minutes "
-          "${seconds.toString().padLeft(2, '0')} seconds";
+            "${hours.toString().padLeft(2, '0')} hours "
+            "${minutes.toString().padLeft(2, '0')} minutes "
+            "${seconds.toString().padLeft(2, '0')} seconds";
       }
 
       await Future.delayed(const Duration(seconds: 1));
@@ -260,5 +287,19 @@ class OrdersController extends GetxController
     if (isError.value) return errorMessage.value;
     if (isGeneralOrdersError.value) return generalOrdersErrorMessage.value;
     return '';
+  }
+
+  // Find order by id (reactive lookup for details screen)
+  dynamic findOrderById(String id, bool isCustom) {
+    if (isCustom) {
+      for (final o in customOrders) {
+        if (o.id == id) return o;
+      }
+    } else {
+      for (final g in generalOrders) {
+        if (g.id == id) return g;
+      }
+    }
+    return null;
   }
 }
