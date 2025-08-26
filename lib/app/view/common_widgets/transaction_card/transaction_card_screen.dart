@@ -4,6 +4,7 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 
 class TransactionCard extends StatelessWidget {
   final String title;
+  final String trxId;
   final String date;
   final String time;
   final String type;
@@ -17,7 +18,7 @@ class TransactionCard extends StatelessWidget {
     required this.time,
     required this.type,
     required this.amount,
-    this.primaryColor = Colors.teal,
+    this.primaryColor = Colors.teal, required this.trxId,
   });
 
   @override
@@ -66,10 +67,17 @@ class TransactionCard extends StatelessWidget {
              ),
                 const SizedBox(height: 6),
                 Text(
+                  'TrxID: ${trxId}', 
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 13,
+                  ),
+                ),
+                Text(
                   '$date ,$time',
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 13,
+                    fontSize: 12,
                   ),
                 ),
                 const SizedBox(height: 6),
