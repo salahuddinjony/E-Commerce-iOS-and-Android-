@@ -15,8 +15,10 @@ import '../../../../services/app_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
 
 class AuthController extends GetxController {
-  final emailController = TextEditingController(text: "videostore06@gmail.com");
-  final passWordController = TextEditingController(text: "salahAbc@1");
+  // final emailController = TextEditingController(text: "videostore06@gmail.com");
+  // final passWordController = TextEditingController(text: "salahAbc@1");
+    final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
+  final passWordController = TextEditingController(text: "12345678");
 /*
 fahadhossaim24@gmail.com
 12345678

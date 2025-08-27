@@ -43,6 +43,19 @@ extension DateTimeConverter on String {
   }
 }
 
+extension DateFormat on DateTime {
+
+  String formatDate() {
+    final local = this.toLocal();
+    const months = [
+      'January','February','March','April','May','June',
+      'July','August','September','October','November','December'
+    ];
+    return '${local.day} ${months[local.month - 1]} ${local.year}';
+  }
+}
+
+
 // Safe capitalize
 extension SafeCap on String? {
   String safeCap() {

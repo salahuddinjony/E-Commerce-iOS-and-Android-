@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 
@@ -18,7 +20,8 @@ class TransactionCard extends StatelessWidget {
     required this.time,
     required this.type,
     required this.amount,
-    this.primaryColor = Colors.teal, required this.trxId,
+    this.primaryColor = Colors.teal,
+    required this.trxId,
   });
 
   @override
@@ -38,36 +41,56 @@ class TransactionCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-             Row(
-              children: [
-                  Text(
-                  title,
-                  style: TextStyle(
-                    color:type=='credit' ? AppColors.brightCyan :  Colors.red,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-                Card(
-                  elevation: 0.5,
-                  color:type=='credit' ? Colors.green :  Colors.red ,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: Text(
-                      type.capitalizeFirstWord()+'ed',
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      title,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
+                        color: type == 'credit'
+                            ? AppColors.brightCyan
+                            : Colors.red,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
                     ),
-                  ),
+                    Card(
+                      elevation: 0.5,
+                      color: type == 'credit' ? Colors.green : Colors.red,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: Text(
+                          type.capitalizeFirstWord() + 'ed',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () async {
+                        await Clipboard.setData(ClipboardData(text: trxId));
+                        ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text('Copied $trxId'),
+                              duration: const Duration(seconds: 1),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                      },
+                      child: Icon(Icons.copy_rounded,
+                          size: 18.sp, color: Colors.grey.withValues(alpha: 1)),
+                    ),
+                  ],
                 ),
-
-              ],
-             ),
                 const SizedBox(height: 6),
                 Text(
-                  'TrxID: ${trxId}', 
+                  'TrxID: ${trxId}',
                   style: TextStyle(
                     color: Colors.grey[800],
                     fontSize: 13,
@@ -76,18 +99,17 @@ class TransactionCard extends StatelessWidget {
                 Text(
                   '$date ,$time',
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: Colors.green,
                     fontSize: 12,
                   ),
                 ),
                 const SizedBox(height: 6),
-                
               ],
             ),
             // Right side amount text
             Text(
               "${amount}\$",
-                style: TextStyle(
+              style: TextStyle(
                 color: primaryColor.withValues(alpha: .7),
                 fontWeight: FontWeight.w800,
                 fontSize: 20,
