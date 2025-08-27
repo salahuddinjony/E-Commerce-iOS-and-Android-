@@ -48,7 +48,7 @@ class VendorTotalEarnings extends StatelessWidget {
                   onPressed: () async {
                     await notificationController.loadUserIdAndNotifications();
                     controller.balanceFetch.value = false; // Show shimmer immediately
-                    controller.fetchWalletData();
+                    await controller.fetchWalletData();
                   },
                   icon: Icon(
                     Icons.refresh,
