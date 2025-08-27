@@ -9,8 +9,9 @@ import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/screens/vendor/home/model/wallet_data_model.dart';
+import 'package:local/app/view/screens/vendor/profile/transaction/mixin/mixin_transaction_screen.dart';
 
-class HomePageController extends GetxController {
+class HomePageController extends GetxController with MixinTransactionScreen {
   RxInt amount = 0.obs;
   RxBool balanceFetch = false.obs;
   RxList<TransactionHistory> walletData = <TransactionHistory>[].obs;
@@ -34,7 +35,7 @@ class HomePageController extends GetxController {
     super.onClose();
   }
 
-  Future<void> fetchWalletData() async {
+  Future<void> fetchWalletData() async { 
     try {
       final id = await SharePrefsHelper.getString(AppConstants.userId);
 
