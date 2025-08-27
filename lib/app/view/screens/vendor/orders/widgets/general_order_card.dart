@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:shimmer/shimmer.dart';
 import '../models/general_order_response_model.dart';
 import '../controller/order_controller.dart';
 import 'order_detail_row.dart';
@@ -18,6 +20,15 @@ class GeneralOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String safeFirstLetter(String? v) =>
+        (v != null && v.isNotEmpty) ? v[0].toUpperCase() : '?';
+
+    String safeIdShort(String v) =>
+        (v.length > 8) ? '${v.substring(0, 8)}...' : v;
+
+    final clientName = (order.clientName.isNotEmpty) ? order.clientName : 'Unknown';
+    final vendorName = (order.vendorName.isNotEmpty) ? order.vendorName : 'Unknown Vendor';
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -41,7 +52,7 @@ class GeneralOrderCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Order: ${order.id.substring(0, 8)}...',
+                  'Order: ${safeIdShort(order.id)}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -69,10 +80,52 @@ class GeneralOrderCard extends StatelessWidget {
           // Client & Vendor
           Row(
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: order.clientImage != null ? NetworkImage(order.clientImage!) : null,
-                child: order.clientImage == null ? Text(order.clientName[0].toUpperCase()) : null,
+              // Avatar with cached image
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: ClipOval(
+                  child: (order.clientImage != null && order.clientImage!.isNotEmpty)
+                      ? CachedNetworkImage(
+                          imageUrl: order.clientImage!,
+                          fit: BoxFit.cover,
+                          placeholder: (ctx, _) => Container(
+                            color: Colors.grey.shade200,
+                            alignment: Alignment.center,
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(
+                              width: 40,
+                              height: 40,
+                              color: Colors.grey.shade300,
+                              ),
+                            ),
+                          ),
+                          errorWidget: (ctx, _, __) => Container(
+                            color: Colors.grey.shade300,
+                            alignment: Alignment.center,
+                            child: Text(
+                              safeFirstLetter(clientName),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          color: Colors.grey.shade300,
+                          alignment: Alignment.center,
+                          child: Text(
+                            safeFirstLetter(clientName),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -80,14 +133,14 @@ class GeneralOrderCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Client: ${order.clientName}',
+                      'Client: $clientName',
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),
                     ),
                     Text(
-                      'Vendor: ${order.vendorName}',
+                      'Vendor: $vendorName',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 12,
