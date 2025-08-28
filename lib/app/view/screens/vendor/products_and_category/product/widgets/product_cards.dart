@@ -12,13 +12,15 @@ class ProductCard extends StatelessWidget {
   final ProductItem productData;
   final VoidCallback? onProductDeleted;
 
-   ProductCard({
+  ProductCard({
     super.key,
     required this.productData,
     this.onProductDeleted,
   });
-    VendorProductController vendorProductController =
+
+  final VendorProductController vendorProductController =
       Get.find<VendorProductController>();
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -35,7 +37,10 @@ class ProductCard extends StatelessWidget {
                 productData.images.isNotEmpty &&
                         productData.images.first.isNotEmpty
                     ? CustomNetworkImage(
-                        imageUrl: productData.images.first,
+                        imageUrl: productData.images.first.replaceFirst(
+                          'http://10.10.20.19:5007',
+                          'https://gmosley-uteehub-backend.onrender.com',
+                        ),
                         height: 90.h,
                         width: 119.w,
                       )
@@ -59,54 +64,54 @@ class ProductCard extends StatelessWidget {
                     color: Colors.white,
                     icon: Icon(Icons.more_vert,
                         size: 20, color: Colors.grey[800]),
-                    onSelected: (value) {
+                    onSelected: (value) async {
                       if (value == 'edit') {
-                       vendorProductController.fetchCategories();
+                        await vendorProductController.fetchCategories();
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddProductScreen(
-                                    method: 'PATCH',
-                                    productId: productData.id,
-                                    productName: productData.name,
-                                    imageUrl: productData.images.isNotEmpty
-                                        ? productData.images.first
-                                        : '',
-                                    categoryId: productData.category,
-                                    selectedColor: productData.colors,
-                                    selectedSize: productData.size,
-                                    price: productData.price.toString(),
-                                    quantity: productData.quantity.toString(),
-                                    isFeatured: productData.isFeatured
-                                        ? 'true'
-                                        : 'false')));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddProductScreen(
+                              method: 'PATCH',
+                              productId: productData.id,
+                              productName: productData.name,
+                              imageUrl: productData.images.isNotEmpty
+                                  ? productData.images.first
+                                  : '',
+                              categoryId: productData.category,
+                              selectedColor: productData.colors,
+                              selectedSize: productData.size,
+                              price: productData.price.toString(),
+                              quantity: productData.quantity.toString(),
+                              isFeatured:
+                                  productData.isFeatured ? 'true' : 'false',
+                            ),
+                          ),
+                        );
                       } else if (value == 'delete') {
                         showDialog(
-                          
                           context: context,
                           builder: (context) => ConfirmDialog(
                             title: 'Delete Product',
                             content:
                                 'Are you sure you want to delete this product?',
                             onConfirm: () async {
-                              // Delete the product using the service
-                              final success =
-                                  await ProductServices.deleteProduct(
-                                      productData.id);
-                              if (success && onProductDeleted != null) {
-                                onProductDeleted!();
+                              final success = await vendorProductController
+                                  .deleteProduct(productData.id);
+                              if (success) {
+                                onProductDeleted?.call();
+                                Navigator.of(context).pop();
                               }
                             },
                           ),
                         );
                       }
                     },
-                    itemBuilder: (context) => [
-                      const PopupMenuItem(
+                    itemBuilder: (context) => const [
+                      PopupMenuItem(
                         value: 'edit',
                         child: Text('Edit'),
                       ),
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'delete',
                         child: Text('Delete'),
                       ),

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/services/api_client.dart';
@@ -11,42 +10,42 @@ import 'package:local/app/view/screens/vendor/products_and_category/category/mod
 mixin class CategoryServices {
   final RxList<CategoryData> categoriesData = <CategoryData>[].obs;
 
+  // New loading & action state flags
+  final RxBool isCategoryLoading = false.obs;
+  final RxBool isCategoryMutating = false.obs;
+
   // ================= Fetch =================
   Future<void> fetchCategories() async {
-    EasyLoading.show(
-        status: 'Loading categories...', maskType: EasyLoadingMaskType.black);
+    isCategoryLoading.value = true;
     try {
       final userId = await SharePrefsHelper.getString(AppConstants.userId);
       if (userId.isEmpty) {
-        EasyLoading.showInfo('User not found');
+        Get.snackbar('Categories', 'User not found');
+        categoriesData.clear();
         return;
       }
+
       final response =
           await ApiClient.getData(ApiUrl.categoryList(userId: userId));
 
       if (response.statusCode == 200) {
         final body = response.body;
-     
         final responseData = CategoryResponse.fromJson(body);
         categoriesData.value = responseData.wrapper?.items ?? [];
-        if (categoriesData.isEmpty) {
-          EasyLoading.showInfo('No categories found, Create First');
-        } else {
-          EasyLoading.showSuccess('Categories loaded successfully');
-        }
-
         debugPrint('Categories fetched: ${categoriesData.length}');
+        if (categoriesData.isEmpty) {
+          debugPrint('No categories found');
+        }
       } else if (response.statusCode == 404) {
-        categoriesData.value = [];
-        EasyLoading.showInfo('No categories found');
+        categoriesData.clear();
+        debugPrint('No categories found (404)');
       } else {
-        EasyLoading.showError('Error ${response.statusCode}');
+        debugPrint('Fetch categories error: ${response.statusCode}');
       }
     } catch (e) {
-      EasyLoading.showError('Load failed');
       debugPrint('fetchCategories error: $e');
     } finally {
-      EasyLoading.dismiss();
+      isCategoryLoading.value = false;
     }
   }
 
@@ -55,36 +54,29 @@ mixin class CategoryServices {
     required String name,
     required String method, // 'POST' or 'PATCH'
     String? imagePath,
-    String? id, // required if PATCH
+    String? id,
   }) async {
-    assert(
-        method == 'POST' || method == 'PATCH', 'method must be POST or PATCH');
+    assert(method == 'POST' || method == 'PATCH', 'method must be POST or PATCH');
 
     if (name.trim().isEmpty) {
-      EasyLoading.showInfo('Name required');
+      Get.snackbar('Category', 'Name required');
       return false;
     }
     if (method == 'PATCH' && (id == null || id.isEmpty)) {
-      EasyLoading.showInfo('Category id missing');
+      Get.snackbar('Category', 'Category id missing');
       return false;
     }
     if (method == 'POST' && (imagePath == null || imagePath.isEmpty)) {
-      EasyLoading.showInfo('Image required');
+      Get.snackbar('Category', 'Image required');
       return false;
     }
 
-    EasyLoading.show(
-      status:
-          method == 'POST' ? 'Creating category...' : 'Updating category...',
-      maskType: EasyLoadingMaskType.black,
-    );
-
+    isCategoryMutating.value = true;
     try {
       final fullUrl = method == 'POST'
           ? ApiUrl.createCategory
           : ApiUrl.updateCategory(categoryId: id!);
 
-      // Convert to endpoint (strip base) for multipart helper
       String endpoint = fullUrl;
       if (endpoint.startsWith(ApiUrl.baseUrl)) {
         endpoint = endpoint.substring(ApiUrl.baseUrl.length);
@@ -100,14 +92,13 @@ mixin class CategoryServices {
         final isRemote = imagePath.startsWith('http');
         if (!isRemote) {
           final file = File(imagePath);
-          if (await file.exists()) {
-            multipart.add(MultipartBody('image', file));
-          } else {
-            EasyLoading.showError('Image file not found');
-            return false;
-          }
+            if (await file.exists()) {
+              multipart.add(MultipartBody('image', file));
+            } else {
+              Get.snackbar('Category', 'Image file not found');
+              return false;
+            }
         } else if (method == 'PATCH') {
-          // keep existing remote image
           body['image'] = imagePath;
         }
       }
@@ -125,9 +116,7 @@ mixin class CategoryServices {
             );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // EasyLoading.showSuccess(method == 'POST' ? 'Created' : 'Updated');
-        print("Category ${method == 'POST' ? 'created' : 'updated'} successfully");
-        // Refresh list after successful change
+        debugPrint("Category ${method == 'POST' ? 'created' : 'updated'}");
         await fetchCategories();
         return true;
       } else {
@@ -136,34 +125,31 @@ mixin class CategoryServices {
                 response.body['message'].toString().isNotEmpty)
             ? response.body['message'].toString()
             : 'Failed (${response.statusCode})';
-        EasyLoading.showError(msg);
+        Get.snackbar('Category', msg);
         return false;
       }
     } catch (e) {
-      EasyLoading.showError(
-          'Failed to ${method == 'POST' ? 'create' : 'update'}: $e');
+      Get.snackbar('Category', 'Failed: $e');
       return false;
     } finally {
-      EasyLoading.dismiss();
+      isCategoryMutating.value = false;
     }
   }
 
   // ================= Delete =================
   Future<bool> deleteCategory(String categoryId) async {
     if (categoryId.isEmpty) {
-      EasyLoading.showInfo('Invalid category id');
+      Get.snackbar('Category', 'Invalid category id');
       return false;
     }
-    EasyLoading.show(
-        status: 'Deleting category...', maskType: EasyLoadingMaskType.black);
+    isCategoryMutating.value = true;
     try {
       final url = ApiUrl.categoryDelete(categoryId: categoryId);
-
       final response = await ApiClient.deleteData(url);
       if (response.statusCode == 200) {
-        EasyLoading.showSuccess('Deleted');
-        
-
+        debugPrint('Category deleted');
+        // Optionally refresh list
+        categoriesData.removeWhere((c) => c.id == categoryId);
         return true;
       } else {
         final msg = (response.body is Map &&
@@ -171,14 +157,14 @@ mixin class CategoryServices {
                 response.body['message'].toString().isNotEmpty)
             ? response.body['message'].toString()
             : 'Delete failed (${response.statusCode})';
-        EasyLoading.showError(msg);
+        Get.snackbar('Category', msg);
         return false;
       }
     } catch (e) {
-      EasyLoading.showError('Delete failed: $e');
+      Get.snackbar('Category', 'Delete failed: $e');
       return false;
     } finally {
-      EasyLoading.dismiss();
+      isCategoryMutating.value = false;
     }
   }
 }

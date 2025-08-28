@@ -6,6 +6,7 @@ import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/widgets/product_cards.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProductsGridSection extends StatelessWidget {
   ProductsGridSection({super.key});
@@ -15,6 +16,31 @@ class ProductsGridSection extends StatelessWidget {
 
   Future<void> _refresh() async {
     await vendorProductController.fetchProducts();
+  }
+
+  Widget _shimmerGrid() {
+    return GridView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 2.h,
+        crossAxisSpacing: 2.w,
+        childAspectRatio: 0.7,
+      ),
+      itemCount: 9,
+      itemBuilder: (_, __) => Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          margin: EdgeInsets.all(4.w),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -29,16 +55,18 @@ class ProductsGridSection extends StatelessWidget {
             onRefresh: _refresh,
             color: AppColors.brightCyan,
             child: Obx(() {
-              final products = vendorProductController.productItems;
+              if (vendorProductController.isProductsLoading.value) {
+                return _shimmerGrid();
+              }
 
+              final products = vendorProductController.productItems;
               if (products.isEmpty) {
-                // Allow pull-to-refresh even when empty
                 return LayoutBuilder(
                   builder: (context, constraints) => SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: ConstrainedBox(
-                      constraints:
-                          BoxConstraints(minHeight: constraints.maxHeight),
+                      constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight),
                       child: Center(
                         child: Text(
                           "No Products Found",
@@ -52,7 +80,6 @@ class ProductsGridSection extends StatelessWidget {
                   ),
                 );
               }
-
               return GridView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
@@ -76,25 +103,28 @@ class ProductsGridSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 20.h),
-        CustomButton(
-          onTap: ()async {
-            
-            await vendorProductController.fetchCategories();
-
-            if (vendorProductController.categoriesData.isEmpty) {
-              return;
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddProductScreen(method: 'POST'),
-                ),
-              );
-            }
-          },
-          title: "Add Product",
-          isRadius: true,
-        ),
+        Obx(() => CustomButton(
+              onTap: vendorProductController.isProductMutating.value
+                  ? null
+                  : () async {
+                      await vendorProductController.fetchCategories();
+                      if (vendorProductController.categoriesData.isEmpty) {
+                        Get.snackbar('Product', 'Add a category first');
+                        return;
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AddProductScreen(method: 'POST'),
+                        ),
+                      );
+                    },
+              title: vendorProductController.isProductMutating.value
+                  ? "Please wait..."
+                  : "Add Product",
+              isRadius: true,
+            )),
       ],
     );
   }

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -13,10 +12,11 @@ import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
 
 mixin class ProductServices {
-
-  
-//create product and update product
+  //create product and update product
   RxList<ProductItem> productItems = <ProductItem>[].obs;
+  // Loading flags
+  final RxBool isProductsLoading = false.obs;
+  final RxBool isProductMutating = false.obs;
   final productNameController = TextEditingController();
   final priceController = TextEditingController();
   final quantityController = TextEditingController(); // Added for quantity
@@ -30,7 +30,7 @@ mixin class ProductServices {
 
   RxString isFeatured = 'false'.obs;
   RxString selectedProductId = ''.obs;
-  RxBool isLoading = false.obs;
+  RxBool isLoading = false.obs; // (legacy) keep if referenced elsewhere, but prefer new flags
   var imagePath = ''.obs;
   RxString categoryNameIs = ''.obs;
 
@@ -65,8 +65,8 @@ mixin class ProductServices {
         print("No image selected");
       }
     } catch (e) {
-      print("Error picking image: $e");
-      EasyLoading.showError('Failed to pick image: $e');
+      debugPrint("Error picking image: $e");
+      Get.snackbar('Product', 'Failed to pick image');
     }
   }
 
@@ -121,31 +121,31 @@ mixin class ProductServices {
     Map<String, dynamic>? originalData,
   }) async {
     if (productNameController.text.isEmpty) {
-      EasyLoading.showError('Product name is required');
+      Get.snackbar('Product', 'Name required');
       return false;
     }
     if (double.tryParse(priceController.text) == null) {
-      EasyLoading.showError('Invalid price format');
+      Get.snackbar('Product', 'Invalid price');
       return false;
     }
     if (int.tryParse(quantityController.text) == null) {
-      EasyLoading.showError('Invalid quantity format');
+      Get.snackbar('Product', 'Invalid quantity');
       return false;
     }
     if (method == "POST" && imagePath.isEmpty) {
-      EasyLoading.showError('Please select at least one image');
+      Get.snackbar('Product', 'Image required');
       return false;
     }
     if (selectedCategory.value.isEmpty) {
-      EasyLoading.showError('Please select a category');
+      Get.snackbar('Product', 'Select category');
       return false;
     }
     if (selectedColor.isEmpty) {
-      EasyLoading.showError('Please select a Color');
+      Get.snackbar('Product', 'Select color');
       return false;
     }
     if (selectedSize.isEmpty) {
-      EasyLoading.showError('Please select Size');
+      Get.snackbar('Product', 'Select size');
       return false;
     }
 
@@ -161,20 +161,20 @@ mixin class ProductServices {
               List<String>.from(originalData['colors'] ?? []), selectedColor) &&
           imagePath.isEmpty;
       if (noChanges) {
-        EasyLoading.showInfo('No changes to update');
+        Get.snackbar('Product', 'No changes');
         return false;
       }
     }
 
-    isLoading.value = true;
+    isProductMutating.value = true;
     try {
       final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
       if (token.isEmpty) {
-        EasyLoading.showError('Authentication token missing');
+        Get.snackbar('Auth', 'Token missing');
         return false;
       }
       if (JwtDecoder.isExpired(token)) {
-        EasyLoading.showError('Session expired');
+        Get.snackbar('Auth', 'Session expired');
         return false;
       }
 
@@ -209,22 +209,19 @@ mixin class ProductServices {
         files = [MultipartBody('images', File(imagePath.value))];
       }
 
-      Response resp;
-      if (method == 'POST') {
-        resp = await ApiClient.postMultipartData(
-          endpoint,
-          body,
-          multipartBody: files,
-          requestType: 'POST',
-        );
-      } else {
-        resp = await ApiClient.patchMultipart(
-          endpoint,
-          body,
-          multipartBody: files,
-          requestType: 'PATCH',
-        );
-      }
+      final Response resp = method == 'POST'
+          ? await ApiClient.postMultipartData(
+              endpoint,
+              body,
+              multipartBody: files,
+              requestType: 'POST',
+            )
+          : await ApiClient.patchMultipart(
+              endpoint,
+              body,
+              multipartBody: files,
+              requestType: 'PATCH',
+            );
 
       final status = resp.statusCode ?? 0;
       dynamic decoded;
@@ -235,71 +232,68 @@ mixin class ProductServices {
       }
 
       if (status == 200) {
-        EasyLoading.showSuccess(method == "POST"
-            ? 'Product created successfully'
-            : 'Product updated successfully');
+        Get.snackbar('Product',
+            method == "POST" ? 'Created successfully' : 'Updated successfully');
         clear();
+        await fetchProducts(); // refresh list
         return true;
       } else {
-        final msg = (decoded is Map && (decoded['message'] != null))
+        final msg = (decoded is Map && decoded['message'] != null)
             ? decoded['message'].toString()
-            : 'Failed (Status: $status)';
-        EasyLoading.showError(msg);
+            : 'Failed ($status)';
+        Get.snackbar('Product', msg);
         return false;
       }
     } catch (e) {
-      EasyLoading.showError('Error: $e');
+      Get.snackbar('Product', 'Error: $e');
       return false;
     } finally {
-      isLoading.value = false;
+      isProductMutating.value = false;
     }
   }
 
-//fetch product details
-
   Future<void> fetchProducts() async {
-    EasyLoading.show(
-        status: 'Loading products...', maskType: EasyLoadingMaskType.black);
+    isProductsLoading.value = true;
     try {
-      final resp = await ApiClient.getData(ApiUrl.productList(
-          userId: await SharePrefsHelper.getString(AppConstants.userId)));
+      final userId =
+          await SharePrefsHelper.getString(AppConstants.userId);
+      final resp =
+          await ApiClient.getData(ApiUrl.productList(userId: userId));
       if (resp.statusCode == 200) {
-        final data = resp.body;
-        final root = (data is String) ? jsonDecode(data) : data;
+        final raw = resp.body;
+        final root = (raw is String) ? jsonDecode(raw) : raw;
         if (root == null || root['data'] == null) {
-          EasyLoading.showError('Unexpected response');
+          Get.snackbar('Product', 'Unexpected response');
+          productItems.clear();
           return;
         }
         final productResponse = ProductResponse.fromJson(root['data']);
         productItems.value = productResponse.data;
-
         if (productItems.isEmpty) {
-          EasyLoading.showInfo('No products found');
-        } else {
-          EasyLoading.showSuccess('Products loaded');
+          debugPrint('No products found');
         }
       } else if (resp.statusCode == 404) {
-        EasyLoading.showError('No products found');
+        productItems.clear();
+        debugPrint('Products 404');
       } else {
-        EasyLoading.showError('Failed (Status: ${resp.statusCode})');
+        debugPrint('Fetch products failed (${resp.statusCode})');
       }
     } catch (e) {
-      EasyLoading.showError('Failed: $e');
+      debugPrint('fetchProducts error: $e');
     } finally {
-      EasyLoading.dismiss();
+      isProductsLoading.value = false;
     }
   }
 
-  // delete product
-  static Future<bool> deleteProduct(String productId) async {
-    EasyLoading.show(
-        status: 'Deleting...', maskType: EasyLoadingMaskType.black);
+  Future<bool> deleteProduct(String productId) async {
+    if (productId.isEmpty) return false;
+    isProductMutating.value = true;
     try {
-      // Build full URL for delete since ApiClient.deleteData does NOT prepend base
       final fullUrl = '${ApiUrl.baseUrl}/product/delete/$productId';
       final resp = await ApiClient.deleteData(fullUrl);
       if (resp.statusCode == 200) {
-        EasyLoading.showSuccess('Product deleted');
+        productItems.removeWhere((p) => p.id == productId);
+        Get.snackbar('Product', 'Deleted');
         return true;
       } else {
         dynamic decoded;
@@ -308,15 +302,15 @@ mixin class ProductServices {
         } catch (_) {}
         final msg = (decoded is Map && decoded['message'] != null)
             ? decoded['message'].toString()
-            : 'Delete failed (Status: ${resp.statusCode})';
-        EasyLoading.showError(msg);
+            : 'Delete failed (${resp.statusCode})';
+        Get.snackbar('Product', msg);
         return false;
       }
     } catch (e) {
-      EasyLoading.showError('Error: $e');
+      Get.snackbar('Product', 'Delete error: $e');
       return false;
     } finally {
-      EasyLoading.dismiss();
+      isProductMutating.value = false;
     }
   }
 }

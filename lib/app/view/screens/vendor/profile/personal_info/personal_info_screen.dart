@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local/app/services/app_url.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/widgets/profile_header.dart';
 
 import '../../../../../core/route_path.dart';
@@ -57,9 +56,11 @@ class PersonalInfoScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ProfileHeader(
-                    image: controller.profileModel.value.profile?.id?.image??"",
-                    name: controller.profileModel.value.profile?.id?.name??""
-                        ""
+                    image: controller.profileModel.value.profile?.id!.image?.replaceFirst(
+                          'http://10.10.20.19:5007',
+                          'https://gmosley-uteehub-backend.onrender.com',
+                    ) ?? "",
+                    name: controller.profileModel.value.profile?.id?.name ?? ""
                   ),
                   SizedBox(height: 20.h),
                   CustomFromCard(

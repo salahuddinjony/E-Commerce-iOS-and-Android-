@@ -31,7 +31,10 @@ class CategoryCard extends StatelessWidget {
                   Expanded(
                     child: CustomNetworkImage(
                       imageUrl:
-                          category.image, // fallback to empty string if null
+                          category.image.replaceFirst(
+                          'http://10.10.20.19:5007',
+                          'https://gmosley-uteehub-backend.onrender.com',
+                      ),
                       height: 119.h,
                       width: 119.w,
                     ),
