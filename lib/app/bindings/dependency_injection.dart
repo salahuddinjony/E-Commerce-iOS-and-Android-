@@ -1,13 +1,10 @@
-
 import 'package:get/get.dart';
 import 'package:local/app/global/controller/Onboarding_Controller.dart';
 import 'package:local/app/global/controller/genarel_controller.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 import 'package:local/app/view/screens/splash/controller/splash_controller.dart';
 import 'package:local/app/view/screens/vendor/home/controller/home_page_controller.dart';
-import 'package:local/app/view/screens/vendor/home/view_order/view_order_details/view_order_details_controller.dart';
 import 'package:local/app/view/screens/vendor/orders/controller/order_controller.dart';
-import 'package:local/app/view/screens/vendor/orders/models/custom_order_response_model.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/controller/category_controller.dart';
 import '../view/screens/common_screen/controller/info_controller.dart';
 import '../view/screens/common_screen/notification/controller/notification_controller.dart';
@@ -28,6 +25,5 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => CategoryController(), fenix: true);
     Get.lazyPut(()=> HomePageController(), fenix: true);
     Get.lazyPut(()=> OrdersController(), fenix: true);
-    Get.lazyPut(()=> ViewOrderDetailsController(Order as Order), fenix: true);
   }
 }

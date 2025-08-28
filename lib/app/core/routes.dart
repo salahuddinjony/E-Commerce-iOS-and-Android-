@@ -48,7 +48,7 @@ import '../view/screens/user/user_home/shop_details/product_details/product_deta
 import '../view/screens/user/user_home/shop_details/shop_details_screen.dart';
 import '../view/screens/user/user_home/user_profile/payment_methods/payment_methods_screen.dart';
 import '../view/screens/user/user_order/user_order_details/user_order_details_screen.dart';
-import '../view/screens/vendor/home/view_order/view_order_details/view_order_details.dart';
+import '../view/screens/vendor/home/view_order/view_order_details/screen/view_order_details.dart';
 import '../view/screens/vendor/home/view_order/view_order_screen.dart';
 import '../view/screens/vendor/orders/order_details/screen/order_details_screen.dart';
 import '../view/screens/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
