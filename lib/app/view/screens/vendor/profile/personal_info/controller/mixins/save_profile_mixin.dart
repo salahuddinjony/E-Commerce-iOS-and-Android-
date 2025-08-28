@@ -57,7 +57,7 @@ mixin SaveProfileMixin on ProfileStateMixin, ProfileFetchMixin {
       'description': descriptionController.text.trim(),
       'deliveryOption':
           selectedDelivery.value.isEmpty ? null : selectedDelivery.value,
-      'lat': lat,
+      'lat': latitude.value,
       'lng': lng,
       'gender': currentGender.isEmpty ? null : currentGender,
     }..removeWhere((k, v) => v == null || (v is String && v.trim().isEmpty));

@@ -24,8 +24,10 @@ class OrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       backgroundColor: Colors.white,
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         title: Text('${isCustomOrder ? 'Custom' : 'General'} Order Details'),
         backgroundColor: Colors.white,
         elevation: 0,

@@ -1,12 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:local/app/view/screens/vendor/orders/models/general_order_response_model.dart';
+import 'package:local/app/view/screens/vendor/home/widgets/product_shimmer.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
 
 import '../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../utils/app_constants/app_constants.dart';
-import '../../../../common_widgets/custom_network_image/custom_network_image.dart';
 import '../../../../common_widgets/custom_text/custom_text.dart';
 
 class BestSellingProducts extends StatelessWidget {
@@ -22,6 +20,9 @@ class BestSellingProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (bestSellingProducts.isEmpty) {
+      return const ProductShimmer();
+    }
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -51,7 +52,7 @@ class BestSellingProducts extends StatelessWidget {
                       height: 119,
                       width: 119,
                       child: const Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                        child: null,
                       ),
                       ),
                       errorWidget: (context, url, error) => Container(
