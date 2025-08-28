@@ -22,6 +22,7 @@ import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.d
 import 'package:local/app/view/screens/user/user_order/user_order_screen.dart';
 import 'package:local/app/view/screens/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/vendor/orders/controller/order_controller.dart';
+import 'package:local/app/view/screens/vendor/orders/models/custom_order_response_model.dart';
 import 'package:local/app/view/screens/vendor/orders/screen/orders_screen.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/screen/product_screen.dart'
     show ProductScreen;
@@ -492,20 +493,40 @@ class AppRouter {
         GoRoute(
           name: RoutePath.viewOrderScreen,
           path: RoutePath.viewOrderScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ViewOrderScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?; 
+            final status = extra?['status'] as String? ?? '';
+            final orderData = (extra?['orderData'] as List<Order>?) ?? const <Order>[];
+            return _buildPageWithAnimation(
+              child: ViewOrderScreen(
+                status: status,
+                orderData: orderData,
+              ),
+              state: state,
+            );
+          },
         ),
 
         ///=======================  ViewOrderDetails =======================
         GoRoute(
           name: RoutePath.viewOrderDetails,
           path: RoutePath.viewOrderDetails.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ViewOrderDetails(),
-            state: state,
-          ),
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            final order = extra?['order'] as Order?;
+            if (order == null) {
+              return _buildPageWithAnimation(
+                child: const SizedBox.shrink(),
+                state: state,
+                disableAnimation: true,
+              );
+            }
+
+            return _buildPageWithAnimation(
+              child: ViewOrderDetails(order: order),
+              state: state,
+            );
+          },
         ),
 
         ///=======================  ViewOrderDetails =======================

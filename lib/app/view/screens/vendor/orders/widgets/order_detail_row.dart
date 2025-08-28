@@ -5,6 +5,7 @@ class OrderDetailRow extends StatelessWidget {
   final String value;
   final double labelWidth;
    final TextStyle? valueStyle;
+  final Color? color;
 
   const OrderDetailRow({
     super.key,
@@ -12,6 +13,7 @@ class OrderDetailRow extends StatelessWidget {
     required this.value,
     this.labelWidth = 80,
     this.valueStyle,
+    this.color,
   });
 
   @override

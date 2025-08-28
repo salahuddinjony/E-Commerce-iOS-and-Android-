@@ -1,204 +1,119 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
+import 'package:local/app/view/screens/vendor/orders/models/custom_order_response_model.dart';
+import 'view_order_details_controller.dart';
 
-class ViewOrderDetails extends StatefulWidget {
-  const ViewOrderDetails({super.key});
+class ViewOrderDetails extends StatelessWidget {
+  final Order order;
 
-  @override
-  State<ViewOrderDetails> createState() => _ViewOrderDetailsState();
-}
-
-class _ViewOrderDetailsState extends State<ViewOrderDetails> {
-  Duration remainingTime =
-      const Duration(days: 1, hours: 20, minutes: 12, seconds: 40);
-  Timer? _timer;
-
-  Duration?
-      _pendingExtension; // holds the currently requested extension duration
-
-  @override
-  void initState() {
-    super.initState();
-    _startCountdownTimer();
-  }
-
-  void _startCountdownTimer() {
-    _timer?.cancel(); // Cancel any existing timer
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (remainingTime.inSeconds <= 0) {
-        timer.cancel();
-      } else {
-        setState(() {
-          remainingTime = remainingTime - const Duration(seconds: 1);
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  String twoDigits(int n) => n.toString().padLeft(2, '0');
-
-  Future<void> _showDatePickerAndRequestExtension() async {
-    final now = DateTime.now();
-    final initialDate = now.add(remainingTime);
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: initialDate,
-      lastDate: now.add(const Duration(days: 365)),
-    );
-
-    if (pickedDate != null) {
-      final currentDeliveryDate = now.add(remainingTime);
-      if (pickedDate.isAfter(currentDeliveryDate)) {
-        final addedDuration = pickedDate.difference(currentDeliveryDate);
-
-        // Show confirmation dialog
-        final confirmed = await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            final addedDays = addedDuration.inDays;
-            final addedHours = addedDuration.inHours % 24;
-            final addedMinutes = addedDuration.inMinutes % 60;
-            final addedSeconds = addedDuration.inSeconds % 60;
-
-            return AlertDialog(
-              title: const Text("Confirm Extension Request"),
-              content: Text(
-                "You want to request an extension of:\n"
-                "$addedDays day(s), $addedHours hour(s), "
-                "$addedMinutes minute(s), and $addedSeconds second(s).\n\n"
-                "Vendor will review and accept your request soon.",
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text("Cancel"),
-                ),
-                ElevatedButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: const Text("Confirm"),
-                ),
-              ],
-            );
-          },
-        );
-
-        if (confirmed ?? false) {
-          setState(() {
-            _pendingExtension = addedDuration;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Extension request sent.")),
-          );
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content:
-                  Text("Please select a date after current delivery date.")),
-        );
-      }
-    }
-  }
-
-  void _cancelExtensionRequest() {
-    setState(() {
-      _pendingExtension = null;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Extension request cancelled.")),
+  ViewOrderDetails({super.key, required this.order}) {
+    // Unique controller per order (tag uses order id)
+    controller = Get.put(
+      ViewOrderDetailsController(order),
+      tag: 'order_${order.id}',
     );
   }
+
+  late final ViewOrderDetailsController controller;
 
   @override
   Widget build(BuildContext context) {
-    final days = remainingTime.inDays;
-    final hours = remainingTime.inHours % 24;
-    final minutes = remainingTime.inMinutes % 60;
-    final seconds = remainingTime.inSeconds % 60;
-
-    String formatDuration(Duration d) {
-      final dDays = d.inDays;
-      final dHours = d.inHours % 24;
-      final dMinutes = d.inMinutes % 60;
-      final dSeconds = d.inSeconds % 60;
-      return "$dDays day(s), $dHours hour(s), $dMinutes minute(s), $dSeconds second(s)";
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const CustomAppBar(
         appBarContent: "Order Request",
         iconData: Icons.arrow_back,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Countdown Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CountdownBox(number: twoDigits(days), label: 'Days'),
-                CountdownBox(number: twoDigits(hours), label: 'Hours'),
-                CountdownBox(number: twoDigits(minutes), label: 'Min'),
-                CountdownBox(number: twoDigits(seconds), label: 'Sec'),
-              ],
-            ),
-            SizedBox(height: 25.h),
+      body: Obx(() {
+        final remaining = controller.remainingTime.value;
+        // final days = remaining.inDays;
+        // final hours = remaining.inHours % 24;
+        // final minutes = remaining.inMinutes % 60;
+        // final seconds = remaining.inSeconds % 60;
 
-            // Show the pending extension request info if any
-            if (_pendingExtension != null) ...[
-              SizedBox(height: 25.h),
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Order details card
               Card(
-                color: Colors.yellow[100],
+                elevation: 0,
+                color: Colors.grey[50],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: Colors.orange, width: 1.5),
+                  side: const BorderSide(color: Color(0xFFE0E0E0)),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          "Extension request sent for:\n${formatDuration(_pendingExtension!)}\n"
-                          "Vendor will review your request.",
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: _cancelExtensionRequest,
-                        child: const Text(
-                          "Cancel Request",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      )
+                      OrderField(label: "Order ID", value: order.id.toString()),
+                      OrderField(label: "Client", value: (order.client).toString()),
+                      OrderField(label: "Status", value: order.status),
+                      OrderField(label: "Price", value: '\$'+(order.price).toStringAsFixed(0)),
+                      OrderField(label: "Created", value: order.createdAt.toIso8601String().getDateTime()),
+                      OrderField(label: "Delivery Date", value: order.deliveryDate!.formatDate()), 
                     ],
                   ),
                 ),
               ),
-            ],
-            SizedBox(height: 25.h),
+              SizedBox(height: 20.h),
 
-            CustomButton(
-              isRadius: true,
-              onTap: _showDatePickerAndRequestExtension,
-              title: "Extend Delivery Date",
-            ),
-          ],
-        ),
-      ),
+              // Countdown
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CountdownBox(number: controller.twoDigits(remaining.inDays), label: 'Days'),
+                  CountdownBox(number: controller.twoDigits(remaining.inHours % 24), label: 'Hours'),
+                  CountdownBox(number: controller.twoDigits(remaining.inMinutes % 60), label: 'Min'),
+                  CountdownBox(number: controller.twoDigits(remaining.inSeconds % 60), label: 'Sec'),
+                ],
+              ),
+              SizedBox(height: 25.h),
+
+              if (controller.pendingExtension.value != null) ...[
+                Card(
+                  color: Colors.yellow[100],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: const BorderSide(color: Colors.orange, width: 1.5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Extension request:\n${controller.formatDuration(controller.pendingExtension.value!)}\nPending review.",
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => controller.cancelExtensionRequest(context),
+                          child: const Text("Cancel Request", style: TextStyle(color: Colors.red)),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 25.h),
+              ],
+
+              CustomButton(
+                isRadius: true,
+                onTap: () => controller.pickAndRequestExtension(context),
+                title: "Extend Delivery Date",
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
@@ -237,6 +152,36 @@ class CountdownBox extends StatelessWidget {
               color: Colors.grey,
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class OrderField extends StatelessWidget {
+  final String label;
+  final String value;
+  const OrderField({required this.label, required this.value});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Text(label,
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black54)),
+          ),
+            const Text(": ", style: TextStyle(color: Colors.black54)),
+          Expanded(
+            flex: 6,
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

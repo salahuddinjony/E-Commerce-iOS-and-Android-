@@ -11,6 +11,7 @@ import 'package:local/app/view/screens/vendor/home/widgets/best_selling_products
 import 'package:local/app/view/screens/vendor/home/widgets/stock_alert.dart';
 import 'package:local/app/view/screens/vendor/home/widgets/vendor_total_earnings.dart';
 import 'package:local/app/view/screens/common_screen/notification/controller/notification_controller.dart';
+import 'package:local/app/view/screens/vendor/orders/controller/order_controller.dart';
 
 import '../../../common_widgets/custom_text/custom_text.dart';
 import '../../../common_widgets/owner_nav/owner_nav.dart';
@@ -21,6 +22,8 @@ class HomeScreen extends StatelessWidget {
 
   final HomePageController controller = Get.find<HomePageController>();
   final NotificationController notificationController = Get.find<NotificationController>(); //notification controller
+  final OrdersController orderController = Get.find<OrdersController>(); // order controller
+  
 
   @override
   Widget build(BuildContext context) {
@@ -68,44 +71,58 @@ class HomeScreen extends StatelessWidget {
                     // Cards Row
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          StatsCard(
-                            onTap: () {
-                              context.pushNamed(
+                      child: Obx(() {
+                        final loading = orderController.isLoading.value;
+                        return Row(
+                          children: [
+                            StatussCard(
+                              onTap: () => context.pushNamed(
                                 RoutePath.viewOrderScreen,
-                              );
-                            },
-                            title: 'Total Orders',
-                            value: '542',
-                            tealColor: AppColors.brightCyan,
-                            icon: Icons.shopping_cart,
-                          ),
-                          StatsCard(
-                            onTap: () {
-                              context.pushNamed(
+                                extra: {
+                                  'status': 'allOrder',
+                                  'orderData': orderController.customOrders.toList(),
+                                },
+                              ),
+                              title: 'Total Customs\nOrders',
+                              value: orderController.totalCustomOrder.value.toString(),
+                              tealColor: AppColors.brightCyan,
+                              icon: Icons.shopping_cart,
+                              loading: loading,
+                              status: 'allOrder',
+                            ),
+                            StatussCard(
+                              onTap: () => context.pushNamed(
                                 RoutePath.viewOrderScreen,
-                              );
-                            },
-                            title: 'Pending Orders',
-                            value: '402',
-                            tealColor: AppColors.brightCyan,
-                            icon: Icons.access_time,
-                          ),
-                          StatsCard(
-                            onTap: () {
-                              context.pushNamed(
+                                extra: {
+                                  'status': 'pendingOrder',
+                                  'orderData': orderController.customOrders.toList(),
+                                },
+                              ),
+                              title: 'Customs Pending\nOrders',
+                              value: orderController.totalPendingOrder.value.toString(),
+                              tealColor: AppColors.brightCyan,
+                              icon: Icons.access_time,
+                              loading: loading,
+                              status: 'pendingOrder',
+                            ),
+                            StatussCard(
+                              onTap: () => context.pushNamed(
                                 RoutePath.viewOrderScreen,
-                              );
-                            },
-                            title: 'Completed Orders',
-                            value: '625',
-                            tealColor: AppColors.brightCyan,
-                            icon: Icons.check_circle,
-                          ),
-                        ],
-                      ),
+                                extra: {
+                                  'status': 'inProgressOrder',
+                                  'orderData': orderController.customOrders.toList(),
+                                },
+                              ),
+                              title: 'Customs in-Progress\nOrders',
+                              value: orderController.totalInProgressOrder.value.toString(),
+                              tealColor: AppColors.brightCyan,
+                              icon: Icons.autorenew,
+                              loading: loading,
+                              status: 'inProgressOrder',
+                            ),
+                          ],
+                        );
+                      }),
                     ),
                     SizedBox(
                       height: 32.h,

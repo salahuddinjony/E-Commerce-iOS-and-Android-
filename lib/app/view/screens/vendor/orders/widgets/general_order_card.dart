@@ -183,6 +183,7 @@ class GeneralOrderCard extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: OrderDetailRow(
+                  valueStyle: const TextStyle(color: Colors.green),
                   label: 'Date',
                   value: controller.getOrderDateDisplay<GeneralOrder>(order),
                 ),

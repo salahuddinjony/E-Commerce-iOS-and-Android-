@@ -19,11 +19,25 @@ class OrdersController extends GetxController
   final GeneralOrderService generalOrderService = GeneralOrderService();
 
   var isCustomOrder = false.obs; // toggle state
+
   RxInt totalCustomOrder = 0.obs;
+  RxInt totalInProgressOrder = 0.obs;
   RxInt totalGeneralOrder = 0.obs;
+  RxInt totalPendingOrder = 0.obs;
 
   List<String> get generalTabs => OrderConstants.generalTabs;
   List<String> get customTabs => OrderConstants.customTabs;
+
+  void totalOrder() async {
+    totalInProgressOrder.value = await customOrders
+        .where((order) => order.status == OrderConstants.statusInProgress)
+        .length;
+    totalPendingOrder.value = await customOrders
+        .where((order) =>
+            order.status == OrderConstants.statusPending ||
+            order.status == OrderConstants.statusOffered)
+        .length;
+  }
 
   // Get the current tabs
   List<String> get currentTabs =>
@@ -36,6 +50,7 @@ class OrdersController extends GetxController
   @override
   void onInit() {
     super.onInit();
+    totalOrder();
     generalTabController =
         TabController(length: generalTabs.length, vsync: this);
     customTabController = TabController(length: customTabs.length, vsync: this);
@@ -80,6 +95,7 @@ class OrdersController extends GetxController
       final response = await customerOrderService.fetchVendorOrders();
       totalCustomOrder.value = response.data.meta.total;
       processOrderResponse(response);
+      totalOrder();
     } catch (e) {
       isLoading.value = false;
       isError.value = true;

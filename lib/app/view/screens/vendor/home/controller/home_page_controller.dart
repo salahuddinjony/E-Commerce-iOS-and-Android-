@@ -9,9 +9,10 @@ import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/screens/vendor/home/model/wallet_data_model.dart';
+import 'package:local/app/view/screens/vendor/orders/mixins/order_mixin.dart';
 import 'package:local/app/view/screens/vendor/profile/transaction/mixin/mixin_transaction_screen.dart';
 
-class HomePageController extends GetxController with MixinTransactionScreen {
+class HomePageController extends GetxController with MixinTransactionScreen, OrderMixin {
   RxInt amount = 0.obs;
   RxBool balanceFetch = false.obs;
   RxList<TransactionHistory> walletData = <TransactionHistory>[].obs;
@@ -19,10 +20,41 @@ class HomePageController extends GetxController with MixinTransactionScreen {
   RxString message = ''.obs;
 
 
+
+  // final CustomOrderService customerOrderService = CustomOrderService();
+
+  //   Future<void> fetchCustomOrders() async {
+  //   try {
+  //     isLoading.value = true;
+  //     isError.value = false;
+
+  //     final response = await customerOrderService.fetchVendorOrders();
+  //     // (Optional) keep meta count if you want
+  //     totalCustomOrder.value = response.data.meta.total;
+  //     processOrderResponse(response); // populates customOrders
+  //     totalOrder(); // <-- ensure counts derived from current list
+  //   } catch (e) {
+  //     isLoading.value = false;
+  //     isError.value = true;
+  //     errorMessage.value = e.toString();
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
+
+
+
+
   @override
   void onInit() {
     super.onInit();
     fetchWalletData();
+    // fetchCustomOrders();
+    // totalOrder();
+    // print("Custom orders: ${customOrders.length}");
+    // print("In Progress orders: ${totalInProgressOrder.value}");
+    // print("Pending orders: ${totalPendingOrder.value}");
+
 
     // Add listener for real-time validation
     withdrawAmount.addListener(validateWithdrawAmount);
@@ -34,6 +66,7 @@ class HomePageController extends GetxController with MixinTransactionScreen {
     withdrawAmount.dispose();
     super.onClose();
   }
+  
 
   Future<void> fetchWalletData() async { 
     try {
