@@ -20,6 +20,9 @@ mixin ProfileStateMixin on GetxController {
   final descriptionController = TextEditingController();
   final locationController = TextEditingController();
 
+   final RxString latitude = ''.obs;
+  final RxString longitude = ''.obs;
+
   // Reactive fields
   final RxString selectedGender = ''.obs;
   final RxString pickedImage = ''.obs;

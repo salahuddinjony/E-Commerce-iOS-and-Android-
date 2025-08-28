@@ -9,6 +9,7 @@ import 'package:local/app/view/screens/vendor/orders/models/general_order_respon
 import 'package:local/app/view/screens/vendor/orders/widgets/api_fialed_widget.dart';
 import 'package:local/app/view/screens/vendor/orders/widgets/custom_order_card.dart';
 import 'package:local/app/view/screens/vendor/orders/widgets/general_order_card.dart';
+import 'package:local/app/view/screens/vendor/orders/widgets/shimmer_order_card.dart';
 
 
 class BuildTabContent extends StatelessWidget {
@@ -20,7 +21,13 @@ class BuildTabContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isAnyLoading) {
-        return const Center(child: CustomLoader());
+        return  ListView.builder(
+          itemCount: 6,
+          
+          itemBuilder:(context, index) {
+            return  ShimmerOrderCard();
+          },
+        );
       }
 
       if (controller.isAnyError) {
