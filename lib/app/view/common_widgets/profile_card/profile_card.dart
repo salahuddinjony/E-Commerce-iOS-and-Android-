@@ -32,7 +32,10 @@ class ProfileCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CustomNetworkImage(
-                imageUrl: imageUrl,
+                imageUrl: imageUrl.replaceFirst(
+                          'http://10.10.20.19:5007',
+                          'https://gmosley-uteehub-backend.onrender.com',
+                ),
                 height: 40,
                 width: 40,
                 boxShape: BoxShape.circle,

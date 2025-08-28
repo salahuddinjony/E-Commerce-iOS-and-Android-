@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:intl/intl.dart';
 import 'package:local/app/core/route_path.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';

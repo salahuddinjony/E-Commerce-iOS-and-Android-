@@ -56,13 +56,12 @@ class CustomText extends StatelessWidget {
       case CustomFont.poppins:
         return GoogleFonts.poppins(
           fontSize: fontSize.sp,
-          fontWeight: fontWeight,
+          fontWeight: text.contains('Price') ? FontWeight.bold : fontWeight,
           color: color,
           decoration: decoration,
         );
       case CustomFont.inter:
-      default:
-        return GoogleFonts.inter(
+      return GoogleFonts.inter(
           fontSize: fontSize.sp,
           fontWeight: fontWeight,
           color: color,

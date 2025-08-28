@@ -12,6 +12,7 @@ import 'package:local/app/view/screens/vendor/home/widgets/stock_alert.dart';
 import 'package:local/app/view/screens/vendor/home/widgets/vendor_total_earnings.dart';
 import 'package:local/app/view/screens/common_screen/notification/controller/notification_controller.dart';
 import 'package:local/app/view/screens/vendor/orders/controller/order_controller.dart';
+import 'package:local/app/view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 
 import '../../../common_widgets/custom_text/custom_text.dart';
 import '../../../common_widgets/owner_nav/owner_nav.dart';
@@ -23,11 +24,11 @@ class HomeScreen extends StatelessWidget {
   final HomePageController controller = Get.find<HomePageController>();
   final NotificationController notificationController = Get.find<NotificationController>(); //notification controller
   final OrdersController orderController = Get.find<OrdersController>(); // order controller
-  
+  final VendorProductController productsController = Get.find<VendorProductController>();
 
   @override
   Widget build(BuildContext context) {
-
+ 
     
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -137,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                     ),
 
                     //==========Best Selling Product==============
-                    const BestSellingProducts(),
+                    Obx(() => BestSellingProducts(productsList: productsController.productItems.toList()),),
                     SizedBox(
                       height: 32.h,
                     ),
@@ -151,7 +152,7 @@ class HomeScreen extends StatelessWidget {
                     ),
 
                     //===========Stock Alert=============
-                    const StockAlert(),
+                    Obx(() => StockAlert(productsList: productsController.productItems.toList()),),
                   ],
                 ),
               ),
