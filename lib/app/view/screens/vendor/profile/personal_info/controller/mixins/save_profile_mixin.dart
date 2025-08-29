@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/services/profile_edit_service.dart';
@@ -20,7 +21,6 @@ mixin SaveProfileMixin on ProfileStateMixin, ProfileFetchMixin {
     final trimmedName = fullNameController.text.trim();
     if (trimmedName != (id?.name ?? '')) changed = true;
     if (phoneController.text.trim() != (data.phone ?? '')) changed = true;
-    if (addressController.text.trim() != (id?.address ?? '')) changed = true;
     if (descriptionController.text.trim() != (id?.description ?? '')) changed = true;
 
     final currentGender =
@@ -34,25 +34,25 @@ mixin SaveProfileMixin on ProfileStateMixin, ProfileFetchMixin {
     if (pickedImage.value.isNotEmpty) changed = true;
     if (pickedDocuments.isNotEmpty) changed = true;
 
-    final rawLoc = locationController.text.trim();
-    if (rawLoc.isNotEmpty) changed = true; // treat any entered loc as change
+    if (latitude.value.isNotEmpty && longitude.value.isNotEmpty) changed = true;
 
     if (!changed) {
       EasyLoading.showInfo('No changes to save');
       return false;
     }
 
-   
-    if (rawLoc.isNotEmpty) {
-      final parts = rawLoc.split(',');
-      if (parts.isNotEmpty && parts[0].trim().isNotEmpty) latitude.value = parts[0].trim();
-      if (parts.length > 1 && parts[1].trim().isNotEmpty) longitude.value = parts[1].trim();
-    }
+
+    // if (latitude.value.isNotEmpty && longitude.value.isNotEmpty) {
+  
+    //   if (latitude.value != (id?.location?.coordinates?[1].toString() ?? '') ||
+    //       longitude.value != (id?.location?.coordinates?[0].toString() ?? '')) {
+    //     changed = true;
+    //   }
+    // }
 
     final body = <String, dynamic>{
       'name': trimmedName,
       'phone': phoneController.text.trim(),
-      'address': addressController.text.trim(),
       'description': descriptionController.text.trim(),
       'deliveryOption':
           selectedDelivery.value.isEmpty ? null : selectedDelivery.value,
@@ -78,14 +78,18 @@ mixin SaveProfileMixin on ProfileStateMixin, ProfileFetchMixin {
         EasyLoading.showSuccess('Updated');
         return true;
       } else {
-        EasyLoading.showError(
-            (res.body is Map && res.body['message'] != null)
-                ? res.body['message'].toString()
-                : 'Update failed (${res.statusCode})');
+        // Show the full error JSON if present
+        String errorMessage = 'Update failed';
+        if (res.body != null) {
+          errorMessage = jsonDecode(res.body)['error']?.toString() ?? errorMessage;
+        }
+        EasyLoading.showError(errorMessage);
         ApiChecker.checkApi(res);
       }
-    } catch (_) {
-      EasyLoading.showError('Update failed');
+    } catch (e) {
+    EasyLoading.showError('An error occurred');
+      // Log the error if needed
+      print('Error in saveProfile: $e');
     } finally {
       EasyLoading.dismiss();
       isSaving.value = false;

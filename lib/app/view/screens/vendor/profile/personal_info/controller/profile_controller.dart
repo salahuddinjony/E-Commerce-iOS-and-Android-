@@ -1,6 +1,5 @@
-import 'package:flutter/widgets.dart';
+
 import 'package:get/get.dart';
-import 'dart:io';
 import 'mixins/profile_state_mixin.dart';
 import 'mixins/profile_fetch_mixin.dart';
 import 'mixins/document_mixin.dart';
@@ -26,21 +25,9 @@ class ProfileController extends GetxController
       
   // Text controllers for Edit Profile (kept here to avoid Stateful widget)
 
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController genderController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
 
 
-  final RxString selectedGender = ''.obs;
-  final RxString pickedImage = ''.obs;
-  final RxList<File> pickedDocuments = <File>[].obs;
-  final RxList<String> serverDocuments = <String>[].obs; // URLs/paths from API
-  final RxString selectedDelivery = ''.obs;
- 
-  final RxBool isSaving = false.obs;
+
 
  
 
@@ -51,12 +38,6 @@ class ProfileController extends GetxController
   }
   @override
   void onClose(){
-    fullNameController.dispose();
-    phoneController.dispose();
-    locationController.dispose();
-    addressController.dispose();
-    descriptionController.dispose();
-    genderController.dispose();
     super.onClose();
   }
 }
