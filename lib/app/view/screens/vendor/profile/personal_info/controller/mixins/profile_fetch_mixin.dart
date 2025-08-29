@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:local/app/view/screens/vendor/profile/personal_info/map/show_address_based_on_latLng.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/model/profile_model.dart';
 import '../../../../../../../services/api_client.dart';
 import '../../../../../../../services/api_check.dart';
@@ -19,40 +20,25 @@ mixin ProfileFetchMixin on ProfileStateMixin {
       profileModel.value = ProfileData.fromJson(response.body["data"]);
       try {
         final id = profileModel.value.profile?.id;
-        // longitude.value = id?.location?.coordinates?[0].toString() ?? '';
-        // latitude.value = id?.location?.coordinates?[1].toString() ?? '';
+        final latStr = id?.location?.coordinates?[1].toString();
+        final lngStr = id?.location?.coordinates?[0].toString();
 
-        // Reverse-geocode lat/lng from profile data and update address
-        try {
-          final latStr = id?.location?.coordinates?[1].toString();
-          final lngStr = id?.location?.coordinates?[0].toString();
-          if (latStr != null && lngStr != null && latStr.isNotEmpty && lngStr.isNotEmpty) {
-            latitude.value = latStr;
-            longitude.value = lngStr;
-            final lat = double.tryParse(latStr);
-            final lng = double.tryParse(lngStr);
-            if (lat != null && lng != null) {
-              List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
-              if (placemarks.isNotEmpty) {
-                final place = placemarks.first;
-                address.value = [
-                  place.name,
-                  place.street,
-                  place.locality,
-                  place.administrativeArea,
-                  place.country
-                ].where((e) => e != null && e.isNotEmpty).join(', ');
-              } else {
-                address.value = 'Unknown location';
-              }
-            } else {
-              address.value = '';
-            }
-          } else {
-            address.value = '';
-          }
-        } catch (_) {
-          address.value = 'Unknown location';
+        debugPrint("Longitude: ${lngStr}, Latitude: ${latStr}");
+        if (latStr != null &&
+            lngStr != null &&
+            latStr.isNotEmpty &&
+            lngStr.isNotEmpty) {
+          latitude.value = latStr;
+          longitude.value = lngStr;
+
+          final lat = double.tryParse(latStr);
+          final lng = double.tryParse(lngStr);
+
+          final latLng = LatLng(lat!, lng!);
+          
+          address.value = await ShowAddressBasedOnLatlng.updateAddress(latLng);
+        } else {
+          address.value = '';
         }
 
         final docs = (id?.documents is List)
