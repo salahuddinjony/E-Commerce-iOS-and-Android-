@@ -30,6 +30,7 @@ mixin ProfileStateMixin on GetxController {
   final RxList<String> serverDocuments = <String>[].obs;
   final RxString selectedDelivery = ''.obs;
   final RxBool isSaving = false.obs;
+  RxString address = ''.obs;
 
 
   // Download progress state

@@ -4,12 +4,14 @@ class UserProfileModel {
   final int? statusCode;
   final String? status;
   final String? message;
-  final UserProfileData? data;
+  final Meta? meta;
+  final List<UserProfileData>? data;
 
   UserProfileModel({
     this.statusCode,
     this.status,
     this.message,
+    this.meta,
     this.data,
   });
 
@@ -18,21 +20,46 @@ class UserProfileModel {
 
   String toRawJson() => json.encode(toJson());
 
-  factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
-      UserProfileModel(
+  factory UserProfileModel.fromJson(Map<String, dynamic> json) => UserProfileModel(
         statusCode: json["statusCode"],
         status: json["status"],
         message: json["message"],
+        meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
         data: json["data"] == null
             ? null
-            : UserProfileData.fromJson(json["data"]),
+            : List<UserProfileData>.from(
+                json["data"].map((x) => UserProfileData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "statusCode": statusCode,
         "status": status,
         "message": message,
-        "data": data?.toJson(),
+        "meta": meta?.toJson(),
+        "data": data?.map((x) => x.toJson()).toList(),
+      };
+}
+
+class Meta {
+  final int? page;
+  final int? limit;
+  final int? total;
+  final int? totalPages;
+
+  Meta({this.page, this.limit, this.total, this.totalPages});
+
+  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
+        page: json["page"],
+        limit: json["limit"],
+        total: json["total"],
+        totalPages: json["totalPages"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "page": page,
+        "limit": limit,
+        "total": total,
+        "totalPages": totalPages,
       };
 }
 
@@ -142,6 +169,11 @@ class UserId {
   final int? v;
   final String? gender;
   final String? image;
+  final Location? location;
+  final String? address;
+  final String? description;
+  final List<String>? deliveryOption;
+  final List<String>? documents;
 
   UserId({
     this.id,
@@ -152,6 +184,11 @@ class UserId {
     this.v,
     this.gender,
     this.image,
+    this.location,
+    this.address,
+    this.description,
+    this.deliveryOption,
+    this.documents,
   });
 
   factory UserId.fromJson(Map<String, dynamic> json) => UserId(
@@ -160,13 +197,22 @@ class UserId {
         name: json["name"],
         createdAt: json["createdAt"] == null
             ? null
-            : DateTime.parse(json["createdAt"]),
+            : DateTime.tryParse(json["createdAt"].toString()),
         updatedAt: json["updatedAt"] == null
             ? null
-            : DateTime.parse(json["updatedAt"]),
+            : DateTime.tryParse(json["updatedAt"].toString()),
         v: json["__v"],
         gender: json["gender"],
         image: json["image"]?.toString().replaceAll('\\', '/'),
+        location: json["location"] == null ? null : Location.fromJson(json["location"]),
+        address: json["address"],
+        description: json["description"],
+        deliveryOption: json["deliveryOption"] == null
+            ? null
+            : List<String>.from(json["deliveryOption"].map((x) => x.toString())),
+        documents: json["documents"] == null
+            ? null
+            : List<String>.from(json["documents"].map((x) => x.toString().replaceAll('\\', '/'))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -178,6 +224,30 @@ class UserId {
         "__v": v,
         "gender": gender,
         "image": image,
+        "location": location?.toJson(),
+        "address": address,
+        "description": description,
+        "deliveryOption": deliveryOption,
+        "documents": documents,
+      };
+}
+
+class Location {
+  final String? type;
+  final List<double>? coordinates;
+
+  Location({this.type, this.coordinates});
+
+  factory Location.fromJson(Map<String, dynamic> json) => Location(
+        type: json["type"],
+        coordinates: json["coordinates"] == null
+            ? null
+            : List<double>.from(json["coordinates"].map((x) => x is num ? x.toDouble() : double.tryParse(x.toString()))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "type": type,
+        "coordinates": coordinates,
       };
 }
 

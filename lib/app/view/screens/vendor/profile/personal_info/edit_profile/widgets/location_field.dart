@@ -10,16 +10,32 @@ class LocationField extends StatelessWidget {
   const LocationField({super.key, required this.controller});
 
   Future<void> _pickLocation(BuildContext context) async {
+    // Show address based on latitude and longitude before opening the map
+    final lat = double.tryParse(controller.latitude.value.toString()) ?? 24.7136;
+    final lng = double.tryParse(controller.longitude.value.toString()) ?? 46.6753;
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+      if (placemarks.isNotEmpty) {
+        final place = placemarks.first;
+        controller.address.value = [
+          place.name,
+          place.street,
+          place.locality,
+          place.administrativeArea,
+          place.country
+        ].where((e) => e != null && e.isNotEmpty).join(', ');
+      } else {
+        controller.address.value = 'Unknown location';
+      }
+    } catch (e) {
+      controller.address.value = 'Unknown location';
+    }
+
     final picked = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => MapPickerScreen(
-          initialPosition: LatLng(
-            double.tryParse(controller.latitude.value.toString()) ??
-                    24.7136,
-            double.tryParse(controller.longitude.value.toString()) ??
-                    46.6753,
-          ),
+          initialPosition: LatLng(lat, lng),
         ),
       ),
     );
