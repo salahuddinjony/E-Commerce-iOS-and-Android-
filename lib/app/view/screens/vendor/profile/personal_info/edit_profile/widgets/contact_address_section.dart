@@ -31,12 +31,12 @@ class ContactAddressSection extends StatelessWidget {
           validator: (v) => null,
         ),
         SizedBox(height: 12.h),
-        CustomFromCard(
-          hinText: 'Write your address here',
-          title: 'Address',
-          controller: TextEditingController(text: id?.address ?? ''),
-          validator: (v) => null,
-        ),
+        // CustomFromCard(
+        //   hinText: 'Write your address here',
+        //   title: 'Address',
+        //   controller: TextEditingController(text: id?.location?.coordinates.first.toString() ?? ''),
+        //   validator: (v) => null,
+        // ),
         SizedBox(height: 12.h),
         CustomFromCard(
           hinText: 'Write your description here',

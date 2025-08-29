@@ -21,6 +21,7 @@ class OwnerAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      surfaceTintColor: AppColors.white,
       backgroundColor: AppColors.white,
       elevation: 0,
       automaticallyImplyLeading: false,

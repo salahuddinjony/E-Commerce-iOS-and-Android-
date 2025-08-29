@@ -41,7 +41,7 @@ class ProfileController extends GetxController
   final RxString selectedDelivery = ''.obs;
  
   final RxBool isSaving = false.obs;
-  RxString address = ''.obs;
+
  
 
   @override

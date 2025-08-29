@@ -42,12 +42,11 @@ mixin SaveProfileMixin on ProfileStateMixin, ProfileFetchMixin {
       return false;
     }
 
-    String? lat;
-    String? lng;
+   
     if (rawLoc.isNotEmpty) {
       final parts = rawLoc.split(',');
-      if (parts.isNotEmpty && parts[0].trim().isNotEmpty) lat = parts[0].trim();
-      if (parts.length > 1 && parts[1].trim().isNotEmpty) lng = parts[1].trim();
+      if (parts.isNotEmpty && parts[0].trim().isNotEmpty) latitude.value = parts[0].trim();
+      if (parts.length > 1 && parts[1].trim().isNotEmpty) longitude.value = parts[1].trim();
     }
 
     final body = <String, dynamic>{
@@ -58,7 +57,7 @@ mixin SaveProfileMixin on ProfileStateMixin, ProfileFetchMixin {
       'deliveryOption':
           selectedDelivery.value.isEmpty ? null : selectedDelivery.value,
       'lat': latitude.value,
-      'lng': lng,
+      'lng': longitude.value,
       'gender': currentGender.isEmpty ? null : currentGender,
     }..removeWhere((k, v) => v == null || (v is String && v.trim().isEmpty));
 

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/model/profile_model.dart';
 import '../../../../../../../services/api_client.dart';
 import '../../../../../../../services/api_check.dart';
@@ -18,6 +19,42 @@ mixin ProfileFetchMixin on ProfileStateMixin {
       profileModel.value = ProfileData.fromJson(response.body["data"]);
       try {
         final id = profileModel.value.profile?.id;
+        // longitude.value = id?.location?.coordinates?[0].toString() ?? '';
+        // latitude.value = id?.location?.coordinates?[1].toString() ?? '';
+
+        // Reverse-geocode lat/lng from profile data and update address
+        try {
+          final latStr = id?.location?.coordinates?[1].toString();
+          final lngStr = id?.location?.coordinates?[0].toString();
+          if (latStr != null && lngStr != null && latStr.isNotEmpty && lngStr.isNotEmpty) {
+            latitude.value = latStr;
+            longitude.value = lngStr;
+            final lat = double.tryParse(latStr);
+            final lng = double.tryParse(lngStr);
+            if (lat != null && lng != null) {
+              List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+              if (placemarks.isNotEmpty) {
+                final place = placemarks.first;
+                address.value = [
+                  place.name,
+                  place.street,
+                  place.locality,
+                  place.administrativeArea,
+                  place.country
+                ].where((e) => e != null && e.isNotEmpty).join(', ');
+              } else {
+                address.value = 'Unknown location';
+              }
+            } else {
+              address.value = '';
+            }
+          } else {
+            address.value = '';
+          }
+        } catch (_) {
+          address.value = 'Unknown location';
+        }
+
         final docs = (id?.documents is List)
             ? List<String>.from(id!.documents as Iterable)
             : <String>[];
