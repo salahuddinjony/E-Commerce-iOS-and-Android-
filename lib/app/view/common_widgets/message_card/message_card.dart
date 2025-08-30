@@ -29,9 +29,9 @@ class MessageCard extends StatelessWidget {
           borderRadius: BorderRadius.all(
             Radius.circular(8.r),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1), // Shadow color
+          boxShadow: [ 
+            BoxShadow( 
+              color: Colors.black.withValues(alpha: .1), // Shadow color
               spreadRadius: 2, // Spread the shadow
               blurRadius: 5, // Blur radius
               offset: const Offset(0, 2), // Shadow offset

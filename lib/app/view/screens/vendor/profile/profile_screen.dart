@@ -9,7 +9,7 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_log_out_button/custom_log_out_button.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
+import 'package:local/app/view/common_widgets/vendor_nav/vendor_nav.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/controller/profile_controller.dart';
 import '../../../../core/route_path.dart';
 import '../../../../data/local/shared_prefs.dart';
@@ -26,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar: const OwnerNav(currentIndex: 4),
+      bottomNavigationBar:  OwnerNav(currentIndex: 4),
       appBar: const CustomAppBar(appBarContent: AppStrings.profile),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),

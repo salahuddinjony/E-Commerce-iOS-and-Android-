@@ -5,6 +5,7 @@ import 'package:local/app/utils/custom_assets/assets.gen.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
+    Key? key, 
     this.inputFormatters,
     this.onFieldSubmitted,
     this.textEditingController,
@@ -30,14 +31,12 @@ class CustomTextField extends StatefulWidget {
     this.isPrefixIcon = true,
     this.readOnly = false,
     this.maxLength,
-    super.key,
     this.prefixIcon,
     this.onTap,
-  });
+  }) : super(key: key);
 
   final TextEditingController? textEditingController;
   final FocusNode? focusNode;
-
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final Color cursorColor;

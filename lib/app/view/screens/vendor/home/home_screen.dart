@@ -15,7 +15,7 @@ import 'package:local/app/view/screens/vendor/orders/controller/order_controller
 import 'package:local/app/view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 
 import '../../../common_widgets/custom_text/custom_text.dart';
-import '../../../common_widgets/owner_nav/owner_nav.dart';
+import '../../../common_widgets/vendor_nav/vendor_nav.dart';
 import '../../../common_widgets/status_card/status_card.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
     
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar: const OwnerNav(
+      bottomNavigationBar:  OwnerNav(
         currentIndex: 0,
       ),
       body: Column(

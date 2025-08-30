@@ -5,7 +5,7 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
-import 'package:local/app/view/common_widgets/nav_bar/nav_bar.dart';
+import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
 
 import '../../../../core/route_path.dart';
 
@@ -77,7 +77,7 @@ class _UserOrderScreenState extends State<UserOrderScreen> {
         appBar: const CustomAppBar(
           appBarContent: "Order",
         ),
-        bottomNavigationBar: const CustomNavBar(currentIndex: 1),
+        bottomNavigationBar:  CustomNavBar(currentIndex: 1),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
           child: Column(

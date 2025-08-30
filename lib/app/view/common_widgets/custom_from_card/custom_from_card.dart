@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
 
-class CustomFromCard extends StatefulWidget {
+class CustomFromCardController extends GetxController {
+  final TextEditingController? externalController;
+  late final TextEditingController controller;
+
+  CustomFromCardController([this.externalController]) {
+    controller = externalController ?? TextEditingController();
+  }
+
+  @override
+  void onClose() {
+    if (externalController == null) {
+      controller.dispose();
+    }
+    super.onClose();
+  }
+}
+
+class CustomFromCard extends StatelessWidget {
   final String title;
   final String? hinText;
-  final TextEditingController? controller; // now optional
+  final TextEditingController? controller; // optional external controller
   final String? Function(String?) validator;
   final bool isPassword;
   final bool isRead;
@@ -27,55 +45,38 @@ class CustomFromCard extends StatefulWidget {
   });
 
   @override
-  State<CustomFromCard> createState() => _CustomFromCardState();
-}
-
-class _CustomFromCardState extends State<CustomFromCard> {
-  TextEditingController? _ownedController;
-
-  TextEditingController get _effectiveController =>
-      widget.controller ?? (_ownedController ??= TextEditingController());
-
-  bool get _ownsController => widget.controller == null;
-
-  @override
-  void dispose() {
-    if (_ownsController) {
-      _ownedController?.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomText(
-          font: CustomFont.inter,
-          color: AppColors.darkNaturalGray,
-          text: widget.title,
+    return GetBuilder<CustomFromCardController>(
+      // init controller per widget instance so it manages lifecycle (disposes when removed)
+      init: CustomFromCardController(controller),
+      builder: (con) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomText(
+            font: CustomFont.inter,
+            color: AppColors.darkNaturalGray,
+            text: title,
             fontWeight: FontWeight.w600,
-          fontSize: 16.sp,
-          bottom: 8.h,
-        ),
-        CustomTextField(
-          maxLines: widget.isPassword ? 1 : (widget.maxLine ?? 1),
-          hintStyle: const TextStyle(color: AppColors.black),
-          readOnly: widget.isRead,
-          validator: widget.validator,
-          isPassword: widget.isPassword,
-          textEditingController: _effectiveController,
-          hintText: widget.hinText,
-          inputTextStyle: const TextStyle(color: AppColors.black),
-          fillColor: widget.isBgColor == true ? AppColors.black : AppColors.white,
-          fieldBorderColor: AppColors.borderColor,
-          keyboardType: widget.isPassword
-              ? TextInputType.visiblePassword
-              : TextInputType.text,
-        ),
-        SizedBox(height: 14.h),
-      ],
+            fontSize: 16.sp,
+            bottom: 8.h,
+          ),
+          CustomTextField(
+            maxLines: isPassword ? 1 : (maxLine ?? 1),
+            hintStyle: const TextStyle(color: AppColors.black),
+            readOnly: isRead,
+            validator: validator,
+            isPassword: isPassword,
+            textEditingController: con.controller,
+            hintText: hinText,
+            inputTextStyle: const TextStyle(color: AppColors.black),
+            fillColor: isBgColor == true ? AppColors.black : AppColors.white,
+            fieldBorderColor: AppColors.borderColor,
+            keyboardType:
+                isPassword ? TextInputType.visiblePassword : TextInputType.text,
+          ),
+          SizedBox(height: 14.h),
+        ],
+      ),
     );
   }
 }

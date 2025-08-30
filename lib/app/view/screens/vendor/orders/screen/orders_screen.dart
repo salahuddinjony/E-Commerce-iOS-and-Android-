@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/view/common_widgets/owner_nav/owner_nav.dart';
+import 'package:local/app/view/common_widgets/vendor_nav/vendor_nav.dart';
 import 'package:local/app/view/screens/vendor/orders/widgets/build_tab_content.dart';
 import 'package:local/app/view/screens/vendor/orders/widgets/order_type_toggle.dart';
 import 'package:local/app/view/screens/vendor/orders/widgets/orders_appbar.dart';
@@ -14,7 +14,7 @@ class OrdersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar: const OwnerNav(currentIndex: 1),
+      bottomNavigationBar: OwnerNav(currentIndex: 1),
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,

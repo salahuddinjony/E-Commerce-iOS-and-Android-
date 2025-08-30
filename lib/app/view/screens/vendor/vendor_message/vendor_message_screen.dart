@@ -9,7 +9,7 @@ import '../../../../utils/app_strings/app_strings.dart';
 import '../../../common_widgets/custom_appbar/custom_appbar.dart';
 import '../../../common_widgets/custom_text/custom_text.dart';
 import '../../../common_widgets/message_card/message_card.dart';
-import '../../../common_widgets/owner_nav/owner_nav.dart';
+import '../../../common_widgets/vendor_nav/vendor_nav.dart';
 
 class VendorMessageScreen extends StatelessWidget {
   const VendorMessageScreen({super.key});
@@ -21,7 +21,7 @@ class VendorMessageScreen extends StatelessWidget {
       appBar: const CustomAppBar(
         appBarContent: AppStrings.chatList,
       ),
-      bottomNavigationBar: const OwnerNav(
+      bottomNavigationBar:  OwnerNav(
         currentIndex:3 ,
       ),
       body: Padding(

@@ -4,6 +4,17 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 
 class CustomButton extends StatelessWidget {
+  final double height;
+  final double width;
+  final Color fillColor;
+  final Color borderColor;
+  final Color textColor;
+  final bool isRadius;
+  final VoidCallback? onTap;
+  final String? title;
+  final Widget? child;
+  final double marginVertical;
+  final double marginHorizontal;
   const CustomButton({
     super.key,
     this.height = 48,
@@ -19,17 +30,7 @@ class CustomButton extends StatelessWidget {
     this.isRadius = false,
   }) : assert(title != null || child != null, 'Either title or child must be provided');
 
-  final double height;
-  final double width;
-  final Color fillColor;
-  final Color borderColor;
-  final Color textColor;
-  final bool isRadius;
-  final VoidCallback? onTap;
-  final String? title;
-  final Widget? child;
-  final double marginVertical;
-  final double marginHorizontal;
+
 
   @override
   Widget build(BuildContext context) {

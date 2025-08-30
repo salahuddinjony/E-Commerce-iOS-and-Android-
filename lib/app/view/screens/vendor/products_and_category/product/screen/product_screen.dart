@@ -5,7 +5,7 @@ import 'package:local/app/view/screens/vendor/products_and_category/product/cont
 import 'package:local/app/view/screens/vendor/products_and_category/product/widgets/products_grid_section.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../common_widgets/custom_appbar/custom_appbar.dart';
-import '../../../../../common_widgets/owner_nav/owner_nav.dart';
+import '../../../../../common_widgets/vendor_nav/vendor_nav.dart';
 
 class ProductScreen extends StatelessWidget {
   ProductScreen({super.key});
@@ -19,7 +19,7 @@ class ProductScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        bottomNavigationBar: const OwnerNav(currentIndex: 2),
+        bottomNavigationBar:  OwnerNav(currentIndex: 2),
         backgroundColor: AppColors.white,
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight + 48),

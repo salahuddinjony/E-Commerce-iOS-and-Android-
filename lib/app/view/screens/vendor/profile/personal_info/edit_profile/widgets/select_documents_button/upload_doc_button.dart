@@ -2,24 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/controller/profile_controller.dart';
 
-class UploadDocButton extends StatelessWidget {
+class UploadDocButton<T> extends StatelessWidget {
 
-  final ProfileController profileController;
+  final T genericCOntroller;
   final dynamic id;
 
   const UploadDocButton({
     Key? key,
-    required this.profileController,
+    required this.genericCOntroller,
     this.id
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    final controller=genericCOntroller as dynamic;
+    // Do not use Expanded here — leave sizing to the parent Flex (Flexible/SizedBox).
+    return SizedBox(
+      width: double.infinity,
       child: OutlinedButton.icon(
-        onPressed: profileController.pickDocuments,
+        onPressed: controller.pickDocuments,
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.brightCyan,
           side: BorderSide(color: AppColors.brightCyan, width: 1.5),
@@ -30,14 +32,13 @@ class UploadDocButton extends StatelessWidget {
         ),
         icon: Icon(Icons.attach_file, size: 20, color: AppColors.brightCyan),
         label: Obx(() {
-          final documents = profileController.pickedDocuments;
+          final documents = controller.pickedDocuments;
           final existingDocuments = (id?.documents ?? []) as List<dynamic>;
           String fileNameFromUrl(String url) {
             try {
-              final uri = Uri.parse(url); // Parse the URL
+              final uri = Uri.parse(url);
               if (uri.pathSegments.isNotEmpty) {
-                return uri
-                    .pathSegments.last; // Get the last segment of the path
+                return uri.pathSegments.last;
               }
               return url;
             } catch (_) {

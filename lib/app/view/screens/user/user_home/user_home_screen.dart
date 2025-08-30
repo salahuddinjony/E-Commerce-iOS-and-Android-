@@ -7,7 +7,7 @@ import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/common_home_app_bar/common_home_app_bar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/common_widgets/nav_bar/nav_bar.dart';
+import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
 
 import '../../../common_widgets/profile_card/profile_card.dart';
 
@@ -18,7 +18,7 @@ class UserHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar: const CustomNavBar(currentIndex: 0),
+      bottomNavigationBar:  CustomNavBar(currentIndex: 0),
       body: Column(
         children: [
           CommonHomeAppBar(

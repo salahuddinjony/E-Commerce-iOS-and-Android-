@@ -9,7 +9,8 @@ void showCustomSnackBar(String? message,
     {bool isError = true, bool getXSnackBar = false}) {
   if (message != null && message.isNotEmpty) {
     if (getXSnackBar) {
-      Get.showSnackbar(GetSnackBar(
+      Get.showSnackbar(
+        GetSnackBar(
         backgroundColor: isError ? Colors.red : Colors.green,
         message: message,
         duration: const Duration(seconds: 3),
@@ -20,7 +21,8 @@ void showCustomSnackBar(String? message,
         dismissDirection: DismissDirection.horizontal,
       ));
     } else {
-      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(
         dismissDirection: DismissDirection.horizontal,
         margin: EdgeInsets.only(
           right: 10.h,
