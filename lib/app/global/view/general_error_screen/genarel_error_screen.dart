@@ -2,7 +2,7 @@
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:get/get_core/src/get_main.dart';
 // import 'package:get/get_navigation/get_navigation.dart';
-//
+
 // class GeneralErrorScreen extends StatelessWidget {
 //   const GeneralErrorScreen({super.key, required this.onTap});
 //   final Function() onTap;

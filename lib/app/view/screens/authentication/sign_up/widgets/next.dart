@@ -11,19 +11,14 @@ import 'package:local/app/view/screens/authentication/controller/auth_controller
 
 import '../../../../common_widgets/loading_button/loading_button.dart';
 
-class NextScreen extends StatefulWidget {
+class NextScreen extends StatelessWidget {
   const NextScreen({super.key});
 
   @override
-  State<NextScreen> createState() => _NextScreenState();
-}
-
-class _NextScreenState extends State<NextScreen> {
-  final AuthController controller = Get.find<AuthController>();
-  final _formKey = GlobalKey<FormState>();
-
-  @override
   Widget build(BuildContext context) {
+    final AuthController controller = Get.find<AuthController>();
+    final _formKey = GlobalKey<FormState>(); // local form key (stateless page)
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const CustomAppBar(
@@ -34,7 +29,7 @@ class _NextScreenState extends State<NextScreen> {
         padding: EdgeInsets.symmetric(horizontal: 25.w),
         child: SingleChildScrollView(
           child: Form(
-            key: _formKey, // 🔑 Form key added
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -50,14 +45,14 @@ class _NextScreenState extends State<NextScreen> {
                   color: AppColors.darkNaturalGray,
                 ),
                 CustomTextField(
-                    inputTextStyle: const TextStyle(color: AppColors.black),
-                    isPassword: true,
-                    fieldBorderColor: AppColors.borderColor,
-                    textEditingController:
-                        controller.businessPasswordController,
-                    prefixIcon: const Icon(Icons.lock, color: Colors.grey),
-                    hintText: "Enter Your Password",
-                    validator: Validators.passwordValidator),
+                  inputTextStyle: const TextStyle(color: AppColors.black),
+                  isPassword: true,
+                  fieldBorderColor: AppColors.borderColor,
+                  textEditingController: controller.businessPasswordController,
+                  prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                  hintText: "Enter Your Password",
+                  validator: Validators.passwordValidator,
+                ),
 
                 SizedBox(height: 20.h),
 
@@ -74,8 +69,7 @@ class _NextScreenState extends State<NextScreen> {
                   inputTextStyle: const TextStyle(color: AppColors.black),
                   isPassword: true,
                   fieldBorderColor: AppColors.borderColor,
-                  textEditingController:
-                      controller.businessConfirmPasswordController,
+                  textEditingController: controller.businessConfirmPasswordController,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   hintText: "Confirm Your Password",
                   validator: (value) {
@@ -111,14 +105,14 @@ class _NextScreenState extends State<NextScreen> {
 
                 /// Submit Button
                 LoadingButton(
-                  isLoading: controller.isVendorLoading,
-                  title: "Submit",
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      controller.vendorSIgnUp(context);
-                    }
-                  },
-                ),
+                    isLoading: controller.isVendorLoading,
+                    title: "Submit",
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        controller.vendorSIgnUp(context);
+                      }
+                    },
+                  ),
               ],
             ),
           ),

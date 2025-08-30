@@ -13,8 +13,9 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/controller/profile_controller.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/map/widgets/location_field.dart';
+import 'package:local/app/view/common_widgets/map/widgets/location_field.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile/widgets/select_documents_button/select_documents.dart';
+import 'package:local/app/view/common_widgets/map/widgets/location_field.dart';
 
 // New widget parts
 import '../widgets/profile_header.dart';
@@ -65,11 +66,13 @@ class EditProfileScreen extends StatelessWidget {
                 SizedBox(height: 16.h),
 
                 // Gender Dropdown
-                GenderDropdown(controller: profileController),
-                SizedBox(height: 16.h),
+                // GenderDropdown(controller: profileController),
+                // SizedBox(height: 16.h),
 
                 // Location-address Field
-                LocationField(controller: profileController),
+                LocationField<ProfileController>(
+                  controller: profileController, 
+                ),
                 SizedBox(height: 16.h),
 
                 // Delivery Dropdown
@@ -77,9 +80,9 @@ class EditProfileScreen extends StatelessWidget {
                 SizedBox(height: 12.h),
 
                 // Select Documents
-                SelectDocuments(
+                SelectDocuments<ProfileController>(
                   data: id,
-                  profileController: profileController,
+                  genericCOntroller: profileController,
                 ),
                 SizedBox(height: 16.h),
 

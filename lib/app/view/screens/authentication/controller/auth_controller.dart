@@ -13,11 +13,13 @@ import '../../../../services/api_check.dart';
 import '../../../../services/api_client.dart';
 import '../../../../services/app_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthController extends GetxController {
   // final emailController = TextEditingController(text: "videostore06@gmail.com");
   // final passWordController = TextEditingController(text: "salahAbc@1");
-    final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
+  final emailController =
+      TextEditingController(text: "fahadhossaim24@gmail.com");
   final passWordController = TextEditingController(text: "12345678");
 /*
 fahadhossaim24@gmail.com
@@ -307,22 +309,38 @@ fahadhossaim24@gmail.com
       TextEditingController();
   final TextEditingController businessConfirmPasswordController =
       TextEditingController();
-  final TextEditingController businessAddressController =
-      TextEditingController();
+  // final TextEditingController businessAddressController =
+  //     TextEditingController();
   final TextEditingController businessDescriptionController =
       TextEditingController();
   final TextEditingController businessDeliveryOptionController =
       TextEditingController();
+  final TextEditingController businessGenderController =
+      TextEditingController();
   TextEditingController docController = TextEditingController();
 
   Rx<File?> selectedDocument = Rx<File?>(null);
+    final RxBool showAllExisting = false.obs;
+    final RxList<File> pickedDocuments = <File>[].obs;
+
+    Future<void> pickDocuments() async {
+    final picker = ImagePicker();
+    final files = await picker.pickMultipleMedia();
+    if (files.isNotEmpty) {
+      pickedDocuments.assignAll(files.map((e) => File(e.path)));
+    }
+  }
 
   RxBool isVendorLoading = false.obs;
+
+  final RxString latitude = ''.obs;
+  final RxString longitude = ''.obs;
+  final RxString address = 'Pick Your Locations'.obs;
 
   Future<void> vendorSIgnUp(BuildContext context) async {
     isVendorLoading.value = true;
     refresh();
-    if (selectedDocument.value == null) {
+    if (pickedDocuments.isEmpty) {
       isVendorLoading.value = false;
       refresh();
       toastMessage(message: "Please upload a document before proceeding.");
@@ -335,7 +353,7 @@ fahadhossaim24@gmail.com
       "phone": businessPhoneController.text.trim(),
       "role": "vendor",
       "isSocial": "false",
-      "address": businessAddressController.text.trim(),
+      "address": address.value,
       "description": businessDescriptionController.text.trim(),
       "deliveryOption": businessDeliveryOptionController.text.trim(),
     };
@@ -344,7 +362,7 @@ fahadhossaim24@gmail.com
       ApiUrl.register,
       body,
       multipartBody: [
-        MultipartBody("documents", selectedDocument.value!),
+        MultipartBody("documents", pickedDocuments as File),
       ],
     );
     var responseData = jsonDecode(response.body);
@@ -440,5 +458,32 @@ fahadhossaim24@gmail.com
     }
     vendorIsActiveLoading.value = false;
     refresh();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    businessNameController.dispose();
+    businessEmailController.dispose();
+    businessPasswordController.dispose();
+    businessPhoneController.dispose();
+    businessDescriptionController.dispose();
+    businessDeliveryOptionController.dispose();
+    businessGenderController.dispose();
+    clientEmailController.dispose();
+    clientPasswordController.dispose();
+    clientConfirmPasswordController.dispose();
+    clientPhoneNumberController.dispose();
+    nameController.dispose();
+    confirmPasswordController.dispose();
+    emailController.dispose();
+    passWordController.dispose();
+    docController.dispose();
+
+    super.onClose();
   }
 }

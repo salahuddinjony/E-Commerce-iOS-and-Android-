@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/map/show_address_based_on_latLng.dart';
+import 'package:local/app/view/common_widgets/map/show_address_based_on_latLng.dart';
 import 'package:local/app/view/screens/vendor/profile/personal_info/model/profile_model.dart';
 import '../../../../../../../services/api_client.dart';
 import '../../../../../../../services/api_check.dart';

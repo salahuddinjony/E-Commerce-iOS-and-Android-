@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
 
-class LabeledTextField extends StatefulWidget {
+class LabeledTextField extends StatelessWidget {
   final String label;
   final String hintText;
   final TextEditingController controller;
@@ -20,7 +21,7 @@ class LabeledTextField extends StatefulWidget {
   final List<String>? dropdownOptions;
   final bool isDocumentPicker;
   final ValueChanged<File>? onFilePicked;
-
+  final Rx<File?>? fileRx;
 
   const LabeledTextField({
     super.key,
@@ -34,38 +35,45 @@ class LabeledTextField extends StatefulWidget {
     this.onTap,
     this.isDropdown = false,
     this.dropdownOptions,
-    this.isDocumentPicker = false, this.onFilePicked,
+    this.isDocumentPicker = false,
+    this.onFilePicked,
+    this.fileRx,
   });
 
-  @override
-  State<LabeledTextField> createState() => _LabeledTextFieldState();
-}
-
-class _LabeledTextFieldState extends State<LabeledTextField> {
-  File? selectedImage;
-
-  void _showDropdownOptions(BuildContext context) async {
-    if (widget.dropdownOptions == null || widget.dropdownOptions!.isEmpty) return;
+  Future<void> _showDropdownOptions(BuildContext context) async {
+    if (dropdownOptions == null || dropdownOptions!.isEmpty) return;
 
     final selected = await showModalBottomSheet<String>(
+      backgroundColor: Colors.white,
       context: context,
       builder: (context) {
-        return ListView(
-          shrinkWrap: true,
-          children: widget.dropdownOptions!
-              .map((option) => ListTile(
-            title: Text(option),
-            onTap: () {
-              Navigator.pop(context, option);
-            },
-          ))
-              .toList(),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: dropdownOptions!.length,
+              itemBuilder: (context, index) {
+                final option = dropdownOptions![index];
+                return ListTile(
+                  title: Text(option),
+                  onTap: () {
+                    Navigator.pop(context, option);
+                  },
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+            ),
+          ),
         );
       },
     );
 
     if (selected != null) {
-      widget.controller.text = selected;
+      controller.text = selected;
     }
   }
 
@@ -74,10 +82,10 @@ class _LabeledTextFieldState extends State<LabeledTextField> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      setState(() {
-        selectedImage = File(pickedFile.path);
-        widget.controller.text = pickedFile.name;
-      });
+      final file = File(pickedFile.path);
+      controller.text = pickedFile.name;
+      if (fileRx != null) fileRx!.value = file;
+      if (onFilePicked != null) onFilePicked!(file);
     }
   }
 
@@ -88,41 +96,45 @@ class _LabeledTextFieldState extends State<LabeledTextField> {
       children: [
         CustomText(
           top: 8.h,
-          text: widget.label,
+          text: label,
           fontSize: 16.sp,
           bottom: 8.h,
           fontWeight: FontWeight.w500,
           color: AppColors.darkNaturalGray,
         ),
         CustomTextField(
-          readOnly: widget.readOnly || widget.isDropdown || widget.isDocumentPicker,
+          readOnly: readOnly || isDropdown || isDocumentPicker,
           inputTextStyle: const TextStyle(color: AppColors.black),
           fieldBorderColor: AppColors.borderColor,
-          textEditingController: widget.controller,
-          prefixIcon: Icon(widget.icon),
-          suffixIcon: widget.isDropdown
+          textEditingController: controller,
+          prefixIcon: Icon(icon),
+          suffixIcon: isDropdown
               ? GestureDetector(
-            onTap: () => _showDropdownOptions(context),
-            child: const Icon(Icons.arrow_drop_down),
-          )
+                  onTap: () => _showDropdownOptions(context),
+                  child: const Icon(Icons.arrow_drop_down),
+                )
               : null,
-          hintText: widget.hintText,
-          validator: widget.validator,
-          onTap: widget.isDocumentPicker
+          hintText: hintText,
+          validator: validator,
+          onTap: isDocumentPicker
               ? _pickDocument
-              : (widget.isDropdown ? () => _showDropdownOptions(context) : widget.onTap),
+              : (isDropdown ? () => _showDropdownOptions(context) : onTap),
         ),
-        if (selectedImage != null) ...[
+        if (fileRx != null) ...[
           SizedBox(height: 10.h),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
-            child: Image.file(
-              selectedImage!,
-              height: 120.h,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
+          Obx(() {
+            final file = fileRx!.value;
+            if (file == null) return const SizedBox.shrink();
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: Image.file(
+                file,
+                height: 120.h,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            );
+          }),
         ],
       ],
     );

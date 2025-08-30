@@ -38,6 +38,7 @@ mixin ProfileStateMixin on GetxController {
   final RxString downloadingFileName = ''.obs; // current file being downloaded
   final RxBool isShow = false.obs;
   final RxBool showAllExisting = false.obs;
+  
 
   @override
   void onClose() {

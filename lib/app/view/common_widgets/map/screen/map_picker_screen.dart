@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/controller/profile_controller.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/map/controller/map_picker_controller.dart';
+import 'package:local/app/view/common_widgets/map/controller/map_picker_controller.dart';
 
 class MapPickerScreen extends StatelessWidget {
   final LatLng initialPosition;

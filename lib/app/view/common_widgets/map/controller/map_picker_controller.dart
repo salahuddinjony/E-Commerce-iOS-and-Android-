@@ -3,7 +3,7 @@ import 'package:geocoding/geocoding.dart' show Location, locationFromAddress;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/map/show_address_based_on_latLng.dart';
+import 'package:local/app/view/common_widgets/map/show_address_based_on_latLng.dart';
 class MapPickerController extends GetxController {
   Rx<LatLng> pickedLocation = LatLng(24.7136, 46.6753).obs; // Default to Riyadh
   var isLoading = false.obs;

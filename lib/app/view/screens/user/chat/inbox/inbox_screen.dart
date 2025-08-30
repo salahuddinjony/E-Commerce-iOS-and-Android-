@@ -8,7 +8,7 @@ import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/message_card/message_card.dart';
-import 'package:local/app/view/common_widgets/nav_bar/nav_bar.dart';
+import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
 
 class InboxScreen extends StatelessWidget {
   const InboxScreen({super.key});
@@ -17,7 +17,7 @@ class InboxScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar: const CustomNavBar(currentIndex: 2),
+      bottomNavigationBar:  CustomNavBar(currentIndex: 2),
       appBar: const CustomAppBar(
         appBarContent: AppStrings.chatList,
       ),
