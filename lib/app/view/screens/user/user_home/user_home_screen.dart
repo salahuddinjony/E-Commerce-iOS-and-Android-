@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
@@ -8,17 +9,24 @@ import 'package:local/app/view/common_widgets/common_home_app_bar/common_home_ap
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
+import 'package:local/app/view/common_widgets/map/widgets/location_field.dart';
+import 'package:local/app/view/screens/user/user_home/controller/delivery_controller.dart';
+import 'package:local/app/view/screens/user/user_home/controller/user_home_controller.dart';
 
 import '../../../common_widgets/profile_card/profile_card.dart';
 
 class UserHomeScreen extends StatelessWidget {
-  const UserHomeScreen({super.key});
+
+    final UserHomeController controller = Get.find<UserHomeController>();
+    final MixInDelivery mixInDelivery = Get.find<MixInDelivery>();
+
+   UserHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar:  CustomNavBar(currentIndex: 0),
+      bottomNavigationBar: CustomNavBar(currentIndex: 0),
       body: Column(
         children: [
           CommonHomeAppBar(
@@ -58,6 +66,7 @@ class UserHomeScreen extends StatelessWidget {
                       children: [
                         Column(
                           children: [
+                            SizedBox(height: 30),
                             Container(
                               width: 10,
                               height: 10,
@@ -68,7 +77,7 @@ class UserHomeScreen extends StatelessWidget {
                             ),
                             Container(
                               width: 2,
-                              height: 80,
+                              height: 100,
                               color: Colors.teal[400],
                             ),
                             Container(
@@ -86,36 +95,48 @@ class UserHomeScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               // Your Location field
-                              TextField(
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  hintText: 'Your Location',
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 16),
-                                ),
-                                style: const TextStyle(color: Colors.grey),
+                              // TextField(
+                              //   decoration: InputDecoration(
+                              //     filled: true,
+                              //     fillColor: Colors.grey[200],
+                              //     hintText: 'Your Location',
+                              //     border: OutlineInputBorder(
+                              //       borderSide: BorderSide.none,
+                              //       borderRadius: BorderRadius.circular(4),
+                              //     ),
+                              //     contentPadding: const EdgeInsets.symmetric(
+                              //         horizontal: 12, vertical: 16),
+                              //   ),
+                              //   style: const TextStyle(color: Colors.grey),
+                              // ),
+
+                              LocationField<UserHomeController>(
+                                isUser: true,
+                                controller: controller,
                               ),
+
                               const SizedBox(height: 12),
                               // Delivery Location field with pink background
-                              TextField(
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: const Color(0xFFF4C6C6),
-                                  // light pink
-                                  hintText: 'Delivery Location',
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 16),
-                                ),
-                                style: const TextStyle(color: Colors.black87),
+                              // TextField(
+                              //   decoration: InputDecoration(
+                              //     filled: true,
+                              //     fillColor: const Color(0xFFF4C6C6),
+                              //     // light pink
+                              //     hintText: 'Delivery Location',
+                              //     border: OutlineInputBorder(
+                              //       borderSide: BorderSide.none,
+                              //       borderRadius: BorderRadius.circular(4),
+                              //     ),
+                              //     contentPadding: const EdgeInsets.symmetric(
+                              //         horizontal: 12, vertical: 16),
+                              //   ),
+                              //   style: const TextStyle(color: Colors.black87),
+                              // ),
+
+                              LocationField<MixInDelivery>(
+                                isUser: false,
+                                isDeliveryLocation: true,
+                                controller: mixInDelivery,
                               ),
                             ],
                           ),
@@ -171,7 +192,7 @@ class UserHomeScreen extends StatelessWidget {
                       color: AppColors.naturalGray,
                     ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         context.pushNamed(
                           RoutePath.viewMapScreen,
                         );
@@ -199,15 +220,15 @@ class UserHomeScreen extends StatelessWidget {
                         childAspectRatio: 0.8,
                       ),
                       itemBuilder: (context, index) {
-                        return  ProfileCard(
-                          onTap: (){
+                        return ProfileCard(
+                          onTap: () {
                             context.pushNamed(
                               RoutePath.shopDetailsScreen,
                             );
                           },
                           name: 'Alex Carter',
                           location: 'USA',
-                          imageUrl:AppConstants.demoImage ,
+                          imageUrl: AppConstants.demoImage,
                         );
                       },
                     ),
