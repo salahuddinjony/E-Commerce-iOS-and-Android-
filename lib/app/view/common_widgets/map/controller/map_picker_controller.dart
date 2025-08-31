@@ -50,7 +50,8 @@ class MapPickerController extends GetxController {
       }
       Position position = await Geolocator.getCurrentPosition(
         
-          desiredAccuracy: LocationAccuracy.high);
+          desiredAccuracy: LocationAccuracy.high
+        );
       pickedLocation.value = LatLng(position.latitude, position.longitude);
       mapController?.animateCamera(
         CameraUpdate.newLatLng(pickedLocation.value),
