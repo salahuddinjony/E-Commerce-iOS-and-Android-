@@ -26,7 +26,7 @@ class ContactAddressSection extends StatelessWidget {
         SizedBox(height: 12.h),
         CustomFromCard(
           hinText: 'Write your phone number here',
-            title: AppStrings.phone,
+          title: AppStrings.phone,
           controller: controller.phoneController,
           validator: (v) => null,
         ),

@@ -7,6 +7,7 @@ import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/custom_text_field/custom_text_field.dart';
+import 'package:local/app/view/common_widgets/password_constraint/check_password_constraint.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 
 import '../../../../common_widgets/loading_button/loading_button.dart';
@@ -52,6 +53,10 @@ class NextScreen extends StatelessWidget {
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   hintText: "Enter Your Password",
                   validator: Validators.passwordValidator,
+                  onChanged: (value) {
+                    controller.getBool(value);
+                    print("Value $value");
+                  },
                 ),
 
                 SizedBox(height: 20.h),
@@ -69,13 +74,18 @@ class NextScreen extends StatelessWidget {
                   inputTextStyle: const TextStyle(color: AppColors.black),
                   isPassword: true,
                   fieldBorderColor: AppColors.borderColor,
-                  textEditingController: controller.businessConfirmPasswordController,
+                  textEditingController:
+                      controller.businessConfirmPasswordController,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   hintText: "Confirm Your Password",
                   validator: (value) {
                     return Validators.confirmPasswordValidator(
                         value, controller.businessPasswordController.text);
                   },
+                  // onChanged: (value) {
+                  //   controller.getBool(value);
+                  //   print("Value $value");
+                  // },
                 ),
 
                 SizedBox(height: 30.h),
@@ -90,29 +100,30 @@ class NextScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Text(
-                  "• Minimum 8-12 characters\n"
-                  "• At least one uppercase letter (A-Z)\n"
-                  "• At least one special character (!, @, #, \$, etc.)\n"
-                  "• At least one number (0-9)",
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: AppColors.darkNaturalGray,
-                  ),
-                ),
+                // Text(
+                //   "• Minimum 8-12 characters\n"
+                //   "• At least one uppercase letter (A-Z)\n"
+                //   "• At least one special character (!, @, #, \$, etc.)\n"
+                //   "• At least one number (0-9)",
+                //   style: TextStyle(
+                //     fontSize: 13.sp,
+                //     color: AppColors.darkNaturalGray,
+                //   ),
+                // ),
+                CheckPasswordConstraint(controller: controller),
 
                 SizedBox(height: 30.h),
 
                 /// Submit Button
                 LoadingButton(
-                    isLoading: controller.isVendorLoading,
-                    title: "Submit",
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        controller.vendorSIgnUp(context);
-                      }
-                    },
-                  ),
+                  isLoading: controller.isVendorLoading,
+                  title: "Submit",
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      controller.vendorSIgnUp(context);
+                    }
+                  },
+                ),
               ],
             ),
           ),

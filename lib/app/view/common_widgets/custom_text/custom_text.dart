@@ -46,12 +46,12 @@ class CustomText extends StatelessWidget {
         textAlign: textAlign,
         maxLines: maxLines,
         overflow: overflow,
-        style: _getTextStyle(),
+        style: getTextStyle(),
       ),
     );
   }
 
-  TextStyle _getTextStyle() {
+  TextStyle getTextStyle() {
     switch (font) {
       case CustomFont.poppins:
         return GoogleFonts.poppins(

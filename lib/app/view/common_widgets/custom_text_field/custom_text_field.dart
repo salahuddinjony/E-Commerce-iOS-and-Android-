@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:local/app/utils/custom_assets/assets.gen.dart';
+import 'custom_text_field_controller.dart';
 
+class CustomTextField extends StatelessWidget {
+  final CustomTextFieldController controller;
 
-class CustomTextField extends StatefulWidget {
-  const CustomTextField({
-    Key? key, 
+  CustomTextField({
+    Key? key,
     this.inputFormatters,
     this.onFieldSubmitted,
     this.textEditingController,
@@ -13,15 +16,15 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
     this.cursorColor = Colors.greenAccent,
-    this.isColor = false, // Default value for isColor
+    this.isColor = false,
     this.inputTextStyle,
     this.textAlignVertical = TextAlignVertical.center,
     this.textAlign = TextAlign.start,
     this.onChanged,
     this.maxLines = 1,
     this.validator,
-    this.hintText ,
-    this.hintStyle ,
+    this.hintText,
+    this.hintStyle,
     this.fillColor = Colors.white,
     this.suffixIcon,
     this.suffixIconColor,
@@ -33,7 +36,8 @@ class CustomTextField extends StatefulWidget {
     this.maxLength,
     this.prefixIcon,
     this.onTap,
-  }) : super(key: key);
+  }) : controller = CustomTextFieldController(),
+       super(key: key);
 
   final TextEditingController? textEditingController;
   final FocusNode? focusNode;
@@ -61,84 +65,115 @@ class CustomTextField extends StatefulWidget {
   final bool readOnly;
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
-  final VoidCallback? onTap; // Callback function for onTap
-
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
-}
-
-class _CustomTextFieldState extends State<CustomTextField> {
-  bool obscureText = true;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    // Determine the input text color based on the isColor flag
-    final textStyle = widget.inputTextStyle ??
+    final textStyle = inputTextStyle ??
         TextStyle(
-          color: widget.isColor! ? Colors.white : Colors.red,
+          color: isColor! ? Colors.white : Colors.red,
         );
 
-    return TextFormField(
-      onTap: widget.onTap,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      inputFormatters: widget.inputFormatters,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      readOnly: widget.readOnly,
-      controller: widget.textEditingController,
-      focusNode: widget.focusNode,
-      maxLength: widget.maxLength,
-      keyboardType: widget.keyboardType,
-      textInputAction: widget.textInputAction,
-      cursorColor: widget.cursorColor,
-      style: textStyle,
-      // Apply the dynamically determined text style
-      onChanged: widget.onChanged,
-      maxLines: widget.maxLines,
-      obscureText: widget.isPassword ? obscureText : false,
-      validator: widget.validator,
-      decoration: InputDecoration(
-        errorMaxLines: 2,
-        errorStyle: const TextStyle(
-          color: Colors.red, // Change this to your desired color
-          fontSize: 16, // Optional: Change font size
-        ),
-        hintText: widget.hintText,
-        hintStyle: widget.hintStyle,
-        fillColor: widget.fillColor,
-        filled: true,
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.isPassword
-            ? GestureDetector(
-                onTap: toggle,
+    if (isPassword) {
+      return Obx(() => TextFormField(
+            onTap: onTap,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            inputFormatters: inputFormatters,
+            onFieldSubmitted: onFieldSubmitted,
+            readOnly: readOnly,
+            controller: textEditingController,
+            focusNode: focusNode,
+            maxLength: maxLength,
+            keyboardType: keyboardType,
+            textInputAction: textInputAction,
+            cursorColor: cursorColor,
+            style: textStyle,
+            onChanged: onChanged,
+            maxLines: maxLines,
+            obscureText: controller.obscureText.value,
+            validator: validator,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              errorStyle: const TextStyle(
+                color: Colors.red,
+                fontSize: 16,
+              ),
+              hintText: hintText,
+              hintStyle: hintStyle,
+              fillColor: fillColor,
+              filled: true,
+              prefixIcon: prefixIcon,
+              suffixIcon: GestureDetector(
+                onTap: controller.toggle,
                 child: Padding(
                   padding: const EdgeInsets.only(
                       left: 16, right: 16, top: 16, bottom: 16),
-                  child: obscureText
+                  child: controller.obscureText.value
                       ? Assets.icons.eyeOff.svg()
                       : Assets.icons.eye.svg(),
                 ),
-              )
-            : widget.suffixIcon,
-        suffixIconColor: widget.suffixIconColor,
+              ),
+              suffixIconColor: suffixIconColor,
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(fieldBorderRadius),
+                  borderSide: BorderSide(color: fieldBorderColor, width: 1),
+                  gapPadding: 0),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(fieldBorderRadius),
+                  borderSide: BorderSide(color: fieldBorderColor, width: 1),
+                  gapPadding: 0),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(fieldBorderRadius),
+                  borderSide: BorderSide(color: fieldBorderColor, width: 1),
+                  gapPadding: 0),
+            ),
+          ));
+    }
+
+    // Non-password field — no Obx required
+    return TextFormField(
+      onTap: onTap,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      inputFormatters: inputFormatters,
+      onFieldSubmitted: onFieldSubmitted,
+      readOnly: readOnly,
+      controller: textEditingController,
+      focusNode: focusNode,
+      maxLength: maxLength,
+      keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      cursorColor: cursorColor,
+      style: textStyle,
+      onChanged: onChanged,
+      maxLines: maxLines,
+      obscureText: false,
+      validator: validator,
+      decoration: InputDecoration(
+        errorMaxLines: 2,
+        errorStyle: const TextStyle(
+          color: Colors.red,
+          fontSize: 16,
+        ),
+        hintText: hintText,
+        hintStyle: hintStyle,
+        fillColor: fillColor,
+        filled: true,
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
+        suffixIconColor: suffixIconColor,
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(widget.fieldBorderRadius),
-            borderSide: BorderSide(color: widget.fieldBorderColor, width: 1),
+            borderRadius: BorderRadius.circular(fieldBorderRadius),
+            borderSide: BorderSide(color: fieldBorderColor, width: 1),
             gapPadding: 0),
         focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(widget.fieldBorderRadius),
-            borderSide: BorderSide(color: widget.fieldBorderColor, width: 1),
+            borderRadius: BorderRadius.circular(fieldBorderRadius),
+            borderSide: BorderSide(color: fieldBorderColor, width: 1),
             gapPadding: 0),
         enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(widget.fieldBorderRadius),
-            borderSide: BorderSide(color: widget.fieldBorderColor, width: 1),
+            borderRadius: BorderRadius.circular(fieldBorderRadius),
+            borderSide: BorderSide(color: fieldBorderColor, width: 1),
             gapPadding: 0),
       ),
     );
-  }
-
-  void toggle() {
-    setState(() {
-      obscureText = !obscureText;
-    });
-  }
+   }
 }
