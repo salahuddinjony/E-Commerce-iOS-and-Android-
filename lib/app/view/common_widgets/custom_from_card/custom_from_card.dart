@@ -47,8 +47,9 @@ class CustomFromCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CustomFromCardController>(
-      // init controller per widget instance so it manages lifecycle (disposes when removed)
+      // create a controller instance for this GetBuilder only (not globally)
       init: CustomFromCardController(controller),
+      global: false,
       builder: (con) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

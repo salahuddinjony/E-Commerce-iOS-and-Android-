@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
+import 'package:local/app/global/controllers/password_constraint_controller.dart';
+
 import '../../../../core/route_path.dart';
 import '../../../../core/routes.dart';
 import '../../../../data/local/shared_prefs.dart';
@@ -15,12 +17,12 @@ import '../../../../services/app_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AuthController extends GetxController {
+class AuthController extends GetxController with PasswordConstraintController{
   // final emailController = TextEditingController(text: "videostore06@gmail.com");
   // final passWordController = TextEditingController(text: "salahAbc@1");
   final emailController =
-      TextEditingController(text: "fahadhossaim24@gmail.com");
-  final passWordController = TextEditingController(text: "12345678");
+      TextEditingController(text: "pekasi2300@futurejs.com");
+  final passWordController = TextEditingController(text: "Salah!1aa");
 /*
 fahadhossaim24@gmail.com
 12345678
@@ -259,6 +261,12 @@ fahadhossaim24@gmail.com
   }
 
   Future<void> clientSIgnUp(BuildContext context) async {
+
+     if(!areTrue.value) {
+      toastMessage(message: "Please make sure your password meets all requirements.");
+      return;
+     
+    }  
     isClient.value = true;
     refresh();
 
@@ -270,6 +278,7 @@ fahadhossaim24@gmail.com
       "role": "client",
       "isSocial": "false",
     };
+    
 
     var response = await ApiClient.postMultipartData(
       ApiUrl.register,
@@ -319,11 +328,12 @@ fahadhossaim24@gmail.com
       TextEditingController();
   TextEditingController docController = TextEditingController();
 
-  Rx<File?> selectedDocument = Rx<File?>(null);
-    final RxBool showAllExisting = false.obs;
-    final RxList<File> pickedDocuments = <File>[].obs;
 
-    Future<void> pickDocuments() async {
+  Rx<File?> selectedDocument = Rx<File?>(null);
+  final RxBool showAllExisting = false.obs;
+  final RxList<File> pickedDocuments = <File>[].obs;
+
+  Future<void> pickDocuments() async {
     final picker = ImagePicker();
     final files = await picker.pickMultipleMedia();
     if (files.isNotEmpty) {
@@ -338,6 +348,11 @@ fahadhossaim24@gmail.com
   final RxString address = 'Pick Your Locations'.obs;
 
   Future<void> vendorSIgnUp(BuildContext context) async {
+      if(!areTrue.value) {
+      toastMessage(message: "Please make sure your password meets all requirements.");
+      return;
+    
+    } 
     isVendorLoading.value = true;
     refresh();
     if (pickedDocuments.isEmpty) {
@@ -354,16 +369,18 @@ fahadhossaim24@gmail.com
       "role": "vendor",
       "isSocial": "false",
       "address": address.value,
+      "lat": latitude.value,
+      "long": longitude.value,
       "description": businessDescriptionController.text.trim(),
-      "deliveryOption": businessDeliveryOptionController.text.trim(),
+      "deliveryOption": businessDeliveryOptionController.text.toLowerCase().trim(),
     };
 
     var response = await ApiClient.postMultipartData(
       ApiUrl.register,
       body,
-      multipartBody: [
-        MultipartBody("documents", pickedDocuments as File),
-      ],
+      multipartBody: pickedDocuments
+          .map((file) => MultipartBody("documents", file))
+          .toList(),
     );
     var responseData = jsonDecode(response.body);
 
@@ -390,7 +407,7 @@ fahadhossaim24@gmail.com
   String activationCode = "";
   RxBool isActiveLoading = false.obs;
 
-  Future<void> accountActiveOtp() async {
+  Future<void> userAccountActiveOtp() async {
     if (activationCode.isEmpty) {
       toastMessage(message: "Please enter the activation code.");
       return;
@@ -411,7 +428,7 @@ fahadhossaim24@gmail.com
     if (response.statusCode == 200) {
       clientEmailController.clear();
 
-      AppRouter.route.goNamed(RoutePath.userHomeScreen);
+      AppRouter.route.goNamed(RoutePath.signInScreen);
       toastMessage(message: response.body["message"]);
     } else if (response.statusCode == 400) {
       toastMessage(message: response.body["error"]);
@@ -448,9 +465,10 @@ fahadhossaim24@gmail.com
     if (response.statusCode == 200) {
       businessEmailController.clear();
 
-      AppRouter.route.goNamed(RoutePath.homeScreen);
+      AppRouter.route.goNamed(RoutePath.signInScreen);
       toastMessage(message: response.body["message"]);
     } else if (response.statusCode == 400) {
+      pinCodeController.clear();
       toastMessage(message: response.body["error"]);
     } else {
       ApiChecker.checkApi(response);
@@ -465,25 +483,25 @@ fahadhossaim24@gmail.com
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    businessNameController.dispose();
-    businessEmailController.dispose();
-    businessPasswordController.dispose();
-    businessPhoneController.dispose();
-    businessDescriptionController.dispose();
-    businessDeliveryOptionController.dispose();
-    businessGenderController.dispose();
-    clientEmailController.dispose();
-    clientPasswordController.dispose();
-    clientConfirmPasswordController.dispose();
-    clientPhoneNumberController.dispose();
-    nameController.dispose();
-    confirmPasswordController.dispose();
-    emailController.dispose();
-    passWordController.dispose();
-    docController.dispose();
+  // @override
+  // void onClose() {
+  //   businessNameController.dispose();
+  //   businessEmailController.dispose();
+  //   businessPasswordController.dispose();
+  //   businessPhoneController.dispose();
+  //   businessDescriptionController.dispose();
+  //   businessDeliveryOptionController.dispose();
+  //   businessGenderController.dispose();
+  //   clientEmailController.dispose();
+  //   clientPasswordController.dispose();
+  //   clientConfirmPasswordController.dispose();
+  //   clientPhoneNumberController.dispose();
+  //   nameController.dispose();
+  //   confirmPasswordController.dispose();
+  //   emailController.dispose();
+  //   passWordController.dispose();
+  //   docController.dispose();
 
-    super.onClose();
-  }
+  //   super.onClose();
+  // }
 }

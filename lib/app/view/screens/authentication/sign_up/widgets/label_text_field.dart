@@ -40,7 +40,7 @@ class LabeledTextField extends StatelessWidget {
     this.fileRx,
   });
 
-  Future<void> _showDropdownOptions(BuildContext context) async {
+  Future<void> showDropdownOptions(BuildContext context) async {
     if (dropdownOptions == null || dropdownOptions!.isEmpty) return;
 
     final selected = await showModalBottomSheet<String>(
@@ -57,6 +57,10 @@ class LabeledTextField extends StatelessWidget {
               itemBuilder: (context, index) {
                 final option = dropdownOptions![index];
                 return ListTile(
+                  leading: Text("${index + 1}."),
+                  trailing: controller.text.trim().toLowerCase() == option.toLowerCase()
+                      ? const Icon(Icons.check, color: AppColors.brightCyan, size: 25)
+                      : null,
                   title: Text(option),
                   onTap: () {
                     Navigator.pop(context, option);
@@ -77,7 +81,7 @@ class LabeledTextField extends StatelessWidget {
     }
   }
 
-  Future<void> _pickDocument() async {
+  Future<void> pickDocument() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -110,15 +114,15 @@ class LabeledTextField extends StatelessWidget {
           prefixIcon: Icon(icon),
           suffixIcon: isDropdown
               ? GestureDetector(
-                  onTap: () => _showDropdownOptions(context),
+                  onTap: () => showDropdownOptions(context),
                   child: const Icon(Icons.arrow_drop_down),
                 )
               : null,
           hintText: hintText,
           validator: validator,
           onTap: isDocumentPicker
-              ? _pickDocument
-              : (isDropdown ? () => _showDropdownOptions(context) : onTap),
+              ? pickDocument
+              : (isDropdown ? () => showDropdownOptions(context) : onTap),
         ),
         if (fileRx != null) ...[
           SizedBox(height: 10.h),

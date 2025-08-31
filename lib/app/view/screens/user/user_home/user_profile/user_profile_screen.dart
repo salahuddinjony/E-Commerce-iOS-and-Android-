@@ -4,19 +4,14 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-
 import '../../../../../core/route_path.dart';
 import '../../../../../data/local/shared_prefs.dart';
-import '../../../../../services/app_url.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../utils/app_constants/app_constants.dart';
 import '../../../../../utils/enums/status.dart';
 import '../../../../common_widgets/custom_loader/custom_loader.dart';
 import '../../../../common_widgets/custom_log_out_button/custom_log_out_button.dart';
 import '../../../../common_widgets/custom_network_image/custom_network_image.dart';
 import '../../../../common_widgets/custom_text/custom_text.dart';
-import '../../../../common_widgets/genarel_screen/genarel_screen.dart';
-import '../../../../common_widgets/no_internet/no_internet.dart';
 import '../../../vendor/profile/personal_info/controller/profile_controller.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -146,9 +141,9 @@ class UserProfileScreen extends StatelessWidget {
             ),
             CustomLogoutButton(
               onTap: () async {
-                await SharePrefsHelper.remove(AppConstants.userId);
-                Get.delete<ProfileController>();
-
+                await SharePrefsHelper.remove();
+                 Get.deleteAll(force: true);
+                // Get.delete<ProfileController>();
                 context.goNamed(RoutePath.signInScreen);
               },
             ),

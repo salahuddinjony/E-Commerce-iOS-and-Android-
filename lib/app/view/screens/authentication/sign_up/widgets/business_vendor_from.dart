@@ -7,7 +7,6 @@ import 'package:local/app/view/common_widgets/map/widgets/location_field.dart';
 import '../../../../../core/route_path.dart';
 import '../../../../../core/routes.dart';
 import '../../../../common_widgets/custom_button/custom_button.dart';
-import 'ducument_file.dart';
 import 'label_text_field.dart';
 
 class BusinessVendorForm extends StatelessWidget {
@@ -71,7 +70,7 @@ class BusinessVendorForm extends StatelessWidget {
             controller: controller.businessDeliveryOptionController,
             icon: Icons.delivery_dining,
             isDropdown: true,
-            dropdownOptions: const ['pickup', 'courier', 'pickupAndCourier'],
+            dropdownOptions: const ['Pickup', 'Courier', 'Pickup and Courier'],
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Select Delivery Option';
@@ -111,6 +110,9 @@ class BusinessVendorForm extends StatelessWidget {
           CustomButton(
             onTap: () {
               if (formKey.currentState!.validate()) {
+                controller.reset();
+                controller.clientConfirmPasswordController.clear();
+                controller.clientPasswordController.clear();
                 AppRouter.route.pushNamed(RoutePath.nextScreen);
               }
             },

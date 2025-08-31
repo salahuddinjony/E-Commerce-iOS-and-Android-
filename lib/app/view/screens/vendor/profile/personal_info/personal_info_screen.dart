@@ -16,7 +16,7 @@ import '../../../../common_widgets/no_internet/no_internet.dart';
 import 'controller/profile_controller.dart';
 
 class PersonalInfoScreen extends StatelessWidget {
-   PersonalInfoScreen({super.key});
+  PersonalInfoScreen({super.key});
 
   final ProfileController controller = Get.find<ProfileController>();
 
@@ -56,30 +56,33 @@ class PersonalInfoScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ProfileHeader(
-                    image: controller.profileModel.value.profile?.id!.image?.replaceFirst(
-                          'http://10.10.20.19:5007',
-                          'https://gmosley-uteehub-backend.onrender.com',
-                    ) ?? "",
-                    name: controller.profileModel.value.profile?.id?.name ?? ""
-                  ),
+                      image: controller.profileModel.value.profile?.id!.image
+                              ?.replaceFirst(
+                            'http://10.10.20.19:5007',
+                            'https://gmosley-uteehub-backend.onrender.com',
+                          ) ??
+                          "",
+                      name: controller.profileModel.value.profile?.id?.name ??
+                          ""),
                   SizedBox(height: 20.h),
                   CustomFromCard(
                     isRead: true,
-                    hinText: controller.profileModel.value.profile?.id?.name??"",
+                    hinText:
+                        controller.profileModel.value.profile?.id?.name ?? "",
                     title: AppStrings.fullName,
                     controller: TextEditingController(),
                     validator: (v) => null,
                   ),
                   CustomFromCard(
                     isRead: true,
-                    hinText: controller.profileModel.value.phone??"",
+                    hinText: controller.profileModel.value.phone ?? "",
                     title: AppStrings.phone,
                     controller: TextEditingController(),
                     validator: (v) => null,
                   ),
                   CustomFromCard(
                     isRead: true,
-                    hinText: controller.profileModel.value.email??"",
+                    hinText: controller.profileModel.value.email ?? "",
                     title: AppStrings.email,
                     controller: TextEditingController(),
                     validator: (v) => null,

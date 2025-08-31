@@ -12,11 +12,23 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../common_widgets/custom_rich_text/custom_rich_text.dart';
 import '../../../common_widgets/loading_button/loading_button.dart';
 
-class OtpScreen extends StatelessWidget {
-  OtpScreen({super.key});
+class OtpScreen extends StatefulWidget {
+  const OtpScreen({super.key});
 
+  @override
+  State<OtpScreen> createState() => _OtpScreenState();
+}
+
+class _OtpScreenState extends State<OtpScreen> {
   final AuthController controller = Get.find<AuthController>();
   final formKey = GlobalKey<FormState>();
+  final TextEditingController _localPinController = TextEditingController();
+
+  @override
+  void dispose() {
+    _localPinController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +36,6 @@ class OtpScreen extends StatelessWidget {
     final bool isForgetValue = extra?['isForget'] ?? false;
     final bool isVendor = extra?['isVendor'] ?? false;
     final String email = extra?['email'] ?? '';
-
-
 
     debugPrint("================$isForgetValue");
     debugPrint("================$email");
@@ -45,13 +55,14 @@ class OtpScreen extends StatelessWidget {
               OtpHeader(email: email),
 
               ///: <<<<<<====== OTP Pin Code Field ======>>>>>>>>
+
               PinCodeTextField(
                 textStyle: TextStyle(color: AppColors.black, fontSize: 24.sp),
                 keyboardType: TextInputType.number,
                 autoDisposeControllers: false,
                 cursorColor: AppColors.black,
                 appContext: context,
-                controller: controller.pinCodeController,
+                controller: _localPinController,
                 onCompleted: (value) {
                   if (isForgetValue == true) {
                     controller.activationCode = value;
@@ -61,7 +72,6 @@ class OtpScreen extends StatelessWidget {
                     controller.resetCode = value;
                   }
                 },
-
                 validator: (value) {
                   if (value == null || value.length != 4) {
                     return "Please enter a 4-digit OTP code";
@@ -81,7 +91,9 @@ class OtpScreen extends StatelessWidget {
                 ),
                 length: 4,
                 enableActiveFill: false,
-                onChanged: (value) {},
+                onChanged: (value) {
+                  // don't reset the controller here; just let the user edit normally
+                },
               ),
 
               SizedBox(
@@ -96,7 +108,7 @@ class OtpScreen extends StatelessWidget {
                 onTap: () {
                   if (formKey.currentState!.validate()) {
                     if (isForgetValue == true) {
-                      controller.accountActiveOtp();
+                      controller.userAccountActiveOtp();
                     } else if (isVendor == true) {
                       controller.vendorAccountActiveOtp();
                     } else {
