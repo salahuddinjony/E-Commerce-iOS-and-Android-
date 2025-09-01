@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/view/screens/vendor/home/widgets/product_shimmer.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../common_widgets/custom_network_image/custom_network_image.dart';
 import '../../../../common_widgets/custom_text/custom_text.dart';

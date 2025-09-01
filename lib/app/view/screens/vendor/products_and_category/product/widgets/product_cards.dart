@@ -5,7 +5,6 @@ import 'package:local/app/view/screens/vendor/products_and_category/common_widge
 import 'package:local/app/view/screens/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/product/services/product_services.dart';
 import '../../../../../common_widgets/custom_network_image/custom_network_image.dart';
 
 class ProductCard extends StatelessWidget {

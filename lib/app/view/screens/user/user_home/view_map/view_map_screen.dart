@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-
-import '../../../../../utils/app_strings/app_strings.dart';
 import '../../../../common_widgets/custom_appbar/custom_appbar.dart';
 
 class ViewMapScreen extends StatelessWidget {

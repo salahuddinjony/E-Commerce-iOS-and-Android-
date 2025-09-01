@@ -53,7 +53,7 @@ class BusinessDocumentsScreen extends StatelessWidget {
                   border: Border.all(color: Colors.grey.shade300),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -66,7 +66,7 @@ class BusinessDocumentsScreen extends StatelessWidget {
                       height: 34.r,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary.withOpacity(.12),
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       
@@ -92,7 +92,7 @@ class BusinessDocumentsScreen extends StatelessWidget {
                     Icon(
                       Icons.arrow_forward_ios,
                       size: 16.sp,
-                      color: AppColors.darkNaturalGray.withOpacity(.6),
+                      color: AppColors.darkNaturalGray.withValues(alpha: 0.6),
                     ),
                   ],
                 ),

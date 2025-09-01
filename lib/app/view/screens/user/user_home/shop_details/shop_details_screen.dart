@@ -30,7 +30,7 @@ class ShopDetailsScreen extends StatelessWidget {
           // Dark overlay to make text readable
           Positioned.fill(
             child: Container(
-              color: Colors.black.withOpacity(0.6),
+              color: Colors.black.withValues(alpha: 0.6),
             ),
           ),
 

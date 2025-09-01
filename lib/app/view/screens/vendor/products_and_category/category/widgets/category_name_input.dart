@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/controller/category_controller.dart';
 
 class CategoryNameInputWidget extends StatelessWidget {
