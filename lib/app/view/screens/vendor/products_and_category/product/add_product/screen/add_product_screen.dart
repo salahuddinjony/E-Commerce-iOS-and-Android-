@@ -90,7 +90,12 @@ class AddProductScreen extends StatelessWidget {
                 hinText: "Enter product name",
                 title: "Product Name",
                 controller: controller.productNameController,
-                validator: (v) {},
+                validator: (v) {
+                  if (v == null || v.isEmpty) {
+                    return 'Please enter product name';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 20.h),
 
@@ -139,7 +144,15 @@ class AddProductScreen extends StatelessWidget {
                 hinText: "Enter quantity",
                 title: "Qunatity",
                 controller: controller.quantityController,
-                validator: (v) {},
+                validator: (v) {
+                  if (v == null || v.isEmpty) {
+                    return 'Please enter quantity';
+                  }
+                  if (int.tryParse(v) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 20.h),
 
@@ -148,7 +161,15 @@ class AddProductScreen extends StatelessWidget {
                 hinText: "Enter price",
                 title: "Price (\$)",
                 controller: controller.priceController,
-                validator: (v) {},
+                validator: (v) {
+                  if (v == null || v.isEmpty) {
+                    return 'Please enter price';
+                  }
+                  if (double.tryParse(v) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 20.h),
 

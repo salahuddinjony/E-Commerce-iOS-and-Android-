@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/common_widgets/empty_state/empty_state_scrollable.dart';
 import 'package:local/app/view/screens/vendor/orders/controller/order_controller.dart';
 import 'package:local/app/view/screens/vendor/orders/models/custom_order_response_model.dart';

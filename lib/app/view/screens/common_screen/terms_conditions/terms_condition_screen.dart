@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/text_section/text_section.dart';
 import 'package:local/app/view/screens/common_screen/controller/info_controller.dart';
 
 import '../../../../utils/enums/status.dart';

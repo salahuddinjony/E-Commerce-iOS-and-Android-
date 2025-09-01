@@ -12,15 +12,15 @@ Future<bool?> showExtensionDialog(
   final addedDuration = pickedDate.difference(currentDate);
   const maxChars = 200;
 
-  String _formatDuration(Duration d) {
-    final parts = <String>[];
-    if (d.inDays > 0) parts.add("${d.inDays}d");
-    final hours = d.inHours.remainder(24);
-    if (hours > 0) parts.add("${hours}h");
-    final mins = d.inMinutes.remainder(60);
-    if (mins > 0) parts.add("${mins}m");
-    return parts.isEmpty ? "0m" : parts.join(" ");
-  }
+  // String formatDuration(Duration d) {
+  //   final parts = <String>[];
+  //   if (d.inDays > 0) parts.add("${d.inDays}d");
+  //   final hours = d.inHours.remainder(24);
+  //   if (hours > 0) parts.add("${hours}h");
+  //   final mins = d.inMinutes.remainder(60);
+  //   if (mins > 0) parts.add("${mins}m");
+  //   return parts.isEmpty ? "0m" : parts.join(" ");
+  // }
 
   final formattedDate = DateFormat('EEE, d MMM yyyy • HH:mm').format(pickedDate);
 
@@ -52,7 +52,7 @@ Future<bool?> showExtensionDialog(
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: AppColors.brightCyan.withOpacity(.15),
+                    color: AppColors.brightCyan.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   padding: const EdgeInsets.all(8),
@@ -81,7 +81,7 @@ Future<bool?> showExtensionDialog(
                   children: [
                     Card(
                       elevation: 0,
-                      color: Theme.of(context).colorScheme.primary.withOpacity(.05),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
