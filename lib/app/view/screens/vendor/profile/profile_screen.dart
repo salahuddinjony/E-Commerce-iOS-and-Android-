@@ -70,10 +70,7 @@ class ProfileScreen extends StatelessWidget {
                           },
                           child: CustomNetworkImage(
                             imageUrl:
-                                profileController.profileModel.value.profile?.id!.image?.replaceFirst(
-                          'http://10.10.20.19:5007',
-                          'https://gmosley-uteehub-backend.onrender.com',
-                ) ?? "",
+                                profileController.profileModel.value.profile?.id!.image?? "",
                             height: 125.h,
                             width: 126.w,
                             boxShape: BoxShape.circle,

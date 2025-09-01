@@ -56,14 +56,10 @@ class PersonalInfoScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ProfileHeader(
-                      image: controller.profileModel.value.profile?.id!.image
-                              ?.replaceFirst(
-                            'http://10.10.20.19:5007',
-                            'https://gmosley-uteehub-backend.onrender.com',
-                          ) ??
+                      image: controller.profileModel.value.profile?.id!.image ??
                           "",
-                      name: controller.profileModel.value.profile?.id?.name ??
-                          ""),
+                      name: controller.profileModel.value.profile?.id?.name ??""
+                      ),
                   SizedBox(height: 20.h),
                   CustomFromCard(
                     isRead: true,
