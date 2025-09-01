@@ -41,7 +41,7 @@ class UserHomeController extends GetxController {
       try {
         position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high,
-        ).timeout(const Duration(seconds: 10));
+        );
       } catch (_) {
         position = await Geolocator.getLastKnownPosition();
       }
