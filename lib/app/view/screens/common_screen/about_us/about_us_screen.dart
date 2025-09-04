@@ -177,7 +177,7 @@ class AboutUsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureRow(String text) {
+  Widget buildFeatureRow(String text) {
     return Row(
       children: [
         SizedBox(width: 10.w),

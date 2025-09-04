@@ -5,8 +5,9 @@ import 'package:local/app/view/common_widgets/client_nav_bar/controller/nav_bar_
 import 'package:local/app/view/common_widgets/vendor_nav/controller/verndor_nav_controller.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 import 'package:local/app/view/screens/splash/controller/splash_controller.dart';
-import 'package:local/app/view/screens/user/user_home/controller/delivery_controller.dart';
+import 'package:local/app/view/screens/user/user_home/controller/delivery_locations_controller.dart';
 import 'package:local/app/view/screens/user/user_home/controller/user_home_controller.dart';
+import 'package:local/app/view/screens/user/user_home/shop_details/controller/shop_details_controller.dart';
 import 'package:local/app/view/screens/vendor/home/controller/home_page_controller.dart';
 import 'package:local/app/view/screens/vendor/orders/controller/order_controller.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/category/controller/category_controller.dart';
@@ -33,6 +34,7 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => NavBarController(), fenix: true);
     Get.lazyPut(() => OwnerNavController(), fenix: true);
     Get.lazyPut(() => UserHomeController(), fenix: true);
-    Get.lazyPut(() => MixInDelivery(), fenix: true);
+    Get.lazyPut(() => MixInDeliveryLocation(), fenix: true);
+    Get.lazyPut(() => ShopDetailsController(), fenix: true);
   }
 }

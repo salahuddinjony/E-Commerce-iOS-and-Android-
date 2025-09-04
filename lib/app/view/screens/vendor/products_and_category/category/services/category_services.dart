@@ -14,19 +14,19 @@ mixin class CategoryServices {
   final RxBool isCategoryLoading = false.obs;
   final RxBool isCategoryMutating = false.obs;
 
-  // ================= Fetch =================
-  Future<void> fetchCategories() async {
+  // ================= Fetch Categories =================
+  Future<void> fetchCategories({String? vendorId}) async {
     isCategoryLoading.value = true;
     try {
-      final userId = await SharePrefsHelper.getString(AppConstants.userId);
-      if (userId.isEmpty) {
+      vendorId ??= await SharePrefsHelper.getString(AppConstants.userId); //when userId is not passed
+      if (vendorId.isEmpty) {
         Get.snackbar('Categories', 'User not found');
         categoriesData.clear();
         return;
       }
 
       final response =
-          await ApiClient.getData(ApiUrl.categoryList(userId: userId));
+          await ApiClient.getData(ApiUrl.categoryList(userId: vendorId));
 
       if (response.statusCode == 200) {
         final body = response.body;

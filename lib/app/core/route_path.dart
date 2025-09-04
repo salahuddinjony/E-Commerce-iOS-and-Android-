@@ -69,4 +69,11 @@ class RoutePath {
   static const String userOrderDetailsScreen = 'UserOrderDetailsScreen';
   static const String
   customDesignScreen = 'CustomDesignScreen';
+
+  ///======================= Chat Section =======================
+  
+
+
+  //Map Screen
+  static const String mapPickerScreen = 'MapPickerScreen';
 }
