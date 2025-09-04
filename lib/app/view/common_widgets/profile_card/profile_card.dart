@@ -16,7 +16,8 @@ class ProfileCard extends StatelessWidget {
 
   ProfileCard({super.key, required this.imageUrl, required this.vendorItems});
 
-  final ShopDetailsController shopDetailsController = Get.find<ShopDetailsController>();
+  final ShopDetailsController shopDetailsController =
+      Get.find<ShopDetailsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -83,12 +84,12 @@ class ProfileCard extends StatelessWidget {
                 color: AppColors.darkNaturalGray,
                 fontWeight: FontWeight.w500,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 10),
               CustomText(
                 text:
                     vendorItems.profile?.id?.address?.split(',').last.trim() ??
                         '',
-                fontSize: 14.sp,
+                fontSize: 12.sp,
                 font: CustomFont.poppins,
                 color: AppColors.naturalGray,
                 fontWeight: FontWeight.w400,

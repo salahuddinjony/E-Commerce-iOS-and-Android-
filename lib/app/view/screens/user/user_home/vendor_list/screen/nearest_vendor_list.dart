@@ -11,18 +11,6 @@ class NearestVendorList extends StatelessWidget {
   Widget build(BuildContext context) {
     final filteredVendorList =
         vendorList.where((vendor) => vendor.status == 'active').toList();
-    if (filteredVendorList.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.store_mall_directory, size: 48, color: Colors.grey),
-            SizedBox(height: 8),
-            Text('No vendors available'),
-          ],
-        ),
-      );
-    }
     return GridView.builder(
       padding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
       physics: const NeverScrollableScrollPhysics(),
