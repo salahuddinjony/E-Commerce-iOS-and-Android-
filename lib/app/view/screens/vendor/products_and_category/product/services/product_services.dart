@@ -252,13 +252,12 @@ mixin class ProductServices {
     }
   }
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchProducts({String? vendorId}) async {
     isProductsLoading.value = true;
     try {
-      final userId =
-          await SharePrefsHelper.getString(AppConstants.userId);
+      vendorId ??= await SharePrefsHelper.getString(AppConstants.userId);
       final resp =
-          await ApiClient.getData(ApiUrl.productList(userId: userId));
+          await ApiClient.getData(ApiUrl.productList(userId: vendorId));
       if (resp.statusCode == 200) {
         final raw = resp.body;
         final root = (raw is String) ? jsonDecode(raw) : raw;

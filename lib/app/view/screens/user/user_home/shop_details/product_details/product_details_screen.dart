@@ -1,43 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 
 import '../../../../../../core/route_path.dart';
+import 'product_details_controller.dart';
 
-class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+class ProductDetailsScreen extends StatelessWidget {
+  ProductDetailsScreen({super.key});
 
-  @override
-  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
-}
-
-class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  int items = 1;
-  String size = 'S';
-
-  bool standardShipping = false;
-  bool expressShipping = false;
-  bool homeDelivery = false;
-
-  final double basePrice = 20.22;
-  final double standardShippingCost = 10;
-  final double expressShippingCost = 10;
-  final double homeDeliveryCost = 8;
-  final double hubFeePercent = 0.2;
+  final ProductDetailsController controller = Get.put(ProductDetailsController());
 
   @override
   Widget build(BuildContext context) {
-    double shippingCost = 0;
-    if (standardShipping) shippingCost += standardShippingCost;
-    if (expressShipping) shippingCost += expressShippingCost;
-    if (homeDelivery) shippingCost += homeDeliveryCost;
-
-    double subTotal = basePrice * items + shippingCost;
-    double totalCost = subTotal + subTotal * hubFeePercent;
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: const CustomAppBar(
@@ -91,100 +69,92 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              '\$20.22',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            // Rating and sold
-            Row(
-              children: [
-                const Icon(Icons.star, color: Colors.amber, size: 18),
-                const SizedBox(width: 4),
-                const Text('4.5'),
-                const SizedBox(width: 16),
-                const Text('Sold (100)'),
-              ],
-            ),
-            const SizedBox(height: 16),
-            // Thumbnails row (placeholder images)
-            SizedBox(
-              height: 70,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _thumbnail(AppConstants.teeShirt),
-                  _thumbnail(AppConstants.teeShirt),
-                  _thumbnail(AppConstants.teeShirt),
-                ],
-              ),
-            ),
+
+            //rating and sold
+            // const Text(
+            //   '\$20.22',
+            //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            // ),
+            // const SizedBox(height: 16),
+            // // Rating and sold
+            // Row(
+            //   children: [
+            //     const Icon(Icons.star, color: Colors.amber, size: 18),
+            //     const SizedBox(width: 4),
+            //     const Text('4.5'),
+            //     const SizedBox(width: 16),
+            //     const Text('Sold (100)'),
+            //   ],
+            // ),
+            // const SizedBox(height: 16),
+            // // Thumbnails row (placeholder images)
+            // SizedBox(
+            //   height: 70,
+            //   child: ListView(
+            //     scrollDirection: Axis.horizontal,
+            //     children: [
+            //       thumbnail(AppConstants.teeShirt),
+            //       thumbnail(AppConstants.teeShirt),
+            //       thumbnail(AppConstants.teeShirt),
+            //     ],
+            //   ),
+            // ),
             const SizedBox(height: 16),
             // Items counter
             const Text('Items', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Row(
               children: [
-                _counterButton('-', () {
-                  setState(() {
-                    if (items > 1) items--;
-                  });
-                }),
+                counterButton('-', controller.decrement),
                 Container(
                   width: 50,
                   color: AppColors.white,
                   alignment: Alignment.center,
-                  child: Text('$items', style: const TextStyle(fontSize: 18)),
+                  child: Obx(() => Text('${controller.items.value}',
+                      style: const TextStyle(fontSize: 18))),
                 ),
-                _counterButton('+', () {
-                  setState(() {
-                    items++;
-                  });
-                }),
+                counterButton('+', controller.increment),
               ],
             ),
             const SizedBox(height: 16),
             // Size options
-            const Text('Size', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Available Sizes', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Wrap(
-              spacing: 10,
-              children: ['S', 'M', 'L', 'XL', 'XXL']
+            SizedBox(
+              height: 40,
+              child: Obx(() => ListView(
+                scrollDirection: Axis.horizontal,
+                children: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', 'XXXXXL']
                   .map(
-                    (s) => ChoiceChip(
-                      label: Text(s),
-                      selected: size == s,
-                      onSelected: (selected) {
-                        setState(() {
-                          size = s;
-                        });
-                      },
-                      selectedColor: Colors.teal,
-                      // background color when selected
-                      backgroundColor: Colors.grey[200],
-                      // background color when not selected
-                      labelStyle: TextStyle(
-                        color: size == s
-                            ? Colors.white
-                            : Colors.black, // label color depending on state
+                    (s) => Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: ChoiceChip(
+                        checkmarkColor: Colors.white,
+                        label: Text(s),
+                        selected: controller.size.value == s,
+                        onSelected: (selected) {
+                          controller.selectSize(s);
+                        },
+                        selectedColor: Colors.teal,
+                        backgroundColor: Colors.grey[200],
+                        labelStyle: TextStyle(
+                          color: controller.size.value == s ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
                   )
                   .toList(),
+              )),
             ),
 
             const SizedBox(height: 16),
             // Shipping options
             const Text('Shipping Options:',
                 style: TextStyle(fontWeight: FontWeight.bold)),
-            CheckboxListTile(
+            Obx(() => CheckboxListTile(
               title: const Text('Standard Shipping (5-7 days)'),
-              value: standardShipping,
-              onChanged: (val) {
-                setState(() {
-                  standardShipping = val ?? false;
-                });
-              },
+              value: controller.standardShipping.value,
+              onChanged: (val) => controller.toggleStandard(val ?? false),
               secondary: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -193,15 +163,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 child: const Text('\$10', style: TextStyle(color: Colors.teal)),
               ),
               controlAffinity: ListTileControlAffinity.leading,
-            ),
-            CheckboxListTile(
+            )),
+            Obx(() => CheckboxListTile(
               title: const Text('Express Shipping (2-3 days)'),
-              value: expressShipping,
-              onChanged: (val) {
-                setState(() {
-                  expressShipping = val ?? false;
-                });
-              },
+              value: controller.expressShipping.value,
+              onChanged: (val) => controller.toggleExpress(val ?? false),
               secondary: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -210,19 +176,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 child: const Text('\$10', style: TextStyle(color: Colors.teal)),
               ),
               controlAffinity: ListTileControlAffinity.leading,
-            ),
+            )),
             const SizedBox(height: 8),
             // Delivery option
             const Text('Delivery Option:',
                 style: TextStyle(fontWeight: FontWeight.bold)),
-            CheckboxListTile(
+            Obx(() => CheckboxListTile(
               title: const Text('Home Delivery'),
-              value: homeDelivery,
-              onChanged: (val) {
-                setState(() {
-                  homeDelivery = val ?? false;
-                });
-              },
+              value: controller.homeDelivery.value,
+              onChanged: (val) => controller.toggleHomeDelivery(val ?? false),
               secondary: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -231,16 +193,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 child: const Text('\$8', style: TextStyle(color: Colors.teal)),
               ),
               controlAffinity: ListTileControlAffinity.leading,
-            ),
+            )),
             const SizedBox(height: 8),
             const Text('Hub Fee 20%',
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text('Total Cost: \$${totalCost.toStringAsFixed(0)}',
+            Obx(() => Text('Total Cost: \$${controller.totalCost.toStringAsFixed(0)}',
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Colors.teal)),
+                    color: Colors.teal))),
+
             const SizedBox(height: 16),
             CustomButton(
               onTap: () {
@@ -258,7 +221,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _counterButton(String label, VoidCallback onPressed) {
+  Widget counterButton(String label, VoidCallback onPressed) {
     return SizedBox(
       width: 36,
       height: 36,
@@ -275,7 +238,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _thumbnail(String url) {
+  Widget thumbnail(String url) {
     return Container(
       margin: const EdgeInsets.only(right: 10),
       width: 60,

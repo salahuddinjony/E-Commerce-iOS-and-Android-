@@ -79,7 +79,9 @@ static String orderDateExtension({required String orderId}) {
   static String deleteGeneralOrder({required String orderId}) {
     return "$baseUrl/general-order/delete/$orderId";
   }
-  
+
+  static String getNearestVendorlist="$baseUrl/user/retrieve/all";
+
 
 
   

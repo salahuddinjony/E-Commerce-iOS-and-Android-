@@ -68,7 +68,7 @@ class CategoryController extends GetxController
     isNetworkImage.value = false;
   }
 
-
+  
 
   void reFresehData() async{
     print("Refreshing data");

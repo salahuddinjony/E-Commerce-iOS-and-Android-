@@ -4,23 +4,23 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/common_home_app_bar/common_home_app_bar.dart';
-import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
+import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
 import 'package:local/app/view/common_widgets/map/widgets/location_field.dart';
-import 'package:local/app/view/screens/user/user_home/controller/delivery_controller.dart';
+import 'package:local/app/view/screens/user/user_home/controller/delivery_locations_controller.dart';
 import 'package:local/app/view/screens/user/user_home/controller/user_home_controller.dart';
-
-import '../../../common_widgets/profile_card/profile_card.dart';
+import 'package:local/app/view/screens/user/user_home/custom_hub/screen/custom_hub_screen.dart';
+import 'package:local/app/view/screens/user/user_home/shop_details/widgets/not_found.dart';
+import 'package:local/app/view/screens/user/user_home/vendor_list/screen/nearest_vendor_list.dart';
+import 'package:local/app/view/screens/user/user_home/widgets/view_map_button.dart';
 
 class UserHomeScreen extends StatelessWidget {
+  final UserHomeController controller = Get.find<UserHomeController>();
+  final MixInDeliveryLocation mixInDelivery = Get.find<MixInDeliveryLocation>();
 
-    final UserHomeController controller = Get.find<UserHomeController>();
-    final MixInDelivery mixInDelivery = Get.find<MixInDelivery>();
-
-   UserHomeScreen({super.key});
+  UserHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -94,46 +94,15 @@ class UserHomeScreen extends StatelessWidget {
                         Expanded(
                           child: Column(
                             children: [
-                              // Your Location field
-                              // TextField(
-                              //   decoration: InputDecoration(
-                              //     filled: true,
-                              //     fillColor: Colors.grey[200],
-                              //     hintText: 'Your Location',
-                              //     border: OutlineInputBorder(
-                              //       borderSide: BorderSide.none,
-                              //       borderRadius: BorderRadius.circular(4),
-                              //     ),
-                              //     contentPadding: const EdgeInsets.symmetric(
-                              //         horizontal: 12, vertical: 16),
-                              //   ),
-                              //   style: const TextStyle(color: Colors.grey),
-                              // ),
-
+                              // User Location field with cyan background
                               LocationField<UserHomeController>(
                                 isUser: true,
                                 controller: controller,
                               ),
 
                               const SizedBox(height: 12),
-                              // Delivery Location field with pink background
-                              // TextField(
-                              //   decoration: InputDecoration(
-                              //     filled: true,
-                              //     fillColor: const Color(0xFFF4C6C6),
-                              //     // light pink
-                              //     hintText: 'Delivery Location',
-                              //     border: OutlineInputBorder(
-                              //       borderSide: BorderSide.none,
-                              //       borderRadius: BorderRadius.circular(4),
-                              //     ),
-                              //     contentPadding: const EdgeInsets.symmetric(
-                              //         horizontal: 12, vertical: 16),
-                              //   ),
-                              //   style: const TextStyle(color: Colors.black87),
-                              // ),
 
-                              LocationField<MixInDelivery>(
+                              LocationField<MixInDeliveryLocation>(
                                 isUser: false,
                                 isDeliveryLocation: true,
                                 controller: mixInDelivery,
@@ -146,32 +115,9 @@ class UserHomeScreen extends StatelessWidget {
                     SizedBox(
                       height: 25.h,
                     ),
-                    CustomText(
-                      textAlign: TextAlign.start,
-                      maxLines: 2,
-                      text: "Custom Hub – Design Your Own Tee",
-                      fontWeight: FontWeight.w600,
-                      font: CustomFont.poppins,
-                      fontSize: 20.sp,
-                      color: AppColors.brightCyan,
-                    ),
-                    CustomText(
-                      textAlign: TextAlign.start,
-                      maxLines: 10,
-                      text:
-                          "Welcome to the Custom Hub! Upload your design, choose colors, and personalize your T-shirt exactly how you want.",
-                      fontWeight: FontWeight.w400,
-                      font: CustomFont.poppins,
-                      fontSize: 14.sp,
-                      color: AppColors.naturalGray,
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    CustomButton(
-                      onTap: () {},
-                      title: "Custom Hub",
-                    ),
+
+                    //-------------Custom Hub------------
+                    CustomHubScreen(),
                     SizedBox(
                       height: 20.h,
                     ),
@@ -191,45 +137,24 @@ class UserHomeScreen extends StatelessWidget {
                       fontSize: 14.sp,
                       color: AppColors.naturalGray,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        context.pushNamed(
-                          RoutePath.viewMapScreen,
-                        );
-                      },
-                      child: CustomText(
-                        top: 24.h,
-                        decoration: TextDecoration.underline,
-                        textAlign: TextAlign.start,
-                        text: "View Map",
-                        fontWeight: FontWeight.w400,
-                        font: CustomFont.poppins,
-                        fontSize: 16.sp,
-                        color: AppColors.darkNaturalGray,
-                      ),
-                    ),
-                    GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 8,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 15,
-                        crossAxisSpacing: 15,
-                        childAspectRatio: 0.8,
-                      ),
-                      itemBuilder: (context, index) {
-                        return ProfileCard(
-                          onTap: () {
-                            context.pushNamed(
-                              RoutePath.shopDetailsScreen,
-                            );
-                          },
-                          name: 'Alex Carter',
-                          location: 'USA',
-                          imageUrl: AppConstants.demoImage,
-                        );
+
+                    //-------------Mapwise show the nearest vendors------------
+                    ViewMapButton(),
+                    Obx(
+                      () {
+                        if (controller.nearestVendors.isEmpty &&
+                            !controller.isLoadingVendorList.value) {
+                          return NotFound(
+                              message: 'No vendors found near you',
+                              icon: Icons.storefront_outlined);
+                        }
+                        return controller.isLoadingVendorList.value
+                            ? Center(
+                                child: CustomLoader(),
+                              )
+                            : NearestVendorList(
+                                vendorList: controller.nearestVendors,
+                              );
                       },
                     ),
                   ],

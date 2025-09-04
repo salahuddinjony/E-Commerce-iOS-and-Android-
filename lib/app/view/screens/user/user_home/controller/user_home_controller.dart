@@ -4,8 +4,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/view/common_widgets/map/show_address_based_on_latLng.dart';
+import 'package:local/app/view/screens/user/user_home/vendor_list/service/vendor_list_service.dart';
 
-class UserHomeController extends GetxController {
+class UserHomeController extends GetxController with VendorListService {
   // For map
   final RxString latitude = ''.obs;
   final RxString longitude = ''.obs;
@@ -14,6 +15,7 @@ class UserHomeController extends GetxController {
 
   @override
   void onInit() {
+    fetchNearestVendor();
     super.onInit();
     // wait for the first frame so Get.context is likely available
     WidgetsBinding.instance.addPostFrameCallback((_) {

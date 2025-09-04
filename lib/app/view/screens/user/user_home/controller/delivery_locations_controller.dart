@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class MixInDelivery extends GetxController {
+class MixInDeliveryLocation extends GetxController {
   // For map
   final RxString latitude = ''.obs;
   final RxString longitude = ''.obs;

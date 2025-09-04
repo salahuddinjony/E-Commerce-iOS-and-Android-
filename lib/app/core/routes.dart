@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/utils/enums/transection_type.dart';
+import 'package:local/app/view/common_widgets/map/screen/map_picker_screen.dart';
 import 'package:local/app/view/screens/authentication/choose_auth/choose_auth_screen.dart';
 import 'package:local/app/view/screens/authentication/forget_password/forget_password_screen.dart';
 import 'package:local/app/view/screens/authentication/otp/otp_screen.dart';
@@ -14,6 +17,7 @@ import 'package:local/app/view/screens/user/chat/chat_screen.dart';
 import 'package:local/app/view/screens/user/chat/inbox/inbox_screen.dart';
 import 'package:local/app/view/screens/user/support/order_mangement/order_manegment_screen.dart';
 import 'package:local/app/view/screens/user/support/support_screen.dart';
+import 'package:local/app/view/screens/user/user_home/controller/user_home_controller.dart';
 import 'package:local/app/view/screens/user/user_home/user_home_screen.dart';
 import 'package:local/app/view/screens/user/user_home/user_profile/category/category_screen.dart';
 import 'package:local/app/view/screens/user/user_home/user_profile/order_history/order_history_screen.dart';
@@ -57,6 +61,7 @@ import '../view/screens/vendor/vendor_message/vendor_message_screen.dart';
 import 'route_path.dart';
 
 class AppRouter {
+
   static final GoRouter initRoute = GoRouter(
       initialLocation: RoutePath.splashScreen.addBasePath,
       debugLogDiagnostics: true,
@@ -365,10 +370,22 @@ class AppRouter {
         GoRoute(
           name: RoutePath.shopDetailsScreen,
           path: RoutePath.shopDetailsScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ShopDetailsScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final image = extra['image'] as String? ?? '';
+            final location = extra['location'] as String? ?? '';
+            final name = extra['name'] as String? ?? '';
+            final vendorId = extra['vendorId'] as String? ?? '';
+            return _buildPageWithAnimation(
+              child: ShopDetailsScreen(
+                imageUrl: image,
+                shopLocation: location,
+                shopName: name,
+                vendorId: vendorId,
+              ),
+              state: state,
+            );
+          },
         ),
 
         ///=======================  CustomDesignScreen =======================
@@ -439,6 +456,25 @@ class AppRouter {
             child: ViewMapScreen(),
             state: state,
           ),
+        ),
+
+        ///=======================  MapPickerScreen =======================
+        GoRoute(
+          name: RoutePath.mapPickerScreen,
+          path: RoutePath.mapPickerScreen.addBasePath,
+          pageBuilder: (context, state) {
+            final controller = Get.find<UserHomeController>();
+            final lat = double.tryParse(controller.latitude.value.toString()) ?? 0.0;
+            final lng = double.tryParse(controller.longitude.value.toString()) ?? 0.0;
+            return _buildPageWithAnimation(
+
+              
+              child: MapPickerScreen(
+                initialPosition: LatLng(lat, lng),
+              ),
+              state: state,
+            );
+          },
         ),
 
         ///=======================  ViewMapScreen =======================
@@ -534,7 +570,7 @@ class AppRouter {
           name: RoutePath.productDetailsScreen,
           path: RoutePath.productDetailsScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const ProductDetailsScreen(),
+            child:  ProductDetailsScreen(),
             state: state,
           ),
         ),    ///=======================  userOrderDetailsScreen =======================

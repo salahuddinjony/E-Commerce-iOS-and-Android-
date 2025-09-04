@@ -54,8 +54,8 @@ class OrderDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             DatePriceRow(
-              date: _extractCreatedDate(),
-              price: _extractPrice(),
+              date: extractCreatedDate(),
+              price: extractPrice(),
             ),
             const SizedBox(height: 24),
             const Text(
@@ -79,7 +79,7 @@ class OrderDetailsScreen extends StatelessWidget {
     );
   }
 
-  String _extractCreatedDate() {
+  String extractCreatedDate() {
     if (isCustomOrder) {
       final order = orderData as Order;
       return '${order.createdAt.day}/${order.createdAt.month}/${order.createdAt.year}';
@@ -89,7 +89,7 @@ class OrderDetailsScreen extends StatelessWidget {
     }
   }
 
-  String _extractPrice() {
+  String extractPrice() {
     if (isCustomOrder) {
       final order = orderData as Order;
       return '${order.currency} ${order.price}';
