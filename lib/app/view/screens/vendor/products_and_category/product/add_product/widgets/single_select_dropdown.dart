@@ -38,7 +38,7 @@ class SingleSelectDropdown extends StatelessWidget {
         ),
         Obx(
           () => DropdownButtonFormField<String>(
-            initialValue: selectedValue.value.isEmpty || !uniqueOptions.contains(selectedValue.value)
+            value: selectedValue.value.isEmpty || !uniqueOptions.contains(selectedValue.value)
                 ? null
                 : selectedValue.value,
             decoration: InputDecoration(

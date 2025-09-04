@@ -11,10 +11,10 @@ class NotFound extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.shopping_bag_outlined, color: Colors.grey, size: 40),
+          Icon(icon, color: Colors.grey, size: 40),
           SizedBox(height: 8),
           Text(
-            'No products available',
+            message,
             style: TextStyle(color: Colors.grey),
           ),
         ],
