@@ -117,14 +117,24 @@ mixin MixinTransactionScreen on GetxController {
       () => ListTile(
         dense: true,
         contentPadding: EdgeInsets.zero,
-        leading: Radio<String>(
-          value: value,
-            groupValue: filterType.value, // Radio (not deprecated)
-          activeColor: Colors.teal,
-          onChanged: (v) {
-            filterType.value = v;
+        leading: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            filterType.value = value;
             Navigator.pop(ctx);
           },
+          child: SizedBox(
+            width: 36,
+            height: 36,
+            child: Center(
+              child: Icon(
+                filterType.value == value
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color: filterType.value == value ? Colors.teal : Colors.grey,
+              ),
+            ),
+          ),
         ),
         title: Text(label),
         onTap: () {

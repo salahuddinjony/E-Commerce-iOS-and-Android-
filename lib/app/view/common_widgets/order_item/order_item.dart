@@ -15,7 +15,8 @@ class OrderItem extends StatelessWidget {
     required this.imageUrl,
     required this.productName,
     required this.productMaterial,
-    required this.productPrice, required this.onTap,
+    required this.productPrice,
+    required this.onTap,
   });
 
   @override
@@ -29,7 +30,7 @@ class OrderItem extends StatelessWidget {
           color: AppColors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: .1),
               blurRadius: 5,
               spreadRadius: 1,
               offset: const Offset(0, 2), // Shadow position
@@ -43,7 +44,8 @@ class OrderItem extends StatelessWidget {
               imageUrl: imageUrl,
               height: 140.h,
               width: 187.w,
-              boxShape: BoxShape.rectangle, // Assuming you want rectangular image
+              boxShape:
+                  BoxShape.rectangle, // Assuming you want rectangular image
             ),
             CustomText(
               top: 5.h,
