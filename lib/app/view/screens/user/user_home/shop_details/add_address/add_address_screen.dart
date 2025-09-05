@@ -125,7 +125,7 @@ class AddAddressScreen extends StatelessWidget {
                     },
                   );
                 },
-                title: "next",
+                title: "Next",
               )
             ],
           ),

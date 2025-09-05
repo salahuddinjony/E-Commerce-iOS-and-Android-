@@ -213,7 +213,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   },
                 );
               },
-              title: "order Now",
+              title: "Order Now",
             ),
             const SizedBox(height: 16),
           ],

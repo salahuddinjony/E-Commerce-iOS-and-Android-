@@ -46,7 +46,6 @@ import '../view/screens/common_screen/privacy/privacy_policy_screen.dart';
 import '../view/screens/common_screen/terms_conditions/terms_condition_screen.dart';
 import '../view/screens/user/support/account_security/account_security_screen.dart';
 import '../view/screens/user/support/u_tee_hub_account/u_tee_hub_account.dart';
-import '../view/screens/user/user_home/custom_design/custom_design_screen.dart';
 import '../view/screens/user/user_home/custom_design/custom_order/custom_order_screen.dart';
 import '../view/screens/user/user_home/shop_details/add_address/add_address_screen.dart';
 import '../view/screens/user/user_home/shop_details/product_details/product_details_screen.dart';
@@ -393,10 +392,30 @@ class AppRouter {
         GoRoute(
           name: RoutePath.customDesignScreen,
           path: RoutePath.customDesignScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const CustomDesignScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state){
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final vendorId=extra['vendorId'] as String? ?? '';
+            final productId=extra['productId'] as String? ?? '';
+            final controller = extra['controller'];
+            final productName= extra['productName'] as String? ?? '';
+            final productCategoryName= extra['productCategoryName'] as String? ?? '';
+            final productImage = extra['ProductImage'] as String? ?? '';
+            final isCustom= extra['isCustom'] as bool? ?? true;
+
+            return _buildPageWithAnimation(
+              child:  CustomOrderScreen(
+                vendorId: vendorId,
+                productId: productId,
+                controller: controller,
+                isCustom: isCustom,
+                productImage: productImage,
+                productName: productName,
+                productCategoryName: productCategoryName,
+              ),
+              state: state,
+            );
+
+          } 
         ),
 
         GoRoute(
