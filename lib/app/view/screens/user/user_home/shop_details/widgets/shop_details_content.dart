@@ -9,8 +9,9 @@ import 'package:local/app/view/screens/user/user_home/shop_details/widgets/vendo
 
 class ShopDetailsContent extends StatelessWidget {
   final ShopDetailsController controller;
+  final String vendorId;
 
-  ShopDetailsContent({super.key, required this.controller});
+  ShopDetailsContent({super.key, required this.controller, required this.vendorId});
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -69,7 +70,7 @@ class ShopDetailsContent extends StatelessWidget {
                 fontSize: 20.sp,
               ),
               const SizedBox(height: 20),
-              VendorProductList(controller: controller),
+              VendorProductList(controller: controller, vendorId: vendorId),
               const SizedBox(height: 20),
 
              OurTopTShirtDesigner(),
