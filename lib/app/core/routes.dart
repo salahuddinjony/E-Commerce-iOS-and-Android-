@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -434,10 +435,29 @@ class AppRouter {
         GoRoute(
           name: RoutePath.customOrderScreen,
           path: RoutePath.customOrderScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const CustomOrderScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state){
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+           final vendorId=extra['vendorId'] as String? ?? '';
+           final productId=extra['productId'] as String? ?? '';
+           final controller = extra['controller'];
+           final isCustom = extra['isCustom'] as bool? ?? false;
+           final productImage = extra['ProductImage'] as String? ?? '';
+           final productName= extra['productName'] as String? ?? '';
+           final productCategoryName= extra['productCategoryName'] as String? ?? '';
+
+            return _buildPageWithAnimation(
+              child:  CustomOrderScreen(
+                vendorId: vendorId,
+                productId: productId,
+                controller: controller,
+                isCustom: isCustom,
+                productImage: productImage,
+                productName: productName,
+                productCategoryName: productCategoryName,
+              ),
+              state: state,
+            );
+          },
         ),
         GoRoute(
           name: RoutePath.paymentMethodsScreen,
@@ -598,10 +618,28 @@ class AppRouter {
         GoRoute(
           name: RoutePath.addAddressScreen,
           path: RoutePath.addAddressScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const AddAddressScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state){
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final vendorId = extra['vendorId'] as String? ?? '';
+            final productId = extra['productId'] as String? ?? '';
+            final controller = extra['controller'];
+            final isCustomOrder = extra['isCustomOrder'] as bool? ?? false;
+            final productImage = extra['ProductImage'] as String? ?? '';
+            final productName = extra['productName'] as String? ?? '';
+            final productCategoryName = extra['productCategoryName'] as String? ?? '';
+            return _buildPageWithAnimation(
+              child: AddAddressScreen(
+                vendorId: vendorId,
+                productId: productId,
+                controller: controller,
+                isCustomOrder: isCustomOrder,
+                productImage: productImage,
+                productName: productName,
+                productCategoryName: productCategoryName,
+              ),
+              state: state,
+            );
+          },
         ),
 
         ///=======================  UserOrderScreen =======================

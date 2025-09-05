@@ -17,9 +17,7 @@ class AvailableSizeColor extends StatelessWidget {
         children: [...list]
             .map((s) => Padding(
                   padding: const EdgeInsets.only(right: 10),
-                  // Only the ChoiceChip needs to be reactive
                   child: Obx(() {
-                    // Parse color safely, fallback to grey
                     Color parsedColor;
                     try {
                       parsedColor =
