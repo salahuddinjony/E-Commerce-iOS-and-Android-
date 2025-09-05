@@ -91,7 +91,7 @@ class ShopDetailsScreen extends StatelessWidget {
               displayLocation: displayLocation, displayName: displayName),
 
           // Content container (white background)
-          ShopDetailsContent(controller: controller),
+          ShopDetailsContent(controller: controller, vendorId: vendorId),
         ],
       ),
     );

@@ -11,7 +11,9 @@ import 'package:local/app/view/screens/vendor/products_and_category/product/mode
 
 class VendorProductList extends StatelessWidget {
   final controller;
-  const VendorProductList({super.key, this.controller});
+  final String vendorId;
+
+  const VendorProductList({super.key, this.controller, required this.vendorId});
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +36,25 @@ class VendorProductList extends StatelessWidget {
           separatorBuilder: (_, __) => SizedBox(width: 5.w),
           itemBuilder: (context, index) {
             return SizedBox(
-              width: 140.w, // fixed card width
+              width: 140.w,
               child: GestureDetector(
                 onTap: () {
-                  context.pushNamed(RoutePath.productDetailsScreen);
+                  
+                  // Find the category name based on the product's category ID
+                  final catIndex = controller.categoriesData.indexWhere(
+                    (category) => category.id == productItems[index].category,
+                  );
+                  final productCategoryName =
+                      catIndex != -1 ? controller.categoriesData[catIndex].name : null;
+
+                  context.pushNamed(
+                    RoutePath.productDetailsScreen,
+                    extra: {
+                      'product': productItems[index],
+                      'vendorId': vendorId,
+                      'productCategoryName': productCategoryName,
+                    },
+                  );
                 },
                 child: Card(
                   color: AppColors.white,

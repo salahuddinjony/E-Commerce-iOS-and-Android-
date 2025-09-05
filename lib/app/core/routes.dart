@@ -569,10 +569,22 @@ class AppRouter {
         GoRoute(
           name: RoutePath.productDetailsScreen,
           path: RoutePath.productDetailsScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  ProductDetailsScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state){
+              final extra = state.extra as Map<String, dynamic>? ?? {};
+            final product = extra['product'];
+            final vendorId = extra['vendorId'] as String? ?? '';
+            final productCategoryName = extra['productCategoryName'] as String? ?? '';
+            return _buildPageWithAnimation(
+              child: ProductDetailsScreen(
+                product: product,
+                vendorId: vendorId,
+                productCategoryName: productCategoryName,
+              ),
+              state: state,
+            );
+
+
+          },
         ),    ///=======================  userOrderDetailsScreen =======================
         GoRoute(
           name: RoutePath.userOrderDetailsScreen,

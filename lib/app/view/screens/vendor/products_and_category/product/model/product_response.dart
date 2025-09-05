@@ -39,6 +39,7 @@ class Meta {
 
 class ProductItem {
   final String id;
+  final String creator;
   final String name;
   final String category;
   final bool isFeatured;
@@ -53,6 +54,7 @@ class ProductItem {
 
   ProductItem({
     required this.id,
+    required this.creator,
     required this.name,
     required this.category,
     required this.isFeatured,
@@ -69,6 +71,7 @@ class ProductItem {
   factory ProductItem.fromJson(Map<String, dynamic> json) {
     return ProductItem(
       id: json['_id'],
+      creator: json['creator'],
       name: json['name'],
       category: json['category'],
       isFeatured: json['isFeatured'],
@@ -76,7 +79,9 @@ class ProductItem {
       currency: json['currency'],
       quantity: json['quantity'],
       size: List<String>.from(json['size']),
-      images: (json['images'] as List).map((image) => image.toString().replaceAll('\\', '/')).toList(),
+      images: (json['images'] as List)
+          .map((image) => image.toString().replaceAll('\\', '/'))
+          .toList(),
       colors: List<String>.from(json['colors']),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
