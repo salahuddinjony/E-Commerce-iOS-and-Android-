@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
@@ -11,7 +12,6 @@ import 'package:local/app/view/screens/user/user_home/shop_details/product_detai
 import 'package:local/app/view/screens/user/user_home/shop_details/product_details/widgets/items_count.dart';
 import 'package:local/app/view/screens/user/user_home/shop_details/product_details/widgets/shipping_option.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
-
 import '../../../../../../core/route_path.dart';
 import 'controller/product_details_controller.dart';
 
@@ -116,53 +116,6 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // RichText(
-            //   text: TextSpan(
-            //     style: const TextStyle(color: Colors.black87, fontSize: 14),
-            //     children: [
-            //       const TextSpan(text: 'These '),
-            //       TextSpan(
-            //         text: 'T-shirts',
-            //         style: TextStyle(color: Colors.blue.shade700),
-            //       ),
-            //       const TextSpan(
-            //           text:
-            //               ' are dominating the fashion scene with their unique designs and top-quality fabric. Pick your favorite now!'),
-            //     ],
-            //   ),
-            // ),
-
-            // const SizedBox(height: 16),
-            //rating and sold
-            // const Text(
-            //   '\$20.22',
-            //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            // ),
-            // const SizedBox(height: 16),
-            // // Rating and sold
-            // Row(
-            //   children: [
-            //     const Icon(Icons.star, color: Colors.amber, size: 18),
-            //     const SizedBox(width: 4),
-            //     const Text('4.5'),
-            //     const SizedBox(width: 16),
-            //     const Text('Sold (100)'),
-            //   ],
-            // ),
-            // const SizedBox(height: 16),
-            // // Thumbnails row (placeholder images)
-            // SizedBox(
-            //   height: 70,
-            //   child: ListView(
-            //     scrollDirection: Axis.horizontal,
-            //     children: [
-            //       thumbnail(AppConstants.teeShirt),
-            //       thumbnail(AppConstants.teeShirt),
-            //       thumbnail(AppConstants.teeShirt),
-            //     ],
-            //   ),
-            // ),
-
             // Items counter
             const Text('Items', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
@@ -170,7 +123,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Size options
+            // Size & Color options
             const Text('Available Sizes',
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
@@ -195,6 +148,13 @@ class ProductDetailsScreen extends StatelessWidget {
             const SizedBox(height: 16),
             CustomButton(
               onTap: () {
+                if (controller.size.value.isEmpty ||
+                    controller.color.value.isEmpty) {
+                  EasyLoading.showInfo(
+                      "Please select ${controller.size.value.isEmpty && controller.color.value.isEmpty 
+                      ? 'size and color' : controller.size.value.isEmpty ? 'size' : 'color'}");
+                  return;
+                }
                 context.pushNamed(
                   RoutePath.addAddressScreen,
                   extra: {
@@ -206,10 +166,10 @@ class ProductDetailsScreen extends StatelessWidget {
                     'isCustomOrder': false,
                     'ProductImage': product.images.isNotEmpty
                         ? product.images.first.replaceFirst(
-                          'http://10.10.20.19:5007',
-                          'https://gmosley-uteehub-backend.onrender.com',
-                        )
-                      : AppConstants.teeShirt,
+                            'http://10.10.20.19:5007',
+                            'https://gmosley-uteehub-backend.onrender.com',
+                          )
+                        : AppConstants.teeShirt,
                   },
                 );
               },

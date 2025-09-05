@@ -111,7 +111,9 @@ class AddAddressScreen extends StatelessWidget {
                 height: 20.h,
               ),
               CustomButton(
+   
                 onTap: () {
+                  if (controller.checkCustomerInfoIsEmpty()) return;
                   context.pushNamed(
                     RoutePath.customOrderScreen,
                     extra: {

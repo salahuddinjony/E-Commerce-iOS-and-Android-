@@ -33,16 +33,3 @@ Widget counterButton(
         )),
   );
 }
-
-Widget thumbnail(String url) {
-  return Container(
-    margin: const EdgeInsets.only(right: 10),
-    width: 60,
-    height: 60,
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.grey.shade400),
-      borderRadius: BorderRadius.circular(8),
-      image: DecorationImage(image: NetworkImage(url), fit: BoxFit.cover),
-    ),
-  );
-}

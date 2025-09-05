@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
+import 'package:local/app/view/screens/user/user_home/custom_design/widgets/delivery_summery_customer_info.dart';
+import 'package:local/app/view/screens/user/user_home/custom_design/widgets/product_imsge_and_details_overview.dart';
 import 'package:local/app/view/screens/user/user_home/shop_details/product_details/widgets/order_overview_row.dart';
 
 class CustomOrderScreen extends StatelessWidget {
@@ -40,96 +41,12 @@ class CustomOrderScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Row with image and details
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomNetworkImage(
-                      imageUrl: productImage, height: 150, width: 200),
-                  const SizedBox(width: 15),
-                  // Product details
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          productName,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                         Text(
-                         productCategoryName,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        isCustom
-                            ? const SizedBox.shrink()
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Selected Size: ${controller.size}",
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.black,
-                                      )),
-                                  const SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      const Text("Selected Color ",
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black,
-                                          )),
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          color: Color(int.parse(controller
-                                              .color.value
-                                              .replaceFirst('#', '0xff'))),
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Unit Price: \$${controller.basePrice.toStringAsFixed(0)}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                        const SizedBox(height: 8),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text(
-                              'QTY: ',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            Text(
-                              '${controller.items}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
+              ProductImageAndDetailsOverview(
+                productImage: productImage,
+                productName: productName,
+                productCategoryName: productCategoryName,
+                isCustom: isCustom,
+                controller: controller,
               ),
               const SizedBox(height: 20),
 
@@ -186,122 +103,8 @@ class CustomOrderScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // Delivery (refreshed UI — compact, non-profile style)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(color: AppColors.brightCyan, blurRadius: 1, offset: Offset(0, 0.5))
-                  ],
-                  border: Border.all(color: Colors.grey.shade100),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // vertical accent bar
-                    Container(
-                      width: 6,
-                      height: 96,
-                      decoration: BoxDecoration(
-                        color: AppColors.brightCyan,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-
-                    // details column
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // header with edit
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Delivery To',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  letterSpacing: 0.2,
-                                ),
-                              ),
-                              TextButton.icon(
-                                onPressed: () {
-                                   Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.edit, size: 18),
-                                label: const Text('Edit'),
-                                style: TextButton.styleFrom(
-                                  minimumSize: const Size(0, 30),
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-
-                          // name + phone as compact row
-                          Text(
-                            (controller?.customerNameController.text ?? '').isNotEmpty
-                                ? controller.customerNameController.text
-                                : 'No recipient name',
-                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(height: 6),
-
-                          // address block
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(Icons.location_on, size: 16, color: Colors.redAccent),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  (controller?.customerAddressController.text ?? '').isNotEmpty
-                                      ? controller.customerAddressController.text
-                                      : 'No address provided',
-                                  style: const TextStyle(fontSize: 14, color: Colors.black87),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-
-                          // chips for city/region and phone
-                          Row(
-                            children: [
-                              if ((controller?.customerRegionCityController.text ?? '').isNotEmpty)
-                                Chip(
-                                  visualDensity: VisualDensity.compact,
-                                  backgroundColor: AppColors.brightCyan.withValues(alpha: .12),
-                                  label: Text(
-                                    controller.customerRegionCityController.text,
-                                    style: const TextStyle(fontSize: 13),
-                                  ),
-                                ),
-                              const SizedBox(width: 8),
-                              if ((controller?.customerPhoneController.text ?? '').isNotEmpty)
-                                Chip(
-                                  backgroundColor: Colors.lightBlue.withValues(alpha: .2),
-                                  visualDensity: VisualDensity.compact,
-                                  avatar: const Icon(Icons.phone, size: 16),
-                                  label: Text(
-                                    controller.customerPhoneController.text,
-                                    style: const TextStyle(fontSize: 13),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Delivery summary--> customer info
+              DeliverySummaryCustomerInfo(controller: controller),
 
               const SizedBox(height: 40),
 
