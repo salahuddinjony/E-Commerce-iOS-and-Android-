@@ -2,6 +2,10 @@ import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
 
 class ProductDetailsController extends GetxController {
+  final double basePrice;
+  // basePrice is now passed in via constructor
+  ProductDetailsController({required this.basePrice});
+
   final items = 1.obs;
   final size = ''.obs;
   final color = ''.obs;
@@ -10,14 +14,20 @@ class ProductDetailsController extends GetxController {
   final expressShipping = false.obs;
   final homeDelivery = false.obs;
 
-  final double basePrice = 20.22;
+  final TextEditingController itemsTextController = TextEditingController();
+
+  // Ordered customer info
+  final TextEditingController customerNameController = TextEditingController(text: "Salah Uddin");
+  final TextEditingController customerPhoneController = TextEditingController(text: "01712345678");
+  final TextEditingController customerRegionCityController =
+      TextEditingController(text: "Dhaka");
+  final TextEditingController customerAddressController = TextEditingController(text: "123 Main St, Dhaka");
+
+// Shipping costs and hub fee percentage
   final double standardShippingCost = 10;
   final double expressShippingCost = 10;
   final double homeDeliveryCost = 8;
   final double hubFeePercent = 0.2;
-
-
-  final TextEditingController itemsTextController = TextEditingController();
 
   @override
   void onInit() {
@@ -39,19 +49,9 @@ class ProductDetailsController extends GetxController {
     // When items changes (via buttons), update text field
     ever<int>(items, (val) {
       final newText = val.toString();
-      // Avoid rewriting the same text (prevents cursor jump / needless events)
       if (itemsTextController.text == newText) return;
       itemsTextController.text = newText;
-      itemsTextController.selection = TextSelection.fromPosition(
-        TextPosition(offset: itemsTextController.text.length),
-      );
     });
-  }
-
-  @override
-  void onClose() {
-    itemsTextController.dispose();
-    super.onClose();
   }
 
   void increment() => items.value++;
@@ -73,7 +73,17 @@ class ProductDetailsController extends GetxController {
     if (homeDelivery.value) v += homeDeliveryCost;
     return v;
   }
+  double get priceOfItems=>(basePrice * items.value);
+  double get subTotal => priceOfItems + shippingCost;
+  double get totalCost => subTotal + (subTotal * hubFeePercent);
 
-  double get subTotal => basePrice * items.value + shippingCost;
-  double get totalCost => subTotal + subTotal * hubFeePercent;
+  @override
+  void onClose() {
+    super.onClose();
+    itemsTextController.dispose();
+    customerNameController.dispose();
+    customerPhoneController.dispose();
+    customerRegionCityController.dispose();
+    customerAddressController.dispose();
+  }
 }

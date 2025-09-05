@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
@@ -9,11 +8,12 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/screens/user/user_home/shop_details/product_details/widgets/available_size_color.dart';
-import 'package:local/app/view/screens/user/user_home/shop_details/product_details/widgets/counter_button_andThumbnail.dart';
+import 'package:local/app/view/screens/user/user_home/shop_details/product_details/widgets/items_count.dart';
+import 'package:local/app/view/screens/user/user_home/shop_details/product_details/widgets/shipping_option.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
 
 import '../../../../../../core/route_path.dart';
-import 'product_details_controller.dart';
+import 'controller/product_details_controller.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   final ProductItem product;
@@ -29,7 +29,12 @@ class ProductDetailsScreen extends StatelessWidget {
   late final ProductDetailsController controller =
       Get.isRegistered<ProductDetailsController>(tag: product.id)
           ? Get.find<ProductDetailsController>(tag: product.id)
-          : Get.put(ProductDetailsController(), tag: product.id);
+          : Get.put(
+              ProductDetailsController(
+                basePrice: product.price.toDouble(),
+              ),
+              tag: product.id,
+            );
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +61,9 @@ class ProductDetailsScreen extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: product.images.isNotEmpty
                       ? product.images.first.replaceFirst(
-                                    'http://10.10.20.19:5007',
-                                    'https://gmosley-uteehub-backend.onrender.com',
-                                  )
+                          'http://10.10.20.19:5007',
+                          'https://gmosley-uteehub-backend.onrender.com',
+                        )
                       : AppConstants.teeShirt,
                   fit: BoxFit.contain,
                   width: 400,
@@ -84,24 +89,50 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                style: const TextStyle(color: Colors.black87, fontSize: 14),
+            const SizedBox(height: 16),
+
+            // Price
+            Container(
+              width: 80,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
                 children: [
-                  const TextSpan(text: 'These '),
-                  TextSpan(
-                    text: 'T-shirts',
-                    style: TextStyle(color: Colors.blue.shade700),
+                  Icon(Icons.attach_money,
+                      color: Colors.green.shade700, size: 20),
+                  Text(
+                    '${product.price}',
+                    style: TextStyle(
+                      color: Colors.green.shade800,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const TextSpan(
-                      text:
-                          ' are dominating the fashion scene with their unique designs and top-quality fabric. Pick your favorite now!'),
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
 
+            // RichText(
+            //   text: TextSpan(
+            //     style: const TextStyle(color: Colors.black87, fontSize: 14),
+            //     children: [
+            //       const TextSpan(text: 'These '),
+            //       TextSpan(
+            //         text: 'T-shirts',
+            //         style: TextStyle(color: Colors.blue.shade700),
+            //       ),
+            //       const TextSpan(
+            //           text:
+            //               ' are dominating the fashion scene with their unique designs and top-quality fabric. Pick your favorite now!'),
+            //     ],
+            //   ),
+            // ),
+
+            // const SizedBox(height: 16),
             //rating and sold
             // const Text(
             //   '\$20.22',
@@ -131,125 +162,55 @@ class ProductDetailsScreen extends StatelessWidget {
             //     ],
             //   ),
             // ),
-            const SizedBox(height: 16),
+
             // Items counter
             const Text('Items', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Row(
-              children: [
-                counterButton(label: '-', onPressed: controller.decrement, tag: product.id, quantity: product.quantity),
-                SizedBox(
-                  width: 50,
-                  child: TextField(
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
-                    controller: controller.itemsTextController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      border: InputBorder.none,
-                    ),
-                    onSubmitted: (_) {
-                      if (controller.itemsTextController.text.trim().isEmpty ||
-                          int.tryParse(controller.itemsTextController.text) == 0) {
-                        controller.items.value = 1;
-                        controller.itemsTextController.text = '1';
-                      }
-                    },
-                  ),
-                ),
-                counterButton(label: '+', onPressed: controller.increment, tag: product.id, quantity: product.quantity),
-                const SizedBox(width: 16),
-                Text('Available: ${product.quantity}',
-                    style: const TextStyle(color: Colors.grey)),
-              ],
-            ),
+            ItemsCount(controller: controller, product: product),
+
             const SizedBox(height: 16),
+
             // Size options
             const Text('Available Sizes',
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-             AvailableSizeColor( list: product.size, isColor: false, controller: controller),
+            AvailableSizeColor(
+                list: product.size, isColor: false, controller: controller),
             const SizedBox(height: 16),
             const Text('Available Colors',
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
 
-             AvailableSizeColor( list: product.colors, isColor: true, controller: controller),
+            AvailableSizeColor(
+                list: product.colors, isColor: true, controller: controller),
 
             const SizedBox(height: 16),
+
             // Shipping options
             const Text('Shipping Options:',
                 style: TextStyle(fontWeight: FontWeight.bold)),
-            Obx(() => CheckboxListTile(
-                  title: const Text('Standard Shipping (5-7 days)'),
-                  value: controller.standardShipping.value,
-                  onChanged: (val) => controller.toggleStandard(val ?? false),
-                  secondary: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: const Text('\$10',
-                        style: TextStyle(color: Colors.teal)),
-                  ),
-                  controlAffinity: ListTileControlAffinity.leading,
-                )),
-            Obx(() => CheckboxListTile(
-                  title: const Text('Express Shipping (2-3 days)'),
-                  value: controller.expressShipping.value,
-                  onChanged: (val) => controller.toggleExpress(val ?? false),
-                  secondary: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: const Text('\$10',
-                        style: TextStyle(color: Colors.teal)),
-                  ),
-                  controlAffinity: ListTileControlAffinity.leading,
-                )),
-            const SizedBox(height: 8),
-            // Delivery option
-            const Text('Delivery Option:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            Obx(() => CheckboxListTile(
-                  title: const Text('Home Delivery'),
-                  value: controller.homeDelivery.value,
-                  onChanged: (val) =>
-                      controller.toggleHomeDelivery(val ?? false),
-                  secondary: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.teal),
-                        borderRadius: BorderRadius.circular(8)),
-                    child:
-                        const Text('\$8', style: TextStyle(color: Colors.teal)),
-                  ),
-                  controlAffinity: ListTileControlAffinity.leading,
-                )),
-            const SizedBox(height: 8),
-            const Text('Hub Fee 20%',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Obx(() => Text(
-                'Total Cost: \$${controller.totalCost.toStringAsFixed(0)}',
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.teal))),
+
+            ShippingOption(controller: controller),
 
             const SizedBox(height: 16),
             CustomButton(
               onTap: () {
                 context.pushNamed(
                   RoutePath.addAddressScreen,
+                  extra: {
+                    'vendorId': vendorId,
+                    'productId': product.id,
+                    'productName': product.name,
+                    'productCategoryName': productCategoryName,
+                    'controller': controller,
+                    'isCustomOrder': false,
+                    'ProductImage': product.images.isNotEmpty
+                        ? product.images.first.replaceFirst(
+                          'http://10.10.20.19:5007',
+                          'https://gmosley-uteehub-backend.onrender.com',
+                        )
+                      : AppConstants.teeShirt,
+                  },
                 );
               },
               title: "order Now",
