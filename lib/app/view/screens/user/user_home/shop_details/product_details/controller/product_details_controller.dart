@@ -1,3 +1,4 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
 
@@ -22,6 +23,34 @@ class ProductDetailsController extends GetxController {
   final TextEditingController customerRegionCityController =
       TextEditingController(text: "Dhaka");
   final TextEditingController customerAddressController = TextEditingController(text: "123 Main St, Dhaka");
+
+
+  void clearCustomerInfo() {
+    customerNameController.clear();
+    customerPhoneController.clear();
+    customerRegionCityController.clear();
+    customerAddressController.clear();
+  }
+  bool checkCustomerInfoIsEmpty(){
+    if(customerNameController.text.isEmpty||
+        customerPhoneController.text.isEmpty||
+        customerRegionCityController.text.isEmpty||
+        customerAddressController.text.isEmpty){
+      String missingField = '';
+      if (customerNameController.text.isEmpty) {
+        missingField = 'Name';
+      } else if (customerPhoneController.text.isEmpty) {
+        missingField = 'Phone';
+      } else if (customerRegionCityController.text.isEmpty) {
+        missingField = 'Region/City';
+      } else if (customerAddressController.text.isEmpty) {
+        missingField = 'Address';
+      }
+      EasyLoading.showInfo("Please fill the $missingField field");
+      return true;
+    }
+    return false;
+  }
 
 // Shipping costs and hub fee percentage
   final double standardShippingCost = 10;
