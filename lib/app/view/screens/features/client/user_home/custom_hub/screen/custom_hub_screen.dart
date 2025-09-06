@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
@@ -34,7 +36,10 @@ class CustomHubScreen extends StatelessWidget {
             height: 20.h,
           ),
           CustomButton(
-            onTap: () {},
+            onTap: () {
+              context.pushNamed(RoutePath.customDesignScreen);
+               
+            },
             title: "Custom Hub",
           ),
         ],

@@ -115,7 +115,7 @@ class AddAddressScreen extends StatelessWidget {
                 onTap: () {
                   if (controller.checkCustomerInfoIsEmpty()) return;
                   context.pushNamed(
-                    RoutePath.customOrderScreen,
+                    RoutePath.orderOverviewScreen,
                     extra: {
                       'vendorId': vendorId,
                       'productId': productId,
