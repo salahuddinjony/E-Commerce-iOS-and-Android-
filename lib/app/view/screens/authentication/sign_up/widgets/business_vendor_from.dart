@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/global/helper/validators/validators.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile/widgets/select_documents_button/select_documents.dart';
+import 'package:local/app/view/screens/features/vendor/profile/personal_info/edit_profile/widgets/select_documents_button/select_documents.dart';
 import 'package:local/app/view/common_widgets/map/widgets/location_field.dart';
 import '../../../../../core/route_path.dart';
 import '../../../../../core/routes.dart';
