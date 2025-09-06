@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
-import 'package:local/app/view/screens/user/user_home/shop_details/controller/shop_details_controller.dart';
-import 'package:local/app/view/screens/user/user_home/vendor_list/model/nearest_vendor_response.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/controller/shop_details_controller.dart';
+import 'package:local/app/view/screens/features/client/user_home/vendor_list/model/nearest_vendor_response.dart';
 
 import '../../../utils/app_colors/app_colors.dart';
 import '../custom_network_image/custom_network_image.dart';

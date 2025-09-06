@@ -14,29 +14,28 @@ import 'package:local/app/view/screens/authentication/sign_in/sign_in_screen.dar
 import 'package:local/app/view/screens/authentication/sign_up/widgets/next.dart';
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
-import 'package:local/app/view/screens/user/chat/chat_screen.dart';
-import 'package:local/app/view/screens/user/chat/inbox/inbox_screen.dart';
-import 'package:local/app/view/screens/user/support/order_mangement/order_manegment_screen.dart';
-import 'package:local/app/view/screens/user/support/support_screen.dart';
-import 'package:local/app/view/screens/user/user_home/controller/user_home_controller.dart';
-import 'package:local/app/view/screens/user/user_home/user_home_screen.dart';
-import 'package:local/app/view/screens/user/user_home/user_profile/category/category_screen.dart';
-import 'package:local/app/view/screens/user/user_home/user_profile/order_history/order_history_screen.dart';
-import 'package:local/app/view/screens/user/user_home/user_profile/user_profile_screen.dart';
-import 'package:local/app/view/screens/user/user_home/view_map/view_map_screen.dart';
-import 'package:local/app/view/screens/user/user_order/user_order_screen.dart';
-import 'package:local/app/view/screens/vendor/home/home_screen.dart';
-import 'package:local/app/view/screens/vendor/orders/controller/order_controller.dart';
-import 'package:local/app/view/screens/vendor/orders/models/custom_order_response_model.dart';
-import 'package:local/app/view/screens/vendor/orders/screen/orders_screen.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/product/screen/product_screen.dart'
+import 'package:local/app/view/screens/features/client/chat/chat_screen.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox/inbox_screen.dart';
+import 'package:local/app/view/screens/features/client/support/order_mangement/order_manegment_screen.dart';
+import 'package:local/app/view/screens/features/client/support/support_screen.dart';
+import 'package:local/app/view/screens/features/client/user_home/controller/user_home_controller.dart';
+import 'package:local/app/view/screens/features/client/user_home/user_home_screen.dart';
+import 'package:local/app/view/screens/features/client/user_home/user_profile/category/category_screen.dart';
+import 'package:local/app/view/screens/features/client/user_home/user_profile/order_history/order_history_screen.dart';
+import 'package:local/app/view/screens/features/client/user_home/user_profile/user_profile_screen.dart';
+import 'package:local/app/view/screens/features/client/user_order/user_order_screen.dart';
+import 'package:local/app/view/screens/features/vendor/home/home_screen.dart';
+import 'package:local/app/view/screens/features/vendor/orders/controller/order_controller.dart';
+import 'package:local/app/view/screens/features/vendor/orders/models/custom_order_response_model.dart';
+import 'package:local/app/view/screens/features/vendor/orders/screen/orders_screen.dart';
+import 'package:local/app/view/screens/features/vendor/products_and_category/product/screen/product_screen.dart'
     show ProductScreen;
-import 'package:local/app/view/screens/vendor/profile/help_center/help_center_screen.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/edit_profile/screen/edit_profile_screen.dart';
-import 'package:local/app/view/screens/vendor/profile/personal_info/personal_info_screen.dart';
-import 'package:local/app/view/screens/vendor/profile/profile_screen.dart';
-import 'package:local/app/view/screens/vendor/profile/transaction/transaction_screen.dart';
-import 'package:local/app/view/screens/vendor/profile/wallet/wallet_screen.dart';
+import 'package:local/app/view/screens/features/vendor/profile/help_center/help_center_screen.dart';
+import 'package:local/app/view/screens/features/vendor/profile/personal_info/edit_profile/screen/edit_profile_screen.dart';
+import 'package:local/app/view/screens/features/vendor/profile/personal_info/personal_info_screen.dart';
+import 'package:local/app/view/screens/features/vendor/profile/profile_screen.dart';
+import 'package:local/app/view/screens/features/vendor/profile/transaction/transaction_screen.dart';
+import 'package:local/app/view/screens/features/vendor/profile/wallet/wallet_screen.dart';
 import '../view/screens/common_screen/about_us/about_us_screen.dart';
 import '../view/screens/common_screen/change_password/change_password_screen.dart';
 import '../view/screens/common_screen/faq_screen/faq_screen.dart';
@@ -44,20 +43,20 @@ import '../view/screens/common_screen/notification/notification_screen.dart';
 import '../view/screens/common_screen/onboarding_screen/onboarding_screen.dart';
 import '../view/screens/common_screen/privacy/privacy_policy_screen.dart';
 import '../view/screens/common_screen/terms_conditions/terms_condition_screen.dart';
-import '../view/screens/user/support/account_security/account_security_screen.dart';
-import '../view/screens/user/support/u_tee_hub_account/u_tee_hub_account.dart';
-import '../view/screens/user/user_home/custom_design/custom_order/custom_order_screen.dart';
-import '../view/screens/user/user_home/shop_details/add_address/add_address_screen.dart';
-import '../view/screens/user/user_home/shop_details/product_details/product_details_screen.dart';
-import '../view/screens/user/user_home/shop_details/shop_details_screen.dart';
-import '../view/screens/user/user_home/user_profile/payment_methods/payment_methods_screen.dart';
-import '../view/screens/user/user_order/user_order_details/user_order_details_screen.dart';
-import '../view/screens/vendor/home/view_order/view_order_details/screen/view_order_details.dart';
-import '../view/screens/vendor/home/view_order/view_order_screen.dart';
-import '../view/screens/vendor/orders/order_details/screen/order_details_screen.dart';
-import '../view/screens/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
-import '../view/screens/vendor/profile/business_documents/business_documents_screen.dart';
-import '../view/screens/vendor/vendor_message/vendor_message_screen.dart';
+import '../view/screens/features/client/support/account_security/account_security_screen.dart';
+import '../view/screens/features/client/support/u_tee_hub_account/u_tee_hub_account.dart';
+import '../view/screens/features/client/user_home/order_overview_page/screen/order_overview_screen.dart';
+import '../view/screens/features/client/user_home/shop_details/add_address/screen/add_address_screen.dart';
+import '../view/screens/features/client/user_home/shop_details/product_details/screen/product_details_screen.dart';
+import '../view/screens/features/client/user_home/shop_details/screen/shop_details_screen.dart';
+import '../view/screens/features/client/user_home/user_profile/payment_methods/payment_methods_screen.dart';
+import '../view/screens/features/client/user_order/user_order_details/user_order_details_screen.dart';
+import '../view/screens/features/vendor/home/view_order/view_order_details/screen/view_order_details.dart';
+import '../view/screens/features/vendor/home/view_order/view_order_screen.dart';
+import '../view/screens/features/vendor/orders/order_details/screen/order_details_screen.dart';
+import '../view/screens/features/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
+import '../view/screens/features/vendor/profile/business_documents/business_documents_screen.dart';
+import '../view/screens/features/vendor/vendor_message/vendor_message_screen.dart';
 import 'route_path.dart';
 
 class AppRouter {
@@ -403,7 +402,7 @@ class AppRouter {
             final isCustom= extra['isCustom'] as bool? ?? true;
 
             return _buildPageWithAnimation(
-              child:  CustomOrderScreen(
+              child:  OrderOverviewScreen(
                 vendorId: vendorId,
                 productId: productId,
                 controller: controller,
@@ -465,7 +464,7 @@ class AppRouter {
            final productCategoryName= extra['productCategoryName'] as String? ?? '';
 
             return _buildPageWithAnimation(
-              child:  CustomOrderScreen(
+              child:  OrderOverviewScreen(
                 vendorId: vendorId,
                 productId: productId,
                 controller: controller,
@@ -488,14 +487,14 @@ class AppRouter {
         ),
 
         ///=======================  ViewMapScreen =======================
-        GoRoute(
-          name: RoutePath.viewMapScreen,
-          path: RoutePath.viewMapScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: ViewMapScreen(),
-            state: state,
-          ),
-        ),
+        // GoRoute(
+        //   name: RoutePath.viewMapScreen,
+        //   path: RoutePath.viewMapScreen.addBasePath,
+        //   pageBuilder: (context, state) => _buildPageWithAnimation(
+        //     child: ViewMapScreen(),
+        //     state: state,
+        //   ),
+        // ),
 
         ///=======================  MapPickerScreen =======================
         GoRoute(
