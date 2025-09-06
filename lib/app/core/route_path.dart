@@ -58,7 +58,7 @@ class RoutePath {
   static const String nextScreen = 'NextScreen';
   static const String userOrderScreen = 'UserOrderScreen';
   static const String inboxScreen = 'InboxScreen';
-  static const String customOrderScreen = 'CustomOrderScreen';
+  static const String orderOverviewScreen = 'OrderOverviewScreen';
   static const String paymentMethodsScreen = 'PaymentMethodsScreen';
   static const String faqScreen = 'FaqScreen';
   static const String uTeeHubAccount = 'UTeeHubAccount';
@@ -67,8 +67,7 @@ class RoutePath {
   static const String productDetailsScreen = 'ProductDetailsScreen';
   static const String addAddressScreen = 'AddAddressScreen';
   static const String userOrderDetailsScreen = 'UserOrderDetailsScreen';
-  static const String
-  customDesignScreen = 'CustomDesignScreen';
+  static const String customDesignScreen = 'CustomDesignScreen';
 
   ///======================= Chat Section =======================
   

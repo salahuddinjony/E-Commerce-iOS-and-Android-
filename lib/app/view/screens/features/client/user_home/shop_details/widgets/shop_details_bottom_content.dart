@@ -140,7 +140,8 @@ class ShopDetailsBottomContent extends StatelessWidget {
         const SizedBox(height: 12),
         CustomButton(
           onTap: () {
-            context.pushNamed(RoutePath.chatScreen);
+            context.pushNamed(RoutePath.chatScreen,  
+            );
           },
           title: "Chat",
         ),

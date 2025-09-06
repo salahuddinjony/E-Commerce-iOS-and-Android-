@@ -49,5 +49,9 @@
 	<string>This app needs your location to pick your address.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This app needs your location to pick your address.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Needed to save edited images to your photo library</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Needed to read photos for editing</string>
 </dict>
 </plist>

@@ -13,6 +13,7 @@ import 'package:local/app/view/screens/authentication/reset_password/reset_passw
 import 'package:local/app/view/screens/authentication/sign_in/sign_in_screen.dart';
 import 'package:local/app/view/screens/authentication/sign_up/widgets/next.dart';
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
+import 'package:local/app/view/screens/features/client/user_home/custom_design/screen/custom_design_screen.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/chat_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox/inbox_screen.dart';
@@ -391,30 +392,14 @@ class AppRouter {
         GoRoute(
           name: RoutePath.customDesignScreen,
           path: RoutePath.customDesignScreen.addBasePath,
-          pageBuilder: (context, state){
-            final extra = state.extra as Map<String, dynamic>? ?? {};
-            final vendorId=extra['vendorId'] as String? ?? '';
-            final productId=extra['productId'] as String? ?? '';
-            final controller = extra['controller'];
-            final productName= extra['productName'] as String? ?? '';
-            final productCategoryName= extra['productCategoryName'] as String? ?? '';
-            final productImage = extra['ProductImage'] as String? ?? '';
-            final isCustom= extra['isCustom'] as bool? ?? true;
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+            child:  CustomDesignScreen(),
+            state: state,
+          ),
+           
+          
 
-            return _buildPageWithAnimation(
-              child:  OrderOverviewScreen(
-                vendorId: vendorId,
-                productId: productId,
-                controller: controller,
-                isCustom: isCustom,
-                productImage: productImage,
-                productName: productName,
-                productCategoryName: productCategoryName,
-              ),
-              state: state,
-            );
-
-          } 
+          
         ),
 
         GoRoute(
@@ -451,8 +436,8 @@ class AppRouter {
         ),
 
         GoRoute(
-          name: RoutePath.customOrderScreen,
-          path: RoutePath.customOrderScreen.addBasePath,
+          name: RoutePath.orderOverviewScreen,
+          path: RoutePath.orderOverviewScreen.addBasePath,
           pageBuilder: (context, state){
             final extra = state.extra as Map<String, dynamic>? ?? {};
            final vendorId=extra['vendorId'] as String? ?? '';
