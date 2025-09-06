@@ -134,19 +134,19 @@ class AddProductScreen extends StatelessWidget {
               /// Customizable
               SingleSelectDropdown(
                 title: 'Customizable',
-                options: const ['true', 'false'],
+                options: const ['Yes', 'No'],
                 selectedValue: controller.isFeatured,
                 hintText: 'Select Customizable',
                 onChanged: controller.setIsFeatured,
               ),
               SizedBox(height: 20.h),
               CustomFromCard(
-                hinText: "Enter quantity",
-                title: "Qunatity",
+                hinText: "Enter quantities",
+                title: "Quantities",
                 controller: controller.quantityController,
                 validator: (v) {
                   if (v == null || v.isEmpty) {
-                    return 'Please enter quantity';
+                    return 'Please enter quantities';
                   }
                   if (int.tryParse(v) == null) {
                     return 'Please enter a valid number';

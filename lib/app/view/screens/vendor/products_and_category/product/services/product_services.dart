@@ -30,23 +30,13 @@ mixin class ProductServices {
 
   RxString isFeatured = 'false'.obs;
   RxString selectedProductId = ''.obs;
-  RxBool isLoading = false.obs; // (legacy) keep if referenced elsewhere, but prefer new flags
+  RxBool isLoading =
+      false.obs; // (legacy) keep if referenced elsewhere, but prefer new flags
   var imagePath = ''.obs;
   RxString categoryNameIs = ''.obs;
 
   final isNetworkImage = false.obs;
 
-  final Map<String, String> colors = {
-    "Black": "#000000",
-    "White": "#FFFFFF",
-    "Red": "#FF0000",
-    "Green": "#00FF00",
-    "Blue": "#0000FF",
-    "Yellow": "#FFFF00",
-    "Pink": "#FFC0CB",
-    "Purple": "#800080",
-    "Orange": "#FFA500",
-  };
   final List<String> sizes = ["S", "M", "L", "XL", "XXL"];
   final List<String> isFeaturedOptions = ["true", "false"];
 

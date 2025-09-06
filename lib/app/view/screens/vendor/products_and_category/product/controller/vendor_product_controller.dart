@@ -2,20 +2,21 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:local/app/view/common_widgets/product_color_list/mixin_product_color.dart';
 
 import 'package:local/app/view/screens/vendor/products_and_category/category/services/category_services.dart';
-import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
+// import 'package:local/app/view/screens/vendor/products_and_category/product/model/product_response.dart';
 import 'package:local/app/view/screens/vendor/products_and_category/product/services/product_services.dart';
 
 class VendorProductController extends GetxController
-    with CategoryServices, ProductServices {
+    with CategoryServices, ProductServices, ProductColorMixin {
   var userIndex = "product".obs;
 
   void toggleUserIndex({required String selectedIndex}) {
     userIndex.value = selectedIndex;
   }
 
-  RxList<ProductItem> productItems = <ProductItem>[].obs;
+  // RxList<ProductItem> productItems = <ProductItem>[].obs;
   final searchController = TextEditingController();
   final RxList<dynamic> filteredCategories = <dynamic>[].obs;
 

@@ -1,8 +1,9 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
+import 'package:local/app/view/common_widgets/product_color_list/mixin_product_color.dart';
 
-class ProductDetailsController extends GetxController {
+class ProductDetailsController extends GetxController with ProductColorMixin{
   final double basePrice;
   // basePrice is now passed in via constructor
   ProductDetailsController({required this.basePrice});
@@ -23,7 +24,6 @@ class ProductDetailsController extends GetxController {
   final TextEditingController customerRegionCityController =
       TextEditingController(text: "Dhaka");
   final TextEditingController customerAddressController = TextEditingController(text: "123 Main St, Dhaka");
-
 
   void clearCustomerInfo() {
     customerNameController.clear();
@@ -52,7 +52,7 @@ class ProductDetailsController extends GetxController {
     return false;
   }
 
-// Shipping costs and hub fee percentage
+// Constants for Shipping costs and hub fee percentage
   final double standardShippingCost = 10;
   final double expressShippingCost = 10;
   final double homeDeliveryCost = 8;
@@ -95,6 +95,7 @@ class ProductDetailsController extends GetxController {
   void toggleExpress(bool v) => expressShipping.value = v;
   void toggleHomeDelivery(bool v) => homeDelivery.value = v;
 
+// Calculate shipping cost based on selected options
   double get shippingCost {
     double v = 0;
     if (standardShipping.value) v += standardShippingCost;
@@ -102,9 +103,12 @@ class ProductDetailsController extends GetxController {
     if (homeDelivery.value) v += homeDeliveryCost;
     return v;
   }
+
+  // Cost calculations
   double get priceOfItems=>(basePrice * items.value);
   double get subTotal => priceOfItems + shippingCost;
-  double get totalCost => subTotal + (subTotal * hubFeePercent);
+  double get hubfee=> subTotal * hubFeePercent;
+  double get totalCost => subTotal + hubfee;
 
   @override
   void onClose() {
