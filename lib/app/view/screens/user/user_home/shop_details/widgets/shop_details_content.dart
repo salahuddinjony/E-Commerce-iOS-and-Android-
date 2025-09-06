@@ -70,7 +70,10 @@ class ShopDetailsContent extends StatelessWidget {
                 fontSize: 20.sp,
               ),
               const SizedBox(height: 20),
+
+              // Product list grid
               VendorProductList(controller: controller, vendorId: vendorId),
+              
               const SizedBox(height: 20),
 
              OurTopTShirtDesigner(),

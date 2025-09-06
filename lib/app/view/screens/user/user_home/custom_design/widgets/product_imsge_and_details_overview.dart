@@ -64,24 +64,45 @@ class ProductImageAndDetailsOverview extends StatelessWidget {
                               color: Colors.black,
                             )),
                         const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Text("Selected Color ",
+                        RichText(
+                          text: TextSpan(
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black,
+                            ),
+                            children: [
+                              const TextSpan(text: "Selected Color: "),
+                              TextSpan(
+                                text: controller.getColorName(hexCode: controller.color.value),
                                 style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black,
-                                )),
-                            Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: Color(int.parse(controller.color.value
-                                    .replaceFirst('#', '0xff'))),
-                                borderRadius: BorderRadius.circular(4),
+                                  color: Color(int.parse(controller.color.value.replaceFirst('#', '0xff'))),
+                                  fontWeight: FontWeight.bold,
+                                  backgroundColor: controller.color.value.toLowerCase() == '#ffffff'
+                                      ? Colors.black
+                                      : Colors.transparent,
+                                ),
                               ),
-                            )
-                          ],
+                            ],
+                          ),
                         ),
+                        // Row(
+                        //   children: [
+                        //     Text("Selected Color: ${controller.getColorName(haxcode: controller.color.value)}",
+                        //         style: TextStyle(
+                        //           fontSize: 13,
+                        //           color: Colors.black,
+                        //         )),
+                        //     Container(
+                        //       width: 20,
+                        //       height: 20,
+                        //       decoration: BoxDecoration(
+                        //         color: Color(int.parse(controller.color.value
+                        //             .replaceFirst('#', '0xff'))),
+                        //         borderRadius: BorderRadius.circular(4),
+                        //       ),
+                        //     )
+                        //   ],
+                        // ),
                         const SizedBox(height: 4),
                         Text(
                           'Unit Price: \$${controller.basePrice.toStringAsFixed(0)}',

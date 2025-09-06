@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:local/app/utils/app_colors/app_colors.dart';
 
 class ShippingOption extends StatelessWidget {
   final controller;
@@ -11,6 +12,7 @@ class ShippingOption extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() => CheckboxListTile(
+              activeColor: AppColors.brightCyan,
               title: const Text('Standard Shipping (5-7 days)'),
               value: controller.standardShipping.value,
               onChanged: (val) => controller.toggleStandard(val ?? false),
@@ -24,6 +26,7 @@ class ShippingOption extends StatelessWidget {
               controlAffinity: ListTileControlAffinity.leading,
             )),
         Obx(() => CheckboxListTile(
+              activeColor: AppColors.brightCyan,
               title: const Text('Express Shipping (2-3 days)'),
               value: controller.expressShipping.value,
               onChanged: (val) => controller.toggleExpress(val ?? false),
@@ -41,6 +44,7 @@ class ShippingOption extends StatelessWidget {
         const Text('Delivery Option:',
             style: TextStyle(fontWeight: FontWeight.bold)),
         Obx(() => CheckboxListTile(
+              activeColor: AppColors.brightCyan,
               title: const Text('Home Delivery'),
               value: controller.homeDelivery.value,
               onChanged: (val) => controller.toggleHomeDelivery(val ?? false),

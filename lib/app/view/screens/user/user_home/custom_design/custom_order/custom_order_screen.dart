@@ -79,9 +79,15 @@ class CustomOrderScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               OrderOverviewRow(
-                fieldName: 'Hub Fee 20% of ${controller.subTotal.toString()}',
+                fieldName:"$productName (${controller.items.value} items x \$${controller.basePrice.toStringAsFixed(2)})",
+                fieldValue: '\$${controller.priceOfItems.toStringAsFixed(2)}',
+                isTrue: true,
+              ),
+              const SizedBox(height: 4),
+              OrderOverviewRow(
+                fieldName: 'Hub Fee 20% of \$${controller.subTotal.toString()}',
                 fieldValue:
-                    '\$${(controller.priceOfItems * 0.2).toStringAsFixed(2)}',
+                    '\$${(controller.hubfee).toStringAsFixed(2)}',
                 isTrue: true,
               ),
 
