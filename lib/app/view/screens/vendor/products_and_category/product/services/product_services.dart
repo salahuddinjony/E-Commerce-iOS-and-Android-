@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:local/app/data/local/shared_prefs.dart';
+import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
@@ -111,31 +113,31 @@ mixin class ProductServices {
     Map<String, dynamic>? originalData,
   }) async {
     if (productNameController.text.isEmpty) {
-      Get.snackbar('Product', 'Name required');
+      EasyLoading.showInfo('Name required');
       return false;
     }
     if (double.tryParse(priceController.text) == null) {
-      Get.snackbar('Product', 'Invalid price');
+      EasyLoading.showInfo('Invalid price');
       return false;
     }
     if (int.tryParse(quantityController.text) == null) {
-      Get.snackbar('Product', 'Invalid quantity');
+      EasyLoading.showInfo('Invalid quantity');
       return false;
     }
     if (method == "POST" && imagePath.isEmpty) {
-      Get.snackbar('Product', 'Image required');
+      EasyLoading.showInfo('Image required');
       return false;
     }
     if (selectedCategory.value.isEmpty) {
-      Get.snackbar('Product', 'Select category');
+      EasyLoading.showInfo('Select category');
       return false;
     }
     if (selectedColor.isEmpty) {
-      Get.snackbar('Product', 'Select color');
+      EasyLoading.showInfo('Select color');
       return false;
     }
     if (selectedSize.isEmpty) {
-      Get.snackbar('Product', 'Select size');
+      EasyLoading.showInfo('Select size');
       return false;
     }
 
@@ -158,13 +160,14 @@ mixin class ProductServices {
 
     isProductMutating.value = true;
     try {
+      EasyLoading.show(status: method == 'POST' ? 'Creating...' : 'Updating...');
       final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
       if (token.isEmpty) {
-        Get.snackbar('Auth', 'Token missing');
+        toastMessage(message: 'Token missing');
         return false;
       }
       if (JwtDecoder.isExpired(token)) {
-        Get.snackbar('Auth', 'Session expired');
+        toastMessage(message: 'Session expired');
         return false;
       }
 
@@ -222,8 +225,8 @@ mixin class ProductServices {
       }
 
       if (status == 200) {
-        Get.snackbar('Product',
-            method == "POST" ? 'Created successfully' : 'Updated successfully');
+        EasyLoading.showSuccess(
+            method == 'POST' ? 'Product created' : 'Product updated');
         clear();
         await fetchProducts(); // refresh list
         return true;
@@ -231,13 +234,14 @@ mixin class ProductServices {
         final msg = (decoded is Map && decoded['message'] != null)
             ? decoded['message'].toString()
             : 'Failed ($status)';
-        Get.snackbar('Product', msg);
+        EasyLoading.showError(msg);
         return false;
       }
     } catch (e) {
-      Get.snackbar('Product', 'Error: $e');
+      EasyLoading.showError('Error: $e');
       return false;
     } finally {
+      EasyLoading.dismiss();
       isProductMutating.value = false;
     }
   }
@@ -278,13 +282,15 @@ mixin class ProductServices {
     if (productId.isEmpty) return false;
     isProductMutating.value = true;
     try {
+      EasyLoading.show(status: 'Deleting...');
       final fullUrl = '${ApiUrl.baseUrl}/product/delete/$productId';
       final resp = await ApiClient.deleteData(fullUrl);
       if (resp.statusCode == 200) {
         productItems.removeWhere((p) => p.id == productId);
-        Get.snackbar('Product', 'Deleted');
+        EasyLoading.showSuccess('Product deleted');
         return true;
       } else {
+        EasyLoading.showError('Delete failed');
         dynamic decoded;
         try {
           decoded = (resp.body is String) ? jsonDecode(resp.body) : resp.body;
@@ -292,13 +298,14 @@ mixin class ProductServices {
         final msg = (decoded is Map && decoded['message'] != null)
             ? decoded['message'].toString()
             : 'Delete failed (${resp.statusCode})';
-        Get.snackbar('Product', msg);
+        EasyLoading.showError(msg);
         return false;
       }
     } catch (e) {
-      Get.snackbar('Product', 'Delete error: $e');
+      EasyLoading.showError('Delete error: $e');
       return false;
     } finally {
+      EasyLoading.dismiss();
       isProductMutating.value = false;
     }
   }

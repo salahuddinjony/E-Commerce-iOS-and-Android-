@@ -180,7 +180,7 @@ class AddProductScreen extends StatelessWidget {
                   bool success = await controller.createOrUpdateProduct(
                       method: method!, productId: productId);
 
-                  if (success) {
+                  if (await success) {
                     controller.fetchProducts();
                     context.pop();
                   }

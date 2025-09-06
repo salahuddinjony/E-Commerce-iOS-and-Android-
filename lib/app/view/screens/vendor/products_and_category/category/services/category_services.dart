@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:local/app/data/local/shared_prefs.dart';
+import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
@@ -73,6 +75,7 @@ mixin class CategoryServices {
 
     isCategoryMutating.value = true;
     try {
+      EasyLoading.show(status: method == 'POST' ? 'Creating...' : 'Updating...');
       final fullUrl = method == 'POST'
           ? ApiUrl.createCategory
           : ApiUrl.updateCategory(categoryId: id!);
@@ -95,7 +98,7 @@ mixin class CategoryServices {
             if (await file.exists()) {
               multipart.add(MultipartBody('image', file));
             } else {
-              Get.snackbar('Category', 'Image file not found');
+              toastMessage(message:   'Image file not found');
               return false;
             }
         } else if (method == 'PATCH') {
@@ -116,22 +119,27 @@ mixin class CategoryServices {
             );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        EasyLoading.showSuccess(
+            method == 'POST' ? 'Category created' : 'Category updated');
         debugPrint("Category ${method == 'POST' ? 'created' : 'updated'}");
         await fetchCategories();
         return true;
       } else {
+        EasyLoading.showError('Failed (${response.statusCode})');
         final msg = (response.body is Map &&
                 response.body['message'] != null &&
                 response.body['message'].toString().isNotEmpty)
             ? response.body['message'].toString()
             : 'Failed (${response.statusCode})';
-        Get.snackbar('Category', msg);
+        debugPrint('Create/Update category error: $msg');
         return false;
       }
     } catch (e) {
-      Get.snackbar('Category', 'Failed: $e');
+      EasyLoading.showError('Failed: $e');
+      // Get.snackbar('Category', 'Failed: $e');
       return false;
     } finally {
+      EasyLoading.dismiss();
       isCategoryMutating.value = false;
     }
   }
@@ -139,11 +147,12 @@ mixin class CategoryServices {
   // ================= Delete =================
   Future<bool> deleteCategory(String categoryId) async {
     if (categoryId.isEmpty) {
-      Get.snackbar('Category', 'Invalid category id');
+      toastMessage(message:'Invalid category id');
       return false;
     }
     isCategoryMutating.value = true;
     try {
+      EasyLoading.show(status: 'Deleting...');
       final url = ApiUrl.categoryDelete(categoryId: categoryId);
       final response = await ApiClient.deleteData(url);
       if (response.statusCode == 200) {
@@ -164,6 +173,7 @@ mixin class CategoryServices {
       Get.snackbar('Category', 'Delete failed: $e');
       return false;
     } finally {
+      EasyLoading.dismiss();
       isCategoryMutating.value = false;
     }
   }
