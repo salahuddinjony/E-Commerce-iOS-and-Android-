@@ -92,17 +92,17 @@ class CategoryController extends GetxController
 
    
     if (name.isEmpty) {
-      EasyLoading.showError('Category name cannot be empty');
+      EasyLoading.showInfo('Name cannot be empty');
       print("Validation failed: name is empty");
       return;
     }
     if (method == 'POST' && imagePath.isEmpty) {
-      EasyLoading.showError('Please select an image for the category');
+      EasyLoading.showInfo('Image cannot be empty');
       print("Validation failed: imagePath is empty for POST");
       return;
     }
     if (method == 'PATCH' && (id.isEmpty || id == 'null')) {
-      EasyLoading.showError('Category ID is required for updating');
+      EasyLoading.showInfo('Category ID is required for updating');
       print("Validation failed: categoryId is empty for PATCH");
       return;
     }

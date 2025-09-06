@@ -53,18 +53,25 @@ class MultiSelectField extends StatelessWidget {
             ),
             buttonText: Text(
               selectedValues.isEmpty
-                  ? hintText
-                  : selectedValues
-                      .map((hex) => items
-                          .firstWhere(
-                            (item) => item.value == hex,
-                            orElse: () => items.first,
-                          )
-                          .label)
-                      .join(", "),
+                ? hintText
+                : (() {
+                  final selectedLabels = selectedValues
+                    .map((hex) => items
+                      .firstWhere(
+                      (item) => item.value == hex,
+                      orElse: () => items.first,
+                      )
+                      .label)
+                    .toList();
+                  if (selectedLabels.length > 3) {
+                  return '${selectedLabels.take(3).join(", ")} +${selectedLabels.length - 3} more';
+                  } else {
+                  return selectedLabels.join(", ");
+                  }
+                })(),
               style: TextStyle(
-                color: AppColors.darkNaturalGray,
-                fontSize: 16.sp,
+              color: AppColors.darkNaturalGray,
+              fontSize: 16.sp,
               ),
             ),
             chipDisplay: MultiSelectChipDisplay.none(),
