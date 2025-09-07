@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/rendering.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class TextBoxModel {
   final String id;
@@ -25,7 +24,7 @@ class TextBoxModel {
     required String text,
     Offset initialPos = const Offset(0.5, 0.5),
     String initialFont = 'Poppins',
-    double initialSize = 48,
+    double initialSize = 32,
     Color initialColor = Colors.white,
   })  : controller = TextEditingController(text: text),
         position = Rx<Offset>(initialPos),
@@ -185,46 +184,46 @@ class CustomDesignController extends GetxController {
   }
 
   // capture the preview RepaintBoundary and write PNG to gallery, returns saved path or null
-  Future<String?> exportPreviewAsPng() async {
-    if (isExporting.value) return null;
-    isExporting.value = true;
-    try {
-      final ctx = previewKey.currentContext;
-      if (ctx == null) return null;
-      final boundary = ctx.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) return null;
+  // Future<String?> exportPreviewAsPng() async {
+  //   if (isExporting.value) return null;
+  //   isExporting.value = true;
+  //   try {
+  //     final ctx = previewKey.currentContext;
+  //     if (ctx == null) return null;
+  //     final boundary = ctx.findRenderObject() as RenderRepaintBoundary?;
+  //     if (boundary == null) return null;
 
-      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      if (byteData == null) return null;
-      final Uint8List bytes = byteData.buffer.asUint8List();
+  //     final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+  //     final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+  //     if (byteData == null) return null;
+  //     final Uint8List bytes = byteData.buffer.asUint8List();
 
-      // On Android/iOS request storage/media permission if needed
-      if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) return null;
-      } else if (Platform.isIOS) {
-        final status = await Permission.photos.request();
-        if (!status.isGranted) return null;
-      }
+  //     // On Android/iOS request storage/media permission if needed
+  //     if (Platform.isAndroid) {
+  //       final status = await Permission.storage.request();
+  //       if (!status.isGranted) return null;
+  //     } else if (Platform.isIOS) {
+  //       final status = await Permission.photos.request();
+  //       if (!status.isGranted) return null;
+  //     }
       
-      final result = await ImageGallerySaver.saveImage(bytes, quality: 100, name: 'design_${DateTime.now().millisecondsSinceEpoch}');
-      if (result == null) return null;
+  //     final result = await ImageGallerySaver.saveImage(bytes, quality: 100, name: 'design_${DateTime.now().millisecondsSinceEpoch}');
+  //     if (result == null) return null;
 
-      // ImageGallerySaver returns a Map on many platforms
-      String? savedPath;
-      if (result is Map) {
-        savedPath = result['filePath']?.toString() ?? result['path']?.toString() ?? result['result']?.toString();
-      } else if (result is String) {
-        savedPath = result;
-      }
-      return savedPath;
-    } catch (_) {
-      return null;
-    } finally {
-      isExporting.value = false;
-    }
-  }
+  //     // ImageGallerySaver returns a Map on many platforms
+  //     String? savedPath;
+  //     if (result is Map) {
+  //       savedPath = result['filePath']?.toString() ?? result['path']?.toString() ?? result['result']?.toString();
+  //     } else if (result is String) {
+  //       savedPath = result;
+  //     }
+  //     return savedPath;
+  //   } catch (_) {
+  //     return null;
+  //   } finally {
+  //     isExporting.value = false;
+  //   }
+  // }
 
   @override
   void onClose() {

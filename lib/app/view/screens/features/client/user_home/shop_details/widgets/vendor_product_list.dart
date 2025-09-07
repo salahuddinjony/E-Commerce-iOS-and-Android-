@@ -3,10 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
-import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/widgets/customShimmer_loader.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/widgets/not_found.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/widgets/vendor_product_card.dart';
 import 'package:local/app/view/screens/features/vendor/products_and_category/product/model/product_response.dart';
 
 class VendorProductList extends StatelessWidget {
@@ -56,51 +55,12 @@ class VendorProductList extends StatelessWidget {
                     },
                   );
                 },
-                child: Card(
-                  color: AppColors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
-                        child: CustomNetworkImage(
-                          imageUrl:
-                              productItems[index].images.first.replaceFirst(
-                                    'http://10.10.20.19:5007',
-                                    'https://gmosley-uteehub-backend.onrender.com',
-                                  ),
-                          height: 100.h,
-                          width: double.infinity,
-                          boxShape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(12),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              productItems[index].name.toString(),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "\$${productItems[index].price.toString()}",
-                              style: TextStyle(color: Colors.cyan, fontWeight: FontWeight.w800),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                child: VendorProductCard(
+                  imageUrl: productItems[index].images.isNotEmpty
+                      ? productItems[index].images[0]
+                      : '',
+                  productName: productItems[index].name,
+                  productPrice: productItems[index].price.toString(),
                 ),
               ),
             );

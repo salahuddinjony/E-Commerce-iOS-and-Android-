@@ -68,6 +68,7 @@ class RoutePath {
   static const String addAddressScreen = 'AddAddressScreen';
   static const String userOrderDetailsScreen = 'UserOrderDetailsScreen';
   static const String customDesignScreen = 'CustomDesignScreen';
+  static const String categoryWiseProducts = 'CategoryWiseProducts';
 
   ///======================= Chat Section =======================
   

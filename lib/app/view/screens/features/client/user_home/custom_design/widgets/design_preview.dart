@@ -46,7 +46,7 @@ class DesignPreview extends StatelessWidget {
                   height: cardHeight.toDouble(),
                   child: Card(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    elevation: 6,
+                    elevation: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: GestureDetector(
@@ -68,7 +68,7 @@ class DesignPreview extends StatelessWidget {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: const [
-                                      Icon(Icons.image_not_supported_outlined, size: 48, color: Colors.grey),
+                                      Icon(Icons.image_not_supported_outlined, size: 32, color: Colors.grey),
                                       SizedBox(height: 8),
                                       Text('No image selected', style: TextStyle(color: Colors.grey, fontSize: 16)),
                                     ],

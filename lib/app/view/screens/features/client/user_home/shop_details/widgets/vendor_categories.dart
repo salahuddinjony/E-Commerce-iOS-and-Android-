@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
+import 'package:get/get.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/widgets/category_circle_card.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/widgets/customShimmer_loader.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/widgets/not_found.dart';
 import 'package:local/app/view/screens/features/vendor/products_and_category/category/model/category_response.dart';
@@ -28,32 +28,12 @@ class VendorCategories extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           itemCount: categoriesData.length,
           separatorBuilder: (_, __) => SizedBox(width: 20.w),
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.green, width: 3),
-                  ),
-                  child: CustomNetworkImage(
-                    imageUrl: categoriesData[index].image.replaceFirst(
-                          'http://10.10.20.19:5007',
-                          'https://gmosley-uteehub-backend.onrender.com',
-                        ),
-                    height: 58,
-                    width: 58,
-                    boxShape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  categoriesData[index].name,
-                  style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w500),
-                ),
-              ],
+          itemBuilder: (context, index) { 
+            return CategoryCircleCard(
+              controller: controller,
+              categoryId: categoriesData[index].id,
+              categoryName: categoriesData[index].name,
+              imageUrl: categoriesData[index].image,
             );
           },
         ),
