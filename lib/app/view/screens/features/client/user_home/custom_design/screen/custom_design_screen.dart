@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
+import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 
 import '../controller/custom_design_controller.dart';
 import '../widgets/design_preview.dart';
 import '../widgets/design_toolbar.dart';
-import '../widgets/order_button.dart';
 
 class CustomDesignScreen extends StatelessWidget {
   const CustomDesignScreen({super.key});
@@ -39,6 +39,7 @@ class CustomDesignScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 8),
+                  
                   const DesignToolbar(),
                   // show inline editor for active text box (if any)
              
@@ -52,27 +53,29 @@ class CustomDesignScreen extends StatelessWidget {
                       alignment: WrapAlignment.start,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        ElevatedButton.icon(
+                        TextButton(
                           onPressed: c.pickImageFromGallery,
-                          icon: const Icon(Icons.upload_file),
-                          label: const Text("Upload Image"),
+                          child: const Text("Upload Image", style: TextStyle(color: Colors.black)),
                         ),
                         Obx(() {
-                          return ElevatedButton.icon(
+                          if ( c.imagePath.value == null) {
+                            return const SizedBox.shrink();
+                          }
+                          return TextButton.icon(
                             onPressed: c.isExporting.value
                                 ? null
                                 : () async {
-                                    final path = await c.exportPreviewAsPng();
-                                    if (path != null) {
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saved image: $path')));
-                                    } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to save image')));
-                                    }
+                                    // final path = await c.exportPreviewAsPng();
+                                    // if (path != null) {
+                                    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saved image: $path')));
+                                    // } else {
+                                    //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to save image')));
+                                    // }
                                   },
                             icon: c.isExporting.value
                                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                                 : const Icon(Icons.download),
-                            label: const Text("Download"),
+                            label: const Text("Download",style: TextStyle(color: Colors.black), ),
                           );
                         }),
                         Obx(() => c.imagePath.value != null
@@ -89,10 +92,10 @@ class CustomDesignScreen extends StatelessWidget {
                   SizedBox(height: previewHeight, child: const DesignPreview()),
                   const SizedBox(height: 16),
                   // order button placed at bottom; it's not Expanded so it won't break scroll
-                  OrderButton(onTap: () {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text('Order flow not implemented')));
-                  }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child:  CustomButton(onTap: (){}, title: "Place Order", height: 48),
+                  ),
                   const SizedBox(height: 12),
                 ],
               ),

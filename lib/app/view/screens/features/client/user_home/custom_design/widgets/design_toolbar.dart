@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:local/app/utils/app_colors/app_colors.dart';
 import '../controller/custom_design_controller.dart';
 
 class DesignToolbar extends StatelessWidget {
@@ -76,6 +77,7 @@ class DesignToolbar extends StatelessWidget {
         return StatefulBuilder(builder: (ctx, setState) {
           final list = query.isEmpty ? _fontFamilies : _fontFamilies.where((f) => f.toLowerCase().contains(query.toLowerCase())).toList();
           return AlertDialog(
+            backgroundColor: Colors.white,
             title: const Text('Choose font'),
             content: SizedBox(
               width: double.maxFinite,
@@ -96,8 +98,11 @@ class DesignToolbar extends StatelessWidget {
                       itemBuilder: (_, i) {
                         final f = list[i];
                         return ListTile(
-                          title: Text(f, style: _safeGoogleFontStyle(f, fontSize: 16)),
-                          subtitle: Text('The quick brown fox', style: _safeGoogleFontStyle(f, fontSize: 12, color: Colors.grey[600])),
+                            trailing: c.textBoxes.firstWhereOrNull((t) => t.id == c.activeId.value)?.fontFamily == f
+                              ? const Icon(Icons.check, color: Colors.green)
+                              : null,
+                          title: Text(f, style: _safeGoogleFontStyle(f, fontSize: 18)),
+                          subtitle: Text('The quick brown fox', style: _safeGoogleFontStyle(f, fontSize: 14, color: Colors.grey[600])),
                           onTap: () => Navigator.of(ctx).pop(f),
                         );
                       },
@@ -154,6 +159,7 @@ class DesignToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     final CustomDesignController c = Get.find();
     return Card(
+      color: AppColors.brightCyan,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -169,6 +175,7 @@ class DesignToolbar extends StatelessWidget {
               children: [
                 // Add text box button
                 IconButton(
+                  color: Colors.white,
                   onPressed: () => c.addTextBox(text: 'New text'),
                   icon: const Icon(Icons.add_box_outlined),
                   tooltip: 'Add text box',
@@ -187,17 +194,30 @@ class DesignToolbar extends StatelessWidget {
                   return Row(
                     children: [
                       // quick inline text edit (small)
-                      SizedBox(
+                        SizedBox(
                         width: dropdownW,
                         child: TextField(
+                          maxLines: 1,
+                          style: const TextStyle(color: Colors.white),
                           controller: box.controller,
-                          decoration: const InputDecoration(hintText: 'Edit text', isDense: true, contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8)),
+                          decoration: const InputDecoration(
+                          hintText: 'Edit text',
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white, width: 2),
+                          ),
+                          ),
                           onChanged: (_) => box.controller.text = box.controller.text,
                         ),
                       ),
                       const SizedBox(width: 8),
                       // font picker for active
                       IconButton(
+                        color: Colors.white,
                         onPressed: () => _showFontPicker(context, c),
                         icon: const Icon(Icons.font_download_outlined),
                         tooltip: 'Choose font',
@@ -205,6 +225,7 @@ class DesignToolbar extends StatelessWidget {
 
                       // color plate button
                       IconButton(
+                        color: Colors.white,
                         onPressed: () => _showColorPicker(context, c, box.fontColor.value),
                         icon: Container(
                           width: 22,
@@ -219,17 +240,33 @@ class DesignToolbar extends StatelessWidget {
                       ),
 
                       // size
-                      IconButton(onPressed: c.decreaseFontForActive, icon: const Icon(Icons.remove)),
-                      Obx(() => Text("${c.textBoxes.firstWhereOrNull((t) => t.id == activeId)?.fontSize.value.toInt() ?? 0}")),
-                      IconButton(onPressed: c.increaseFontForActive, icon: const Icon(Icons.add)),
-                      // bold / italic / delete
-                      IconButton(onPressed: c.toggleBoldForActive, icon: const Icon(Icons.format_bold)),
-                      IconButton(onPressed: c.toggleItalicForActive, icon: const Icon(Icons.format_italic)),
                       IconButton(
+                        color: Colors.white,
+                        onPressed: c.decreaseFontForActive,
+                        icon: const Icon(Icons.remove),
+                      ),
+                      Obx(() => Text("${c.textBoxes.firstWhereOrNull((t) => t.id == activeId)?.fontSize.value.toInt() ?? 0}", style: TextStyle(color: Colors.white) ,)),
+                      IconButton(
+                        onPressed: c.increaseFontForActive,
+                        icon: const Icon(Icons.add),
+                        color: Colors.white,),
+                      // bold / italic / delete
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: c.toggleBoldForActive,
+                        icon: const Icon(Icons.format_bold),
+                      ),
+                      IconButton(
+                        color: Colors.white,
+                        onPressed: c.toggleItalicForActive,
+                        icon: const Icon(Icons.format_italic),
+                      ),
+                      IconButton(
+                        color: Colors.white,
                         onPressed: () {
                           c.removeTextBox(activeId);
                         },
-                        icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                        icon: const Icon(Icons.delete, color: Colors.redAccent),
                       ),
                     ],
                   );
@@ -242,7 +279,12 @@ class DesignToolbar extends StatelessWidget {
                   if (c.activeId.value == null) {
                     return Row(
                       children: [
-                        TextButton.icon(onPressed: () => c.addTextBox(text: 'New text'), icon: const Icon(Icons.text_fields), label: const Text('Add text')),
+                        TextButton.icon(
+                          style: TextButton.styleFrom(foregroundColor: Colors.white),
+                          onPressed: () => c.addTextBox(text: 'New text'),
+                          icon: const Icon(Icons.text_fields),
+                          label: const Text('Add text'),
+                        ),
                       ],
                     );
                   }

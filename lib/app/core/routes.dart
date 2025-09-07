@@ -14,6 +14,7 @@ import 'package:local/app/view/screens/authentication/sign_in/sign_in_screen.dar
 import 'package:local/app/view/screens/authentication/sign_up/widgets/next.dart';
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/custom_design/screen/custom_design_screen.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/category_wise_product/screen/category_wise_products.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/chat_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox/inbox_screen.dart';
@@ -326,6 +327,28 @@ class AppRouter {
               child: const ChatScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
+        ),
+
+        GoRoute(
+          name: RoutePath.categoryWiseProducts,
+          path: RoutePath.categoryWiseProducts.addBasePath,
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final categoryName = extra['categoryName'] as String? ?? '';
+            final products = extra['products'] as List? ?? [];
+            final categoryImage = extra['categoryImage'] as String? ?? '';
+            final categoryId = extra['categoryId'] as String? ?? '';
+
+            return _buildPageWithAnimation(
+              child: CategoryWiseProducts(
+                categoryName: categoryName,
+                products: products.obs,
+                categoryImage: categoryImage,
+                categoryId: categoryId,
+              ),
+              state: state,
+            );
+          },
         ),
 
         ///======================= InboxScreen Section =======================
