@@ -28,7 +28,7 @@ class CustomOrderService {
       // if (isCustom != null) queryParams['isCustom'] = isCustom;
 
       if (vendorId.isNotEmpty) {
-        queryParams['vendor'] = vendorId; 
+        queryParams['client'] = vendorId; 
       }
 
       print('Fetching orders with query: $queryParams');

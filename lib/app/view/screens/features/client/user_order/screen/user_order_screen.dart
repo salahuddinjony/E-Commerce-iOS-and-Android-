@@ -15,7 +15,7 @@ import '../../../../../../global/helper/toast_message/toast_message.dart';
 class UserOrderScreen extends StatelessWidget {
   UserOrderScreen({super.key});
 
-  final UserOrderController controller = Get.put(UserOrderController());
+  final UserOrderController controller = Get.find<UserOrderController>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +32,9 @@ class UserOrderScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              IconButton(onPressed:(){
+                controller.fetchCustomOrders();
+              }, icon: Icon(Icons.arrow_back)),
               TabBar(
                 indicatorColor: AppColors.brightCyan,
                 labelColor: AppColors.brightCyan,
@@ -62,10 +65,10 @@ class UserOrderScreen extends StatelessWidget {
   Widget buildMyOrdersList(BuildContext context) {
     return Obx(() {
       return ListView.separated(
-        itemCount: controller.myOrders.length,
+        itemCount: controller.customOrders.length,
         separatorBuilder: (_, __) => SizedBox(height: 16.h),
         itemBuilder: (context, index) {
-          final item = controller.myOrders[index];
+          final item = controller.customOrders[index];
           return GestureDetector(
             onTap: () {
               context.pushNamed(
@@ -73,11 +76,11 @@ class UserOrderScreen extends StatelessWidget {
               );
             },
             child: OrderItemCard(
-              imagePath: item['image']!,
-              title: item['title']!,
-              subtitle: item['subtitle']!,
-              description: item['description']!,
-              isActive: item['isActive'] ?? false,
+              imagePath: item.id!,
+              title: item.status,
+              subtitle: item.client!,
+              description: item.orderId!,
+              isActive:false,
             ),
           );
         },
@@ -88,22 +91,22 @@ class UserOrderScreen extends StatelessWidget {
   Widget buildExtendRequestsList(BuildContext context) {
     return Obx(() {
       return ListView.separated(
-        itemCount: controller.extendDateRequests.length,
+        itemCount: controller.customOrders.length,
         separatorBuilder: (_, __) => SizedBox(height: 16.h),
         itemBuilder: (context, index) {
-          final item = controller.extendDateRequests[index];
+          final item = controller.customOrders[index];
           return ExtendRequestCard(
-            imagePath: item['image']!,
-            title: item['title']!,
-            subtitle: item['subtitle']!,
-            description: item['description']!,
-            requestedDays: item['requestedDays'] ?? 0,
-            isAccepted: item['isAccepted'] ?? false,
-            onAccept: item['isAccepted'] == false
+            imagePath: item.client!,
+            title: item.client!,
+            subtitle: item.createdAt.toString()!,
+            description: item.summery!,
+            requestedDays: item.quantity ?? 0,
+            isAccepted: false,
+            onAccept: item.isBlank == false
                 ? () {
-                    controller.acceptRequest(index);
+                    controller.customOrders[index] == true;
                     showCustomSnackBar(
-                      'You accepted a ${item['requestedDays']}-day extension for "${item['title']}".',
+                      'You accepted a -day extension for "".',
                       isError: false,
                       getXSnackBar: true,
                     );
