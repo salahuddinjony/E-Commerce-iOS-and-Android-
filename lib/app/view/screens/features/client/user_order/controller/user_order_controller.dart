@@ -1,49 +1,72 @@
 import 'package:get/get.dart';
-import 'package:local/app/utils/app_constants/app_constants.dart';
+import 'package:local/app/view/screens/features/vendor/orders/mixins/general_order_mixin.dart';
+import 'package:local/app/view/screens/features/vendor/orders/mixins/order_mixin.dart';
+import 'package:local/app/view/screens/features/vendor/orders/services/custom_order_service.dart';
+import 'package:local/app/view/screens/features/vendor/orders/services/general_order_service.dart';
 
-class UserOrderController extends GetxController {
-  final RxList<Map<String, dynamic>> myOrders = <Map<String, dynamic>>[
-    {
-      'image': AppConstants.demoImage,
-      'title': 'Guitar Soul Tee',
-      'subtitle': 'Supreme Soft Cotton',
-      'description':
-          'These T-shirts are popular for their unique design and high-quality fabric. Pick your favorite now!',
-      'isActive': true,
-    },
-    {
-      'image': AppConstants.demoImage,
-      'title': 'Vintage Rock Tee',
-      'subtitle': 'Classic Cotton',
-      'description': 'A classic vintage rock tee, a must-have for all rock fans.',
-      'isActive': false,
-    },
-  ].obs;
+class UserOrderController extends GetxController with GeneralOrderMixin, OrderMixin {
 
-  final RxList<Map<String, dynamic>> extendDateRequests = <Map<String, dynamic>>[
-    {
-      'image': AppConstants.demoImage,
-      'title': 'Extended Guitar Soul Tee',
-      'subtitle': 'Extended Soft Cotton',
-      'description': 'Extension request sent for this order.',
-      'requestedDays': 5,
-      'isAccepted': false,
-    },
-    {
-      'image': AppConstants.demoImage,
-      'title': 'Extended Rock Tee',
-      'subtitle': 'Extended Soft Cotton',
-      'description': 'Extension date request.',
-      'requestedDays': 3,
-      'isAccepted': false,
-    },
-  ].obs;
 
-  void acceptRequest(int index) {
-    if (index < 0 || index >= extendDateRequests.length) return;
-    final item = Map<String, dynamic>.from(extendDateRequests[index]);
-    item['isAccepted'] = true;
-    // replace the item to trigger listeners
-    extendDateRequests[index] = item;
+  //Create instances of services
+  final CustomOrderService customerOrderService = CustomOrderService();
+  final GeneralOrderService generalOrderService = GeneralOrderService();
+
+  RxInt totalCustomOrder = 0.obs;
+  RxInt totalGeneralOrder = 0.obs;
+
+    // Fetch custom orders from API
+  Future<void> fetchCustomOrders() async {
+    try {
+      isLoading.value = true;
+      isError.value = false;
+
+      final response = await customerOrderService.fetchVendorOrders();
+      totalCustomOrder.value = response.data.meta.total;
+      processOrderResponse(response);
+     print("Total Custom Orders: ${totalCustomOrder.value}");
+     print("Custom Orders: ${customOrders.length}");
+
+    } catch (e) {
+      isLoading.value = false;
+      isError.value = true;
+      errorMessage.value = e.toString();
+    }
   }
+
+  // Fetch general orders from API
+  Future<void> fetchGeneralOrders() async {
+    try {
+      isGeneralOrdersLoading.value = true;
+      isGeneralOrdersError.value = false;
+
+      final response = await generalOrderService.fetchGeneralOrders();
+      totalGeneralOrder.value = response.data.meta.total;
+      processGeneralOrderResponse(response);
+    } catch (e) {
+      isGeneralOrdersLoading.value = false;
+      isGeneralOrdersError.value = true;
+      generalOrdersErrorMessage.value = e.toString();
+    }
+  }
+
+    // Fetch all orders (both custom and general)
+  Future<void> fetchAllOrders() async {
+    await Future.wait([
+      fetchCustomOrders(),
+      fetchGeneralOrders(),
+    ]);
+  }
+
+  @override
+  void onInit(){
+    print("UserOrderController initialized");
+    super.onInit();
+    fetchCustomOrders();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+  }
+ 
 }
