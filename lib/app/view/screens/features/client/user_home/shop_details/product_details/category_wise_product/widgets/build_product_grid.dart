@@ -11,8 +11,8 @@ Widget buildProductGrid(
     required RxList<dynamic> products,
     required String categoryName}) {
   return Obx(() {
-    // final list = controller.filteredProducts;
-    final list = products;
+    final list = controller.filteredProducts;
+    // final list = products;
 
     if (products.isEmpty) {
       var categoryName;

@@ -81,9 +81,9 @@ Widget buildHeader(
               ),
               SizedBox(width: 12.w),
               Obx(() {
-                // final count = controller
-                //     .filteredProducts.length;
-                final count = products.length; // <-- Use filteredProducts
+                final count = controller
+                    .filteredProducts.length;
+                // final count = products.length; 
 
                 return Container(
                   padding:

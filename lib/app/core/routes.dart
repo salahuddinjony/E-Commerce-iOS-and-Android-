@@ -25,7 +25,7 @@ import 'package:local/app/view/screens/features/client/user_home/user_home_scree
 import 'package:local/app/view/screens/features/client/user_home/user_profile/category/category_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/user_profile/order_history/order_history_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/user_profile/user_profile_screen.dart';
-import 'package:local/app/view/screens/features/client/user_order/user_order_screen.dart';
+import 'package:local/app/view/screens/features/client/user_order/screen/user_order_screen.dart';
 import 'package:local/app/view/screens/features/vendor/home/home_screen.dart';
 import 'package:local/app/view/screens/features/vendor/orders/controller/order_controller.dart';
 import 'package:local/app/view/screens/features/vendor/orders/models/custom_order_response_model.dart';
@@ -47,7 +47,7 @@ import '../view/screens/common_screen/privacy/privacy_policy_screen.dart';
 import '../view/screens/common_screen/terms_conditions/terms_condition_screen.dart';
 import '../view/screens/features/client/support/account_security/account_security_screen.dart';
 import '../view/screens/features/client/support/u_tee_hub_account/u_tee_hub_account.dart';
-import '../view/screens/features/client/user_home/order_overview_page/screen/order_overview_screen.dart';
+import '../view/screens/features/client/user_home/shop_details/order_overview_page/screen/order_overview_screen.dart';
 import '../view/screens/features/client/user_home/shop_details/add_address/screen/add_address_screen.dart';
 import '../view/screens/features/client/user_home/shop_details/product_details/screen/product_details_screen.dart';
 import '../view/screens/features/client/user_home/shop_details/screen/shop_details_screen.dart';
