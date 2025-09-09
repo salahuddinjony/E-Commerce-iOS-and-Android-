@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/screens/features/client/user_home/order_overview_page/widgets/delivery_summery_customer_info.dart';
-import 'package:local/app/view/screens/features/client/user_home/order_overview_page/widgets/product_imsge_and_details_overview.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/delivery_summery_customer_info.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/product_imsge_and_details_overview.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/widgets/order_overview_row.dart';
 
 class OrderOverviewScreen extends StatelessWidget {
