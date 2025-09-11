@@ -133,7 +133,7 @@ class OrdersController extends GetxController
     try {
       print('Updating custom order status: $orderId to $status');
       final result =
-          await customerOrderService.updateOrderStatus(orderId, status);
+          await customerOrderService.updateOrderStatusOrUpdateExtn(orderId, status);
       // Refresh custom orders after status update
       refreshOrdersByType(true);
       return result;

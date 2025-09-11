@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
+import 'package:local/app/view/screens/features/vendor/orders/constants/order_constants.dart';
 
 class OrderItemCard extends StatelessWidget {
   final String imagePath;
@@ -8,6 +9,7 @@ class OrderItemCard extends StatelessWidget {
   final String subtitle;
   final String description;
   final bool isActive;
+  final String? status;
 
   const OrderItemCard({
     Key? key,
@@ -15,7 +17,8 @@ class OrderItemCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.description,
-    this.isActive = false,
+    this.isActive = false, 
+    this.status,
   }) : super(key: key);
 
   @override
@@ -77,23 +80,23 @@ class OrderItemCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    if (isActive) ...[
+                    if (status != null) ...[
                       SizedBox(width: 8.w),
                       Container(
                         padding:
                         EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                         decoration: BoxDecoration(
-                          color: Colors.green.shade100,
+                          color: status != null ? Color(OrderConstants.getStatusColor(status!)) : Colors.green.shade700,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
-                          'Active',
+                          status!,
                           style: TextStyle(
-                            color: Colors.green.shade700,
+                            color: Colors.white,
                             fontWeight: FontWeight.w600,
                             fontSize: 12.sp,
                           ),
-                        ),
+                        ),  
                       ),
                     ],
                   ],
@@ -101,22 +104,7 @@ class OrderItemCard extends StatelessWidget {
                 SizedBox(height: 2.h),
                 Text(subtitle, style: textStyleSubtitle),
                 SizedBox(height: 6.h),
-                RichText(
-                  text: TextSpan(
-                    style: textStyleDescription,
-                    children: [
-                      const TextSpan(text: 'These '),
-                      TextSpan(
-                        text: 'T-shirts',
-                        style: const TextStyle(color: Colors.blue),
-                      ),
-                      const TextSpan(
-                        text:
-                        ' are popular for their unique design and quality fabric. Pick your favorite now!',
-                      ),
-                    ],
-                  ),
-                ),
+                Text(description, style: textStyleDescription),
               ],
             ),
           ),

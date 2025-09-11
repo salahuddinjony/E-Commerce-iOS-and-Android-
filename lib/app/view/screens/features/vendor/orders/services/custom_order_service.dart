@@ -64,10 +64,11 @@ class CustomOrderService {
   }
 
   /// Update order status
-  Future<bool> updateOrderStatus(String orderId, String status) async {
+  Future<bool> updateOrderStatusOrUpdateExtn(String orderId, String status, {String? passedUrl}) async {
     print('Updating order status: $orderId to $status');
+    print('Using URL: ${passedUrl ?? "Url not provided, will use default"}');
     try {
-      final url = ApiUrl.updateCustomOrderStatus(orderId: orderId);
+      final url = passedUrl ?? ApiUrl.updateCustomOrderStatus(orderId: orderId);
       print('Sending PATCH request to: $url');
 
       final response = await http.patch(
@@ -97,22 +98,22 @@ class CustomOrderService {
 
   /// Accept order
   Future<void> acceptOrder(String orderId) async {
-    await updateOrderStatus(orderId, 'accepted');
+    await updateOrderStatusOrUpdateExtn(orderId, 'accepted');
   }
 
   /// Reject order
   Future<void> rejectOrder(String orderId) async {
-    await updateOrderStatus(orderId, 'rejected');
+    await updateOrderStatusOrUpdateExtn(orderId, 'rejected');
   }
 
   /// Mark order as in progress
   Future<void> markOrderInProgress(String orderId) async {
-    await updateOrderStatus(orderId, 'in-progress');
+    await updateOrderStatusOrUpdateExtn(orderId, 'in-progress');
   }
 
   /// Mark order as completed
   Future<void> markOrderCompleted(String orderId) async {
-    await updateOrderStatus(orderId, 'completed');
+    await updateOrderStatusOrUpdateExtn(orderId, 'completed');
   }
 
   /// Request delivery extension
