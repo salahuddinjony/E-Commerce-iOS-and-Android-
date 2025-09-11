@@ -38,6 +38,6 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => MixInDeliveryLocation(), fenix: true);
     Get.lazyPut(() => ShopDetailsController(), fenix: true);
 
-    Get.put(UserOrderController(), permanent: true);
+    Get.lazyPut(() => UserOrderController(), fenix: true);
   }
 }

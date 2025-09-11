@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
+import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
+import 'package:local/app/view/screens/features/client/user_order/widgets/status_action_button.dart';
+import 'package:local/app/view/screens/features/client/user_order/widgets/status_card.dart';
 
 class ExtendRequestCard extends StatelessWidget {
   final String imagePath;
-  final String title;
-  final String subtitle;
-  final String description;
+  final String orderId;
+  final String lastDate;
+  final String proposeDate;
+  final String status;
   final int requestedDays;
-  final bool isAccepted;
   final VoidCallback? onAccept;
+  final VoidCallback? onCancel;
+  final UserOrderController controller;
 
   const ExtendRequestCard({
     Key? key,
     required this.imagePath,
-    required this.title,
-    required this.subtitle,
-    required this.description,
+    required this.orderId,
+    required this.lastDate,
+    required this.proposeDate,
     required this.requestedDays,
-    required this.isAccepted,
+    required this.status,
     this.onAccept,
+    this.onCancel,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -71,46 +79,63 @@ class ExtendRequestCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: textStyleTitle),
-                SizedBox(height: 2.h),
-                Text(subtitle, style: textStyleSubtitle),
+                Row(
+                  children: [
+                    Text(orderId, style: textStyleTitle),
+                    SizedBox(width: 8.w),
+                    Text("Last Date: " + lastDate, style: textStyleSubtitle),
+                  ],
+                ),
                 SizedBox(height: 6.h),
-                Text(description, style: textStyleDescription),
+                Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: Colors.orange.shade200, width: 1),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.calendar_today_rounded,
+                          color: Colors.orange.shade700, size: 18.sp),
+                      SizedBox(width: 6.w),
+                      Expanded(
+                        child: Text(
+                          "Proposed Date: $proposeDate  (+$requestedDays days)",
+                          style: textStyleDescription.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.orange.shade800,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 12.h),
-                if (!isAccepted)
-                  ElevatedButton(
-                    onPressed: onAccept,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 16.w, vertical: 10.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r),
+                status.toLowerCase() == 'pending'
+                    ? Row(
+                        children: [
+                          Expanded(
+                              child: StatusActionButton(
+                            label: 'Accept',
+                            onClick: onAccept,
+                            controller: controller,
+                          )),
+                          SizedBox(width: 8.w),
+                          Expanded(
+                            child: StatusActionButton(
+                              label: 'Cancel',
+                              onClick: onCancel,
+                              controller: controller,
+                            ),
+                          ),
+                        ],
+                      )
+                    : StatusCard(
+                        isApproved: status.toLowerCase() == 'approved',
+                        requestedDays: requestedDays,
                       ),
-                    ),
-                    child: Text(
-                      'Accept',
-                      style: TextStyle(
-                          fontSize: 14.sp, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                if (isAccepted)
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 12.w, vertical: 8.h),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade100,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Text(
-                      'You accepted a $requestedDays-day extension',
-                      style: TextStyle(
-                        color: Colors.green.shade700,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),

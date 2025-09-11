@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
-import 'package:local/app/view/screens/features/client/user_order/widgets/extend_request_card.dart';
-import 'package:local/app/view/screens/features/client/user_order/widgets/order_item_card.dart';
-
-import '../../../../../../core/route_path.dart';
+import 'package:local/app/view/screens/features/client/user_order/widgets/tab_bar_view_content.dart';
 import '../controller/user_order_controller.dart';
-import '../../../../../../global/helper/toast_message/toast_message.dart';
 
 class UserOrderScreen extends StatelessWidget {
   UserOrderScreen({super.key});
@@ -32,9 +27,6 @@ class UserOrderScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(onPressed:(){
-                controller.fetchCustomOrders();
-              }, icon: Icon(Icons.arrow_back)),
               TabBar(
                 indicatorColor: AppColors.brightCyan,
                 labelColor: AppColors.brightCyan,
@@ -50,8 +42,23 @@ class UserOrderScreen extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    buildMyOrdersList(context),
-                    buildExtendRequestsList(context),
+
+                    // My Orders
+                    RefreshIndicator(
+                      backgroundColor: Colors.white,
+                      color: AppColors.brightCyan,
+                      child: buildMyOrdersList(context, controller),
+                      onRefresh: controller.fetchAllOrders,
+                    ),
+
+                    // Date Extension Requests
+                    RefreshIndicator(
+                      backgroundColor: Colors.white,
+                      color: AppColors.brightCyan,
+                       onRefresh: controller.fetchAllOrders,
+                      child: buildExtendRequestsList(context, controller),
+                     
+                    ),
                   ],
                 ),
               ),
@@ -60,61 +67,5 @@ class UserOrderScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget buildMyOrdersList(BuildContext context) {
-    return Obx(() {
-      return ListView.separated(
-        itemCount: controller.customOrders.length,
-        separatorBuilder: (_, __) => SizedBox(height: 16.h),
-        itemBuilder: (context, index) {
-          final item = controller.customOrders[index];
-          return GestureDetector(
-            onTap: () {
-              context.pushNamed(
-                RoutePath.userOrderDetailsScreen,
-              );
-            },
-            child: OrderItemCard(
-              imagePath: item.id!,
-              title: item.status,
-              subtitle: item.client!,
-              description: item.orderId!,
-              isActive:false,
-            ),
-          );
-        },
-      );
-    });
-  }
-
-  Widget buildExtendRequestsList(BuildContext context) {
-    return Obx(() {
-      return ListView.separated(
-        itemCount: controller.customOrders.length,
-        separatorBuilder: (_, __) => SizedBox(height: 16.h),
-        itemBuilder: (context, index) {
-          final item = controller.customOrders[index];
-          return ExtendRequestCard(
-            imagePath: item.client!,
-            title: item.client!,
-            subtitle: item.createdAt.toString()!,
-            description: item.summery!,
-            requestedDays: item.quantity ?? 0,
-            isAccepted: false,
-            onAccept: item.isBlank == false
-                ? () {
-                    controller.customOrders[index] == true;
-                    showCustomSnackBar(
-                      'You accepted a -day extension for "".',
-                      isError: false,
-                      getXSnackBar: true,
-                    );
-                  }
-                : null,
-          );
-        },
-      );
-    });
   }
 }
