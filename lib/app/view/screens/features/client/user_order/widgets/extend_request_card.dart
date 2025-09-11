@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
 import 'package:local/app/view/screens/features/client/user_order/widgets/status_action_button.dart';
@@ -34,7 +33,7 @@ class ExtendRequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyleTitle = TextStyle(
       fontWeight: FontWeight.w700,
-      fontSize: 16.sp,
+      fontSize: 14.sp,
       color: Colors.black,
     );
 
@@ -82,7 +81,7 @@ class ExtendRequestCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(orderId, style: textStyleTitle),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: 6.w),
                     Text("Last Date: " + lastDate, style: textStyleSubtitle),
                   ],
                 ),

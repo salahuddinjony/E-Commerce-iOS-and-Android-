@@ -33,16 +33,16 @@ class ExtendHistoryScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Order: $orderId',
+              'Order ID: $orderId',
               style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w800,
               color: Colors.grey[800],
               ),
             ),
             SizedBox(height: 4.h),
             Text(
-              'Extension Requests: ${history.length}',
+              'Extension Requests: ${history.length.toString().padLeft(2, '0')}',
               style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w400,
