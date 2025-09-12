@@ -44,7 +44,7 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
           final item = generalOrders[index];
           final imagePath = AppConstants.demoImage;
           final title = item.id;
-          final subtitle = item.createdAt.toIso8601String().getDateTime();
+          final subtitle = item.createdAt.formatDate();
           final description = item.shippingAddress;
           final isActive = true;
 
@@ -70,7 +70,7 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
               : AppConstants.demoImage;
           final title = item.orderId;
           final subtitle = item.deliveryDate != null
-              ? item.deliveryDate!.toIso8601String().getDateTime()
+              ? item.deliveryDate!.formatDate()
               : 'No date';
           final description = item.summery;
           final isActive = true;
