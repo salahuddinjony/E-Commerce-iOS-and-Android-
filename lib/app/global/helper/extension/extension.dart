@@ -19,7 +19,6 @@ extension StringCapitalization on String {
 }
 
 extension DateTimeConverter on String {
-
   String getDateTime() {
     final parsed = DateTime.tryParse(this);
     if (parsed == null) return this;
@@ -27,7 +26,10 @@ extension DateTimeConverter on String {
     final now = DateTime.now();
     final difference = now.difference(parsed);
 
-    if (difference.inSeconds < 60) {
+    if (parsed.isAfter(now)) {
+      // If the date is in the future, show date, month, and year
+      return '${parsed.day}/${parsed.month}/${parsed.year}';
+    } else if (difference.inSeconds < 60) {
       return 'Just now';
     } else if (difference.inMinutes < 60) {
       return '${difference.inMinutes}m ago';

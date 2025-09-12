@@ -44,7 +44,7 @@ class UserOrderScreen extends StatelessWidget {
                   children: [
 
                     // My Orders
-                    RefreshIndicator(
+                    RefreshIndicator(        
                       backgroundColor: Colors.white,
                       color: AppColors.brightCyan,
                       child: buildMyOrdersList(context, controller),
