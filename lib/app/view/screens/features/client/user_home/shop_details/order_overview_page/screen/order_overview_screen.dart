@@ -16,6 +16,7 @@ class OrderOverviewScreen extends StatelessWidget {
   final controller;
   final bool isCustom;
   final String productImage;
+  final String clientId;
 
   const OrderOverviewScreen({
     super.key,
@@ -24,6 +25,7 @@ class OrderOverviewScreen extends StatelessWidget {
     this.productName = '',
     this.controller,
     this.productCategoryName = '',
+    this.clientId = '',
     required this.isCustom,
     required this.productImage,
   });
@@ -186,6 +188,21 @@ class OrderOverviewScreen extends StatelessWidget {
                           // ignore
                         }
                       },
+                     // When Stripe reports success, call createGeneralOrder to post the order
+                     onPaymentSuccess: (sessionId, detailedPI) async {
+                       try {
+                         // sessionId may be null; createGeneralOrder expects a string
+                         await controller.createGeneralOrder(
+                           productId: productId,
+                           vendorId: vendorId,
+                           clientId: clientId,
+                           sessionId: sessionId ?? '',
+                         );
+                       } catch (e) {
+                         debugPrint("createGeneralOrder error: $e");
+                         toastMessage(message: "Order post-payment failed");
+                       }
+                     },
                     );
 
                     // Await the overall payment future to catch completion/errors.
