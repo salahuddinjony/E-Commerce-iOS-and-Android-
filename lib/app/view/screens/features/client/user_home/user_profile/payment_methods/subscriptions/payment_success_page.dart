@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/controller/product_details_controller.dart';
 
 class PaymentSuccessPage extends StatelessWidget {
@@ -83,13 +84,13 @@ class PaymentSuccessPage extends StatelessWidget {
                width: 220.w, // adjust this value to the desired button width
                child: OutlinedButton.icon(
                  style: OutlinedButton.styleFrom(
-                   foregroundColor: Colors.green,
-                   side: const BorderSide(color: Colors.green, width: 2),
+                   foregroundColor: AppColors.brightCyan,
+                   side: const BorderSide(color: AppColors.brightCyan, width: 2),
                    minimumSize: Size(0, 48.h), // keep height, allow width from SizedBox
                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                    textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                  ),
-                 icon: const Icon(Icons.check_circle_outline, color: Colors.green),
+                 icon: const Icon(Icons.check_circle_outline, color:AppColors.brightCyan),
                  label: const Text('Done'),
                  onPressed: () {
                   // Clear ProductDetailsController so tag-wise store product info is cleared
