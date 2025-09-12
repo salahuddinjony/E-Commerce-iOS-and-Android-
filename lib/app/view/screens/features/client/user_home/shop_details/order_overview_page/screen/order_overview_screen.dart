@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/delivery_summery_customer_info.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/product_imsge_and_details_overview.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/widgets/order_overview_row.dart';
+import 'package:local/app/view/screens/features/client/user_home/user_profile/payment_methods/subscriptions/services/stripe_service.dart';
 
 class OrderOverviewScreen extends StatelessWidget {
   final String vendorId;
@@ -79,7 +81,7 @@ class OrderOverviewScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               OrderOverviewRow(
-                fieldName:"$productName (${controller.items.value} items x \$${controller.basePrice.toStringAsFixed(2)})",
+                fieldName: "$productName (${controller.items.value} items x \$${controller.basePrice.toStringAsFixed(2)})",
                 fieldValue: '\$${controller.priceOfItems.toStringAsFixed(2)}',
                 isTrue: true,
               ),
@@ -125,7 +127,7 @@ class OrderOverviewScreen extends StatelessWidget {
 
               const SizedBox(height: 25),
 
-              // Apple Pay button
+              // Payment button
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.brightCyan,
@@ -135,14 +137,140 @@ class OrderOverviewScreen extends StatelessWidget {
                   ),
                 ),
                 icon: const Icon(
-                  Icons.apple,
+                  Icons.payment,
                   color: AppColors.white,
                 ),
                 label: const Text(
-                  'Apple Pay',
+                  'Payment',
                   style: TextStyle(fontSize: 16, color: AppColors.white),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  // debug log
+                  debugPrint("Payment pressed, totalCost=${controller.totalCost}");
+
+                  // Validate amount
+                  final total = controller.totalCost;
+                  if (total == null) {
+                    debugPrint("Error: totalCost is null");
+                   toastMessage(message: "Error: totalCost is null");
+                    return;
+                  }
+                  if (total < 0.01) {
+                    debugPrint("Error: amount too small for Stripe: $total");
+                    toastMessage(message: "Error: amount too small for Stripe");
+                    return;
+                  }
+
+                  // show a nice non-dismissible loading dialog while the Stripe sheet is preparing/opening
+                  showDialog<void>(
+                    context: context,
+                    barrierDismissible: false,
+                    barrierColor: Colors.black45,
+                    builder: (_) => const PaymentLoadingDialog(),
+                  );
+
+                  try {
+                    // Start payment but provide a callback that will be invoked when the payment sheet is shown.
+                    // The callback immediately dismisses our custom loader so the user sees the native sheet.
+                    final paymentFuture = StripeServicePayment.instance.makePayment(
+                      context: context,
+                      amount: (total).toInt(),
+                      currency: 'usd',
+                      onPaymentSheetOpened: () {
+                        try {
+                          if (Navigator.of(context, rootNavigator: true).canPop()) {
+                            Navigator.of(context, rootNavigator: true).pop(); // close loader
+                          }
+                        } catch (_) {
+                          // ignore
+                        }
+                      },
+                    );
+
+                    // Await the overall payment future to catch completion/errors.
+                    await paymentFuture;
+                    debugPrint("makePayment completed");
+                  } catch (e, st) {
+                    debugPrint("makePayment error: $e\n$st");
+                    // ensure loader is closed on error as well
+                    try {
+                      if (Navigator.of(context, rootNavigator: true).canPop()) {
+                        Navigator.of(context, rootNavigator: true).pop();
+                      }
+                    } catch (_) {}
+                  } finally {
+                    // final fallback: if loader somehow remains, try to close it
+                    // try {
+                    //   if (Navigator.of(context, rootNavigator: true).canPop()) {
+                    //     Navigator.of(context, rootNavigator: true).pop();
+                    //   }
+                    // } catch (_) {}
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Nice reusable loading dialog used while Stripe sheet initializes
+class PaymentLoadingDialog extends StatelessWidget {
+  final String message;
+  const PaymentLoadingDialog({super.key, this.message = 'Preparing payment…'});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              )
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(
+                width: 42,
+                height: 42,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.brightCyan),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      message,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Please do not close the app.',
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

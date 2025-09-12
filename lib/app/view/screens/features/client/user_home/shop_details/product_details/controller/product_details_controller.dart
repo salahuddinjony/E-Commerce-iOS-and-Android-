@@ -16,6 +16,15 @@ class ProductDetailsController extends GetxController with ProductColorMixin{
   final expressShipping = false.obs;
   final homeDelivery = false.obs;
 
+  void clearSelections() {
+    size.value = '';
+    color.value = '';
+    items.value = 1;
+    standardShipping.value = false;
+    expressShipping.value = false;
+    homeDelivery.value = false;
+  }
+
   final TextEditingController itemsTextController = TextEditingController();
 
   // Ordered customer info
