@@ -26,6 +26,8 @@ class StripeServicePayment {
     required int amount,
     required String currency,
     VoidCallback? onPaymentSheetOpened,
+    Future<void> Function(String? sessionId, Map<String, dynamic>? detailedPI)?
+        onPaymentSuccess, // <--- new optional callback
   }) async {
     try {
       final paymentIntent = await _createPaymentIntent(
@@ -176,19 +178,21 @@ class StripeServicePayment {
 
         // If finalStatus is null or not 'succeeded', treat as failure.
         if (finalStatus == null || finalStatus.toLowerCase() != 'succeeded') {
-          // Close any loader/dialog presented earlier so toast/snackbar is visible.
-          // try {
-          //   if (Navigator.of(context, rootNavigator: true).canPop()) {
-          //     Navigator.of(context, rootNavigator: true).pop();
-          //   }
-          // } catch (_) {}
-
           // show a visible toast after dialog is dismissed
           toastMessage(
               message: "Payment Failed, Try Again!", color: Colors.redAccent);
 
           debugPrint("Payment not succeeded. Status: $finalStatus");
           return;
+        }
+
+        // Call optional success callback BEFORE navigation so caller can post the order
+        try {
+          if (onPaymentSuccess != null) {
+            await onPaymentSuccess(sessionId, detailedPI);
+          }
+        } catch (e) {
+          debugPrint("onPaymentSuccess callback error: $e");
         }
 
         // navigate to success page (pass masked details and summary)

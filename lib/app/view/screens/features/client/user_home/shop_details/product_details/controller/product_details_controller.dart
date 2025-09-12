@@ -2,15 +2,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
 import 'package:local/app/view/common_widgets/product_color_list/mixin_product_color.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/controller/mixin_create_order.dart';
 
-class ProductDetailsController extends GetxController with ProductColorMixin{
+class ProductDetailsController extends GetxController
+    with ProductColorMixin, MixinCreateOrder {
   final double basePrice;
   // basePrice is now passed in via constructor
   ProductDetailsController({required this.basePrice});
-
-  final items = 1.obs;
-  final size = ''.obs;
-  final color = ''.obs;
 
   final standardShipping = false.obs;
   final expressShipping = false.obs;
@@ -28,11 +26,14 @@ class ProductDetailsController extends GetxController with ProductColorMixin{
   final TextEditingController itemsTextController = TextEditingController();
 
   // Ordered customer info
-  final TextEditingController customerNameController = TextEditingController(text: "Salah Uddin");
-  final TextEditingController customerPhoneController = TextEditingController(text: "01712345678");
+  final TextEditingController customerNameController =
+      TextEditingController(text: "Salah Uddin");
+  final TextEditingController customerPhoneController =
+      TextEditingController(text: "01712345678");
   final TextEditingController customerRegionCityController =
       TextEditingController(text: "Dhaka");
-  final TextEditingController customerAddressController = TextEditingController(text: "123 Main St, Dhaka");
+  final TextEditingController customerAddressController =
+      TextEditingController(text: "123 Main St, Dhaka");
 
   void clearCustomerInfo() {
     customerNameController.clear();
@@ -40,11 +41,12 @@ class ProductDetailsController extends GetxController with ProductColorMixin{
     customerRegionCityController.clear();
     customerAddressController.clear();
   }
-  bool checkCustomerInfoIsEmpty(){
-    if(customerNameController.text.isEmpty||
-        customerPhoneController.text.isEmpty||
-        customerRegionCityController.text.isEmpty||
-        customerAddressController.text.isEmpty){
+
+  bool checkCustomerInfoIsEmpty() {
+    if (customerNameController.text.isEmpty ||
+        customerPhoneController.text.isEmpty ||
+        customerRegionCityController.text.isEmpty ||
+        customerAddressController.text.isEmpty) {
       String missingField = '';
       if (customerNameController.text.isEmpty) {
         missingField = 'Name';
@@ -114,10 +116,33 @@ class ProductDetailsController extends GetxController with ProductColorMixin{
   }
 
   // Cost calculations
-  double get priceOfItems=>(basePrice * items.value);
+  double get priceOfItems => (basePrice * items.value);
   double get subTotal => priceOfItems + shippingCost;
-  double get hubfee=> subTotal * hubFeePercent;
+  double get hubfee => subTotal * hubFeePercent;
   double get totalCost => subTotal + hubfee;
+
+  Future<void> createGeneralOrder(
+      {required String productId,
+      required String vendorId,
+      required String clientId,
+      required String sessionId}) async {
+    await createOrder(
+      ProductId: productId,
+      vendorId: vendorId,
+      price: basePrice.toInt(),
+      quantity: items.value,
+      shippingAddress: "Address:" +
+          customerAddressController.text.trim() +
+          ", City/Region:" +
+          customerRegionCityController.text.trim() +
+          ", Phone:" +
+          customerPhoneController.text.trim() +
+          ", Name:" +
+          customerNameController.text.trim(),
+      clientId: clientId,
+      sessionId: sessionId,
+    );
+  }
 
   @override
   void onClose() {
