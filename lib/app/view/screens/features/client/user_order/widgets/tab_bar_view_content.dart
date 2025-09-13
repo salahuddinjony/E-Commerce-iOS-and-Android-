@@ -43,10 +43,11 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
         if (index < generalOrders.length) {
           final item = generalOrders[index];
           final imagePath = AppConstants.demoImage;
-          final title = item.id;
-          final subtitle = item.createdAt.formatDate();
-          final description = item.shippingAddress;
+          final orderId = item.id;
+          final createdDate = item.createdAt.formatDate();
+          final shippingAddress = item.shippingAddress;
           final isActive = true;
+          final price = item.price;
 
           return GestureDetector(
             onTap: () {
@@ -60,10 +61,12 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
             },
             child: OrderItemCard(
               imagePath: imagePath,
-              title: title,
-              subtitle: subtitle,
-              description: description,
+              orderid: orderId,
+              createdDate: createdDate,
+              description: shippingAddress,
               isActive: isActive,
+              status: item.status?? 'N/A',
+                price: price.toString(),
             ),
           );
         } else {
@@ -72,12 +75,13 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
           final imagePath = (item.designFiles.isNotEmpty)
               ? item.designFiles.first
               : AppConstants.demoImage;
-          final title = item.orderId;
-          final subtitle = item.deliveryDate != null
+          final orderId = item.orderId;
+          final createdDate = item.deliveryDate != null
               ? item.deliveryDate!.formatDate()
               : 'No date';
           final description = item.summery;
           final isActive = true;
+          final price = item.price;
 
           return GestureDetector(
             onTap: () {
@@ -91,11 +95,12 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
             },
             child: OrderItemCard(
               imagePath: imagePath,
-              title: title,
-              subtitle: subtitle,
+              orderid: orderId,
+              createdDate: createdDate,
               description: description,
               status: item.status,
               isActive: isActive,
+              price: price.toString(),
             ),
           );
         }
