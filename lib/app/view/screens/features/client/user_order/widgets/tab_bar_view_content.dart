@@ -52,6 +52,10 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
             onTap: () {
               context.pushNamed(
                 RoutePath.userOrderDetailsScreen,
+                extra:{
+                  'isCustom': false,
+                  'orderData': item,
+                }
               );
             },
             child: OrderItemCard(
@@ -79,6 +83,10 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
             onTap: () {
               context.pushNamed(
                 RoutePath.userOrderDetailsScreen,
+                extra:{
+                  'isCustom': true,
+                  'orderData': item,
+                }
               );
             },
             child: OrderItemCard(
