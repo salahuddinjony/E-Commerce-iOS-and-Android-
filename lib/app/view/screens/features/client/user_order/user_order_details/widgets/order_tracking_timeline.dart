@@ -32,12 +32,15 @@ class OrderTrackingTimeline extends StatelessWidget {
         child: LayoutBuilder(builder: (context, constraints) {
           final count = statuses.length;
           final step = nodeWidth + connectorWidth;
-          final contentWidth = (count * nodeWidth) + ((count - 1) * connectorWidth);
+          final contentWidth =
+              (count * nodeWidth) + ((count - 1) * connectorWidth);
           final effectiveActive = activeIndex.clamp(0, count - 1);
-          final Color activeColor = isDisabled ? Colors.grey : AppColors.brightCyan;
+          final Color activeColor =
+              isDisabled ? Colors.grey : AppColors.brightCyan;
           final double rawOverlay = (effectiveActive * step) - (outerSize / 2);
           final double maxOverlay = (contentWidth - nodeWidth / 2);
-          final double activeOverlayWidth = rawOverlay <= 0 ? 0.0 : rawOverlay.clamp(0.0, maxOverlay);
+          final double activeOverlayWidth =
+              rawOverlay <= 0 ? 0.0 : rawOverlay.clamp(0.0, maxOverlay);
 
           return SizedBox(
             width: contentWidth,
@@ -77,7 +80,12 @@ class OrderTrackingTimeline extends StatelessWidget {
                                   color: Colors.white,
                                   border: Border.all(
                                     color: i <= effectiveActive
-                                        ? (statuses[i].toLowerCase().contains('cancel') ? Colors.red : activeColor).withOpacity(0.6)
+                                        ? (statuses[i]
+                                                    .toLowerCase()
+                                                    .contains('cancel')
+                                                ? Colors.red
+                                                : activeColor)
+                                            .withValues(alpha: .6)
                                         : Colors.grey.shade300,
                                     width: 2,
                                   ),
@@ -89,13 +97,20 @@ class OrderTrackingTimeline extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: i <= effectiveActive
-                                      ? (statuses[i].toLowerCase().contains('cancel')
-                                          ? Colors.red.withOpacity(0.12)
-                                          : activeColor.withOpacity(0.12))
+                                      ? (statuses[i]
+                                              .toLowerCase()
+                                              .contains('cancel')
+                                          ? Colors.red.withValues(alpha: .12)
+                                          : activeColor.withValues(alpha: .12))
                                       : Colors.transparent,
                                   border: Border.all(
                                     color: i <= effectiveActive
-                                        ? (statuses[i].toLowerCase().contains('cancel') ? Colors.red : activeColor).withOpacity(0.35)
+                                        ? (statuses[i]
+                                                    .toLowerCase()
+                                                    .contains('cancel')
+                                                ? Colors.red
+                                                : activeColor)
+                                            .withValues(alpha: .35)
                                         : Colors.transparent,
                                     width: 1.5,
                                   ),
@@ -107,20 +122,33 @@ class OrderTrackingTimeline extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: i <= effectiveActive
-                                      ? (statuses[i].toLowerCase().contains('cancel') ? Colors.red : activeColor)
+                                      ? (statuses[i]
+                                              .toLowerCase()
+                                              .contains('cancel')
+                                          ? Colors.red
+                                          : activeColor)
                                       : Colors.white,
                                   border: Border.all(
                                     color: i <= effectiveActive
-                                        ? (statuses[i].toLowerCase().contains('cancel') ? Colors.red : activeColor).withOpacity(0.9)
+                                        ? (statuses[i]
+                                                    .toLowerCase()
+                                                    .contains('cancel')
+                                                ? Colors.red
+                                                : activeColor)
+                                            .withValues(alpha: .9)
                                         : Colors.grey.shade300,
                                     width: 1.2,
                                   ),
                                 ),
                                 child: Center(
                                   child: i <= effectiveActive
-                                      ? (statuses[i].toLowerCase().contains('cancel')
-                                          ? const Icon(Icons.close, size: 16, color: Colors.white)
-                                          : const Icon(Icons.check, size: 16, color: Colors.white))
+                                      ? (statuses[i]
+                                              .toLowerCase()
+                                              .contains('cancel')
+                                          ? const Icon(Icons.close,
+                                              size: 16, color: Colors.white)
+                                          : const Icon(Icons.check,
+                                              size: 16, color: Colors.white))
                                       : Container(
                                           width: 6,
                                           height: 6,
@@ -146,9 +174,15 @@ class OrderTrackingTimeline extends StatelessWidget {
                                   softWrap: false,
                                   style: TextStyle(
                                     color: i <= effectiveActive
-                                        ? (statuses[i].toLowerCase().contains('cancel') ? Colors.red : activeColor)
+                                        ? (statuses[i]
+                                                .toLowerCase()
+                                                .contains('cancel')
+                                            ? Colors.red
+                                            : activeColor)
                                         : Colors.grey,
-                                    fontWeight: i == effectiveActive ? FontWeight.bold : FontWeight.normal,
+                                    fontWeight: i == effectiveActive
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -156,7 +190,8 @@ class OrderTrackingTimeline extends StatelessWidget {
                                   Text(
                                     dates![i],
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                    style: const TextStyle(
+                                        fontSize: 11, color: Colors.grey),
                                   ),
                               ],
                             ),

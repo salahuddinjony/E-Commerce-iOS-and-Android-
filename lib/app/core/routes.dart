@@ -53,7 +53,7 @@ import '../view/screens/features/client/user_home/shop_details/add_address/scree
 import '../view/screens/features/client/user_home/shop_details/product_details/screen/product_details_screen.dart';
 import '../view/screens/features/client/user_home/shop_details/screen/shop_details_screen.dart';
 import '../view/screens/features/client/user_home/user_profile/payment_methods/payment_methods_screen.dart';
-import '../view/screens/features/client/user_order/user_order_details/user_order_details_screen.dart';
+import '../view/screens/features/client/user_order/user_order_details/screen/user_order_details_screen.dart';
 import '../view/screens/features/vendor/home/view_order/view_order_details/screen/view_order_details.dart';
 import '../view/screens/features/vendor/home/view_order/view_order_screen.dart';
 import '../view/screens/features/vendor/orders/order_details/screen/order_details_screen.dart';

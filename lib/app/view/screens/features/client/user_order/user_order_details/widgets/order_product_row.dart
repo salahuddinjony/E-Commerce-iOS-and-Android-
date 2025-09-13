@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
+import 'package:local/app/view/screens/features/vendor/orders/constants/order_constants.dart';
 
 class OrderProductRow extends StatelessWidget {
   final String imageUrl;
@@ -48,11 +49,8 @@ class OrderProductRow extends StatelessWidget {
                     TextSpan(
                       text: orderStatus.capitalizeFirstWord(),
                       style: TextStyle(
-                        color: orderStatus.toLowerCase() == 'delivered'
-                            ? Colors.green
-                            : (orderStatus.toLowerCase() == 'cancelled'
-                                ? Colors.red
-                                : Colors.orange),
+                        color:
+                            Color(OrderConstants.getStatusColor(orderStatus)),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -67,13 +65,15 @@ class OrderProductRow extends StatelessWidget {
                     const TextSpan(text: 'Order Type : '),
                     TextSpan(
                       text: isCustom ? 'Custom Order' : 'General Order',
-                      style: TextStyle(color: Colors.blue.shade700),
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 8),
-              Text('Placed on: $orderDate', style: const TextStyle(color: Colors.grey)),
+              Text('Placed on: $orderDate',
+                  style: const TextStyle(color: Colors.grey)),
             ],
           ),
         ),

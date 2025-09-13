@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/screens/features/vendor/orders/constants/order_constants.dart';
 
 class OrderItemCard extends StatelessWidget {
   final String imagePath;
-  final String title;
-  final String subtitle;
+  final String orderid;
+  final String createdDate;
   final String description;
   final bool isActive;
   final String? status;
+  final String? price;
 
   const OrderItemCard({
     Key? key,
     required this.imagePath,
-    required this.title,
-    required this.subtitle,
+    required this.orderid,
+    required this.createdDate,
     required this.description,
-    this.isActive = false, 
+    this.isActive = false,
     this.status,
+    this.price,
   }) : super(key: key);
 
   @override
@@ -61,8 +64,8 @@ class OrderItemCard extends StatelessWidget {
         children: [
           CustomNetworkImage(
             imageUrl: imagePath,
-            height: 127,
-            width: 119,
+            height: 90,
+            width: 90,
             borderRadius: BorderRadius.all(Radius.circular(10.r)),
           ),
           SizedBox(width: 12.w),
@@ -74,7 +77,7 @@ class OrderItemCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        title,
+                        orderid,
                         style: textStyleTitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -83,28 +86,38 @@ class OrderItemCard extends StatelessWidget {
                     if (status != null) ...[
                       SizedBox(width: 8.w),
                       Container(
-                        padding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5.w, vertical: 1.5.h),
                         decoration: BoxDecoration(
-                          color: status != null ? Color(OrderConstants.getStatusColor(status!)) : Colors.green.shade700,
+                          color: status != null
+                              ? Color(OrderConstants.getStatusColor(status!))
+                              : Colors.green.shade700,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
-                          status!,
+                          status!.safeCap(),
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
-                            fontSize: 12.sp,
+                            fontSize: 11.sp,
                           ),
-                        ),  
+                        ),
                       ),
                     ],
                   ],
                 ),
                 SizedBox(height: 2.h),
-                Text(subtitle, style: textStyleSubtitle),
+                Text(createdDate, style: textStyleSubtitle),
                 SizedBox(height: 6.h),
-                Text(description, style: textStyleDescription),
+                Text("Unit Price: ${price ?? 'N/A'}", style: textStyleSubtitle),
+                SizedBox(height: 8.h),
+                Text(
+                  description,
+                  style: textStyleDescription,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                ),
               ],
             ),
           ),

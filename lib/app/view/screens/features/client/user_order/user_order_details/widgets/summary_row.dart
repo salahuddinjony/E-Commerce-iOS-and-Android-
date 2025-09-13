@@ -14,7 +14,9 @@ class SummaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = isBold ? const TextStyle(fontWeight: FontWeight.bold) : const TextStyle();
+    final style = isBold
+        ? const TextStyle(fontWeight: FontWeight.bold)
+        : const TextStyle();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(

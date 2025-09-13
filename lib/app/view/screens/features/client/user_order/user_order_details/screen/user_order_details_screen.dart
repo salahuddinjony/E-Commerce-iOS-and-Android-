@@ -131,28 +131,42 @@ class UserOrderDetailsScreen extends StatelessWidget {
             isDisabled: isDisabled,
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Order Summary',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          const SizedBox(height: 8),
-          SummaryRow(label: 'Price', value: '$orderCurrency$orderPrice'),
-          SummaryRow(label: 'Quantity', value: orderQuantity),
-          SummaryRow(label: 'Payment Status', value: orderPaymentStatus.safeCap()),
-          SummaryRow(label: 'Delivery Option', value: deliveryOption.safeCap()),
-          const Divider(),
-          const SizedBox(height: 24),
-          const Text(
-            'Delivery',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          const SizedBox(height: 8),
-          Text(shippingAddress.toString()),
-          Text(summery.toString()),
-          const SizedBox(height: 12),
-          const SizedBox(height: 8),
-          Text(summery.toString()),
-          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Order Summary',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                SummaryRow(label: 'Price', value: '$orderCurrency$orderPrice'),
+                SummaryRow(
+                    label: 'Quantities', value: orderQuantity.padLeft(2, '0')),
+                SummaryRow(
+                    label: 'Payment Status',
+                    value: orderPaymentStatus.safeCap()),
+                SummaryRow(
+                    label: 'Delivery Option', value: deliveryOption.safeCap()),
+                // const Divider(),
+                const SizedBox(height: 24),
+                const Text(
+                  'Delivery',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Text(shippingAddress.toString()),
+                const SizedBox(height: 24),
+                const Text(
+                  'Additional Notes',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(summery.toString()),
+                const SizedBox(height: 8),
+              ],
+            ),
+          )
         ]),
       ),
     );
