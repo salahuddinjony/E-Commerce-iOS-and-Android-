@@ -16,6 +16,7 @@ class ViewOrderDetailsController extends GetxController {
   final Rxn<Duration> pendingExtension = Rxn<Duration>();
   final Rxn<Order> order = Rxn<Order>();
   final reasonController = TextEditingController();
+  bool isNotExpired = true;
 
   Timer? _timer;
 
@@ -32,6 +33,7 @@ class ViewOrderDetailsController extends GetxController {
     if (deliveryDate != null) {
       final diff = deliveryDate.difference(DateTime.now());
       remainingTime.value = diff.isNegative ? Duration.zero : diff;
+      isNotExpired = !diff.isNegative;
     }
   }
 
@@ -108,10 +110,10 @@ class ViewOrderDetailsController extends GetxController {
     }
   }
 
-  void cancelExtensionRequest(BuildContext context) {
-    pendingExtension.value = null;
-    _snack(context, "Extension request cancelled.");
-  }
+  // void cancelExtensionRequest(BuildContext context) {
+  //   pendingExtension.value = null;
+  //   _snack(context, "Extension request cancelled.");
+  // }
 
   Future<void> _sendExtensionRequest(
       BuildContext context, DateTime pickedDate) async {
