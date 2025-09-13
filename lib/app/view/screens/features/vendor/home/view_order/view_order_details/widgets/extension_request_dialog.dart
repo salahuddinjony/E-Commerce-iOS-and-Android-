@@ -111,32 +111,32 @@ Future<bool?> showExtensionDialog(
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
                               ),
                                  const SizedBox(height: 8),
-                              Wrap(
+                                Wrap(
                                 spacing: 6,
-                                runSpacing: -4,
+                                runSpacing: 8, // Increased for more vertical spacing
                                 children: [
                                   if (addedDuration.inDays > 0)
-                                    DurationChip(
-                                      label: "${addedDuration.inDays} days",
-                                      leading: Icons.calendar_today_rounded,
-                                    ),
+                                  DurationChip(
+                                    label: "${addedDuration.inDays} days",
+                                    leading: Icons.calendar_today_rounded,
+                                  ),
                                   if (addedDuration.inHours.remainder(24) > 0)
-                                    DurationChip(
-                                      label: "${addedDuration.inHours.remainder(24)} hours",
-                                      leading: Icons.schedule_rounded,
-                                    ),
+                                  DurationChip(
+                                    label: "${addedDuration.inHours.remainder(24)} hours",
+                                    leading: Icons.schedule_rounded,
+                                  ),
                                   if (addedDuration.inMinutes.remainder(60) > 0)
-                                    DurationChip(
-                                      label: "${addedDuration.inMinutes.remainder(60)} min",
-                                      leading: Icons.timelapse_rounded,
-                                    ),
+                                  DurationChip(
+                                    label: "${addedDuration.inMinutes.remainder(60)} min",
+                                    leading: Icons.timelapse_rounded,
+                                  ),
                                   if (addedDuration.inMinutes == 0)
-                                    DurationChip(
-                                      label: "No change",
-                                      leading: Icons.info_outline,
-                                    ),
+                                  DurationChip(
+                                    label: "No change",
+                                    leading: Icons.info_outline,
+                                  ),
                                 ],
-                              ),
+                                ),
                               const SizedBox(height: 6),
                              
                             ],
