@@ -25,12 +25,9 @@ class UserOrderDetailsScreen extends StatelessWidget {
 
   String safeFormatDate(dynamic value) {
     if (value == null) return '';
-    try {
-      final dynamic result = (value as dynamic).formatDate();
-      if (result != null) return result.toString();
-    } catch (_) {}
+
     if (value is DateTime) {
-      return '${value.year.toString().padLeft(4, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}';
+      return value.formatDate();
     }
     return value.toString();
   }
@@ -77,22 +74,18 @@ class UserOrderDetailsScreen extends StatelessWidget {
 
     // determine statuses and activeIndex
     final status = orderStatus.toLowerCase();
-    List<String> statuses;
+    List<String> statuses = ['Offered', 'In Progress', 'Completed'];
     int activeIndex;
     if (status == 'offered' || status == 'pending') {
-      statuses = ['Offered', 'In Progress', 'Completed'];
       activeIndex = 0;
     } else if (status == 'in-progress') {
-      statuses = ['Offered', 'In Progress', 'Completed'];
       activeIndex = 1;
     } else if (status == 'cancelled' || status == 'rejected') {
       statuses = ['Offered', 'In Progress', 'Cancelled'];
       activeIndex = 2;
     } else if (status == 'completed' || status == 'delivered') {
-      statuses = ['Offered', 'In Progress', 'Completed'];
       activeIndex = 2;
     } else {
-      statuses = ['Offered', 'In Progress', 'Completed'];
       activeIndex = 0;
     }
 
