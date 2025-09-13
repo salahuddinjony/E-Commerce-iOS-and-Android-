@@ -51,13 +51,10 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
 
           return GestureDetector(
             onTap: () {
-              context.pushNamed(
-                RoutePath.userOrderDetailsScreen,
-                extra:{
-                  'isCustom': false,
-                  'orderData': item,
-                }
-              );
+              context.pushNamed(RoutePath.userOrderDetailsScreen, extra: {
+                'isCustom': false,
+                'orderData': item,
+              });
             },
             child: OrderItemCard(
               imagePath: imagePath,
@@ -65,8 +62,8 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
               createdDate: createdDate,
               description: shippingAddress,
               isActive: isActive,
-              status: item.status?? 'N/A',
-                price: price.toString(),
+              status: item.status ?? 'N/A',
+              price: price.toString(),
             ),
           );
         } else {
@@ -85,13 +82,10 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
 
           return GestureDetector(
             onTap: () {
-              context.pushNamed(
-                RoutePath.userOrderDetailsScreen,
-                extra:{
-                  'isCustom': true,
-                  'orderData': item,
-                }
-              );
+              context.pushNamed(RoutePath.userOrderDetailsScreen, extra: {
+                'isCustom': true,
+                'orderData': item,
+              });
             },
             child: OrderItemCard(
               imagePath: imagePath,
@@ -144,10 +138,9 @@ Widget buildExtendRequestsList(
             // Open extend history screen showing latest first (reverse the list)
             final reversedHistory = item.extentionHistory.reversed.toList();
             Navigator.push(
-              context, 
+              context,
               MaterialPageRoute(
                 builder: (_) => ExtendHistoryScreen(
-                 
                   orderId: item.orderId,
                   history: reversedHistory,
                 ),
@@ -185,7 +178,6 @@ Widget buildExtendRequestsList(
                 toastMessage(message: 'Something went wrong');
               }
             },
-          
           ),
         );
       },
