@@ -15,6 +15,7 @@ import 'package:local/app/view/screens/authentication/sign_up/widgets/next.dart'
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/custom_design/screen/custom_design_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/category_wise_product/screen/category_wise_products.dart';
+import 'package:local/app/view/screens/features/vendor/orders/models/general_order_response_model.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/chat_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox/inbox_screen.dart';
@@ -635,10 +636,20 @@ class AppRouter {
         GoRoute(
           name: RoutePath.userOrderDetailsScreen,
           path: RoutePath.userOrderDetailsScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: const UserOrderDetailsScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final isCustom = extra['isCustom'] as bool;
+            final orderData = isCustom
+                ? extra['orderData'] as Order?
+                : extra['orderData'] as GeneralOrder?;
+            return _buildPageWithAnimation(
+              child: UserOrderDetailsScreen(
+                isCustom: isCustom,
+                orderData: orderData,
+              ),
+              state: state,
+            );
+          }
         ),
         ///=======================  ViewOrderDetails =======================
         GoRoute(
