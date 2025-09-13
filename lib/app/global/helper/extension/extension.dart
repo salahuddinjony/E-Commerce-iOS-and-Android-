@@ -64,6 +64,6 @@ extension SafeCap on String? {
     final s = this;
     if (s == null || s.isEmpty) return '';
     if (s.length == 1) return s.toUpperCase();
-    return s[0].toUpperCase() + s.substring(1);
+    return s[0].toUpperCase() + s.substring(1, s.length).toLowerCase();
   }
 }
