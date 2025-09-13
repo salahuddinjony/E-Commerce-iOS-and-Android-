@@ -92,7 +92,8 @@ class OrdersController extends GetxController
       isLoading.value = true;
       isError.value = false;
 
-      final response = await customerOrderService.fetchVendorOrders(role:'vendor');
+      final response =
+          await customerOrderService.fetchVendorOrders(role: 'vendor');
       totalCustomOrder.value = response.data.meta.total;
       processOrderResponse(response);
       totalOrder();
@@ -109,7 +110,8 @@ class OrdersController extends GetxController
       isGeneralOrdersLoading.value = true;
       isGeneralOrdersError.value = false;
 
-      final response = await generalOrderService.fetchGeneralOrders(role: 'vendor');
+      final response =
+          await generalOrderService.fetchGeneralOrders(role: 'vendor');
       totalGeneralOrder.value = response.data.meta.total;
       processGeneralOrderResponse(response);
     } catch (e) {
@@ -132,8 +134,8 @@ class OrdersController extends GetxController
   Future<bool> updateCustomOrderStatus(String orderId, String status) async {
     try {
       print('Updating custom order status: $orderId to $status');
-      final result =
-          await customerOrderService.updateOrderStatusOrUpdateExtn(orderId, status);
+      final result = await customerOrderService.updateOrderStatusOrUpdateExtn(
+          orderId, status);
       // Refresh custom orders after status update
       refreshOrdersByType(true);
       return result;

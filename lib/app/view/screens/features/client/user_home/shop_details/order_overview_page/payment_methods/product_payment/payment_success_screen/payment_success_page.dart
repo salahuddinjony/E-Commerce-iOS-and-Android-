@@ -9,6 +9,7 @@ class PaymentSuccessPage extends StatelessWidget {
   final String? status;
   final String? amountPaid;
   final Map<String, dynamic>? details;
+  
   // added optional fields used by stripe_service
   final String? chargeId;
   final String? paymentMethod;
@@ -34,7 +35,7 @@ class PaymentSuccessPage extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Colors.white,
-        title: const Text('Contact Support'),
+        title: Center(child: const Text('Contact Support', style: TextStyle(fontWeight: FontWeight.bold),)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

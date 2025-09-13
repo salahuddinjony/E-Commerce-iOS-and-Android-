@@ -24,7 +24,8 @@ class UserOrderController extends GetxController
       isLoading.value = true;
       isError.value = false;
 
-      final response = await customerOrderService.fetchVendorOrders(role: 'client');
+      final response =
+          await customerOrderService.fetchVendorOrders(role: 'client');
       // debug: log raw response and meta
       print("fetchCustomOrders response: ${response.toString()}");
       print("fetchCustomOrders response.data: ${response.data}");
@@ -56,7 +57,8 @@ class UserOrderController extends GetxController
       isGeneralOrdersLoading.value = true;
       isGeneralOrdersError.value = false;
 
-      final response = await generalOrderService.fetchGeneralOrders( role: 'client');
+      final response =
+          await generalOrderService.fetchGeneralOrders(role: 'client');
       // debug: log raw response and meta
       print("fetchGeneralOrders response: ${response.toString()}");
       print("fetchGeneralOrders response.data: ${response.data}");
@@ -81,14 +83,13 @@ class UserOrderController extends GetxController
   }
 
   Future<bool> updateOrderExtention(
-
       {required String orderId, required String status}) async {
     isLoadingForExtn.value = true;
 
     try {
-      return await customerOrderService
-          .updateOrderStatusOrUpdateExtn(orderId, status, passedUrl: ApiUrl.updateExtendRequestStatus(requestId: orderId));
-      
+      return await customerOrderService.updateOrderStatusOrUpdateExtn(
+          orderId, status,
+          passedUrl: ApiUrl.updateExtendRequestStatus(requestId: orderId));
     } catch (e) {
       isError.value = true;
       errorMessage.value = e.toString();
@@ -105,7 +106,6 @@ class UserOrderController extends GetxController
       fetchGeneralOrders(),
     ]);
   }
-
 
   @override
   void onInit() {
