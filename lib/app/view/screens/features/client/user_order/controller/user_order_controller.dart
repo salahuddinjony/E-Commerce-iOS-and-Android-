@@ -24,7 +24,7 @@ class UserOrderController extends GetxController
       isLoading.value = true;
       isError.value = false;
 
-      final response = await customerOrderService.fetchVendorOrders();
+      final response = await customerOrderService.fetchVendorOrders(role: 'client');
       // debug: log raw response and meta
       print("fetchCustomOrders response: ${response.toString()}");
       print("fetchCustomOrders response.data: ${response.data}");
@@ -56,7 +56,7 @@ class UserOrderController extends GetxController
       isGeneralOrdersLoading.value = true;
       isGeneralOrdersError.value = false;
 
-      final response = await generalOrderService.fetchGeneralOrders();
+      final response = await generalOrderService.fetchGeneralOrders( role: 'client');
       // debug: log raw response and meta
       print("fetchGeneralOrders response: ${response.toString()}");
       print("fetchGeneralOrders response.data: ${response.data}");

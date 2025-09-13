@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
@@ -6,7 +7,7 @@ import 'package:local/app/view/screens/features/client/user_home/shop_details/or
 import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/payment_loading_dialog.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/product_imsge_and_details_overview.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/widgets/order_overview_row.dart';
-import 'package:local/app/view/screens/features/client/user_home/user_profile/payment_methods/subscriptions/stripe_services/stripe_service.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/payment_methods/product_payment/stripe_services/stripe_service.dart';
 
 class OrderOverviewScreen extends StatelessWidget {
   final String vendorId;
@@ -16,7 +17,6 @@ class OrderOverviewScreen extends StatelessWidget {
   final controller;
   final bool isCustom;
   final String productImage;
-  final String clientId;
 
   const OrderOverviewScreen({
     super.key,
@@ -25,7 +25,6 @@ class OrderOverviewScreen extends StatelessWidget {
     this.productName = '',
     this.controller,
     this.productCategoryName = '',
-    this.clientId = '',
     required this.isCustom,
     required this.productImage,
   });
@@ -84,15 +83,15 @@ class OrderOverviewScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               OrderOverviewRow(
-                fieldName: "$productName (${controller.items.value} items x \$${controller.basePrice.toStringAsFixed(2)})",
+                fieldName:
+                    "$productName (${controller.items.value} items x \$${controller.basePrice.toStringAsFixed(2)})",
                 fieldValue: '\$${controller.priceOfItems.toStringAsFixed(2)}',
                 isTrue: true,
               ),
               const SizedBox(height: 4),
               OrderOverviewRow(
                 fieldName: 'Hub Fee 20% of \$${controller.subTotal.toString()}',
-                fieldValue:
-                    '\$${(controller.hubfee).toStringAsFixed(2)}',
+                fieldValue: '\$${(controller.hubfee).toStringAsFixed(2)}',
                 isTrue: true,
               ),
 
@@ -149,13 +148,14 @@ class OrderOverviewScreen extends StatelessWidget {
                 ),
                 onPressed: () async {
                   // debug log
-                  debugPrint("Payment pressed, totalCost=${controller.totalCost}");
+                  debugPrint(
+                      "Payment pressed, totalCost=${controller.totalCost}");
 
                   // Validate amount
                   final total = controller.totalCost;
                   if (total == null) {
                     debugPrint("Error: totalCost is null");
-                   toastMessage(message: "Error: totalCost is null");
+                    toastMessage(message: "Error: totalCost is null");
                     return;
                   }
                   if (total < 0.01) {
@@ -175,34 +175,39 @@ class OrderOverviewScreen extends StatelessWidget {
                   try {
                     // Start payment but provide a callback that will be invoked when the payment sheet is shown.
                     // The callback immediately dismisses our custom loader so the user sees the native sheet.
-                    final paymentFuture = StripeServicePayment.instance.makePayment(
+                    final paymentFuture =
+                        StripeServicePayment.instance.makePayment(
                       context: context,
                       amount: (total).toInt(),
                       currency: 'usd',
                       onPaymentSheetOpened: () {
                         try {
-                          if (Navigator.of(context, rootNavigator: true).canPop()) {
-                            Navigator.of(context, rootNavigator: true).pop(); // close loader
+                          if (Navigator.of(context, rootNavigator: true)
+                              .canPop()) {
+                            Navigator.of(context, rootNavigator: true)
+                                .pop(); // close loader
                           }
                         } catch (_) {
                           // ignore
                         }
                       },
-                     // When Stripe reports success, call createGeneralOrder to post the order
-                     onPaymentSuccess: (sessionId, detailedPI) async {
-                       try {
-                         // sessionId may be null; createGeneralOrder expects a string
-                         await controller.createGeneralOrder(
-                           productId: productId,
-                           vendorId: vendorId,
-                           clientId: clientId,
-                           sessionId: sessionId ?? '',
-                         );
-                       } catch (e) {
-                         debugPrint("createGeneralOrder error: $e");
-                         toastMessage(message: "Order post-payment failed");
-                       }
-                     },
+                      // When Stripe reports success, call createGeneralOrder to post the order
+                      onPaymentSuccess: (sessionId, detailedPI) async {
+                        try {
+                          // sessionId may be null; createGeneralOrder expects a string
+                          final isOrderSuccess =
+                              await controller.createGeneralOrder(
+                            productId: productId,
+                            vendorId: vendorId,
+                            sessionId: sessionId ?? '',
+                          );
+                          return isOrderSuccess;
+                        } catch (e) {
+                          debugPrint("createGeneralOrder error: $e");
+                          toastMessage(message: "Order post-payment failed");
+                          return false; // <-- ensure we always return a bool
+                        }
+                      },
                     );
 
                     // Await the overall payment future to catch completion/errors.
@@ -233,6 +238,3 @@ class OrderOverviewScreen extends StatelessWidget {
     );
   }
 }
-
-// Nice reusable loading dialog used while Stripe sheet initializes
-

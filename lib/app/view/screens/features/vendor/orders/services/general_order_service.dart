@@ -10,13 +10,14 @@ class GeneralOrderService {
     int? page,
     int? limit,
     String? status,
-    String? vendorId, // added
+    String? UserId, // added
+    required String role,
   }) async {
     try {
       final queryParams = <String, dynamic>{ };
-        vendorId ??= await SharePrefsHelper.getString(AppConstants.userId);
-      if (vendorId.isNotEmpty) {
-        queryParams['vendor'] = vendorId; 
+        UserId ??= await SharePrefsHelper.getString(AppConstants.userId);
+      if (UserId.isNotEmpty) {
+        queryParams[role] = UserId; 
       }
 
       if (status != null) {
@@ -46,7 +47,7 @@ class GeneralOrderService {
 
   /// Fetch general orders by status
   Future<GeneralOrderResponseModel> fetchGeneralOrdersByStatus(String status) async {
-    return await fetchGeneralOrders(status: status);
+    return await fetchGeneralOrders(status: status, role: 'vendor');
   }
 
   /// Update general order status

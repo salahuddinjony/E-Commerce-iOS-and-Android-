@@ -1,22 +1,26 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/app_url.dart';
+import 'package:local/app/services/api_check.dart';
+import 'package:local/app/utils/app_constants/app_constants.dart'; // added
 
 mixin MixinCreateOrder {
   final items = 1.obs;
   final size = ''.obs;
   final color = ''.obs;
 
-
-
-  Future<void> createOrder(
+  Future<bool> createOrder(
       {required vendorId,
-      required clientId,
       required int price,
       required String ProductId,
       required int quantity,
       required String shippingAddress,
       required String sessionId}) async {
+    final clientId = await SharePrefsHelper.getString(AppConstants.userId);
+
     try {
       final orderData = {
         "vendor": vendorId,
@@ -29,25 +33,32 @@ mixin MixinCreateOrder {
         "shippingAddress": shippingAddress,
         "sessionId": sessionId
       };
-      print(orderData); // Use the variable, or replace with your API call
 
+      debugPrint('createOrder payload: ${jsonEncode(orderData)}');
 
-      final response=await ApiClient.postData(ApiUrl.createGeneralOrder, orderData);
-       print("Response: ${response.body}");
+      // JSON-encode the body before sending
+      final response = await ApiClient.postData(
+        ApiUrl.createGeneralOrder,
+        jsonEncode(orderData),
+      );
+
+      debugPrint(
+          "createOrder response: ${response.statusCode} ${response.body}");
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        print('Order created successfully: ${response.body}');
+        debugPrint('Order created successfully');
+        return true;
       } else {
-        print('Failed to create order: ${response.statusCode} - ${response.body}');
+        // let ApiChecker surface errors (401/403/others)
+        ApiChecker.checkApi(response);
+        debugPrint('Failed to create order: ${response.statusCode}');
+        return false;
       }
-
-    
-    } catch (e) {
-      print('Error creating order: $e');
-      rethrow; // Rethrow the error after logging it
+    } catch (e, st) {
+      debugPrint('Error creating order: $e\n$st');
+      rethrow;
     } finally {
-
-      // Any cleanup code here
+      // cleanup if needed
     }
   }
 }
