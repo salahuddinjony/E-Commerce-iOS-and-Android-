@@ -52,7 +52,6 @@ import '../view/screens/features/client/user_home/shop_details/order_overview_pa
 import '../view/screens/features/client/user_home/shop_details/add_address/screen/add_address_screen.dart';
 import '../view/screens/features/client/user_home/shop_details/product_details/screen/product_details_screen.dart';
 import '../view/screens/features/client/user_home/shop_details/screen/shop_details_screen.dart';
-import '../view/screens/features/client/user_home/user_profile/payment_methods/payment_methods_screen.dart';
 import '../view/screens/features/client/user_order/user_order_details/screen/user_order_details_screen.dart';
 import '../view/screens/features/vendor/home/view_order/view_order_details/screen/view_order_details.dart';
 import '../view/screens/features/vendor/home/view_order/view_order_screen.dart';
@@ -486,14 +485,7 @@ class AppRouter {
             );
           },
         ),
-        GoRoute(
-          name: RoutePath.paymentMethodsScreen,
-          path: RoutePath.paymentMethodsScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child: PaymentMethodsScreen(),
-            state: state,
-          ),
-        ),
+   
 
         ///=======================  ViewMapScreen =======================
         // GoRoute(

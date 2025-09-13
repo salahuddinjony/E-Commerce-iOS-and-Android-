@@ -14,11 +14,12 @@ class CustomOrderService {
     int? limit,
     String? status,
     bool? isCustom,
-    String? vendorId, // added
+    String? UserId, // added
+    required String role,
   }) async {
     try {
-      // Fallback: load vendorId from prefs if not provided
-      vendorId ??= await SharePrefsHelper.getString(AppConstants.userId);
+      // Fallback: load UserId from prefs if not provided
+      UserId ??= await SharePrefsHelper.getString(AppConstants.userId);
 
       final queryParams = <String, dynamic>{};
 
@@ -27,8 +28,8 @@ class CustomOrderService {
       // if (status != null && status.isNotEmpty) queryParams['status'] = status;
       // if (isCustom != null) queryParams['isCustom'] = isCustom;
 
-      if (vendorId.isNotEmpty) {
-        queryParams['client'] = vendorId; 
+      if (UserId.isNotEmpty) {
+        queryParams[role] = UserId;
       }
 
       print('Fetching orders with query: $queryParams');
@@ -50,17 +51,17 @@ class CustomOrderService {
 
   /// Fetch orders by status
   Future<CustomOrderResponseModel> fetchOrdersByStatus(String status) async {
-    return await fetchVendorOrders(status: status);
+    return await fetchVendorOrders(status: status, role: 'vendor');
   }
 
   /// Fetch custom orders
   Future<CustomOrderResponseModel> fetchCustomOrders() async {
-    return await fetchVendorOrders(isCustom: true);
+    return await fetchVendorOrders(isCustom: true, role: 'vendor');
   }
 
   /// Fetch general orders
   Future<CustomOrderResponseModel> fetchGeneralOrders() async {
-    return await fetchVendorOrders(isCustom: false);
+    return await fetchVendorOrders(isCustom: false, role: 'vendor');
   }
 
   /// Update order status

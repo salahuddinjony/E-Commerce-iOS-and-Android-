@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/payment_loading_dialog.dart';
-import 'package:local/app/view/screens/features/client/user_home/user_profile/payment_methods/subscriptions/stripe_services/constant_stripe.dart';
-import 'package:local/app/view/screens/features/client/user_home/user_profile/payment_methods/subscriptions/payment_success_page.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/payment_methods/product_payment/stripe_services/constant_stripe.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/payment_methods/product_payment/payment_success_screen/payment_success_page.dart';
 import 'package:get/get.dart';
 
 class StripeServicePayment {
@@ -26,8 +26,8 @@ class StripeServicePayment {
     required int amount,
     required String currency,
     VoidCallback? onPaymentSheetOpened,
-    Future<void> Function(String? sessionId, Map<String, dynamic>? detailedPI)?
-        onPaymentSuccess, // <--- new optional callback
+    // CHANGED: callback should return a bool indicating if order creation succeeded
+    Future<bool> Function(String? sessionId, Map<String, dynamic>? detailedPI)? onPaymentSuccess,
   }) async {
     try {
       final paymentIntent = await _createPaymentIntent(
@@ -176,23 +176,23 @@ class StripeServicePayment {
         final String? finalStatus =
             status ?? (paymentIntent['status'] as String?);
 
-        // If finalStatus is null or not 'succeeded', treat as failure.
         if (finalStatus == null || finalStatus.toLowerCase() != 'succeeded') {
-          // show a visible toast after dialog is dismissed
           toastMessage(
               message: "Payment Failed, Try Again!", color: Colors.redAccent);
-
           debugPrint("Payment not succeeded. Status: $finalStatus");
           return;
         }
 
-        // Call optional success callback BEFORE navigation so caller can post the order
-        try {
-          if (onPaymentSuccess != null) {
-            await onPaymentSuccess(sessionId, detailedPI);
+        // NEW: call the onPaymentSuccess callback and capture whether order creation succeeded
+        bool orderSucceeded = onPaymentSuccess == null;
+        if (onPaymentSuccess != null) {
+          try {
+            // pass sessionId (if any) and detailedPI (if any) , use as sessionId ===> paymentIntentId
+            orderSucceeded = await onPaymentSuccess(paymentIntentId, detailedPI);
+          } catch (e) {
+            debugPrint("onPaymentSuccess callback error: $e");
+            orderSucceeded = false;
           }
-        } catch (e) {
-          debugPrint("onPaymentSuccess callback error: $e");
         }
 
         // navigate to success page (pass masked details and summary)
@@ -203,7 +203,6 @@ class StripeServicePayment {
               Navigator.of(context, rootNavigator: true).pop();
             }
           } catch (_) {}
-          // ensure our loader is also removed (if still shown)
           try {
             if (loaderShown &&
                 Navigator.of(context, rootNavigator: true).canPop()) {
@@ -216,10 +215,11 @@ class StripeServicePayment {
           final amountPaidFormatted = (amount.toDouble()).toStringAsFixed(2);
           debugPrint(
               "Navigating to success page with amount paid: \$$amountPaidFormatted");
-          print(
-              "----------------finalStatus == 'succeeded'-----------: ${finalStatus == 'succeeded'}");
+
           final route = MaterialPageRoute(
             builder: (ctx) => PaymentSuccessPage(
+              // USE actual order result here
+              isOrderSuccess: orderSucceeded,
               transactionId: paymentIntentId,
               chargeId: chargeId,
               status: finalStatus,
@@ -230,11 +230,9 @@ class StripeServicePayment {
             ),
           );
 
-          // Use rootNavigator and remove intermediate routes so we don't get popped back
           Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
             route,
             (Route<dynamic> r) {
-              // keep the app's first route (home) so back navigation from "Done" works as expected
               return r.isFirst;
             },
           );

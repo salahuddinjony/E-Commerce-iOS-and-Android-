@@ -92,7 +92,7 @@ class OrdersController extends GetxController
       isLoading.value = true;
       isError.value = false;
 
-      final response = await customerOrderService.fetchVendorOrders();
+      final response = await customerOrderService.fetchVendorOrders(role:'vendor');
       totalCustomOrder.value = response.data.meta.total;
       processOrderResponse(response);
       totalOrder();
@@ -109,7 +109,7 @@ class OrdersController extends GetxController
       isGeneralOrdersLoading.value = true;
       isGeneralOrdersError.value = false;
 
-      final response = await generalOrderService.fetchGeneralOrders();
+      final response = await generalOrderService.fetchGeneralOrders(role: 'vendor');
       totalGeneralOrder.value = response.data.meta.total;
       processGeneralOrderResponse(response);
     } catch (e) {

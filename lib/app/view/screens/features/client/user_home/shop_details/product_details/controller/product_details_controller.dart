@@ -1,6 +1,7 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
+import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/view/common_widgets/product_color_list/mixin_product_color.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/controller/mixin_create_order.dart';
 
@@ -121,12 +122,11 @@ class ProductDetailsController extends GetxController
   double get hubfee => subTotal * hubFeePercent;
   double get totalCost => subTotal + hubfee;
 
-  Future<void> createGeneralOrder(
+  Future<bool> createGeneralOrder(
       {required String productId,
       required String vendorId,
-      required String clientId,
       required String sessionId}) async {
-    await createOrder(
+    final response = await createOrder(
       ProductId: productId,
       vendorId: vendorId,
       price: basePrice.toInt(),
@@ -139,9 +139,9 @@ class ProductDetailsController extends GetxController
           customerPhoneController.text.trim() +
           ", Name:" +
           customerNameController.text.trim(),
-      clientId: clientId,
       sessionId: sessionId,
     );
+    return response;
   }
 
   @override
