@@ -4,6 +4,7 @@ import 'package:local/app/global/controller/genarel_controller.dart';
 import 'package:local/app/view/common_widgets/client_nav_bar/controller/nav_bar_controller.dart';
 import 'package:local/app/view/common_widgets/vendor_nav/controller/verndor_nav_controller.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox/controller/conversation_controller.dart';
 import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
 import 'package:local/app/view/screens/splash/controller/splash_controller.dart';
 import 'package:local/app/view/screens/features/client/user_home/controller/delivery_locations_controller.dart';
@@ -39,5 +40,7 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => ShopDetailsController(), fenix: true);
 
     Get.lazyPut(() => UserOrderController(), fenix: true);
+
+    Get.lazyPut(() => ConversationController(), fenix: true);
   }
 }

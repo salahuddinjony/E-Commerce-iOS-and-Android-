@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:local/app/services/api_client.dart';
-import 'package:local/app/services/app_url.dart';
+import 'package:local/app/services/api_url.dart';
 import 'package:local/app/view/screens/features/client/user_home/vendor_list/model/nearest_vendor_response.dart';
 
 mixin class VendorListService {

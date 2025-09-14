@@ -62,7 +62,7 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
               createdDate: createdDate,
               description: shippingAddress,
               isActive: isActive,
-              status: item.status ?? 'N/A',
+              status: item.status,
               price: price.toString(),
             ),
           );

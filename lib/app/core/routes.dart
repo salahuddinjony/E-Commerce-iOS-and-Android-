@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -323,10 +322,20 @@ class AppRouter {
         GoRoute(
           name: RoutePath.chatScreen,
           path: RoutePath.chatScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const ChatScreen(),
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final conversationId = extra['conversationId'] as String? ?? '';
+            final userId = extra['userId'] as String? ?? '';
+
+            return _buildPageWithAnimation(
+              child: ChatScreen(
+                conversationId: conversationId,
+                userId: userId,
+              ),
               state: state,
-              transitionType: TransitionType.detailsScreen),
+              transitionType: TransitionType.detailsScreen,
+            );
+          },
         ),
 
         GoRoute(
@@ -356,7 +365,7 @@ class AppRouter {
           name: RoutePath.inboxScreen,
           path: RoutePath.inboxScreen.addBasePath,
           pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const InboxScreen(), state: state, disableAnimation: true),
+              child:  InboxScreen(), state: state, disableAnimation: true),
         ),
 
         ///======================= SupportScreen Section =======================

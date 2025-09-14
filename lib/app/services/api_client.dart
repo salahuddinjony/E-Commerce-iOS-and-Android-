@@ -10,7 +10,7 @@ import 'package:mime/mime.dart';
 
 import '../data/local/shared_prefs.dart';
 import '../utils/app_constants/app_constants.dart';
-import 'app_url.dart';
+import 'api_url.dart';
 import 'error_response.dart';
 
 class ApiClient extends GetxService {

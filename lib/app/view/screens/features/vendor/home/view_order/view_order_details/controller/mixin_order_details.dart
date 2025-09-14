@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:local/app/services/api_client.dart';
-import 'package:local/app/services/app_url.dart';
+import 'package:local/app/services/api_url.dart';
 import 'package:local/app/view/screens/features/vendor/orders/models/custom_order_response_model.dart';
 
 mixin OrderDetailsMixin {
