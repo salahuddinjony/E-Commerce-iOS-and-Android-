@@ -106,11 +106,27 @@ class OrderItemCard extends StatelessWidget {
                     ],
                   ],
                 ),
-                SizedBox(height: 2.h),
-                Text(createdDate, style: textStyleSubtitle),
                 SizedBox(height: 6.h),
-                Text("Unit Price: ${price ?? 'N/A'}", style: textStyleSubtitle),
-                SizedBox(height: 8.h),
+                Text("Unit Price: \$${price ?? 'N/A'}", style: textStyleSubtitle),
+                SizedBox(height: 2.h),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Order Placed on: ",
+                        style: textStyleSubtitle,
+                      ),
+                      TextSpan(
+                        text: createdDate,
+                        style: textStyleSubtitle.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 5.h),
                 Text(
                   description,
                   style: textStyleDescription,

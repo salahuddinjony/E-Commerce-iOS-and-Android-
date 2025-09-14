@@ -40,7 +40,7 @@ extension DateTimeConverter on String {
     } else if (difference.inDays < 7) {
       return '${difference.inDays} days ago';
     } else {
-      return '${parsed.day}/${parsed.month}/${parsed.year}';
+      return parsed.formatDate();
     }
   }
 }
