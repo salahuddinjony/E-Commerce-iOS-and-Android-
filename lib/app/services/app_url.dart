@@ -89,6 +89,11 @@ static String orderDateExtension({required String orderId}) {
     return "$baseUrl/order/deadline-extend/action/$requestId";
   }
 
+  //Get specific order details
+  static String getOrderDetails({required String orderId}) {
+    return "$baseUrl/order/retrieve/specific/$orderId";
+  }
+
   // =================Create General Order=================
 
   static String createGeneralOrder = "general-order/create";
