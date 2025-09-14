@@ -133,6 +133,21 @@ static String orderDateExtension({required String orderId}) {
 
 
 
+//=================Chat=================
+  static String getConversationList({required String userId}) {
+    return "$baseUrl/conversation/retrieve/list/$userId";
+  }
+
+  static String createConversation = "$baseUrl/conversation/create";
+
+  static String getMessages({required String conversationId}) {
+    return "$baseUrl/message/retrieve/$conversationId";
+  } 
+
+  static String getMessagesForConversation({required String conversationId}) {
+    return "$baseUrl/message/retrieve/$conversationId";
+  } 
+// {{base-url}}/message/retrieve/68c699d8e46eedcfb2537b14
 
 
 

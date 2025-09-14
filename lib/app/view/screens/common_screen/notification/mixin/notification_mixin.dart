@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../../global/helper/toast_message/toast_message.dart';
 import '../../../../../services/api_check.dart';
 import '../../../../../services/api_client.dart';
-import '../../../../../services/app_url.dart';
+import '../../../../../services/api_url.dart';
 import '../../../../../utils/enums/status.dart';
 import '../model/notification_model.dart';
 

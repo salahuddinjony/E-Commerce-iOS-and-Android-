@@ -4,7 +4,7 @@ import 'package:local/app/view/common_widgets/map/show_address_based_on_latLng.d
 import 'package:local/app/view/screens/features/vendor/profile/personal_info/model/profile_model.dart';
 import '../../../../../../../../services/api_client.dart';
 import '../../../../../../../../services/api_check.dart';
-import '../../../../../../../../services/app_url.dart';
+import '../../../../../../../../services/api_url.dart';
 import '../../../../../../../../utils/enums/status.dart';
 import '../../../../../../../../data/local/shared_prefs.dart';
 import '../../../../../../../../utils/app_constants/app_constants.dart';

@@ -1,82 +1,89 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:uuid/uuid.dart';
+import 'package:local/app/view/screens/features/client/chat/controllers/chat_controller.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class ChatScreen extends StatelessWidget {
+  final String conversationId;
+  final String userId;
 
-
-  @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
-  List<types.Message> messages = [];
-  final _user = const types.User(id: 'user_1', firstName: "Me");
+  const ChatScreen({
+    super.key,
+    required this.conversationId,
+    required this.userId,
+  });
 
   @override
-  void initState() {
-    super.initState();
-    // _loadMessages();
-  }
+  Widget build(BuildContext context) {
+    // Put controller to GetX dependency system
+    final controller =
+      Get.isRegistered<ChatController>(tag: conversationId)
+        ? Get.find<ChatController>(tag: conversationId)
+        : Get.put(ChatController(conversationId: conversationId, userId: userId), tag: conversationId);
 
-  /// ✅ Add new text message to chat
-  void _addMessage(types.Message message) {
-    setState(() {
-      messages.insert(0, message);
-    });
-  }
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: CustomAppBar(
+        appBarBgColor: AppColors.white,
+        appBarContent: "${conversationId}",
+        iconData: Icons.arrow_back,
+      ),
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Text( 'Conversation ID: $conversationId'),
+            Text('User ID: $userId'),
+            // Expanded chat area
+            Expanded(
+              child: Obx(() {
+                final messages = controller.messages.toList();
+                // If `user` is an Rx<T>, read .value; otherwise assume it's already the user object.
+                final user = (controller.user is Rx)
+                    ? (controller.user as Rx).value
+                    : controller.user;
 
-  /// ✅ Handle sending text messages only
-  void _handleSendPressed(types.PartialText message) {
-    final textMessage = types.TextMessage(
-      author: _user,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: const Uuid().v4(),
-      text: message.text,
+                return Chat(
+                  messages: messages,
+                  onSendPressed: controller.handleSendPressed,
+                  showUserAvatars: true,
+                  showUserNames: true,
+                  user: user,
+                  theme: const DefaultChatTheme(
+                    inputBackgroundColor: AppColors.brightCyan,
+                    inputTextColor: Colors.black,
+                    primaryColor: AppColors.brightCyan,
+                    secondaryColor: AppColors.borderColor,
+                  ),
+                );
+              }),
+            ),
+
+            // Typing indicator UI (simple, shows when any remote user is typing)
+            Obx(() {
+              if (!controller.isTyping.value) return const SizedBox.shrink();
+              return Container(
+                width: double.infinity,
+                color: Colors.transparent,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                child: Row(
+                  children: const [
+                    SizedBox(width: 8),
+                    Text(
+                      'Someone is typing...',
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
     );
-
-    _addMessage(textMessage);
   }
-
-  /// ✅ Load sample messages from assets
-  // void _loadMessages() async {
-  //   final response = await rootBundle.loadString('assets/messages.json');
-  //   final messages = (jsonDecode(response) as List)
-  //       .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
-  //       .toList();
-  //
-  //   setState(() {
-  //     _messages = messages;
-  //   });
-  // }
-
-  @override
-  Widget build(BuildContext context) =>
-
-      Scaffold(
-        backgroundColor: AppColors.white,
-        appBar: const CustomAppBar(
-          appBarBgColor: AppColors.white,
-          appBarContent: "Chart",
-          iconData: Icons.arrow_back,
-        ),
-        body: Chat(
-          messages: messages,
-          onSendPressed: _handleSendPressed,
-          showUserAvatars: true,
-          showUserNames: true,
-          user: _user,
-          theme: const DefaultChatTheme(
-            inputBackgroundColor: AppColors.brightCyan,
-            inputTextColor: Colors.black,
-            primaryColor: AppColors.brightCyan,
-            secondaryColor: AppColors.borderColor,
-          ),
-        ),
-      );
 }

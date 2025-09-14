@@ -11,7 +11,7 @@ import '../../../../data/local/shared_prefs.dart';
 import '../../../../global/helper/toast_message/toast_message.dart';
 import '../../../../services/api_check.dart';
 import '../../../../services/api_client.dart';
-import '../../../../services/app_url.dart';
+import '../../../../services/api_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
 import 'package:image_picker/image_picker.dart';
 

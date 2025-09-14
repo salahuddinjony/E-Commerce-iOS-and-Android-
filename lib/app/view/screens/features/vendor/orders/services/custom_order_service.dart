@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:local/app/services/api_client.dart';
-import 'package:local/app/services/app_url.dart';
+import 'package:local/app/services/api_url.dart';
 import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import '../models/custom_order_response_model.dart';
