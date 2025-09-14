@@ -73,9 +73,7 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
               ? item.designFiles.first
               : AppConstants.demoImage;
           final orderId = item.orderId;
-          final createdDate = item.deliveryDate != null
-              ? item.deliveryDate!.formatDate()
-              : 'No date';
+          final createdDate = item.createdAt.toIso8601String().getDateTime();
           final description = item.summery;
           final isActive = true;
           final price = item.price;
@@ -153,8 +151,8 @@ Widget buildExtendRequestsList(
                 ? item.designFiles.first
                 : AppConstants.demoImage,
             orderId: item.orderId,
-            lastDate: lastExtention.lastDate.toIso8601String().getDateTime(),
-            proposeDate: lastExtention.newDate.toString().split(' ').first,
+            lastDate: lastExtention.lastDate.formatDate(),
+            proposeDate: lastExtention.newDate.formatDate(),
             requestedDays: lastExtention.newDate
                 .difference(item.extentionHistory.last.lastDate)
                 .inDays,
