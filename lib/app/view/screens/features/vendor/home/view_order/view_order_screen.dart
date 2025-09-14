@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
+import 'package:local/app/view/screens/features/vendor/home/view_order/view_order_details/controller/view_order_details_controller.dart';
 import 'package:local/app/view/screens/features/vendor/orders/constants/order_constants.dart';
 import 'package:local/app/view/screens/features/vendor/orders/models/custom_order_response_model.dart';
 
@@ -14,8 +16,10 @@ import '../../../../../common_widgets/order_card/order_card.dart';
 class ViewOrderScreen extends StatelessWidget {
   final String status;
   final List<Order> orderData;
-  const ViewOrderScreen(
+   ViewOrderScreen(
       {super.key, required this.status, required this.orderData});
+
+ 
 
   List<Order> get filteredOrders {
     switch (status) {
@@ -80,7 +84,12 @@ class ViewOrderScreen extends StatelessWidget {
                   timeAgo: '',
                   color: Color(OrderConstants.getStatusColor(o.status)),
                   imageUrl: AppConstants.demoImage,
-                  onTap: () {
+                  onTap: () async {
+                    final tag = 'order_${o.id}';
+                    final controller = Get.isRegistered<ViewOrderDetailsController>(tag: tag)
+                        ? Get.find<ViewOrderDetailsController>(tag: tag)
+                        : Get.put(ViewOrderDetailsController(o), tag: tag);
+                    await controller.refreshOrder(o.id);
                     context.pushNamed(RoutePath.viewOrderDetails, extra: {'order': o});
                   },
                 );
