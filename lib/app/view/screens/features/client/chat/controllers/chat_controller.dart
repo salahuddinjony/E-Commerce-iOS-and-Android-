@@ -1,52 +1,53 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart'; // <--- added for debugPrint
+import 'package:flutter/foundation.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:local/app/view/screens/features/client/chat/inbox/controller/conversation_controller.dart';
 import 'package:local/app/view/screens/features/client/chat/model/chat_message.dart';
 import 'package:local/app/view/screens/features/client/chat/repositories/chat_repository.dart'
     show ChatRepository;
-import 'package:local/app/view/screens/features/client/chat/inbox/controller/conversation_controller.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatController extends GetxController {
   final String conversationId;
   final String userId;
-  final ChatRepository _repo;
+  final ChatRepository repo;
   late final types.User user;
 
   ChatController({
     required this.conversationId,
     required this.userId,
     ChatRepository? repository,
-  }) : _repo = repository ?? ChatRepository() {
+  }) : repo = repository ?? ChatRepository() {
     user = types.User(id: userId, firstName: 'Me');
   }
 
   final messages = RxList<types.Message>(<types.Message>[]);
   final isTyping = false.obs;
+  // new loading flag to indicate initial history fetch
+  final isLoading = true.obs;
 
-  StreamSubscription<ChatMessage>? _msgSub;
-  StreamSubscription<Map<String, dynamic>>? _typingSub;
+  StreamSubscription<ChatMessage>? msgSub;
+  StreamSubscription<Map<String, dynamic>>? typingSub;
 
   @override
   void onInit() {
     super.onInit();
+
     // connect to socket and join room
-    _repo.connect('https://gmosley-uteehub-backend.onrender.com');
+    repo.connect('https://gmosley-uteehub-backend.onrender.com');
 
     // load history first (if available) so UI shows past messages
-    _repo.fetchMessages(conversationId).then((history) {
+    isLoading.value = true;
+    repo.fetchMessages(conversationId).then((history) {
+
       // map history messages to flutter_chat_types messages
       // ensure createdAt is milliseconds since epoch
+      
       for (final h in history.reversed) {
-        final authorId = h.senderId ?? 'unknown';
-        final createdAtMs = (h.createdAt != null
-                ? (h.createdAt is int
-                    ? h.createdAt
-                    : (h.createdAt is DateTime
-                        ? (h.createdAt as DateTime).millisecondsSinceEpoch
-                        : null))
+        final authorId = h.senderId;
+        final createdAtMs = (h.createdAt is DateTime
+                ? (h.createdAt as DateTime).millisecondsSinceEpoch
                 : null) ??
             DateTime.now().millisecondsSinceEpoch;
 
@@ -54,7 +55,7 @@ class ChatController extends GetxController {
           author: types.User(id: authorId),
           createdAt: createdAtMs,
           id: h.id.isNotEmpty ? h.id : const Uuid().v4(),
-          text: h.text ?? '',
+          text: h.text,
         );
         // newest first expected by UI, but we're iterating reversed to keep chronology
         messages.insert(0, msg);
@@ -63,28 +64,31 @@ class ChatController extends GetxController {
       debugPrint('history load error: $e');
     }).whenComplete(() {
       // now join socket to receive live messages
-      _repo.joinChat(roomId: conversationId, userId: userId);
+      repo.joinChat(roomId: conversationId, userId: userId);
+      // initial load finished (either success or error)
+      isLoading.value = false;
     });
 
-    _msgSub = _repo.onMessage.listen((chatMsg) {
+    msgSub = repo.onMessage.listen((chatMsg) {
       // Ignore server echoes of our own messages (and also skip duplicates by id)
       if (chatMsg.senderId == userId) return;
-      if (chatMsg.id.isNotEmpty && messages.any((m) => m.id == chatMsg.id)) return;
+      if (chatMsg.id.isNotEmpty && messages.any((m) => m.id == chatMsg.id))
+        return;
 
       final msg = types.TextMessage(
-        author: types.User(id: chatMsg.senderId ?? 'unknown'),
+        author: types.User(id: chatMsg.senderId),
         createdAt: chatMsg.createdAt,
         id: chatMsg.id.isNotEmpty ? chatMsg.id : const Uuid().v4(),
-        text: chatMsg.text ?? '',
+        text: chatMsg.text,
       );
       // newest first
       messages.insert(0, msg);
 
       // update inbox preview for this conversation
-      _updateConversationLastMessage(chatMsg.text ?? '', chatMsg.createdAt);
+      updateConversationLastMessage(chatMsg.text ?? '', chatMsg.createdAt);
     });
 
-    _typingSub = _repo.onTyping.listen((data) {
+    typingSub = repo.onTyping.listen((data) {
       // server sends typing/stop-typing payloads; adapt if needed
       final event = data['event']?.toString() ?? '';
       final sender =
@@ -103,9 +107,9 @@ class ChatController extends GetxController {
 
   @override
   void onClose() {
-    _msgSub?.cancel();
-    _typingSub?.cancel();
-    _repo.stopTyping(conversationId: conversationId, senderId: userId);
+    msgSub?.cancel();
+    typingSub?.cancel();
+    repo.stopTyping(conversationId: conversationId, senderId: userId);
     // keep socket alive if other parts use it; otherwise disconnect:
     // _repo.disconnect();
     super.onClose();
@@ -121,31 +125,33 @@ class ChatController extends GetxController {
     messages.insert(0, textMessage);
 
     // update inbox preview optimistically
-    _updateConversationLastMessage(partial.text, textMessage.createdAt);
+    updateConversationLastMessage(partial.text, textMessage.createdAt);
 
     // emit typing, send message, stop typing
-    _repo.startTyping(conversationId: conversationId, senderId: userId);
-    _repo.sendMessage(
+    repo.startTyping(conversationId: conversationId, senderId: userId);
+    repo.sendMessage(
       conversationId: conversationId,
       senderId: userId,
       text: partial.text,
       attachment: [],
     );
-    _repo.stopTyping(conversationId: conversationId, senderId: userId);
+    repo.stopTyping(conversationId: conversationId, senderId: userId);
   }
 
-  void _updateConversationLastMessage(String text, int? createdAt) {
+  void updateConversationLastMessage(String text, int? createdAt) {
     try {
       if (!Get.isRegistered<ConversationController>()) return;
       final convCtrl = Get.find<ConversationController>();
-      final idx = convCtrl.conversationList.indexWhere((c) => c.id == conversationId);
+      final idx =
+          convCtrl.conversationList.indexWhere((c) => c.id == conversationId);
       if (idx == -1) return;
       final convo = convCtrl.conversationList[idx];
 
       // Try to assign fields (works if model fields are mutable)
       try {
         (convo as dynamic).latestMessage = text;
-        (convo as dynamic).updatedAt = createdAt ?? DateTime.now().millisecondsSinceEpoch;
+        (convo as dynamic).updatedAt =
+            createdAt ?? DateTime.now().millisecondsSinceEpoch;
         // reassign to trigger RxList change
         convCtrl.conversationList[idx] = convo;
         return;
@@ -160,8 +166,8 @@ class ChatController extends GetxController {
 
   /// Call while editing to send typing events (debounce outside for live typing)
   void sendTypingStart() =>
-      _repo.startTyping(conversationId: conversationId, senderId: userId);
+      repo.startTyping(conversationId: conversationId, senderId: userId);
 
   void sendTypingStop() =>
-      _repo.stopTyping(conversationId: conversationId, senderId: userId);
+      repo.stopTyping(conversationId: conversationId, senderId: userId);
 }
