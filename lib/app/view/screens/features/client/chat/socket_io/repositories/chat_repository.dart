@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/api_url.dart';
-import 'package:local/app/view/screens/features/client/chat/model/chat_message.dart';
-import 'package:local/app/view/screens/features/client/chat/socket/socket_service.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/model/chat_message.dart';
+import 'package:local/app/view/screens/features/client/chat/socket_io/socket/socket_service.dart';
 
 class ChatRepository {
   final SocketService _socket;

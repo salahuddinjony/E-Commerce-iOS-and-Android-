@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:local/app/view/screens/features/client/chat/inbox/controller/mixin_conversation.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/controller/mixin_conversation.dart';
 import 'package:get/get.dart';
 
 class ConversationController extends GetxController

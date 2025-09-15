@@ -5,7 +5,7 @@ import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/api_url.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
-import 'package:local/app/view/screens/features/client/chat/inbox/model/conversations_model.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/model/conversations_model.dart';
 
 mixin MixinChatConversation {
   final RxList<Conversation> conversationList = <Conversation>[].obs;

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:local/app/view/screens/features/client/chat/inbox/controller/conversation_controller.dart';
-import 'package:local/app/view/screens/features/client/chat/model/chat_message.dart';
-import 'package:local/app/view/screens/features/client/chat/repositories/chat_repository.dart'
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/controller/conversation_controller.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/model/chat_message.dart';
+import 'package:local/app/view/screens/features/client/chat/socket_io/repositories/chat_repository.dart'
     show ChatRepository;
 import 'package:uuid/uuid.dart';
 

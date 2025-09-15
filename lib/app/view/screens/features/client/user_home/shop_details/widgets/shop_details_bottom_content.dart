@@ -9,7 +9,7 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/screens/features/client/chat/inbox/controller/mixin_create_or_retrive_conversation.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/controller/mixin_create_or_retrive_conversation.dart';
 
 class ShopDetailsBottomContent extends StatelessWidget {
   final controller;
