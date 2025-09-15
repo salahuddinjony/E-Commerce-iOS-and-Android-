@@ -13,6 +13,7 @@ class ChatScreen extends StatelessWidget {
   final String receiverRole;
   final String receiverName;
   final String receiverImage;
+  final String userRole;
 
   const ChatScreen({
     super.key,
@@ -20,7 +21,8 @@ class ChatScreen extends StatelessWidget {
     required this.userId,
     required this.receiverRole,
     required this.receiverName,
-    required this.receiverImage,
+    required this.receiverImage, 
+    required this.userRole,
   });
 
   @override
@@ -28,7 +30,7 @@ class ChatScreen extends StatelessWidget {
     final controller = Get.isRegistered<ChatController>(tag: conversationId)
         ? Get.find<ChatController>(tag: conversationId)
         : Get.put(
-            ChatController(conversationId: conversationId, userId: userId),
+            ChatController(conversationId: conversationId, userRole: userRole, userId: userId),
             tag: conversationId);
 
     return Scaffold(

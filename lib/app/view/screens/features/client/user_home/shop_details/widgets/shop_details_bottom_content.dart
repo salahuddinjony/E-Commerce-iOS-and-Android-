@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
+import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox/controller/mixin_create_or_retrive_conversation.dart';
@@ -149,10 +151,16 @@ class ShopDetailsBottomContent extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         CustomButton(
-          
           onTap: () async {
+            // room creation for chat
+            // debugPrint('Vendor ID: $vendorId');
             final conversationId = await controller
                 .createOrRetrieveConversation(receiverId: vendorId);
+
+            final String loggedUserId =
+                await SharePrefsHelper.getString(AppConstants.userId);
+            final String loggedUserRole =
+                await SharePrefsHelper.getString(AppConstants.role);
 
             if (conversationId != null) {
               context.pushNamed(
@@ -161,8 +169,10 @@ class ShopDetailsBottomContent extends StatelessWidget {
                   'receiverRole': role,
                   'receiverName': name,
                   'receiverImage': imageUrl,
-                  'userId': vendorId,
+                  // 'userId': vendorId,
+                  'userId': loggedUserId,
                   'conversationId': conversationId,
+                  'userRole': loggedUserRole,
                 },
               );
             } else {

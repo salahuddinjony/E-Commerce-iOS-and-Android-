@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
+import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
@@ -91,6 +92,8 @@ class InboxScreen extends StatelessWidget {
                             message: messageText,
                             lastMessageTime: lastdateTime,
                             onTap: () async {
+                              final String loggedUserId= await SharePrefsHelper.getString(AppConstants.userId);
+                              final String loggedUserRole= await SharePrefsHelper.getString(AppConstants.role);
                               debugPrint(
                                   'Tapped conversation ID: ${convo.id}\nSender ID: $senderId');
                               // open chat screen and wait until it's popped
@@ -101,7 +104,8 @@ class InboxScreen extends StatelessWidget {
                                   'receiverName': receiverName,
                                   'receiverImage': image,
                                   'conversationId': convo.id,
-                                  'userId': senderId,
+                                  'userId': loggedUserId,
+                                  'userRole': loggedUserRole,
                                 },
                               );
                               // refresh conversations to pick up lastMessage updates

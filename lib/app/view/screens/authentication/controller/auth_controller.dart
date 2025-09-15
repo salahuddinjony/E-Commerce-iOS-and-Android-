@@ -15,8 +15,7 @@ import '../../../../services/api_url.dart';
 import '../../../../utils/app_constants/app_constants.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AuthController extends GetxController with PasswordConstraintController{
-
+class AuthController extends GetxController with PasswordConstraintController {
   // for vendor
   final emailController = TextEditingController(text: "videostore06@gmail.com");
   final passWordController = TextEditingController(text: "salahAbc@1");
@@ -24,12 +23,10 @@ class AuthController extends GetxController with PasswordConstraintController{
   // final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
   // final passWordController = TextEditingController(text: "12345678");
 
-  // // for client
+  // for client
   // final emailController =
   //     TextEditingController(text: "pekasi2300@futurejs.com");
   // final passWordController = TextEditingController(text: "Salah!1aa");
-
-
 
   final confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -59,63 +56,63 @@ class AuthController extends GetxController with PasswordConstraintController{
         jsonEncode(body),
       );
 
-      if (response.statusCode == 200) {
-        print("Response:========================== $response.body");
-        print(
-            "Auth token:========================== ${response.body["data"]['accessToken']}");
+      // Safely parse response body (handle empty / non-JSON)
+      dynamic resBody;
+      try {
+        if (response.body == null) {
+          resBody = null;
+        } else if (response.body is String &&
+            (response.body as String).trim().isEmpty) {
+          resBody = null;
+        } else if (response.body is String) {
+          resBody = jsonDecode(response.body);
+        } else {
+          resBody = response.body;
+        }
+      } catch (e) {
+        debugPrint("Failed to parse response body: $e");
+        resBody = null;
+      }
 
-        print(
-            "======######============Token , User Id , User role========================######");
+      if (response.statusCode == 200 && resBody != null) {
+        debugPrint("Response body: $resBody");
 
-        //____Save token at SharedPreferences
-        SharePrefsHelper.setString(
-          AppConstants.bearerToken,
-          response.body["data"]['accessToken'],
-        );
-        print(
-            "Bearer Tokensss:${await SharePrefsHelper.getString(AppConstants.bearerToken)}");
+        final accessToken = resBody["data"]?['accessToken'];
+        if (accessToken == null) {
+          toastMessage(message: AppStrings.someThing);
+          return;
+        }
 
-        // _____Save UserId at SharedPreferences
-        SharePrefsHelper.setString(
-          AppConstants.userId,
-          response.body['data']["_id"],
-        );
-        final userId = await SharePrefsHelper.getString(AppConstants.userId);
-        print("UsderId here: $userId");
+        // Save token & user info
+        await SharePrefsHelper.setString(AppConstants.bearerToken, accessToken);
+        await SharePrefsHelper.setString(
+            AppConstants.userId, resBody['data']?["_id"] ?? '');
+        await SharePrefsHelper.setString(
+            AppConstants.role, resBody['data']?["role"] ?? '');
 
-        //______Save User Role at SharedPreferences
-        SharePrefsHelper.setString(
-          AppConstants.role,
-          response.body['data']["role"],
-        );
-        final userRole = await SharePrefsHelper.getString(AppConstants.role);
-        print("User Role here: $userRole");
-
-        Map<String, dynamic> decodedToken =
-            JwtDecoder.decode(response.body["data"]['accessToken']);
-
-        print("Decoded Token:========================== $decodedToken");
-        String role = decodedToken['role'];
-        print('Role:============================ $role');
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(accessToken);
+        String role = decodedToken['role'] ?? '';
 
         if (role == 'vendor') {
           AppRouter.route.goNamed(RoutePath.homeScreen);
-          // AppRouter.route.goNamed(RoutePath.userHomeScreen);
         } else if (role == 'client') {
           AppRouter.route.goNamed(RoutePath.userHomeScreen);
         }
 
-        final token =
-            await SharePrefsHelper.getString(AppConstants.bearerToken);
-        print("Access Token:========================== $token");
-
-        debugPrint("Id================${response.body['data']["_id"]}");
-
-        toastMessage(message: response.body["message"]);
+        toastMessage(message: resBody["message"] ?? AppStrings.someThing);
       } else if (response.statusCode == 400) {
-        toastMessage(message: response.body["error"]);
+        final errorMsg = (resBody != null && resBody["error"] != null)
+            ? resBody["error"]
+            : AppStrings.someThing;
+        toastMessage(message: errorMsg);
       } else {
-        ApiChecker.checkApi(response);
+        // ApiChecker may expect a valid response body; guard it to avoid crashes
+        try {
+          ApiChecker.checkApi(response);
+        } catch (e) {
+          debugPrint("ApiChecker failed: $e");
+          toastMessage(message: AppStrings.someThing);
+        }
       }
     } catch (e) {
       toastMessage(message: AppStrings.someThing);
@@ -265,12 +262,11 @@ class AuthController extends GetxController with PasswordConstraintController{
   }
 
   Future<void> clientSIgnUp(BuildContext context) async {
-
-     if(!areTrue.value) {
-      toastMessage(message: "Please make sure your password meets all requirements.");
+    if (!areTrue.value) {
+      toastMessage(
+          message: "Please make sure your password meets all requirements.");
       return;
-     
-    }  
+    }
     isClient.value = true;
     refresh();
 
@@ -282,7 +278,6 @@ class AuthController extends GetxController with PasswordConstraintController{
       "role": "client",
       "isSocial": "false",
     };
-    
 
     var response = await ApiClient.postMultipartData(
       ApiUrl.register,
@@ -332,7 +327,6 @@ class AuthController extends GetxController with PasswordConstraintController{
       TextEditingController();
   TextEditingController docController = TextEditingController();
 
-
   Rx<File?> selectedDocument = Rx<File?>(null);
   final RxBool showAllExisting = false.obs;
   final RxList<File> pickedDocuments = <File>[].obs;
@@ -352,11 +346,11 @@ class AuthController extends GetxController with PasswordConstraintController{
   final RxString address = 'Pick Your Locations'.obs;
 
   Future<void> vendorSIgnUp(BuildContext context) async {
-      if(!areTrue.value) {
-      toastMessage(message: "Please make sure your password meets all requirements.");
+    if (!areTrue.value) {
+      toastMessage(
+          message: "Please make sure your password meets all requirements.");
       return;
-    
-    } 
+    }
     isVendorLoading.value = true;
     refresh();
     if (pickedDocuments.isEmpty) {
@@ -376,7 +370,8 @@ class AuthController extends GetxController with PasswordConstraintController{
       "lat": latitude.value,
       "long": longitude.value,
       "description": businessDescriptionController.text.trim(),
-      "deliveryOption": businessDeliveryOptionController.text.toLowerCase().trim(),
+      "deliveryOption":
+          businessDeliveryOptionController.text.toLowerCase().trim(),
     };
 
     var response = await ApiClient.postMultipartData(
