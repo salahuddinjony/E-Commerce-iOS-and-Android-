@@ -111,9 +111,7 @@ class ChatController extends GetxController {
             id: senderRole,
             firstName: h.sender?.profile?.id?.name ?? '',
           ),
-          createdAt: (h.createdAt is DateTime)
-              ? (h.createdAt as DateTime).millisecondsSinceEpoch
-              : DateTime.now().millisecondsSinceEpoch,
+          createdAt:DateTime.now().millisecondsSinceEpoch,
           id: h.id.isNotEmpty ? h.id : const Uuid().v4(),
           text: h.text,
           metadata: {'role': senderRole},
@@ -145,9 +143,7 @@ class ChatController extends GetxController {
           id: incomingRole,
           firstName: chatMsg.sender?.profile?.id?.name ?? '',
         ),
-        createdAt: (chatMsg.createdAt is DateTime)
-            ? (chatMsg.createdAt as DateTime).millisecondsSinceEpoch
-            : DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
         id: chatMsg.id.isNotEmpty ? chatMsg.id : const Uuid().v4(),
         text: chatMsg.text,
         metadata: {'role': incomingRole},
@@ -157,7 +153,7 @@ class ChatController extends GetxController {
       messages.insert(0, msg);
 
       // update inbox preview for this conversation
-      updateConversationLastMessage(chatMsg.text, (chatMsg.createdAt is DateTime) ? (chatMsg.createdAt as DateTime).millisecondsSinceEpoch : null);
+      updateConversationLastMessage(chatMsg.text,(chatMsg.createdAt).millisecondsSinceEpoch);
     });
 
     typingSub = repo.onTyping.listen((data) {
@@ -243,4 +239,14 @@ class ChatController extends GetxController {
 
   void sendTypingStop() =>
       repo.stopTyping(conversationId: conversationId, senderId: userId);
+
+  /// Extracts the senderId from a ChatMessage, handling possible nulls.
+  String? extractSenderId(ChatMessage chatMsg) {
+    try {
+      if (chatMsg.sender != null && chatMsg.sender?.profile?.id != null) {
+        return chatMsg.sender?.profile?.id?.toString();
+      }
+    } catch (_) {}
+    return null;
+  }
 }
