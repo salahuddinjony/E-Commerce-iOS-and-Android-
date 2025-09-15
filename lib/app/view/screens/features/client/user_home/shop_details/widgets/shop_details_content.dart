@@ -14,7 +14,13 @@ class ShopDetailsContent extends StatelessWidget {
   final ShopDetailsController controller;
   final String vendorId;
 
-  ShopDetailsContent({super.key, required this.controller, required this.vendorId, required this.role, required this.vendorName, required this.imageUrl});
+  ShopDetailsContent(
+      {super.key,
+      required this.controller,
+      required this.vendorId,
+      required this.role,
+      required this.vendorName,
+      required this.imageUrl});
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -62,7 +68,7 @@ class ShopDetailsContent extends StatelessWidget {
               SizedBox(height: 12.h),
 
               // Categories horizontal list
-             VendorCategories(controller: controller),
+              VendorCategories(controller: controller),
               SizedBox(height: 12.h),
 
               CustomText(
@@ -76,16 +82,16 @@ class ShopDetailsContent extends StatelessWidget {
 
               // Product list grid
               VendorProductList(controller: controller, vendorId: vendorId),
-              
+
               const SizedBox(height: 20),
 
-             ShopDetailsBottomContent(
+              ShopDetailsBottomContent(
                 role: role,
                 imageUrl: imageUrl,
                 name: vendorName,
-                vendorId: vendorId, 
+                vendorId: vendorId,
                 controller: controller,
-             ),
+              ),
             ],
           ),
         ),

@@ -26,7 +26,7 @@ class ShopDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // final displayImage =imageUrl.isNotEmpty ? imageUrl : AppConstants.demoImage;
     final displayName = shopName.isNotEmpty ? shopName : 'Alex Carter';
-    
+
     final displayLocation =
         shopLocation.isNotEmpty ? shopLocation.split(',').last : 'USA 256';
     // final displayVendorId = vendorId.isNotEmpty ? vendorId : 'Vendor ID';
@@ -94,11 +94,11 @@ class ShopDetailsScreen extends StatelessWidget {
           // Content container (white background)
           ShopDetailsContent(
             controller: controller,
-            vendorId: vendorId, 
+            vendorId: vendorId,
             role: 'vendor',
             vendorName: displayName,
             imageUrl: imageUrl,
-            ),
+          ),
         ],
       ),
     );

@@ -169,7 +169,6 @@ class ShopDetailsBottomContent extends StatelessWidget {
                   'receiverRole': role,
                   'receiverName': name,
                   'receiverImage': imageUrl,
-                  // 'userId': vendorId,
                   'userId': loggedUserId,
                   'conversationId': conversationId,
                   'userRole': loggedUserRole,
