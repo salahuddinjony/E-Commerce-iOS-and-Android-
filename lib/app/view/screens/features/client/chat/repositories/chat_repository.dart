@@ -14,6 +14,8 @@ class ChatRepository {
 
   void disconnect() => _socket.disconnect();
 
+void setupUser(String userId) => _socket.setupUser(userId);
+
   void joinChat({required String roomId, required String userId}) =>
       _socket.joinChat(roomId: roomId, userId: userId);
 

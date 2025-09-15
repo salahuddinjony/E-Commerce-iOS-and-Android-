@@ -332,6 +332,7 @@ class AppRouter {
 
             return _buildPageWithAnimation(
               child: ChatScreen(
+                userRole: extra['userRole'] as String? ?? '',
                 conversationId: conversationId,
                 userId: userId,
                 receiverRole: receiverRole,

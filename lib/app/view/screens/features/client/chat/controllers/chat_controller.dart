@@ -11,17 +11,20 @@ import 'package:uuid/uuid.dart';
 class ChatController extends GetxController {
   final String conversationId;
   final String userId;
+  final String userRole;
   final ChatRepository repo;
   late final types.User user;
 
   ChatController({
     required this.conversationId,
     required this.userId,
+    required this.userRole,
     ChatRepository? repository,
   }) : repo = repository ?? ChatRepository() {
-    user = types.User(id: userId, firstName: 'Me');
+    // Use role as the author.id so side/layout decisions can be made by role.
+    user = types.User(id: userRole, firstName: 'Me');
   }
-
+  
   final messages = RxList<types.Message>(<types.Message>[]);
   final isTyping = false.obs;
   // new loading flag to indicate initial history fetch
@@ -29,6 +32,56 @@ class ChatController extends GetxController {
 
   StreamSubscription<ChatMessage>? msgSub;
   StreamSubscription<Map<String, dynamic>>? typingSub;
+
+  // Helper: determine role for a sender object (history/incoming)
+  String _roleForSender(dynamic sender, {String fallbackRole = 'other'}) {
+    try {
+      // If sender is ChatMessage
+      if (sender is ChatMessage) {
+        final r = sender.sender?.profile?.role;
+        if (r != null && r.isNotEmpty) return r;
+        // fallback: if sender information missing but senderId equals current user id? (rare)
+      }
+
+      // If sender is Sender model
+      if (sender is Sender) {
+        final r = sender.profile?.role;
+        if (r != null && r.isNotEmpty) return r;
+      }
+
+      // If it's a Map coming from repo or socket
+      if (sender is Map) {
+        final role = (sender['profile'] is Map)
+            ? (sender['profile']['role']?.toString())
+            : (sender['role']?.toString());
+        if (role != null && role.isNotEmpty) return role;
+      }
+
+      // Some payload shapes use nested fields like senderId.profile.role
+      try {
+        final r = (sender as dynamic).sender?.profile?.role ??
+            (sender as dynamic).senderId?.profile?.role ??
+            (sender as dynamic).profile?.role ??
+            (sender as dynamic).role;
+        if (r != null && r.toString().isNotEmpty) return r.toString();
+      } catch (_) {}
+    } catch (_) {}
+
+    return fallbackRole;
+  }
+
+  // Public helper UI can call to know which side a message should render on.
+  // Returns true when message should appear on the "right" (same role as current user).
+  bool isMessageRight(types.Message message) {
+    try {
+      final meta =
+          (message as dynamic).metadata as Map<String, dynamic>? ?? {};
+      final role = meta['role']?.toString();
+      if (role != null && role.isNotEmpty) return role == userRole;
+    } catch (_) {}
+    // fallback to author id (we store role as author.id now)
+    return message.author.id == userRole;
+  }
 
   @override
   void onInit() {
@@ -38,6 +91,10 @@ class ChatController extends GetxController {
     repo.connect('https://gmosley-uteehub-backend.onrender.com');
 
     // load history first (if available) so UI shows past messages
+
+    // setup user on socket
+    repo.setupUser(userId);
+    
     isLoading.value = true;
     repo.fetchMessages(conversationId).then((history) {
 
@@ -45,18 +102,23 @@ class ChatController extends GetxController {
       // ensure createdAt is milliseconds since epoch
       
       for (final h in history.reversed) {
-        final authorId = h.senderId;
-        final createdAtMs = (h.createdAt is DateTime
-                ? (h.createdAt as DateTime).millisecondsSinceEpoch
-                : null) ??
-            DateTime.now().millisecondsSinceEpoch;
+        // determine role for this history message (fall back to 'other' or current userRole)
+        final senderRole = _roleForSender(h, fallbackRole: h.sender != null && (h.sender?.profile?.role == userRole) ? userRole : 'other');
 
+        // Use senderRole as author.id so alignment can be decided by role reliably.
         final msg = types.TextMessage(
-          author: types.User(id: authorId),
-          createdAt: createdAtMs,
+          author: types.User(
+            id: senderRole,
+            firstName: h.sender?.profile?.id?.name ?? '',
+          ),
+          createdAt: (h.createdAt is DateTime)
+              ? (h.createdAt as DateTime).millisecondsSinceEpoch
+              : DateTime.now().millisecondsSinceEpoch,
           id: h.id.isNotEmpty ? h.id : const Uuid().v4(),
           text: h.text,
+          metadata: {'role': senderRole},
         );
+
         // newest first expected by UI, but we're iterating reversed to keep chronology
         messages.insert(0, msg);
       }
@@ -70,22 +132,32 @@ class ChatController extends GetxController {
     });
 
     msgSub = repo.onMessage.listen((chatMsg) {
-      // Ignore server echoes of our own messages (and also skip duplicates by id)
-      if (chatMsg.senderId == userId) return;
-      if (chatMsg.id.isNotEmpty && messages.any((m) => m.id == chatMsg.id))
-        return;
+      // chatMsg is ChatMessage from repository
+      // determine incoming sender role
+      final incomingRole = _roleForSender(chatMsg, fallbackRole: chatMsg.sender != null && (chatMsg.sender?.profile?.role == userRole) ? userRole : 'other');
+
+      // Avoid duplicates
+      if (chatMsg.id.isNotEmpty && messages.any((m) => m.id == chatMsg.id)) return;
 
       final msg = types.TextMessage(
-        author: types.User(id: chatMsg.senderId),
-        createdAt: chatMsg.createdAt,
+        // Use role as author id for consistent side calculation
+        author: types.User(
+          id: incomingRole,
+          firstName: chatMsg.sender?.profile?.id?.name ?? '',
+        ),
+        createdAt: (chatMsg.createdAt is DateTime)
+            ? (chatMsg.createdAt as DateTime).millisecondsSinceEpoch
+            : DateTime.now().millisecondsSinceEpoch,
         id: chatMsg.id.isNotEmpty ? chatMsg.id : const Uuid().v4(),
         text: chatMsg.text,
+        metadata: {'role': incomingRole},
       );
+
       // newest first
       messages.insert(0, msg);
 
       // update inbox preview for this conversation
-      updateConversationLastMessage(chatMsg.text ?? '', chatMsg.createdAt);
+      updateConversationLastMessage(chatMsg.text, (chatMsg.createdAt is DateTime) ? (chatMsg.createdAt as DateTime).millisecondsSinceEpoch : null);
     });
 
     typingSub = repo.onTyping.listen((data) {
@@ -121,6 +193,7 @@ class ChatController extends GetxController {
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),
       text: partial.text,
+      metadata: {'role': userRole},
     );
     messages.insert(0, textMessage);
 

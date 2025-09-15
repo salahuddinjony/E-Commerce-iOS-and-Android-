@@ -35,6 +35,16 @@ class SocketService {
     _socket!.on('disconnect', (_) => print('[SocketService] disconnected'));
     _socket!.on('connect_error', (err) => print('[SocketService] connect_error: $err'));
 
+
+// setup user 
+
+    _socket!.on('setup', (data) {
+      print('[SocketService] setup: $data');
+      if (data is Map) {
+        // Handle setup data if needed
+      }
+    });
+
     // Incoming message events
     _socket!.on('message', (data) {
       if (data is Map) _messageController.add(Map<String, dynamic>.from(data));
@@ -92,6 +102,9 @@ class SocketService {
     } catch (e) {
       print('[SocketService] emitRaw error: $e');
     }
+  }
+  void setupUser(String userId) {
+    emitRaw('setup', userId); 
   }
   void leaveChat({required String roomId, required String userId}) {
     emitRaw('leave-chat', {'roomId': roomId, 'userId': userId});
