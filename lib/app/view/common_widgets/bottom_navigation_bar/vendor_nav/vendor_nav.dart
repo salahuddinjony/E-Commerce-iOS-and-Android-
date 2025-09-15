@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:local/app/core/routes.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/common_widgets/vendor_nav/controller/verndor_nav_controller.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/vendor_nav/controller/verndor_nav_controller.dart';
 
 
 

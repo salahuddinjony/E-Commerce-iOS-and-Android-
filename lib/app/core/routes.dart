@@ -570,14 +570,14 @@ class AppRouter {
         ),
 
         ///=======================  PendingDetailsScreen =======================
-        GoRoute(
-          name: RoutePath.vendorMessageScreen,
-          path: RoutePath.vendorMessageScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-              child: const VendorMessageScreen(),
-              state: state,
-              disableAnimation: true),
-        ),
+        // GoRoute(
+        //   name: RoutePath.vendorMessageScreen,
+        //   path: RoutePath.vendorMessageScreen.addBasePath,
+        //   pageBuilder: (context, state) => _buildPageWithAnimation(
+        //       child: const VendorMessageScreen(),
+        //       state: state,
+        //       disableAnimation: true),
+        // ),
 
         ///=======================  PendingDetailsScreen =======================
         GoRoute(

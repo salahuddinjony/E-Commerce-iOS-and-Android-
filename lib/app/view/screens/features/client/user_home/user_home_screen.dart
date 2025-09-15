@@ -7,7 +7,7 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/common_home_app_bar/common_home_app_bar.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/client_nav_bar/nav_bar.dart';
 import 'package:local/app/view/common_widgets/map/widgets/location_field.dart';
 import 'package:local/app/view/screens/features/client/user_home/controller/delivery_locations_controller.dart';
 import 'package:local/app/view/screens/features/client/user_home/controller/user_home_controller.dart';

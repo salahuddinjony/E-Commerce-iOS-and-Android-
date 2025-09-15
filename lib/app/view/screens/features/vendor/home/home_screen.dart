@@ -15,7 +15,7 @@ import 'package:local/app/view/screens/features/vendor/orders/controller/order_c
 import 'package:local/app/view/screens/features/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 
 import '../../../../common_widgets/custom_text/custom_text.dart';
-import '../../../../common_widgets/vendor_nav/vendor_nav.dart';
+import '../../../../common_widgets/bottom_navigation_bar/vendor_nav/vendor_nav.dart';
 import '../../../../common_widgets/status_card/status_card.dart';
 
 class HomeScreen extends StatelessWidget {

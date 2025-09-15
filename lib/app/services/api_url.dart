@@ -146,9 +146,9 @@ static String orderDateExtension({required String orderId}) {
 
   static String getMessagesForConversation({required String conversationId}) {
     return "$baseUrl/message/retrieve/$conversationId";
-  } 
-// {{base-url}}/message/retrieve/68c699d8e46eedcfb2537b14
+  }  
 
+  static String createOrRetrieveConversation="conversation/create";    
 
 
 
