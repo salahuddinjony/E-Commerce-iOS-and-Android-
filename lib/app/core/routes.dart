@@ -16,8 +16,8 @@ import 'package:local/app/view/screens/features/client/user_home/custom_design/s
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/category_wise_product/screen/category_wise_products.dart';
 import 'package:local/app/view/screens/features/vendor/orders/models/general_order_response_model.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
-import 'package:local/app/view/screens/features/client/chat/chat_screen.dart';
-import 'package:local/app/view/screens/features/client/chat/inbox/inbox_screen.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/screen/chat_screen.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/screen/inbox_screen.dart';
 import 'package:local/app/view/screens/features/client/support/order_mangement/order_manegment_screen.dart';
 import 'package:local/app/view/screens/features/client/support/support_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/controller/user_home_controller.dart';

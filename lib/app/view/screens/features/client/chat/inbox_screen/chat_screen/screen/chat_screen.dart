@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/screens/features/client/chat/controllers/chat_controller.dart';
-import 'package:local/app/view/screens/features/client/chat/inbox/chat_screen/widgets/chat_header.dart';
-import 'inbox/chat_screen/widgets/chat_body.dart';
-import 'inbox/chat_screen/widgets/typing_indicator.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/widgets/chat_header.dart';
+import '../widgets/chat_body.dart';
+import '../widgets/typing_indicator.dart';
 
 class ChatScreen extends StatelessWidget {
   final String conversationId;
