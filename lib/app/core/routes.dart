@@ -326,11 +326,17 @@ class AppRouter {
             final extra = state.extra as Map<String, dynamic>? ?? {};
             final conversationId = extra['conversationId'] as String? ?? '';
             final userId = extra['userId'] as String? ?? '';
+            final receiverRole = extra['receiverRole'] as String? ?? '';
+            final receiverName = extra['receiverName'] as String? ?? '';
+            final receiverImage = extra['receiverImage'] as String? ?? '';
 
             return _buildPageWithAnimation(
               child: ChatScreen(
                 conversationId: conversationId,
                 userId: userId,
+                receiverRole: receiverRole,
+                receiverName: receiverName,
+                receiverImage: receiverImage,
               ),
               state: state,
               transitionType: TransitionType.detailsScreen,
