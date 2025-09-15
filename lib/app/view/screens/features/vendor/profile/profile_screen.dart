@@ -9,7 +9,7 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_log_out_button/custom_log_out_button.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import 'package:local/app/view/common_widgets/vendor_nav/vendor_nav.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/vendor_nav/vendor_nav.dart';
 import 'package:local/app/view/screens/features/vendor/profile/personal_info/controller/profile_controller.dart';
 import '../../../../../core/route_path.dart';
 import '../../../../../data/local/shared_prefs.dart';

@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:local/app/global/controller/Onboarding_Controller.dart';
 import 'package:local/app/global/controller/genarel_controller.dart';
-import 'package:local/app/view/common_widgets/client_nav_bar/controller/nav_bar_controller.dart';
-import 'package:local/app/view/common_widgets/vendor_nav/controller/verndor_nav_controller.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/client_nav_bar/controller/nav_bar_controller.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/vendor_nav/controller/verndor_nav_controller.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox/controller/conversation_controller.dart';
 import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';

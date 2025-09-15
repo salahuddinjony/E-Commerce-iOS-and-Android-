@@ -5,7 +5,7 @@ import 'package:local/app/view/screens/features/vendor/products_and_category/pro
 import 'package:local/app/view/screens/features/vendor/products_and_category/product/widgets/products_grid_section.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../common_widgets/custom_appbar/custom_appbar.dart';
-import '../../../../../../common_widgets/vendor_nav/vendor_nav.dart';
+import '../../../../../../common_widgets/bottom_navigation_bar/vendor_nav/vendor_nav.dart';
 
 class ProductScreen extends StatelessWidget {
   ProductScreen({super.key});

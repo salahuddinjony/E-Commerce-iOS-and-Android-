@@ -10,7 +10,7 @@ import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/message_card/message_card.dart';
-import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/client_nav_bar/nav_bar.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox/controller/conversation_controller.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox/widgets/empty_conversations.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox/widgets/inbox_loader.dart';
@@ -94,7 +94,7 @@ class InboxScreen extends StatelessWidget {
                               debugPrint(
                                   'Tapped conversation ID: ${convo.id}\nSender ID: $senderId');
                               // open chat screen and wait until it's popped
-                              await context.pushNamed(
+                               context.pushNamed(
                                 RoutePath.chatScreen,
                                 extra: {
                                   'receiverRole': receiverRole,

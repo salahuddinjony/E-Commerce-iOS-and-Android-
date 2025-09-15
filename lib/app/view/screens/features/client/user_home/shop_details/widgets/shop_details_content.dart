@@ -8,10 +8,13 @@ import 'package:local/app/view/screens/features/client/user_home/shop_details/wi
 import 'package:local/app/view/screens/features/client/user_home/shop_details/widgets/vendor_product_list.dart';
 
 class ShopDetailsContent extends StatelessWidget {
+  final String role;
+  final String vendorName;
+  final String imageUrl;
   final ShopDetailsController controller;
   final String vendorId;
 
-  ShopDetailsContent({super.key, required this.controller, required this.vendorId});
+  ShopDetailsContent({super.key, required this.controller, required this.vendorId, required this.role, required this.vendorName, required this.imageUrl});
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -77,6 +80,10 @@ class ShopDetailsContent extends StatelessWidget {
               const SizedBox(height: 20),
 
              ShopDetailsBottomContent(
+                role: role,
+                imageUrl: imageUrl,
+                name: vendorName,
+                vendorId: vendorId, 
                 controller: controller,
              ),
             ],

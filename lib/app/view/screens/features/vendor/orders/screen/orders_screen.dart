@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/view/common_widgets/vendor_nav/vendor_nav.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/vendor_nav/vendor_nav.dart';
 import 'package:local/app/view/screens/features/vendor/orders/widgets/build_tab_content.dart';
 import 'package:local/app/view/screens/features/vendor/orders/widgets/order_type_toggle.dart';
 import 'package:local/app/view/screens/features/vendor/orders/widgets/orders_appbar.dart';

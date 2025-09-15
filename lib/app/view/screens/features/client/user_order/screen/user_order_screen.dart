@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/client_nav_bar/nav_bar.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/client_nav_bar/nav_bar.dart';
 import 'package:local/app/view/screens/features/client/user_order/widgets/tab_bar_view_content.dart';
 import '../controller/user_order_controller.dart';
 

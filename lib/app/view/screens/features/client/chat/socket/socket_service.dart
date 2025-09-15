@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-/// Lightweight SocketService used by UI and repositories.
-/// - Connects to server
-/// - Emits join/typing/send-message events
-/// - Exposes streams for incoming messages and typing events
 class SocketService {
   SocketService._internal();
   static final SocketService _instance = SocketService._internal();
@@ -14,9 +10,18 @@ class SocketService {
 
   final _messageController = StreamController<Map<String, dynamic>>.broadcast();
   final _typingController = StreamController<Map<String, dynamic>>.broadcast();
+  final _receiverOnlineController = StreamController<Map<String, dynamic>>.broadcast();
+  final _newMessageNotificationController= StreamController<Map<String, dynamic>>.broadcast(); 
+  final _userJoinedRoomController = StreamController<Map<String, dynamic>>.broadcast();
+  final _userLeftRoomController = StreamController<Map<String, dynamic>>.broadcast();
 
   Stream<Map<String, dynamic>> get onMessage => _messageController.stream;
   Stream<Map<String, dynamic>> get onTyping => _typingController.stream;
+  Stream<Map<String, dynamic>> get onReceiverOnline => _receiverOnlineController.stream;
+  Stream<Map<String, dynamic>> get onNewMessageNotification => _newMessageNotificationController.stream;
+  Stream<Map<String, dynamic>> get onUserJoinedRoom => _userJoinedRoomController.stream;
+  Stream<Map<String, dynamic>> get onUserLeftRoom => _userLeftRoomController.stream;
+
 
   void connect(String url) {
     if (_socket != null && _socket!.connected) return;
@@ -30,10 +35,12 @@ class SocketService {
     _socket!.on('disconnect', (_) => print('[SocketService] disconnected'));
     _socket!.on('connect_error', (err) => print('[SocketService] connect_error: $err'));
 
-    // Incoming message events: adapt if your backend uses different event names.
+    // Incoming message events
     _socket!.on('message', (data) {
       if (data is Map) _messageController.add(Map<String, dynamic>.from(data));
     });
+
+    // New message event (alternative)
     _socket!.on('receive-message', (data) {
       if (data is Map) _messageController.add(Map<String, dynamic>.from(data));
     });
@@ -42,9 +49,31 @@ class SocketService {
     _socket!.on('typing', (data) {
       if (data is Map) _typingController.add(Map<String, dynamic>.from(data));
     });
+
+    // Stop typing event
     _socket!.on('stop-typing', (data) {
       if (data is Map) _typingController.add(Map<String, dynamic>.from(data));
     });
+
+    // Receiver online status
+    _socket!.on('receiver-online', (data) {
+      if (data is Map) _receiverOnlineController.add(Map<String, dynamic>.from(data));
+    });
+
+    // New message notification
+    _socket!.on('new-message-notification', (data) {
+      if (data is Map) _newMessageNotificationController.add(Map<String, dynamic>.from(data));
+    });
+
+    // User joined/left room events
+    _socket!.on('user-joined', (data) {
+      if (data is Map) _userJoinedRoomController.add(Map<String, dynamic>.from(data));
+    });
+    _socket!.on('user-left', (data) {
+      if (data is Map) _userLeftRoomController.add(Map<String, dynamic>.from(data));
+    });
+
+    
   }
 
   void disconnect() {

@@ -40,7 +40,7 @@ class OwnerNavController extends GetxController {
       label: "",
     ),
     (
-      route: RoutePath.vendorMessageScreen,
+      route: RoutePath.inboxScreen,
       selectedIcon: Assets.images.message.image(color: AppColors.brightCyan, height: 35.h),
       unselectedIcon: Assets.images.message.image(),
       label: AppStrings.chat,

@@ -3,13 +3,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
+import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox/controller/mixin_create_or_retrive_conversation.dart';
 
 class ShopDetailsBottomContent extends StatelessWidget {
   final controller;
-  const ShopDetailsBottomContent({super.key, required this.controller});
+  final String role;
+  final String name;
+  final String imageUrl;
+  final String vendorId;
+  const ShopDetailsBottomContent(
+      {super.key,
+      required this.controller,
+      required this.vendorId,
+      required this.role,
+      required this.name,
+      required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +37,6 @@ class ShopDetailsBottomContent extends StatelessWidget {
         //   fontSize: 20.sp,
         // ),
         // const SizedBox(height: 40),
-
 
         // DesignerCard(
         //   imageUrl: 'https://i.pravatar.cc/150?img=2',
@@ -49,7 +60,6 @@ class ShopDetailsBottomContent extends StatelessWidget {
         //   },
         // ),
 
-
         const SizedBox(height: 12),
         CustomText(
           text: 'Shop Details',
@@ -59,27 +69,27 @@ class ShopDetailsBottomContent extends StatelessWidget {
           fontSize: 18.sp,
         ),
         SizedBox(height: 12.h),
-       Obx(()=>
-        CustomText(
-          text: 'Products Available: ${controller.productItems.length.toString().padLeft(2, '0')} ',
-          fontWeight: FontWeight.w500,
-          font: CustomFont.poppins,
-          color: AppColors.naturalGray,
-          fontSize: 16.sp,
+        Obx(
+          () => CustomText(
+            text:
+                'Products Available: ${controller.productItems.length.toString().padLeft(2, '0')} ',
+            fontWeight: FontWeight.w500,
+            font: CustomFont.poppins,
+            color: AppColors.naturalGray,
+            fontSize: 16.sp,
+          ),
         ),
-       
-       ),
-       Obx(()=>
-         CustomText(
-          text: 'Total Categories:  ${controller.categoriesData.length.toString().padLeft(2, '0')}',
-          fontWeight: FontWeight.w500,
-          font: CustomFont.poppins,
-          color: AppColors.naturalGray,
-          fontSize: 16.sp,
+        Obx(
+          () => CustomText(
+            text:
+                'Total Categories:  ${controller.categoriesData.length.toString().padLeft(2, '0')}',
+            fontWeight: FontWeight.w500,
+            font: CustomFont.poppins,
+            color: AppColors.naturalGray,
+            fontSize: 16.sp,
+          ),
         ),
-       ),
-       
-  
+
         // CustomText(
         //   text: 'Average Rating: ⭐4.8',
         //   fontWeight: FontWeight.w500,
@@ -139,11 +149,28 @@ class ShopDetailsBottomContent extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         CustomButton(
-          onTap: () {
-            context.pushNamed(RoutePath.chatScreen,  
-            );
+          
+          onTap: () async {
+            final conversationId = await controller
+                .createOrRetrieveConversation(receiverId: vendorId);
+
+            if (conversationId != null) {
+              context.pushNamed(
+                RoutePath.chatScreen,
+                extra: {
+                  'receiverRole': role,
+                  'receiverName': name,
+                  'receiverImage': imageUrl,
+                  'userId': vendorId,
+                  'conversationId': conversationId,
+                },
+              );
+            } else {
+              toastMessage(message: "Please Click Again!");
+            }
           },
           title: "Chat",
+          icon: Icons.message,
         ),
       ],
     );
