@@ -9,28 +9,30 @@ class MessageCard extends StatelessWidget {
   final String senderName;
   final String message;
   final VoidCallback onTap;
+  final String? lastMessageTime;
 
   const MessageCard({
     super.key,
     required this.imageUrl,
     required this.senderName,
-    required this.message, required this.onTap,
+    required this.message,
+    required this.onTap,
+    this.lastMessageTime,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child:
-      Container(
+      child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 16.h),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.all(
             Radius.circular(8.r),
           ),
-          boxShadow: [ 
-            BoxShadow( 
+          boxShadow: [
+            BoxShadow(
               color: Colors.black.withValues(alpha: .1), // Shadow color
               spreadRadius: 2, // Spread the shadow
               blurRadius: 5, // Blur radius
@@ -38,8 +40,7 @@ class MessageCard extends StatelessWidget {
             ),
           ],
         ),
-        child:
-        Row(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomNetworkImage(
@@ -60,14 +61,31 @@ class MessageCard extends StatelessWidget {
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.darkNaturalGray,
-                  bottom: 6.h,
                 ),
-                CustomText(
-                  text: message,
-                  font: CustomFont.inter,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.naturalGray,
+                Row(
+                  children: [
+                    CustomText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: message.length > 20
+                          ? message.substring(0, 17) + "..."
+                          : message,
+                      font: CustomFont.inter,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.naturalGray,
+                    ),
+                    if (lastMessageTime != null) ...[
+                      SizedBox(width: 8.w),
+                      CustomText(
+                        text: "• " + lastMessageTime!,
+                        font: CustomFont.inter,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.naturalGray,
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),

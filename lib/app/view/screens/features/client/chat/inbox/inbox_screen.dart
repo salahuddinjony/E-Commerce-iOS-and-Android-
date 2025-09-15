@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
+import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
@@ -73,17 +74,22 @@ class InboxScreen extends StatelessWidget {
                         final convo = conversations[index];
                         final hasMembers = convo.members.isNotEmpty;
                         final member = hasMembers ? convo.members.first : null;
-                        final senderRole = member?.profile?.role ?? 'Unknown';
+
+                        final image= member?.profile?.id?.image ?? AppConstants.demoImage;
+                        final receiverRole = member?.profile?.role ?? 'Unknown';
+                        final receiverName = member?.profile?.id?.name ?? 'Unknown';
                         final senderId = member?.id ?? '';
                         final messageText =
                             convo.latestMessage?.toString() ?? '';
+                        final lastdateTime = convo.updatedAt?.getDateTime();
 
                         return Padding(
                           padding: EdgeInsets.only(top: 10.h),
                           child: MessageCard(
-                            imageUrl: AppConstants.demoImage,
-                            senderName: '$senderRole ${index + 1}',
+                            imageUrl: image,
+                            senderName: receiverName,
                             message: messageText,
+                            lastMessageTime: lastdateTime,
                             onTap: () async {
                               debugPrint(
                                   'Tapped conversation ID: ${convo.id}\nSender ID: $senderId');
@@ -91,6 +97,9 @@ class InboxScreen extends StatelessWidget {
                               await context.pushNamed(
                                 RoutePath.chatScreen,
                                 extra: {
+                                  'receiverRole': receiverRole,
+                                  'receiverName': receiverName,
+                                  'receiverImage': image,
                                   'conversationId': convo.id,
                                   'userId': senderId,
                                 },
