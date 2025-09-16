@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/controller/product_details_controller.dart';
 import 'widgets/payment_result_card.dart';
 
@@ -9,7 +10,7 @@ class PaymentSuccessPage extends StatelessWidget {
   final String? status;
   final String? amountPaid;
   final Map<String, dynamic>? details;
-  
+
   // added optional fields used by stripe_service
   final String? chargeId;
   final String? paymentMethod;
@@ -27,7 +28,7 @@ class PaymentSuccessPage extends StatelessWidget {
     required this.isOrderSuccess,
   });
 
-  void _showContactDialog(BuildContext context) {
+  void showContactDialog(BuildContext context) {
     const supportEmail = 'support@uteehub.com';
     const supportPhone = '+8801712XXXXXX';
 
@@ -35,7 +36,11 @@ class PaymentSuccessPage extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Colors.white,
-        title: Center(child: const Text('Contact Support', style: TextStyle(fontWeight: FontWeight.bold),)),
+        title: Center(
+            child: const Text(
+          'Contact Support',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,8 +59,7 @@ class PaymentSuccessPage extends StatelessWidget {
                   icon: const Icon(Icons.copy, size: 18),
                   onPressed: () {
                     Navigator.of(ctx).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Email copied to clipboard')));
+                    toastMessage(message: 'Email copied to clipboard');
                   },
                 )
               ],
@@ -72,8 +76,9 @@ class PaymentSuccessPage extends StatelessWidget {
                   icon: const Icon(Icons.copy, size: 18),
                   onPressed: () {
                     Navigator.of(ctx).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Phone copied to clipboard')));
+                    // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    //     content: Text('Phone copied to clipboard')));
+                    toastMessage(message: 'Phone number copied to clipboard');
                   },
                 )
               ],
@@ -90,7 +95,7 @@ class PaymentSuccessPage extends StatelessWidget {
     );
   }
 
-  void _handleDone(BuildContext context) {
+  void handleDone(BuildContext context) {
     final controller = Get.isRegistered<ProductDetailsController>()
         ? Get.find<ProductDetailsController>()
         : null;
@@ -120,8 +125,8 @@ class PaymentSuccessPage extends StatelessWidget {
                 chargeId: chargeId,
                 paymentMethod: paymentMethod,
                 sessionId: sessionId,
-                onDone: () => _handleDone(context),
-                onContact: () => _showContactDialog(context),
+                onDone: () => handleDone(context),
+                onContact: () => showContactDialog(context),
               ),
             ),
           ),
