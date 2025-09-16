@@ -2,8 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local/app/core/route_path.dart';
+import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/utils/app_constants/app_constants.dart';
+import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 
 class PaymentResultCard extends StatelessWidget {
   final bool isOrderSuccess;
@@ -33,7 +38,7 @@ class PaymentResultCard extends StatelessWidget {
     this.chargeId,
   });
 
-  Widget _infoRow(BuildContext context, String label, Widget content) {
+  Widget infoRow(BuildContext context, String label, Widget content) {
     return Column(
       children: [
         Text(
@@ -50,7 +55,7 @@ class PaymentResultCard extends StatelessWidget {
     );
   }
 
-  void _copyToClipboard(BuildContext context, String text, String message) {
+  void copyToClipboard(BuildContext context, String text, String message) {
     Clipboard.setData(ClipboardData(text: text));
     toastMessage(message: message);
   }
@@ -64,8 +69,35 @@ class PaymentResultCard extends StatelessWidget {
     final primaryColor =
         isOrderSuccess ? Colors.green.shade700 : Colors.orange.shade700;
     final titleText = isOrderSuccess
-        ? 'Payment Successful'
-        : 'Payment Completed — Order Failed';
+      ? 'Payment Successful\n'
+      : RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: TextStyle(
+          fontSize: 22.sp,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+          ),
+          children: [
+          TextSpan(
+            text: 'Payment Completed\n\n',
+            style: TextStyle(color: Colors.green.shade700),
+          ),
+        TextSpan(
+          text: '\n',
+          style: TextStyle(fontSize: 8.sp),
+        ),
+          TextSpan(
+            text: 'Unfortunately Order ',
+            style: TextStyle(color: Colors.orange.shade700),
+          ),
+          TextSpan(
+            text: 'Failed',
+            style: TextStyle(color: Colors.red.shade700),
+          ),
+          ],
+        ),
+        );
     final subtitleText = isOrderSuccess
         ? 'Your payment was processed and the order has been created.'
         : 'Your payment was processed but we could not create the order automatically. Please contact support.';
@@ -146,14 +178,16 @@ class PaymentResultCard extends StatelessWidget {
                 ],
               ),
             SizedBox(height: 12.h),
-            Text(
-              titleText,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87),
-            ),
+            isOrderSuccess
+                ? Text(
+                    titleText as String,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                       color: Colors.green.shade700),
+                  )
+                : titleText as RichText,
             const SizedBox(height: 8),
             Text(
               subtitleText,
@@ -178,11 +212,11 @@ class PaymentResultCard extends StatelessWidget {
               Column(
                 children: [
                   if (transactionId != null)
-                    _infoRow(
+                    infoRow(
                       context,
                       'Transaction ID:',
                       GestureDetector(
-                        onTap: () => _copyToClipboard(context, transactionId!,
+                        onTap: () => copyToClipboard(context, transactionId!,
                             'Transaction ID copied to clipboard'),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -227,19 +261,64 @@ class PaymentResultCard extends StatelessWidget {
                                   fontSize: 16.sp, color: Colors.green)),
                           onPressed: onDone,
                         )
-                      : ElevatedButton.icon(
-                          icon: const Icon(Icons.mail_outline,
-                              color: Colors.white),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.brightCyan,
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                          label: Text('Contact Us',
-                              style: TextStyle(
-                                  fontSize: 16.sp, color: Colors.white)),
-                          onPressed: onContact,
+                      : Column(
+                          children: [
+                            ElevatedButton.icon(
+                              icon: const Icon(Icons.mail_outline,
+                                  color: Colors.white),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.brightCyan,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 14.h, horizontal: 20.w),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                              ),
+                              label: Text('Contact Us',
+                                  style: TextStyle(
+                                      fontSize: 16.sp, color: Colors.white)),
+                              onPressed: onContact,
+                            ),
+                            // SizedBox(height: 12.h),
+                            // CustomButton(
+                            //   fillColor: Colors.orange.shade700,
+                            //   onTap: () async {
+                            //     // room creation for chat
+                            //     // debugPrint('Vendor ID: $vendorId');
+                            //     final conversationId = await controller
+                            //         .createOrRetrieveConversation(
+                            //             receiverId: vendorId);
+
+                            //     final String loggedUserId =
+                            //         await SharePrefsHelper.getString(
+                            //             AppConstants.userId);
+                            //     final String loggedUserRole =
+                            //         await SharePrefsHelper.getString(
+                            //             AppConstants.role);
+
+                            //     if (conversationId != null) {
+                            //       context.pushNamed(
+                            //         RoutePath.chatScreen,
+                            //         extra: {
+                            //           'receiverRole': role,
+                            //           'receiverName': name,
+                            //           'receiverImage': imageUrl,
+                            //           'userId': loggedUserId,
+                            //           'conversationId': conversationId,
+                            //           'userRole': loggedUserRole,
+                            //         },
+                            //       );
+                            //     } else {
+                            //       toastMessage(message: "Please Click Again!");
+                            //     }
+                            //   },
+                            //   title: "Inbox Us",
+                            //   icon: Icons.chat_bubble_outline,
+                            // )
+                            TextButton(
+                              onPressed: onDone,
+                              child: Text('Done', style: TextStyle(fontSize: 16.sp, color: AppColors.brightCyan )),
+                            )
+                          ],
                         ),
                 ),
               ],
