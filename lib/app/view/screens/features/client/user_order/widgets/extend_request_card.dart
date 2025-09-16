@@ -80,12 +80,18 @@ class ExtendRequestCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
+
                     Text(orderId, style: textStyleTitle),
-                    SizedBox(width: 6.w),
-                    Text("Last Date: " + lastDate, style: textStyleSubtitle),
+                    SizedBox(width: 6.h),
+                    Icon(
+                      Icons.access_time,
+                      color: Colors.grey[600],
+                      size: 16.sp,
+                    ),
+                    Text(lastDate, style: textStyleSubtitle),
                   ],
                 ),
-                SizedBox(height: 6.h),
+                SizedBox(height: 4.h),
                 Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
