@@ -130,6 +130,15 @@ class ChatController extends GetxController {
     });
 
     msgSub = repo.onMessage.listen((chatMsg) {
+        // Ignore server echoes of messages we just sent: if the incoming chatMsg
+        // reports a sender id that matches our userId, it's likely the same
+        // message we optimistically added locally. Filtering avoids duplicate
+        // display and flicker.
+        final incomingSenderId = extractSenderId(chatMsg);
+        if (incomingSenderId != null && incomingSenderId == userId) {
+          // We sent this message — server echo. Ignore.
+          return;
+        }
       // chatMsg is ChatMessage from repository
       // determine incoming sender role
       final incomingRole = _roleForSender(chatMsg, fallbackRole: chatMsg.sender != null && (chatMsg.sender?.profile?.role == userRole) ? userRole : 'other');
@@ -243,6 +252,10 @@ class ChatController extends GetxController {
   /// Extracts the senderId from a ChatMessage, handling possible nulls.
   String? extractSenderId(ChatMessage chatMsg) {
     try {
+      // Prefer raw senderId parsed from the payload (covers string ids)
+      if (chatMsg.senderId != null && chatMsg.senderId!.isNotEmpty) return chatMsg.senderId;
+
+      // Fallback to nested sender.profile.id when available
       if (chatMsg.sender != null && chatMsg.sender?.profile?.id != null) {
         return chatMsg.sender?.profile?.id?.toString();
       }

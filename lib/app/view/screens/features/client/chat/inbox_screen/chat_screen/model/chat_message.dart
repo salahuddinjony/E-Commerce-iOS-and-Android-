@@ -38,6 +38,8 @@ class ChatMessage {
   final String id; // maps to _id
   final String conversationId;
   final Sender? sender; // senderId object
+  // Raw sender id when the server returns a string or nested object containing an id
+  final String? senderId;
   final String text;
   final List<String> attachment;
   final List<SeenBy> seenBy;
@@ -57,6 +59,7 @@ class ChatMessage {
     required this.createdAt,
     required this.updatedAt,
     required this.v,
+    this.senderId,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -70,10 +73,29 @@ class ChatMessage {
       }
     }
 
+    // try to extract a raw sender id when available (string or nested _id)
+    String? parseSenderId(dynamic s) {
+      try {
+        if (s == null) return null;
+        if (s is String) return s;
+        if (s is Map) {
+          if (s.containsKey('_id')) return s['_id']?.toString();
+          if (s.containsKey('id')) return s['id']?.toString();
+          if (s.containsKey('user')) return s['user']?.toString();
+        }
+      } catch (_) {}
+      return null;
+    }
+
+    final senderIdFromSenderIdField = parseSenderId(json['senderId']);
+    final senderIdFromSenderField = parseSenderId(json['sender']);
+
     return ChatMessage(
       id: json['_id']?.toString() ?? '',
       conversationId: json['conversationId']?.toString() ?? '',
-      sender: json['senderId'] is Map ? Sender.fromJson(json['senderId'] as Map<String, dynamic>) : null,
+      sender: json['senderId'] is Map
+          ? Sender.fromJson(json['senderId'] as Map<String, dynamic>)
+          : (json['sender'] is Map ? Sender.fromJson(json['sender'] as Map<String, dynamic>) : null),
       text: json['text']?.toString() ?? '',
       attachment: (json['attachment'] is List) ? List<String>.from((json['attachment'] as List).map((e) => e?.toString() ?? '')) : <String>[],
       seenBy: (json['seenBy'] is List) ? List<SeenBy>.from((json['seenBy'] as List).map((e) => SeenBy.fromJson(e as Map<String, dynamic>))) : <SeenBy>[],
@@ -81,6 +103,7 @@ class ChatMessage {
       createdAt: parseDate(json['createdAt']),
       updatedAt: parseDate(json['updatedAt']),
       v: (json['__v'] is int) ? json['__v'] as int : int.tryParse('${json['__v']}') ?? 0,
+      senderId: senderIdFromSenderIdField ?? senderIdFromSenderField,
     );
   }
 
