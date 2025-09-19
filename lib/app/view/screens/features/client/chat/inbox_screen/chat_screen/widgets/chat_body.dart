@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/view/screens/features/client/chat/controllers/chat_controller.dart';
+import 'package:local/app/global/controller/genarel_controller.dart';
 import 'loader_overlay.dart';
 
 class ChatBody extends StatelessWidget {
@@ -30,6 +33,45 @@ class ChatBody extends StatelessWidget {
           Chat(
             messages: messages,
             onSendPressed: controller.handleSendPressed,
+            // Provide attachment handler so users can pick images/files
+            onAttachmentPressed: () async {
+              try {
+                final gen = Get.find<GeneralController>();
+                await gen.selectImage();
+                if (gen.image.value.isEmpty) return;
+
+                // If chat repo expects attachments as list of urls/meta, adapt here.
+                // We'll send a simple message indicating an attachment was sent and
+                // call repo.sendMessage with an attachment path in the 'attachment' field.
+                final pickedPath = gen.image.value;
+
+                // optimistic UI: add an image message locally
+                final imgMsg = types.ImageMessage(
+                  author: controller.user,
+                  createdAt: DateTime.now().millisecondsSinceEpoch,
+                  id: const Uuid().v4(),
+                  name: pickedPath.split('/').last,
+                  size: 0,
+                  uri: pickedPath,
+                  metadata: {'role': controller.userRole},
+                );
+
+                controller.messages.insert(0, imgMsg);
+
+                // send to server via repo (repository expects attachment list)
+                controller.repo.sendMessage(
+                  conversationId: controller.conversationId,
+                  senderId: controller.userId,
+                  text: '',
+                  attachment: [pickedPath],
+                );
+
+                // clear selected image
+                gen.clearImage();
+              } catch (e) {
+                debugPrint('Attachment error: $e');
+              }
+            },
             showUserAvatars: true,
             showUserNames: true,
             dateFormat: DateFormat('dd/MM/yyyy'),
