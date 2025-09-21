@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/widgets/custom_order_field.dart';
 
 import '../../../../../../../../core/route_path.dart';
 
@@ -28,11 +31,15 @@ class AddAddressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("Passed Image to AddAddressScreen: $productImage");
+    debugPrint('AddAddressScreen for vendorId: $vendorId');
+    debugPrint('isCustomOrder: $isCustomOrder');
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Add Address'),
+        title: isCustomOrder ? const Text("Custom Order Details") : const Text('Add Address'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -40,8 +47,7 @@ class AddAddressScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Recipient’s Name',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Recipient’s Name', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               TextField(
                 controller: controller.customerNameController,
@@ -55,16 +61,15 @@ class AddAddressScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text('Contact Number',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+
+              // show custom order fields if isCustomOrder is true
+              isCustomOrder ? CustomOrderField(controller: controller) : const SizedBox(),
+              const Text('Contact Number', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               TextField(
                 controller: controller.customerPhoneController,
                 keyboardType: TextInputType.phone,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
+                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
                   hintText: 'Phone Number',
                   filled: true,
@@ -76,8 +81,7 @@ class AddAddressScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text('City/Region',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('City/Region', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               TextField(
                 controller: controller.customerRegionCityController,
@@ -92,8 +96,7 @@ class AddAddressScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text('Address',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Address', style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               TextField(
                 controller: controller.customerAddressController,
@@ -107,28 +110,51 @@ class AddAddressScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 20.h,
-              ),
-              CustomButton(
-   
-                onTap: () {
-                  if (controller.checkCustomerInfoIsEmpty()) return;
-                  context.pushNamed(
-                    RoutePath.orderOverviewScreen,
-                    extra: {
-                      'vendorId': vendorId,
-                      'productId': productId,
-                      'controller': controller,
-                      'ProductImage': productImage,
-                      'isCustomOrder': isCustomOrder,
-                      'productName': productName,
-                      'productCategoryName': productCategoryName,
-                    },
-                  );
-                },
-                title: "Next",
-              )
+              SizedBox(height: 20.h),
+              Obx(() {
+                final submitting = controller.isSubmitting?.value ?? false;
+                return CustomButton(
+                  onTap: submitting
+                      ? null
+                      : () async {
+                          if (controller.checkCustomerInfoIsEmpty()) return;
+                          if (isCustomOrder) {
+                            try {
+                              EasyLoading.show(status: 'Creating order...');
+                              final success = await controller.createCustomOrder(
+                                vendorId: vendorId,
+                                localImage: productImage,
+                              );
+                              if (success) {
+                                EasyLoading.showSuccess('Order created successfully');
+                                context.goNamed(RoutePath.userHomeScreen);
+                              } else {
+                                EasyLoading.showError('Failed to create order');
+                              }
+                            } catch (e) {
+                              EasyLoading.showError('Error: ${e.toString()}');
+                            }
+                            return;
+                          }
+
+                          // For general order, navigate to order overview
+                          context.pushNamed(
+                            RoutePath.orderOverviewScreen,
+                            extra: {
+                              'vendorId': vendorId,
+                              'productId': productId,
+                              'controller': controller,
+                              'ProductImage': productImage,
+                              'isCustomOrder': isCustomOrder,
+                              'productName': productName,
+                              'productCategoryName': productCategoryName,
+                            },
+                          );
+                        },
+                  title: submitting ? "Creating..." : isCustomOrder ? "Create Custom Order" : "Next",
+                );
+              }),
+              SizedBox(height: 20.h),
             ],
           ),
         ),

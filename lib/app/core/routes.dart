@@ -431,10 +431,14 @@ class AppRouter {
         GoRoute(
           name: RoutePath.customDesignScreen,
           path: RoutePath.customDesignScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  CustomDesignScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state){
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final vendorId = extra['vendorId'] as String? ?? '';
+            return _buildPageWithAnimation(
+              child: CustomDesignScreen(vendorId: vendorId),
+              state: state,
+            );
+          }
            
           
 
