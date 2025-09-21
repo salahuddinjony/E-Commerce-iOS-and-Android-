@@ -39,7 +39,7 @@ class ChatScreen extends StatelessWidget {
         receiverName: receiverName,
         receiverImage: receiverImage,
         onBack: () => context.pop(),
-        onMore: () {}, // TODO: implement
+        onMore: () {}, 
       ),
       body: SafeArea(
         bottom: false,
@@ -48,7 +48,7 @@ class ChatScreen extends StatelessWidget {
             gradient: LinearGradient(
               colors: [
                 Colors.white,
-                AppColors.brightCyan.withOpacity(.03),
+                AppColors.brightCyan.withValues(alpha: .03),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

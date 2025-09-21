@@ -2,13 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:local/app/core/route_path.dart';
-import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
-import 'package:local/app/utils/app_constants/app_constants.dart';
-import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 
 class PaymentResultCard extends StatelessWidget {
   final bool isOrderSuccess;

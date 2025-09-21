@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
+import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
@@ -16,7 +17,7 @@ import '../widgets/design_toolbar.dart';
 
 // Minimal controller-like object expected by `AddAddressScreen`.
 // It provides TextEditingController fields and a basic validation method.
-class _OrderFormController {
+class OrderFormController {
   final customerNameController = TextEditingController();
   final customerPhoneController = TextEditingController();
   final customerRegionCityController = TextEditingController();
@@ -36,7 +37,9 @@ class _OrderFormController {
 
 class CustomDesignScreen extends StatelessWidget {
   final String vendorId;
-  const CustomDesignScreen({super.key, required this.vendorId});
+  final bool isFromCustomHub;
+
+  const CustomDesignScreen({super.key, required this.vendorId, this.isFromCustomHub = false});
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +115,7 @@ class CustomDesignScreen extends StatelessWidget {
                             icon: c.isExporting.value
                                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                                 : const Icon(Icons.download),
-                            label: const Text("Download", style: TextStyle(color: Colors.black)),
+                            label: const Text("Preview", style: TextStyle(color: Colors.black)),
                           );
                         }),
                         Obx(() => c.imagePath.value != null
@@ -132,12 +135,13 @@ class CustomDesignScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   // order button placed at bottom; it's not Expanded so it won't break scroll
-                  Padding(
+                isFromCustomHub? SizedBox.shrink() : Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Obx(() => CustomButton(
                           onTap: c.isExporting.value
                               ? null
                               : () async {
+                               
                                   // prepare payload (exports and stores bytes/base64)
                                   final ok = await c.prepareOrderPayload();
                                   if (!ok || c.exportedImageBytes.value == null) {
@@ -150,9 +154,13 @@ class CustomDesignScreen extends StatelessWidget {
                                   final tempPath = await c.saveBytesToTempFile(bytes);
                                   debugPrint('CustomDesign exported image path: $tempPath');
                                   debugPrint("VendorId: $vendorId");
+                                   if(c.imagePath.value == null){
+                                   toastMessage(message: 'Please upload an image');
+                                   return;
+                                   }
 
                                   // create a minimal controller object expected by AddAddressScreen
-                                  final _orderController = _OrderFormController();
+                                  // final orderController = OrderFormController();
                                   final customOrderController= Get.put(ProductDetailsController(basePrice: 0));
 
                                   // navigate to AddAddressScreen passing the temp image path

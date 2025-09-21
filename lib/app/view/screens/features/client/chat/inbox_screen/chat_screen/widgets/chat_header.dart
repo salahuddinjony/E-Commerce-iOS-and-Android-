@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 
 class ChatHeader extends StatelessWidget implements PreferredSizeWidget {

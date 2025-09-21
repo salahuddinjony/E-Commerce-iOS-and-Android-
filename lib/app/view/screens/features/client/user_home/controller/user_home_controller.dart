@@ -25,8 +25,10 @@ class UserHomeController extends GetxController with VendorListService {
       if (latitude.value.isNotEmpty && longitude.value.isNotEmpty) {
       fetchNearestVendor(
         latLng: LatLng(
-        23.761491917390394,
-         90.35677046743345,
+              23.761491917390394,
+               90.35677046743345,
+          // double.parse(latitude.value),
+          // double.parse(longitude.value),
         ),
       );
       }

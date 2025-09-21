@@ -37,7 +37,12 @@ class CustomHubScreen extends StatelessWidget {
           ),
           CustomButton(
             onTap: () {
-              context.pushNamed(RoutePath.customDesignScreen);
+              context.pushNamed(RoutePath.customDesignScreen,
+                  extra: {
+                    "vendorId": "",
+                    "isFromCustomHub": true
+                    }
+              );
                
             },
             title: "Custom Hub",
