@@ -12,7 +12,7 @@ import '../custom_text/custom_text.dart';
 
 class ProfileCard extends StatelessWidget {
   final String imageUrl;
-  final UserItem vendorItems;
+  final Vendor vendorItems;
 
   ProfileCard({super.key, required this.imageUrl, required this.vendorItems});
 
@@ -26,9 +26,9 @@ class ProfileCard extends StatelessWidget {
         context.pushNamed(
           RoutePath.shopDetailsScreen,
           extra: {
-            'image': vendorItems.profile?.id?.image ?? '',
-            'location': vendorItems.profile?.id?.address ?? '',
-            'name': vendorItems.profile?.id?.name ?? '',
+            'image': vendorItems.image,
+            'location': vendorItems.address,
+            'name': vendorItems.name,
             'vendorId': vendorItems.id,
           },
         );
@@ -55,30 +55,30 @@ class ProfileCard extends StatelessWidget {
                     width: 40,
                     boxShape: BoxShape.circle,
                   ),
-                  if (vendorItems.isOnline == false)
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Container(
-                        width: 14,
-                        height: 14,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                        child: Icon(
-                          Icons.circle,
-                          color: Colors.green,
-                          size: 10,
-                        ),
-                      ),
-                    ),
+                  // if (vendorItems. == false)
+                  //   Positioned(
+                  //     top: 0,
+                  //     right: 0,
+                  //     child: Container(
+                  //       width: 14,
+                  //       height: 14,
+                  //       decoration: BoxDecoration(
+                  //         color: Colors.green,
+                  //         shape: BoxShape.circle,
+                  //         border: Border.all(color: Colors.white, width: 2),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.circle,
+                  //         color: Colors.green,
+                  //         size: 10,
+                  //       ),
+                  //     ),
+                  //   ),
                 ],
               ),
               const SizedBox(height: 5),
               CustomText(
-                text: vendorItems.profile?.id?.name?.toString() ?? '',
+                text: vendorItems.name ?? '',
                 fontSize: 16.sp,
                 font: CustomFont.poppins,
                 color: AppColors.darkNaturalGray,
@@ -87,8 +87,7 @@ class ProfileCard extends StatelessWidget {
               SizedBox(height: 10),
               CustomText(
                 text:
-                    vendorItems.profile?.id?.address?.split(',').last.trim() ??
-                        '',
+                    vendorItems.address?.split(',').last.trim() ?? 'No location',
                 fontSize: 12.sp,
                 font: CustomFont.poppins,
                 color: AppColors.naturalGray,

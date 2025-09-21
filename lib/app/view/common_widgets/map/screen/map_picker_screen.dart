@@ -7,7 +7,8 @@ import 'package:local/app/view/common_widgets/map/controller/map_picker_controll
 
 class MapPickerScreen extends StatelessWidget {
   final LatLng initialPosition;
-  const MapPickerScreen({super.key, required this.initialPosition});
+
+   MapPickerScreen({super.key, required this.initialPosition});
   @override
   Widget build(BuildContext context) {
     if (!Get.isRegistered<MapPickerController>()) {
@@ -45,11 +46,42 @@ class MapPickerScreen extends StatelessWidget {
                 mapPickerController.pickedLocation.value = latLng;
                 await mapPickerController.updateAddress(latLng);
               },
-              markers: {
+                markers: {
+                // Marker for picked location
                 Marker(
                   markerId: const MarkerId('picked'),
                   position: mapPickerController.pickedLocation.value,
+                  // position: LatLng(23.761491917390394, 90.35677046743345),
+
                 ),
+                // Marker for center location
+                // Marker(
+                //   markerId: const MarkerId('center'),
+                //   position: LatLng(
+                //     mapPickerController.pickedLocation.value.latitude + 0.001,
+                //     mapPickerController.pickedLocation.value.longitude + 0.001,
+                //   ),
+                //   icon: BitmapDescriptor.defaultMarkerWithHue(
+                //     BitmapDescriptor.hueMagenta),
+                // ),
+                // Markers for your given lat/lng list
+                ...mapPickerController.nearestVendors
+                    .where((v) => v.location?.coordinates != null && v.location!.coordinates!.length >= 2)
+                    .map((vendor) {
+                  final coords = vendor.location!.coordinates!;
+                  // coords is List<double>. By GeoJSON convention it's [lng, lat].
+                  final double longitude = coords[0];
+                  final double latitude = coords[1];
+                  final id = vendor.id ?? '${latitude}_$longitude';
+                  return Marker(
+                    markerId: MarkerId(id),
+                    position: LatLng(latitude, longitude),
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueGreen,
+                    ),
+                  );
+                }).toSet(),
+                
               },
             ),
           ),

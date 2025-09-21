@@ -80,7 +80,7 @@ static String orderDateExtension({required String orderId}) {
     return "$baseUrl/general-order/delete/$orderId";
   }
 
-  static String getNearestVendorlist="$baseUrl/user/retrieve/all";
+  static String getNearestVendorlist="$baseUrl/vendor/nearest-all";
 
 
       //======== Extend Request ========//
