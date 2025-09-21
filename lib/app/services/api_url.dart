@@ -98,6 +98,8 @@ static String orderDateExtension({required String orderId}) {
 
   static String createGeneralOrder = "general-order/create";
 
+// Create Custom Order
+  static String createCustomOrder = "/order/create";
 
 
   //=================Product=================

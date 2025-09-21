@@ -1,8 +1,11 @@
+// ...existing code...
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
+// ...existing code...
 
 import '../controller/custom_design_controller.dart';
 import '../widgets/design_preview.dart';
@@ -13,9 +16,9 @@ class CustomDesignScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // register controller for this screen
-    Get.put(CustomDesignController());
-    final CustomDesignController c = Get.find();
+    // register controller for this screen so child widgets can use Get.find()
+    final tag = ModalRoute.of(context)!.settings.name; // unique tag per screen instance
+    final CustomDesignController c = Get.put(CustomDesignController(), tag: tag);
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -58,24 +61,34 @@ class CustomDesignScreen extends StatelessWidget {
                           child: const Text("Upload Image", style: TextStyle(color: Colors.black)),
                         ),
                         Obx(() {
-                          if ( c.imagePath.value == null) {
+                          if (c.imagePath.value == null) {
                             return const SizedBox.shrink();
                           }
                           return TextButton.icon(
                             onPressed: c.isExporting.value
                                 ? null
                                 : () async {
-                                    // final path = await c.exportPreviewAsPng();
-                                    // if (path != null) {
-                                    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saved image: $path')));
-                                    // } else {
-                                    //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to save image')));
-                                    // }
+                                    debugPrint('Download button tapped');
+                                    final res = await c.savePreviewToGallery();
+                                    debugPrint('savePreviewToGallery result: $res');
+                                    debugPrint('exportedImageBytes length: ${c.exportedImageBytes.value?.lengthInBytes}');
+                                    debugPrint('exportedImageBase64 length: ${c.exportedImageBase64.value?.length}');
+                                    if (res['ok'] == true) {
+                                      final path = res['path']?.toString() ?? '<unknown>';
+                                      if (res['warning'] == 'permission_denied') {
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saved to temp (permission denied): $path')));
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saved: $path')));
+                                      }
+                                    } else {
+                                      final err = res['error']?.toString() ?? 'unknown';
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to save: $err')));
+                                    }
                                   },
                             icon: c.isExporting.value
                                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                                 : const Icon(Icons.download),
-                            label: const Text("Download",style: TextStyle(color: Colors.black), ),
+                            label: const Text("Download", style: TextStyle(color: Colors.black)),
                           );
                         }),
                         Obx(() => c.imagePath.value != null
@@ -89,12 +102,32 @@ class CustomDesignScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  SizedBox(height: previewHeight, child: const DesignPreview()),
+                  SizedBox(
+                    height: previewHeight,
+                    child: DesignPreview(),
+                  ),
                   const SizedBox(height: 16),
                   // order button placed at bottom; it's not Expanded so it won't break scroll
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child:  CustomButton(onTap: (){}, title: "Place Order", height: 48),
+                    child: Obx(() => CustomButton(
+                          onTap: c.isExporting.value
+                              ? null
+                              : () async {
+                                  // prepare payload (exports and stores base64)
+                                  final ok = await c.prepareOrderPayload();
+                                  if (ok && c.exportedImageBase64.value != null) {
+                                    // At this point, caller can post c.exportedImageBase64.value to API
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Order payload ready')));
+                                    // store or call API here. For now we just print to console.
+                                    // print('base64 length: \'${c.exportedImageBase64.value!.length}\'');
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to prepare order')));
+                                  }
+                                },
+                          title: c.isExporting.value ? 'Processing...' : 'Place Order',
+                          height: 48,
+                        )),
                   ),
                   const SizedBox(height: 12),
                 ],
