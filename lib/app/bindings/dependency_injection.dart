@@ -5,6 +5,7 @@ import 'package:local/app/view/common_widgets/bottom_navigation_bar/client_nav_b
 import 'package:local/app/view/common_widgets/bottom_navigation_bar/vendor_nav/controller/verndor_nav_controller.dart';
 import 'package:local/app/view/screens/authentication/controller/auth_controller.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/controller/conversation_controller.dart';
+import 'package:local/app/view/screens/features/client/user_home/custom_design/controller/custom_design_controller.dart';
 import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
 import 'package:local/app/view/screens/splash/controller/splash_controller.dart';
 import 'package:local/app/view/screens/features/client/user_home/controller/delivery_locations_controller.dart';
@@ -40,7 +41,8 @@ class DependencyInjection extends Bindings {
     Get.lazyPut(() => ShopDetailsController(), fenix: true);
 
     Get.lazyPut(() => UserOrderController(), fenix: true);
-
     Get.lazyPut(() => ConversationController(), fenix: true);
+    Get.lazyPut(() => CustomDesignController(), fenix: true);
+   
   }
 }
