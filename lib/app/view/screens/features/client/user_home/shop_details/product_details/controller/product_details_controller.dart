@@ -1,7 +1,6 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
-import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/view/common_widgets/product_color_list/mixin_product_color.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/controller/mixin_create_order.dart';
 
@@ -10,6 +9,9 @@ class ProductDetailsController extends GetxController
   final double basePrice;
   // basePrice is now passed in via constructor
   ProductDetailsController({required this.basePrice});
+
+  // submission state for custom/general orders
+  final isSubmitting = false.obs;
 
   final standardShipping = false.obs;
   final expressShipping = false.obs;
@@ -142,6 +144,31 @@ class ProductDetailsController extends GetxController
       sessionId: sessionId,
     );
     return response;
+  }
+
+  Future<bool> createCustomOrder(
+      {required String vendorId, dynamic localImage}) async {
+    isSubmitting.value = true;
+    try {
+      // show loading via EasyLoading (UI can also observe isSubmitting)
+      // Note: UI may show its own loading, but having EasyLoading here ensures feedback even if UI doesn't
+      // EasyLoading.show(status: 'Creating order...');
+      final response = await customOrder(
+        vendorId: vendorId,
+        shippingAddress: "Address:" +
+            customerAddressController.text.trim() +
+            ", City/Region:" +
+            customerRegionCityController.text.trim() +
+            ", Phone:" +
+            customerPhoneController.text.trim() +
+            ", Name:" +
+            customerNameController.text.trim(),
+        localImage: localImage,
+      );
+      return response;
+    } finally {
+      isSubmitting.value = false;
+    }
   }
 
   @override

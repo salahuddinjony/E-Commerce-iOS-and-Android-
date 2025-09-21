@@ -138,7 +138,7 @@ class UserHomeScreen extends StatelessWidget {
                       color: AppColors.naturalGray,
                     ),
 
-                    //-------------Mapwise show the nearest vendors------------
+                    //-------------Map wise show the nearest vendors------------
                     ViewMapButton(),
                     Obx(
                       () {

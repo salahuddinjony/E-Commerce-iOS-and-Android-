@@ -24,7 +24,9 @@ class ApiClient extends GetxService {
   ///================================================================Get Method============================///
 
   static Future<Response> getData(String uri,
-      {Map<String, dynamic>? query, Map<String, String>? headers}) async {
+      {Map<String, dynamic>? query,
+      Map<String, String>? headers,
+      dynamic body}) async {
     bearerToken = await SharePrefsHelper.getString(AppConstants.bearerToken);
 
     final mainHeaders = {
@@ -35,10 +37,24 @@ class ApiClient extends GetxService {
     // Build final URI with query params (merging any already present in uri)
     Uri baseUri = Uri.parse(uri);
     if (query != null) {
-      baseUri = baseUri.replace(queryParameters: query); 
+      baseUri = baseUri.replace(queryParameters: query);
     }
     try {
       debugPrint('====> API Call: $baseUri\nHeader: ${headers ?? mainHeaders}');
+
+      // If body is provided for GET, use a generic Request to send a body
+      if (body != null) {
+        debugPrint('====> API Body: $body');
+        var request = http.Request('GET', baseUri);
+        request.headers.addAll(headers ?? mainHeaders);
+        request.body = body is String ? body : jsonEncode(body);
+
+        http.StreamedResponse streamedResponse = await client
+            .send(request)
+            .timeout(const Duration(seconds: timeoutInSeconds));
+        final response = await http.Response.fromStream(streamedResponse);
+        return handleResponse(response, baseUri.toString());
+      }
 
       final response = await client
           .get(
@@ -276,7 +292,7 @@ class ApiClient extends GetxService {
 
     var mainHeaders = {
       'Content-Type': 'application/json',
-      'Authorization':'Bearer $bearerToken', // FIX: add Bearer
+      'Authorization': 'Bearer $bearerToken', // FIX: add Bearer
     };
     try {
       debugPrint('====> API Call: $uri\nHeader: ${headers ?? mainHeaders}');

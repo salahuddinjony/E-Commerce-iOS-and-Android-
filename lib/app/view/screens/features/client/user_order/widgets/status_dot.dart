@@ -23,7 +23,7 @@ class StatusDot extends StatelessWidget {
           boxShadow: [
             if (isLatest)
               BoxShadow(
-                color: color.withOpacity(.25),
+                color: color.withValues(alpha: .25),
                 blurRadius: 8,
                 offset: Offset(0, 2),
               ),

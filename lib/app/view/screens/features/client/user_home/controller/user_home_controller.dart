@@ -12,11 +12,27 @@ class UserHomeController extends GetxController with VendorListService {
   final RxString longitude = ''.obs;
   RxString address = 'Loading...'.obs;
   final RxBool isLoading = false.obs;
+  int time = 0;
 
   @override
   void onInit() {
-    fetchNearestVendor();
-    super.onInit();
+     super.onInit();
+    // Call fetchNearestVendor whenever latitude or longitude changes
+    everAll([latitude, longitude], (_) {
+      time += 1;
+      debugPrint('Latitude changed(call $time): ${latitude.value}');
+      debugPrint('Longitude changed(call $time): ${longitude.value}');
+      if (latitude.value.isNotEmpty && longitude.value.isNotEmpty) {
+      fetchNearestVendor(
+        latLng: LatLng(
+              23.761491917390394,
+               90.35677046743345,
+          // double.parse(latitude.value),
+          // double.parse(longitude.value),
+        ),
+      );
+      }
+    });
     // wait for the first frame so Get.context is likely available
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setCurrentLocationAndAddress(Get.context);

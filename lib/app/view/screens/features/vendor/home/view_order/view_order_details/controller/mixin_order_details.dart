@@ -133,7 +133,7 @@ mixin OrderDetailsMixin {
         // compute pendingExtension based on latest extentionHistory entry if pending
         if (updatedOrder.extentionHistory.isNotEmpty) {
           final ext = updatedOrder.extentionHistory.last;
-          final status = (ext.status ?? '').toLowerCase();
+          final status = (ext.status).toLowerCase();
           if (status == 'pending') {
             try {
               pendingExtension.value = ext.newDate.difference(ext.lastDate);

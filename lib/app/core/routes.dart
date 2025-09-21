@@ -57,7 +57,6 @@ import '../view/screens/features/vendor/home/view_order/view_order_screen.dart';
 import '../view/screens/features/vendor/orders/order_details/screen/order_details_screen.dart';
 import '../view/screens/features/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import '../view/screens/features/vendor/profile/business_documents/business_documents_screen.dart';
-import '../view/screens/features/vendor/vendor_message/vendor_message_screen.dart';
 import 'route_path.dart';
 
 class AppRouter {
@@ -431,10 +430,18 @@ class AppRouter {
         GoRoute(
           name: RoutePath.customDesignScreen,
           path: RoutePath.customDesignScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
-            child:  CustomDesignScreen(),
-            state: state,
-          ),
+          pageBuilder: (context, state){
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final vendorId = extra['vendorId'] as String? ?? '';
+            final isFromCustomHub = extra['isFromCustomHub'] as bool? ?? false;
+            return _buildPageWithAnimation(
+              child: CustomDesignScreen(
+                vendorId: vendorId, 
+                isFromCustomHub: isFromCustomHub,
+              ),
+              state: state,
+            );
+          }
            
           
 

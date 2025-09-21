@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';

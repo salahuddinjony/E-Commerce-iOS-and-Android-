@@ -4,7 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:local/app/view/common_widgets/map/show_address_based_on_latLng.dart';
-class MapPickerController extends GetxController {
+import 'package:local/app/view/screens/features/client/user_home/vendor_list/service/vendor_list_service.dart';
+class MapPickerController extends GetxController with VendorListService {
   Rx<LatLng> pickedLocation = LatLng(24.7136, 46.6753).obs; // Default to Riyadh
   var isLoading = false.obs;
   var errorMessage = ''.obs;
@@ -17,6 +18,13 @@ class MapPickerController extends GetxController {
     pickedLocation.value = initialPosition;
     updateAddress(initialPosition);
   }
+  
+  Future<BitmapDescriptor> getCustomMarkerIcon() async {
+  return await BitmapDescriptor.asset(
+    const ImageConfiguration(size: Size(48, 48)), // icon size
+    'assets/icons/download.png',
+  );
+}
   
   @override
   void onInit() {

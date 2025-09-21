@@ -5,22 +5,25 @@ import 'package:local/app/services/api_url.dart';
 import 'package:local/app/view/screens/features/client/user_home/vendor_list/model/nearest_vendor_response.dart';
 
 mixin class VendorListService {
-  final RxList<UserItem> nearestVendors = <UserItem>[].obs;
+  final RxList<Vendor> nearestVendors = <Vendor>[].obs;
   final RxBool isLoadingVendorList = false.obs;
 
-  Future<void> fetchNearestVendor() async {
+  Future<void> fetchNearestVendor({required  latLng}) async {
     try {
       isLoadingVendorList.value = true;
-      final queryParams = <String, dynamic>{
-          'profile.role': 'vendor',
-      };
+     
     
+      final body = {
 
-      final response = await ApiClient.getData(ApiUrl.getNearestVendorlist,
-          query: queryParams);
+        'clientLocation': '${latLng.latitude}, ${latLng.longitude}',
+        
+      };
+
+      String endpoint = ApiUrl.getNearestVendorlist;
+      final response = await ApiClient.getData(endpoint, body: body);
       if (response.statusCode == 200) {
         isLoadingVendorList.value = false;
-        final data = NearestVendorResponse.fromJson(response.body);
+        final data = VendorResponse.fromJson(response.body);
         nearestVendors.value = data.data ?? [];
         debugPrint('Nearest vendors fetched: ${nearestVendors.length}');
         debugPrint('Response data: ${response.body}');
