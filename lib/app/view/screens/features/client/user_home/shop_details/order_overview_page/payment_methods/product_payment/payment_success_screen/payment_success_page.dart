@@ -10,8 +10,6 @@ class PaymentSuccessPage extends StatelessWidget {
   final String? status;
   final String? amountPaid;
   final Map<String, dynamic>? details;
-
-  // added optional fields used by stripe_service
   final String? chargeId;
   final String? paymentMethod;
   final String? sessionId;
@@ -116,17 +114,17 @@ class PaymentSuccessPage extends StatelessWidget {
           child: Center(
             child: SingleChildScrollView(
               child: PaymentResultCard(
-                isOrderSuccess: isOrderSuccess,
+                isOrderSuccess: !isOrderSuccess,
                 transactionId: transactionId,
                 status: status,
                 amountPaid: amountPaid,
                 details: details,
-                // forward new fields to the reusable card (if your card supports them)
                 chargeId: chargeId,
                 paymentMethod: paymentMethod,
                 sessionId: sessionId,
                 onDone: () => handleDone(context),
                 onContact: () => showContactDialog(context),
+                onDownload: null, 
               ),
             ),
           ),

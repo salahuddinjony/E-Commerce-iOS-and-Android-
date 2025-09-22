@@ -32,8 +32,8 @@ class ProfileCard extends StatelessWidget {
             'vendorId': vendorItems.id,
           },
         );
-        shopDetailsController.fetchCategories(vendorId: vendorItems.id);
-        shopDetailsController.fetchProducts(vendorId: vendorItems.id);
+        shopDetailsController.fetchCategories(vendorId: vendorItems.userId!.id!);
+        shopDetailsController.fetchProducts(vendorId: vendorItems.userId!.id!);
       },
       child: Card(
         color: AppColors.white,
