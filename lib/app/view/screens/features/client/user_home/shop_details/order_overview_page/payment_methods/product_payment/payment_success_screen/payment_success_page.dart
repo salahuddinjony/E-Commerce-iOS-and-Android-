@@ -114,7 +114,7 @@ class PaymentSuccessPage extends StatelessWidget {
           child: Center(
             child: SingleChildScrollView(
               child: PaymentResultCard(
-                isOrderSuccess: !isOrderSuccess,
+                isOrderSuccess: isOrderSuccess,
                 transactionId: transactionId,
                 status: status,
                 amountPaid: amountPaid,
