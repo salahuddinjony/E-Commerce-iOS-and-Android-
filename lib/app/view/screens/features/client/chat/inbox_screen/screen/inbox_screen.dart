@@ -12,12 +12,14 @@ import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/message_card/message_card.dart';
 import 'package:local/app/view/common_widgets/bottom_navigation_bar/client_nav_bar/nav_bar.dart';
+import 'package:local/app/view/common_widgets/bottom_navigation_bar/vendor_nav/vendor_nav.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/controller/conversation_controller.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/widgets/empty_conversations.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/widgets/inbox_loader.dart';
 
 class InboxScreen extends StatelessWidget {
-  InboxScreen({super.key});
+  final bool isVendor;
+  InboxScreen({super.key, this.isVendor = false});
 
   final controller = Get.find<ConversationController>();
 
@@ -25,7 +27,9 @@ class InboxScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar: CustomNavBar(currentIndex: 2),
+      bottomNavigationBar: isVendor
+          ? OwnerNav(currentIndex: 3)
+          : CustomNavBar(currentIndex: 2),
       appBar: const CustomAppBar(
         appBarContent: AppStrings.chatList,
       ),
