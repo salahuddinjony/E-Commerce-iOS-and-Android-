@@ -5,7 +5,6 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:typed_data';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 
@@ -198,7 +197,7 @@ class PaymentResultCard extends StatelessWidget {
                       height: 110.w,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: primaryColor.withOpacity(.12),
+                        color: primaryColor.withValues(alpha: .12),
                       ),
                       child: Center(
                         child: isOrderSuccess
@@ -243,8 +242,8 @@ class PaymentResultCard extends StatelessWidget {
                               horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: isOrderSuccess
-                                ? Colors.green.withOpacity(.12)
-                                : Colors.orange.withOpacity(.12),
+                                ? Colors.green.withValues(alpha: .12)
+                                : Colors.orange.withValues(alpha: .12),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(

@@ -94,12 +94,16 @@ class ProductCard extends StatelessWidget {
                             content:
                                 'Are you sure you want to delete this product?',
                             onConfirm: () async {
-                              final success = await vendorProductController
+                              
+                              // final success = await vendorProductController
+                              //     .deleteProduct(productData.id);
+                              // if (success) {
+                              //   onProductDeleted?.call();
+                              //   Navigator.of(context).pop();
+                              // }
+                              
+                              await vendorProductController
                                   .deleteProduct(productData.id);
-                              if (success) {
-                                onProductDeleted?.call();
-                                Navigator.of(context).pop();
-                              }
                             },
                           ),
                         );
