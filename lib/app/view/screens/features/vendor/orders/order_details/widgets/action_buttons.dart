@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
@@ -47,27 +48,34 @@ class ActionButtons extends StatelessWidget {
       //   );
       // }
       if (order.status == 'in-progress') {
-        return twoButtons(
-          leftTitle: 'Delivery',
-          rightButton: false,
-          leftOnTap: () async {
-            if (await controller.updateCustomOrderStatus(
-                order.id, 'completed')) {
-              toastMessage(message: 'Custom Order Completed');
-              context.pop();
-            } else {
-              toastMessage(message: 'Failed to complete order');
-            }
-          },
-          // rightOnTap: () async {
-          //   if (await controller.updateCustomOrderStatus(
-          //       order.id, 'cancelled')) {
-          //     toastMessage(message: 'Custom Order Cancelled');
-          //     context.pop();
-          //   } else {
-          //     toastMessage(message: 'Failed to cancel order');
-          //   }
-          // },
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50.0),
+          child: Obx(
+            () => twoButtons(
+              leftTitle: 'Delivery',
+              rightButton: false,
+              isLeftLoading: controller.isAcceptLoading.value,
+              isRightLoading: controller.isRejectLoading.value,
+              leftOnTap: () async {
+                if (await controller.updateCustomOrderStatus(
+                    order.id, 'completed')) {
+                  toastMessage(message: 'Custom Order Completed');
+                  context.pop();
+                } else {
+                  toastMessage(message: 'Failed to complete order');
+                }
+              },
+              // rightOnTap: () async {
+              //   if (await controller.updateCustomOrderStatus(
+              //       order.id, 'cancelled')) {
+              //     toastMessage(message: 'Custom Order Cancelled');
+              //     context.pop();
+              //   } else {
+              //     toastMessage(message: 'Failed to cancel order');
+              //   }
+              // },
+            ),
+          ),
         );
       }
       return CustomButton(
@@ -102,5 +110,4 @@ class ActionButtons extends StatelessWidget {
       );
     }
   }
-
- }
+}
