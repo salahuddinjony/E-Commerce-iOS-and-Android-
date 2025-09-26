@@ -358,6 +358,12 @@ class AuthController extends GetxController with PasswordConstraintController {
       toastMessage(message: "Please upload a document before proceeding.");
       return;
     }
+    if (latitude.value.isEmpty || longitude.value.isEmpty) {
+      isVendorLoading.value = false;
+      refresh();
+      toastMessage(message: "Please select a location before proceeding.");
+      return;
+    }
     Map<String, dynamic> body = {
       "name": businessNameController.text.trim(),
       "email": businessEmailController.text.trim(),
@@ -366,11 +372,11 @@ class AuthController extends GetxController with PasswordConstraintController {
       "role": "vendor",
       "isSocial": "false",
       "address": address.value,
-      "lat": latitude.value,
-      "long": longitude.value,
+      "lat": double.tryParse(latitude.value) ?? 0.0,
+      "lng": double.tryParse(longitude.value) ?? 0.0,
       "description": businessDescriptionController.text.trim(),
       "deliveryOption":
-          businessDeliveryOptionController.text.toLowerCase().trim(),
+          businessDeliveryOptionController.text,
     };
 
     var response = await ApiClient.postMultipartData(
@@ -390,9 +396,11 @@ class AuthController extends GetxController with PasswordConstraintController {
           "email": businessEmailController.text,
         },
       );
-      toastMessage(message: responseData["message"]);
+      toastMessage(message: responseData["message"] ?? "Registration successful");
     } else if (response.statusCode == 400) {
-      toastMessage(message: responseData["error"]);
+      toastMessage(message: responseData["error"] ?? "Bad request");
+    } else if (response.statusCode == 500) {
+      toastMessage(message: responseData["error"] ?? "Server error. Please try again.");
     } else {
       ApiChecker.checkApi(response);
     }
