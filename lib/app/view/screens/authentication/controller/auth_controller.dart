@@ -24,8 +24,7 @@ class AuthController extends GetxController with PasswordConstraintController {
   // final passWordController = TextEditingController(text: "12345678");
 
   // for client
-  final emailController =
-      TextEditingController(text: "pekasi2300@futurejs.com");
+  final emailController =TextEditingController(text: "pekasi2300@futurejs.com");
   final passWordController = TextEditingController(text: "Salah!1aa");
 
   final confirmPasswordController = TextEditingController();
