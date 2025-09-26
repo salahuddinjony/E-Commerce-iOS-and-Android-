@@ -83,6 +83,8 @@ class CustomOrderService {
 
       if (response.statusCode == 200) {
         // throw Exception('Failed to update order status: ${response.body}')
+        fetchCustomOrders();
+        fetchGeneralOrders();
        print('Order status updated successfully: $orderId to $status');
        return true;
       } else {

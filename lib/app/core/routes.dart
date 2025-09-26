@@ -14,6 +14,7 @@ import 'package:local/app/view/screens/authentication/sign_up/widgets/next.dart'
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/custom_design/screen/custom_design_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/category_wise_product/screen/category_wise_products.dart';
+import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
 import 'package:local/app/view/screens/features/vendor/orders/models/general_order_response_model.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/screen/chat_screen.dart';
@@ -657,10 +658,13 @@ class AppRouter {
             final orderData = isCustom
                 ? extra['orderData'] as Order?
                 : extra['orderData'] as GeneralOrder?;
+            final controller = extra['controller'] as UserOrderController;
             return _buildPageWithAnimation(
               child: UserOrderDetailsScreen(
                 isCustom: isCustom,
                 orderData: orderData,
+                controller: controller,
+                
               ),
               state: state,
             );

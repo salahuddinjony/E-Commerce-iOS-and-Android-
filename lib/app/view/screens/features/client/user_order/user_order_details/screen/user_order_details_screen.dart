@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
+import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_product_row.dart';
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_tracking_timeline.dart';
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/summary_row.dart';
+import 'package:local/app/view/screens/features/client/user_order/widgets/offer_accept_card.dart';
+import 'package:local/app/view/screens/features/vendor/orders/order_details/widgets/two_buttons_in_row.dart';
+
 
 class UserOrderDetailsScreen extends StatelessWidget {
   final bool isCustom;
   final dynamic orderData;
+  final UserOrderController controller;
   const UserOrderDetailsScreen(
-      {super.key, required this.isCustom, required this.orderData});
+      {super.key,
+      required this.isCustom,
+      required this.orderData,
+      required this.controller});
 
   String safeFirstDesignImage(dynamic data) {
     try {
@@ -74,7 +84,11 @@ class UserOrderDetailsScreen extends StatelessWidget {
 
     // determine statuses and activeIndex
     final status = orderStatus.toLowerCase();
-    List<String> statuses = ['Offered', 'In Progress', 'Completed'];
+    List<String> statuses = [
+      'Offered',
+      'In Progress',
+      status == 'completed' || status == 'accepted' ? 'Delivered' : 'Delivery'
+    ];
     int activeIndex;
     if (status == 'offered' || status == 'pending') {
       activeIndex = 0;
@@ -159,7 +173,32 @@ class UserOrderDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
               ],
             ),
-          )
+          ),
+          const SizedBox(height: 24),
+          if (isCustom && (status == 'offered' || status == 'pending'))
+            twoButtons(
+              leftTitle: 'Accept',
+              rightTitle: 'Reject',
+              leftOnTap: () async {
+                if (await controller.customerOrderService
+                    .updateOrderStatusOrUpdateExtn(orderData.id, 'in-progress')) {
+                  toastMessage(message: 'Your accepted the Offer');
+                  context.pop();
+                } else {
+                  toastMessage(message: 'Failed to accept order');
+                }
+              },
+              rightOnTap: () async {
+                if (await controller.customerOrderService
+                    .updateOrderStatusOrUpdateExtn(orderData.id, 'cancelled')) {
+                  toastMessage(message: 'Reject The Offer');
+                  context.pop();
+                } else {
+                  toastMessage(message: 'Failed to Reject Offer');
+                }
+              },
+            ),
+          if (isCustom && status == 'in-progress')  OfferAcceptCard(time: orderData.updatedAt.toString()),
         ]),
       ),
     );

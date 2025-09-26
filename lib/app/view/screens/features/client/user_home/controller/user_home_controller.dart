@@ -20,8 +20,8 @@ class UserHomeController extends GetxController with VendorListService {
     // Call fetchNearestVendor whenever latitude or longitude changes
     everAll([latitude, longitude], (_) {
       time += 1;
-      debugPrint('Latitude changed(call $time): ${latitude.value}');
-      debugPrint('Longitude changed(call $time): ${longitude.value}');
+      debugPrint('Latitude changed(call $time ${time>1?"times": "time"}): ${latitude.value}');
+      debugPrint('Longitude changed(call $time ${time>1?"times": "time"}): ${longitude.value}');
       if (latitude.value.isNotEmpty && longitude.value.isNotEmpty) {
       fetchNearestVendor(
         latLng: LatLng(

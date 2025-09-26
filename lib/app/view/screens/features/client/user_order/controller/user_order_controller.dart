@@ -17,6 +17,7 @@ class UserOrderController extends GetxController
   RxBool isLoadingForExtn = false.obs;
   RxBool isError = false.obs;
   RxString errorMessage = ''.obs;
+  RxInt selectedOrderType = 0.obs; // 0 for Custom Orders, 1 for General Orders
 
   // Fetch custom orders from API
   Future<void> fetchCustomOrders() async {

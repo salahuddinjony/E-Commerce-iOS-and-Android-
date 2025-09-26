@@ -13,22 +13,112 @@ import 'package:local/app/view/screens/features/client/user_order/widgets/extend
 import 'package:local/app/view/screens/features/client/user_order/widgets/order_item_card.dart';
 import 'package:local/app/view/screens/features/client/user_order/widgets/ractangle_card_shimmer.dart';
 
-Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
+// Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
+//   return Obx(() {
+//     if (controller.isLoading.value) {
+//       return const RectangleCardShimmer();
+//     }
+//     final generalOrders = controller.generalOrders;
+//     final customOrders = controller.customOrders;
+//     if (generalOrders.isEmpty && customOrders.isEmpty) {
+//       return LayoutBuilder(
+//         builder: (context, constraints) => SingleChildScrollView(
+//           physics: const AlwaysScrollableScrollPhysics(),
+//           child: ConstrainedBox(
+//             constraints: BoxConstraints(minHeight: constraints.maxHeight),
+//             child: NotFound(
+//               icon: Icons.production_quantity_limits_outlined,
+//               message: 'You have no orders at the moment.',
+//             ),
+//           ),
+//         ),
+//       );
+//     }
+
+//     return ListView.separated(
+//       itemCount: generalOrders.length + customOrders.length,
+//       separatorBuilder: (_, __) => SizedBox(height: 8.h),
+//       itemBuilder: (context, index) {
+//         // Show general orders first, then custom orders
+//         if (index < generalOrders.length) {
+//           final item = generalOrders[index];
+//           final imagePath = AppConstants.demoImage;
+//           final orderId = item.id;
+//           final createdDate = item.createdAt.formatDate();
+//           final shippingAddress = item.shippingAddress;
+//           final isActive = true;
+//           final price = item.price;
+
+//           return GestureDetector(
+//             onTap: () {
+//               context.pushNamed(RoutePath.userOrderDetailsScreen, extra: {
+//                 'isCustom': false,
+//                 'orderData': item,
+//               });
+//             },
+//             child: OrderItemCard(
+//               imagePath: imagePath,
+//               orderid: orderId,
+//               createdDate: createdDate,
+//               description: shippingAddress,
+//               isActive: isActive,
+//               status: item.status,
+//               price: price.toString(),
+//             ),
+//           );
+//         } else {
+//           final customIndex = index - generalOrders.length;
+//           final item = customOrders[customIndex];
+//           final imagePath = (item.designFiles.isNotEmpty)
+//               ? item.designFiles.first
+//               : AppConstants.demoImage;
+//           final orderId = item.orderId;
+//           final createdDate = item.createdAt.toIso8601String().getDateTime();
+//           final description = item.summery;
+//           final isActive = true;
+//           final price = item.price;
+
+//           return GestureDetector(
+//             onTap: () {
+//               context.pushNamed(RoutePath.userOrderDetailsScreen, extra: {
+//                 'isCustom': true,
+//                 'orderData': item,
+//               });
+//             },
+//             child: OrderItemCard(
+//               imagePath: imagePath,
+//               orderid: orderId,
+//               createdDate: createdDate,
+//               description: description,
+//               status: item.status,
+//               isActive: isActive,
+//               price: price.toString(),
+//             ),
+//           );
+//         }
+//       },
+//     );
+//   });
+// }
+
+// Custom Order
+Widget buildCustomOrdersList(
+    BuildContext context, UserOrderController controller) {
   return Obx(() {
     if (controller.isLoading.value) {
       return const RectangleCardShimmer();
     }
-    final generalOrders = controller.generalOrders;
+
     final customOrders = controller.customOrders;
-    if (generalOrders.isEmpty && customOrders.isEmpty) {
+    if (customOrders.isEmpty) {
       return LayoutBuilder(
         builder: (context, constraints) => SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: NotFound(
-              icon: Icons.production_quantity_limits_outlined,
-              message: 'You have no orders at the moment.',
+              icon: Icons.design_services_outlined,
+              message: 'You have no custom orders at the moment.',
             ),
           ),
         ),
@@ -36,71 +126,102 @@ Widget buildMyOrdersList(BuildContext context, UserOrderController controller) {
     }
 
     return ListView.separated(
-      itemCount: generalOrders.length + customOrders.length,
+      itemCount: customOrders.length,
       separatorBuilder: (_, __) => SizedBox(height: 8.h),
       itemBuilder: (context, index) {
-        // Show general orders first, then custom orders
-        if (index < generalOrders.length) {
-          final item = generalOrders[index];
-          final imagePath = AppConstants.demoImage;
-          final orderId = item.id;
-          final createdDate = item.createdAt.formatDate();
-          final shippingAddress = item.shippingAddress;
-          final isActive = true;
-          final price = item.price;
+        final item = customOrders[index];
+        final imagePath = (item.designFiles.isNotEmpty)
+            ? item.designFiles.first
+            : AppConstants.demoImage;
+        final orderId = item.orderId;
+        final createdDate = item.createdAt.toIso8601String().getDateTime();
+        final description = item.summery;
+        final isActive = true;
+        final price = item.price;
 
-          return GestureDetector(
-            onTap: () {
-              context.pushNamed(RoutePath.userOrderDetailsScreen, extra: {
-                'isCustom': false,
-                'orderData': item,
-              });
-            },
-            child: OrderItemCard(
-              imagePath: imagePath,
-              orderid: orderId,
-              createdDate: createdDate,
-              description: shippingAddress,
-              isActive: isActive,
-              status: item.status,
-              price: price.toString(),
-            ),
-          );
-        } else {
-          final customIndex = index - generalOrders.length;
-          final item = customOrders[customIndex];
-          final imagePath = (item.designFiles.isNotEmpty)
-              ? item.designFiles.first
-              : AppConstants.demoImage;
-          final orderId = item.orderId;
-          final createdDate = item.createdAt.toIso8601String().getDateTime();
-          final description = item.summery;
-          final isActive = true;
-          final price = item.price;
-
-          return GestureDetector(
-            onTap: () {
-              context.pushNamed(RoutePath.userOrderDetailsScreen, extra: {
-                'isCustom': true,
-                'orderData': item,
-              });
-            },
-            child: OrderItemCard(
-              imagePath: imagePath,
-              orderid: orderId,
-              createdDate: createdDate,
-              description: description,
-              status: item.status,
-              isActive: isActive,
-              price: price.toString(),
-            ),
-          );
-        }
+        return GestureDetector(
+          onTap: () {
+            context.pushNamed(RoutePath.userOrderDetailsScreen,
+            extra: {
+              'isCustom': true,
+              'orderData': item,
+              'controller': controller,
+            });
+          },
+          child: OrderItemCard(
+            imagePath: imagePath,
+            orderid: orderId,
+            createdDate: createdDate,
+            description: description,
+            status: item.status,
+            isActive: isActive,
+            price: price.toString(),
+          ),
+        );
       },
     );
   });
 }
 
+//General Order
+Widget buildGeneralOrdersList(
+    BuildContext context, UserOrderController controller) {
+  return Obx(() {
+    if (controller.isGeneralOrdersLoading.value) {
+      return const RectangleCardShimmer();
+    }
+
+    final generalOrders = controller.generalOrders;
+    if (generalOrders.isEmpty) {
+      return LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: NotFound(
+              icon: Icons.shopping_bag_outlined,
+              message: 'You have no general orders at the moment.',
+            ),
+          ),
+        ),
+      );
+    }
+
+    return ListView.separated(
+      itemCount: generalOrders.length,
+      separatorBuilder: (_, __) => SizedBox(height: 8.h),
+      itemBuilder: (context, index) {
+        final item = generalOrders[index];
+        final imagePath = AppConstants.demoImage;
+        final orderId = item.id;
+        final createdDate = item.createdAt.formatDate();
+        final shippingAddress = item.shippingAddress;
+        final isActive = true;
+        final price = item.price;
+
+        return GestureDetector(
+          onTap: () {
+            context.pushNamed(RoutePath.userOrderDetailsScreen, extra: {
+              'isCustom': false,
+              'orderData': item,
+            });
+          },
+          child: OrderItemCard(
+            imagePath: imagePath,
+            orderid: orderId,
+            createdDate: createdDate,
+            description: shippingAddress,
+            isActive: isActive,
+            status: item.status,
+            price: price.toString(),
+          ),
+        );
+      },
+    );
+  });
+}
+
+//Extension Order Request
 Widget buildExtendRequestsList(
     BuildContext context, UserOrderController controller) {
   return Obx(() {
