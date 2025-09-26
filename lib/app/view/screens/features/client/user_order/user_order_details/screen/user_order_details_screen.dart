@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
@@ -176,27 +177,30 @@ class UserOrderDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           if (isCustom && (status == 'offered' || status == 'pending'))
-            twoButtons(
-              leftTitle: 'Accept',
-              rightTitle: 'Reject',
-              leftOnTap: () async {
-                if (await controller.customerOrderService
-                    .updateOrderStatusOrUpdateExtn(orderData.id, 'in-progress')) {
-                  toastMessage(message: 'Your accepted the Offer');
-                  context.pop();
-                } else {
-                  toastMessage(message: 'Failed to accept order');
-                }
-              },
-              rightOnTap: () async {
-                if (await controller.customerOrderService
-                    .updateOrderStatusOrUpdateExtn(orderData.id, 'cancelled')) {
-                  toastMessage(message: 'Reject The Offer');
-                  context.pop();
-                } else {
-                  toastMessage(message: 'Failed to Reject Offer');
-                }
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: Obx(() => twoButtons(
+                leftTitle: 'Accept',
+                rightTitle: 'Reject',
+                isLeftLoading: controller.isAcceptLoading.value,
+                isRightLoading: controller.isRejectLoading.value,
+                leftOnTap: () async {
+                  if (await controller.acceptOrder(orderData.id)) {
+                    toastMessage(message: 'Your accepted the Offer');
+                    context.pop();
+                  } else {
+                    toastMessage(message: 'Failed to accept order');
+                  }
+                },
+                rightOnTap: () async {
+                  if (await controller.rejectOrder(orderData.id)) {
+                    toastMessage(message: 'Reject The Offer');
+                    context.pop();
+                  } else {
+                    toastMessage(message: 'Failed to Reject Offer');
+                  }
+                },
+              )),
             ),
           if (isCustom && status == 'in-progress')  OfferAcceptCard(time: orderData.updatedAt.toString()),
         ]),

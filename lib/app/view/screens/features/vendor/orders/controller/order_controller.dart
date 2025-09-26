@@ -24,6 +24,10 @@ class OrdersController extends GetxController
   RxInt totalInProgressOrder = 0.obs;
   RxInt totalGeneralOrder = 0.obs;
   RxInt totalPendingOrder = 0.obs;
+    
+  // Loading states for order status updates
+  RxBool isAcceptLoading = false.obs;
+  RxBool isRejectLoading = false.obs;
 
   List<String> get generalTabs => OrderConstants.generalTabs;
   List<String> get customTabs => OrderConstants.customTabs;
@@ -132,6 +136,7 @@ class OrdersController extends GetxController
 
   // Update custom order status
   Future<bool> updateCustomOrderStatus(String orderId, String status) async {
+     isAcceptLoading.value = true;
     try {
       print('Updating custom order status: $orderId to $status');
       final result = await customerOrderService.updateOrderStatusOrUpdateExtn(
@@ -142,11 +147,14 @@ class OrdersController extends GetxController
     } catch (e) {
       print('Failed to update custom order status: $e');
       return false;
+    }finally{
+       isAcceptLoading.value = false;
     }
   }
 
   // Update general order status
   Future<void> updateGeneralOrderStatus(String orderId, String status) async {
+     
     try {
       await generalOrderService.updateGeneralOrderStatus(orderId, status);
       // Refresh general orders after status update

@@ -18,6 +18,10 @@ class UserOrderController extends GetxController
   RxBool isError = false.obs;
   RxString errorMessage = ''.obs;
   RxInt selectedOrderType = 0.obs; // 0 for Custom Orders, 1 for General Orders
+  
+  // Loading states for order status updates
+  RxBool isAcceptLoading = false.obs;
+  RxBool isRejectLoading = false.obs;
 
   // Fetch custom orders from API
   Future<void> fetchCustomOrders() async {
@@ -97,6 +101,38 @@ class UserOrderController extends GetxController
       return false;
     } finally {
       isLoadingForExtn.value = false;
+    }
+  }
+
+  // Accept order method
+  Future<bool> acceptOrder(String orderId) async {
+    isAcceptLoading.value = true;
+    
+    try {
+      return await customerOrderService.updateOrderStatusOrUpdateExtn(
+          orderId, 'in-progress');
+    } catch (e) {
+      isError.value = true;
+      errorMessage.value = e.toString();
+      return false;
+    } finally {
+      isAcceptLoading.value = false;
+    }
+  }
+
+  // Reject order method
+  Future<bool> rejectOrder(String orderId) async {
+    isRejectLoading.value = true;
+    
+    try {
+      return await customerOrderService.updateOrderStatusOrUpdateExtn(
+          orderId, 'cancelled');
+    } catch (e) {
+      isError.value = true;
+      errorMessage.value = e.toString();
+      return false;
+    } finally {
+      isRejectLoading.value = false;
     }
   }
 
