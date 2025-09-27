@@ -30,13 +30,39 @@ class StripeServicePayment {
     Future<bool> Function(String? sessionId, Map<String, dynamic>? detailedPI)? onPaymentSuccess,
   }) async {
     try {
-      final paymentIntent = await _createPaymentIntent(
+      // Step 1: Create a real Stripe Checkout Session
+      final checkoutSession = await _createCheckoutSession(amount, currency);
+      
+      if (checkoutSession == null) {
+        debugPrint("Failed to create Checkout Session");
+        Get.snackbar('Payment Failed', 'Could not create checkout session.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white);
+        return;
+      }
+
+      final String? sessionId = checkoutSession['id'] as String?;
+      debugPrint("Created Checkout Session: $sessionId");
+
+      if (sessionId == null) {
+        debugPrint("Session ID missing from checkout session");
+        Get.snackbar('Payment Failed', 'Missing session ID.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white);
+        return;
+      }
+
+      // Step 2: Create a separate PaymentIntent for the payment sheet
+      final paymentIntent = await _createPaymentIntentForSession(
         amount,
         currency,
+        sessionId,
       );
 
       if (paymentIntent == null) {
-        debugPrint("Failed to create PaymentIntent");
+        debugPrint("Failed to create PaymentIntent for session");
         Get.snackbar('Payment Failed', 'Could not create payment intent.',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.redAccent,
@@ -47,6 +73,8 @@ class StripeServicePayment {
       final String? paymentIntentClientSecret =
           paymentIntent['client_secret'] as String?;
       final String? paymentIntentId = paymentIntent['id'] as String?;
+
+      debugPrint("Created PaymentIntent: $paymentIntentId for session: $sessionId");
 
       if (paymentIntentClientSecret == null) {
         debugPrint("Client secret missing on PaymentIntent");
@@ -93,6 +121,7 @@ class StripeServicePayment {
 
         // If presentPaymentSheet completes without throwing, consider it a success
         debugPrint("Payment successful. paymentIntentId: $paymentIntentId");
+        debugPrint("Session ID: $sessionId");
         debugPrint(
             "Client secret (partial): ${paymentIntentClientSecret.length > 12 ? paymentIntentClientSecret.substring(0, 12) + '...' : paymentIntentClientSecret}");
 
@@ -126,17 +155,8 @@ class StripeServicePayment {
         String? chargeId;
         String? status;
         String? paymentMethod;
-        String? sessionId;
         if (detailedPI != null) {
           status = detailedPI['status']?.toString();
-          // try common places for a session id (metadata or checkout_session)
-          sessionId = detailedPI['metadata'] is Map
-              ? (detailedPI['metadata']['session_id'] as String?) ??
-                  (detailedPI['metadata']['checkout_session'] as String?)
-              : null;
-          if (sessionId == null && detailedPI.containsKey('checkout_session')) {
-            sessionId = detailedPI['checkout_session']?.toString();
-          }
 
           final charges = (detailedPI['charges']?['data'] as List<dynamic>?);
           if (charges != null && charges.isNotEmpty) {
@@ -149,28 +169,10 @@ class StripeServicePayment {
                             .first
                             .toString()
                         : null);
-
-            // sometimes session id can be attached to a charge metadata
-            if (sessionId == null && firstCharge['metadata'] is Map) {
-              sessionId = (firstCharge['metadata']['session_id'] as String?) ??
-                  (firstCharge['metadata']['checkout_session'] as String?);
-            }
           }
         }
 
-        // fallback: look for session id in original PaymentIntent payload (metadata or top-level)
-        if (sessionId == null) {
-          sessionId = (paymentIntent['metadata'] is Map)
-              ? (paymentIntent['metadata']['session_id'] as String?) ??
-                  (paymentIntent['metadata']['checkout_session'] as String?)
-              : null;
-          if (sessionId == null &&
-              paymentIntent.containsKey('checkout_session')) {
-            sessionId = paymentIntent['checkout_session']?.toString();
-          }
-        }
-
-        debugPrint("Session id (if any): $sessionId");
+        debugPrint("Using session ID for backend: $sessionId");
 
         // Determine final payment status (prefer detailedPI)
         final String? finalStatus =
@@ -187,8 +189,8 @@ class StripeServicePayment {
         bool orderSucceeded = onPaymentSuccess == null;
         if (onPaymentSuccess != null) {
           try {
-            // pass sessionId (if any) and detailedPI (if any) , use as sessionId ===> paymentIntentId
-            orderSucceeded = await onPaymentSuccess(paymentIntentId, detailedPI);
+            // pass the actual checkout session ID and detailedPI
+            orderSucceeded = await onPaymentSuccess(sessionId, detailedPI);
           } catch (e) {
             debugPrint("onPaymentSuccess callback error: $e");
             orderSucceeded = false;
@@ -224,7 +226,7 @@ class StripeServicePayment {
               chargeId: chargeId,
               status: finalStatus,
               paymentMethod: paymentMethod,
-              sessionId: sessionId,
+              sessionId: sessionId, // This is now the actual checkout session ID
               amountPaid: '\$$amountPaidFormatted',
               details: maskedDetails,
             ),
@@ -263,14 +265,66 @@ class StripeServicePayment {
     }
   }
 
-  Future<Map<String, dynamic>?> _createPaymentIntent(
+  Future<Map<String, dynamic>?> _createCheckoutSession(
       int amount, String currency) async {
+    try {
+      final Dio dio = Dio();
+
+      Map<String, dynamic> data = {
+        "mode": "payment",
+        "line_items": [
+          {
+            "price_data": {
+              "currency": currency,
+              "product_data": {
+                "name": "Order Payment",
+              },
+              "unit_amount": _calculateAmount(amount),
+            },
+            "quantity": 1,
+          }
+        ],
+        "success_url": "https://success.com",
+        "cancel_url": "https://cancel.com",
+      };
+
+      final response = await dio.post(
+        "https://api.stripe.com/v1/checkout/sessions",
+        data: data,
+        options: Options(
+          contentType: Headers.formUrlEncodedContentType,
+          headers: {
+            "Authorization": "Bearer ${Constantstripe.stripeSecretKey}",
+          },
+        ),
+      );
+
+      if (response.data != null && response.data is Map<String, dynamic>) {
+        debugPrint("Checkout Session created: ${response.data['id']}");
+        return Map<String, dynamic>.from(response.data as Map);
+      } else {
+        debugPrint(
+            "Failed to create Checkout Session: ${response.statusCode} - ${response.statusMessage}");
+        return null;
+      }
+    } catch (e) {
+      debugPrint("Error in _createCheckoutSession: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> _createPaymentIntentForSession(
+      int amount, String currency, String sessionId) async {
     try {
       final Dio dio = Dio();
 
       Map<String, dynamic> data = {
         "amount": _calculateAmount(amount),
         "currency": currency,
+        "metadata": {
+          "checkout_session_id": sessionId,
+          "payment_type": "order_payment",
+        },
       };
 
       final response = await dio.post(
@@ -285,8 +339,9 @@ class StripeServicePayment {
       );
 
       if (response.data != null && response.data is Map<String, dynamic>) {
-        debugPrint("PaymentIntent created: ${response.data}");
+        debugPrint("PaymentIntent created: ${response.data['id']}");
         debugPrint("Client secret: ${response.data['client_secret']}");
+        debugPrint("Linked to session: $sessionId");
 
         return Map<String, dynamic>.from(response.data as Map);
       } else {
@@ -295,7 +350,7 @@ class StripeServicePayment {
         return null;
       }
     } catch (e) {
-      debugPrint("Error in _createPaymentIntent: $e");
+      debugPrint("Error in _createPaymentIntentForSession: $e");
       return null;
     }
   }

@@ -48,7 +48,7 @@ class UserOrderScreen extends StatelessWidget {
                         // ChoiceChips for order types
                         Obx(() => Padding(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical:3),
+                                  horizontal: 16, vertical: 3),
                               child: Container(
                                 margin: EdgeInsets.only(bottom: 8.h),
                                 child: Wrap(

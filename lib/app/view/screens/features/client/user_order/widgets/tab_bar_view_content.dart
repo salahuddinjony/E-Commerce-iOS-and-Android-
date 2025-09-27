@@ -171,7 +171,7 @@ Widget buildGeneralOrdersList(
       return const RectangleCardShimmer();
     }
 
-    final generalOrders = controller.generalOrders;
+    final generalOrders = controller.generalOrdersList;
     if (generalOrders.isEmpty) {
       return LayoutBuilder(
         builder: (context, constraints) => SingleChildScrollView(
@@ -204,6 +204,7 @@ Widget buildGeneralOrdersList(
             context.pushNamed(RoutePath.userOrderDetailsScreen, extra: {
               'isCustom': false,
               'orderData': item,
+              'controller': controller,
             });
           },
           child: OrderItemCard(

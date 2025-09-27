@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import 'package:local/app/view/screens/features/vendor/orders/constants/order_constants.dart';
+import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/design_files_gallery.dart';
 
 class OrderProductRow extends StatelessWidget {
   final String imageUrl;
@@ -9,6 +10,7 @@ class OrderProductRow extends StatelessWidget {
   final String orderStatus;
   final bool isCustom;
   final String orderDate;
+  final List<dynamic>? designFiles;
 
   const OrderProductRow({
     super.key,
@@ -17,6 +19,7 @@ class OrderProductRow extends StatelessWidget {
     required this.orderStatus,
     required this.isCustom,
     required this.orderDate,
+    this.designFiles,
   });
 
   @override
@@ -24,11 +27,18 @@ class OrderProductRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomNetworkImage(
-          imageUrl: imageUrl,
-          height: 100,
-          width: 100,
-        ),
+        // Show gallery for custom orders, single image for regular orders
+        isCustom && designFiles != null && designFiles!.isNotEmpty
+            ? DesignFilesGallery(
+                designFiles: designFiles!,
+                height: 100,
+                width: 100,
+              )
+            : CustomNetworkImage(
+                imageUrl: imageUrl,
+                height: 100,
+                width: 100,
+              ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
