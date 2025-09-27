@@ -138,7 +138,7 @@ class HomeScreen extends StatelessWidget {
                     ),
 
                     //==========Best Selling Product==============
-                    Obx(() => BestSellingProducts(productsList: productsController.productItems.toList()),),
+                    Obx(() => BestSellingProducts(controller: productsController, productsList: productsController.productItems.toList()),),
                     SizedBox(
                       height: 32.h,
                     ),
@@ -152,7 +152,7 @@ class HomeScreen extends StatelessWidget {
                     ),
 
                     //===========Stock Alert=============
-                    Obx(() => StockAlert(productsList: productsController.productItems.toList()),),
+                    Obx(() => StockAlert(controller: productsController, productsList: productsController.productItems.toList()),),
                   ],
                 ),
               ),

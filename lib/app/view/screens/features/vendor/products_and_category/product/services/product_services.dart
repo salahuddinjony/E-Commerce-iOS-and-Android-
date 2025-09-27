@@ -286,6 +286,7 @@ mixin class ProductServices {
       final fullUrl = '${ApiUrl.baseUrl}/product/delete/$productId';
       final resp = await ApiClient.deleteData(fullUrl);
       if (resp.statusCode == 200) {
+        fetchProducts(); // refresh list
         productItems.removeWhere((p) => p.id == productId);
         EasyLoading.showSuccess('Product deleted');
         return true;

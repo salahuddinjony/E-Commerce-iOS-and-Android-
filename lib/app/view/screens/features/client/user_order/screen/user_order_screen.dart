@@ -42,22 +42,123 @@ class UserOrderScreen extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-
-                    // My Orders
-                    RefreshIndicator(        
-                      backgroundColor: Colors.white,
-                      color: AppColors.brightCyan,
-                      child: buildMyOrdersList(context, controller),
-                      onRefresh: controller.fetchAllOrders,
+                    // Orders tab with custom segmented control
+                    Column(
+                      children: [
+                        // ChoiceChips for order types
+                        Obx(() => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical:3),
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 8.h),
+                                child: Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 8.w,
+                                  children: [
+                                    // Custom Order ChoiceChip
+                                    ChoiceChip(
+                                      checkmarkColor: Colors.white,
+                                      label: Text(
+                                        'Custom Order',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 11.sp,
+                                        ),
+                                      ),
+                                      selected:
+                                          controller.selectedOrderType.value ==
+                                              0,
+                                      onSelected: (selected) {
+                                        if (selected) {
+                                          controller.selectedOrderType.value =
+                                              0;
+                                        }
+                                      },
+                                      selectedColor: AppColors.brightCyan,
+                                      backgroundColor: Colors.grey[100],
+                                      labelStyle: TextStyle(
+                                        color: controller
+                                                    .selectedOrderType.value ==
+                                                0
+                                            ? Colors.white
+                                            : Colors.grey[600],
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 11.sp,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.r),
+                                        side: BorderSide.none,
+                                      ),
+                                    ),
+                                    // General Order ChoiceChip
+                                    ChoiceChip(
+                                      checkmarkColor: Colors.white,
+                                      label: Text(
+                                        'General Order',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 11.sp,
+                                        ),
+                                      ),
+                                      selected:
+                                          controller.selectedOrderType.value ==
+                                              1,
+                                      onSelected: (selected) {
+                                        if (selected) {
+                                          controller.selectedOrderType.value =
+                                              1;
+                                        }
+                                      },
+                                      selectedColor: AppColors.brightCyan,
+                                      backgroundColor: Colors.grey[100],
+                                      labelStyle: TextStyle(
+                                        color: controller
+                                                    .selectedOrderType.value ==
+                                                1
+                                            ? Colors.white
+                                            : Colors.grey[600],
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 11.sp,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.r),
+                                        side: BorderSide.none,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        // Content based on selected order type
+                        Expanded(
+                          child:
+                              Obx(() => controller.selectedOrderType.value == 0
+                                  ? RefreshIndicator(
+                                      backgroundColor: Colors.white,
+                                      color: AppColors.brightCyan,
+                                      onRefresh: controller.fetchCustomOrders,
+                                      child: buildCustomOrdersList(
+                                          context, controller),
+                                    )
+                                  : RefreshIndicator(
+                                      backgroundColor: Colors.white,
+                                      color: AppColors.brightCyan,
+                                      onRefresh: controller.fetchGeneralOrders,
+                                      child: buildGeneralOrdersList(
+                                          context, controller),
+                                    )),
+                        ),
+                      ],
                     ),
 
                     // Date Extension Requests
                     RefreshIndicator(
                       backgroundColor: Colors.white,
                       color: AppColors.brightCyan,
-                       onRefresh: controller.fetchAllOrders,
+                      onRefresh: controller.fetchAllOrders,
                       child: buildExtendRequestsList(context, controller),
-                     
                     ),
                   ],
                 ),

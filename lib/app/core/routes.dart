@@ -14,10 +14,10 @@ import 'package:local/app/view/screens/authentication/sign_up/widgets/next.dart'
 import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/custom_design/screen/custom_design_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/category_wise_product/screen/category_wise_products.dart';
+import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
 import 'package:local/app/view/screens/features/vendor/orders/models/general_order_response_model.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/screen/chat_screen.dart';
-import 'package:local/app/view/screens/features/client/chat/inbox_screen/screen/inbox_screen.dart';
 import 'package:local/app/view/screens/features/client/support/order_mangement/order_manegment_screen.dart';
 import 'package:local/app/view/screens/features/client/support/support_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/controller/user_home_controller.dart';
@@ -58,6 +58,7 @@ import '../view/screens/features/vendor/orders/order_details/screen/order_detail
 import '../view/screens/features/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import '../view/screens/features/vendor/profile/business_documents/business_documents_screen.dart';
 import 'route_path.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/screen/inbox_screen.dart';
 
 class AppRouter {
 
@@ -577,15 +578,15 @@ class AppRouter {
           },
         ),
 
-        ///=======================  PendingDetailsScreen =======================
-        // GoRoute(
-        //   name: RoutePath.vendorMessageScreen,
-        //   path: RoutePath.vendorMessageScreen.addBasePath,
-        //   pageBuilder: (context, state) => _buildPageWithAnimation(
-        //       child: const VendorMessageScreen(),
-        //       state: state,
-        //       disableAnimation: true),
-        // ),
+        ///======================= VendorMessageScreen =======================
+        GoRoute(
+          name: RoutePath.vendorMessageScreen,
+          path: RoutePath.vendorMessageScreen.addBasePath,
+          pageBuilder: (context, state) => _buildPageWithAnimation(
+              child: InboxScreen(isVendor: true),
+              state: state,
+              disableAnimation: true),
+        ),
 
         ///=======================  PendingDetailsScreen =======================
         GoRoute(
@@ -657,10 +658,13 @@ class AppRouter {
             final orderData = isCustom
                 ? extra['orderData'] as Order?
                 : extra['orderData'] as GeneralOrder?;
+            final controller = extra['controller'] as UserOrderController;
             return _buildPageWithAnimation(
               child: UserOrderDetailsScreen(
                 isCustom: isCustom,
                 orderData: orderData,
+                controller: controller,
+                
               ),
               state: state,
             );
