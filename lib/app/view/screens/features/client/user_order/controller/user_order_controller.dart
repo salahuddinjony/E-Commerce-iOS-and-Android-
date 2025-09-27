@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:local/app/services/api_url.dart';
 import 'package:local/app/view/screens/features/client/user_order/mixin/mixin_extend_order.dart';
@@ -74,8 +75,8 @@ class UserOrderController extends GetxController
 
       // debug: inspect list after processing
       print("Total General Orders: ${totalGeneralOrder.value}");
-      print("General Orders length (after process): ${generalOrders.length}");
-      print("General Orders content: ${generalOrders}");
+      print("General Orders length (after process): ${generalOrdersList.length}");
+      print("General Orders content: ${generalOrdersList}");
       generalOrdersErrorMessage.value = '';
     } catch (e, st) {
       isGeneralOrdersError.value = true;
@@ -105,12 +106,14 @@ class UserOrderController extends GetxController
   }
 
   // Accept order method
-  Future<bool> acceptOrder(String orderId) async {
+  Future<bool> acceptOrder({required String orderId, String? sessionId, String? status}) async {
     isAcceptLoading.value = true;
+    debugPrint("Accepting order: $orderId with sessionId: $sessionId");
+    final String orderStatus = status ?? 'accepted';
     
     try {
       return await customerOrderService.updateOrderStatusOrUpdateExtn(
-          orderId, 'in-progress');
+          orderId, orderStatus, sessionId: sessionId);
     } catch (e) {
       isError.value = true;
       errorMessage.value = e.toString();

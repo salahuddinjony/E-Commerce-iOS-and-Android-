@@ -3,7 +3,7 @@ import '../../constants/order_constants.dart';
 import '../../models/custom_order_response_model.dart';
 import '../../models/general_order_response_model.dart';
 import 'reusable_rows.dart';
-import 'design_files_gallery.dart';
+import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/design_files_gallery.dart';
 
 class OrderDetailsSection extends StatelessWidget {
   final bool isCustomOrder;
@@ -24,11 +24,13 @@ class OrderDetailsSection extends StatelessWidget {
           OrderDetailRow(label: 'Order ID', value: order.orderId),
           const OrderDetailRow(label: 'Type', value: 'Custom Order'),
           OrderDetailRow(label: 'Client Id', value: order.client.toString()),
-          OrderDetailRow(label: 'Price', value: '${order.currency} ${order.price}'),
-            OrderDetailRow(label: 'Quantity', value: '${order.quantity}'),
+          OrderDetailRow(
+              label: 'Price', value: '${order.currency} ${order.price}'),
+          OrderDetailRow(label: 'Quantity', value: '${order.quantity}'),
           OrderDetailRow(
             label: 'Payment Status',
-            value: OrderConstants.getPaymentStatusDisplayText(order.paymentStatus),
+            value:
+                OrderConstants.getPaymentStatusDisplayText(order.paymentStatus),
           ),
           OrderDetailRow(label: 'Delivery Option', value: order.deliveryOption),
           if (order.deliveryDate != null)
@@ -37,10 +39,36 @@ class OrderDetailsSection extends StatelessWidget {
               value:
                   '${order.deliveryDate!.day}/${order.deliveryDate!.month}/${order.deliveryDate!.year}',
             ),
-          OrderDetailRow(label: 'Shipping Address', value: order.shippingAddress),
+          OrderDetailRow(
+              label: 'Shipping Address', value: order.shippingAddress),
           if (order.summery.isNotEmpty)
             OrderDetailRow(label: 'Summary', value: order.summery),
-          DesignFilesGallery(files: order.designFiles),
+          const SizedBox(height: 5),
+
+          // Design Files
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Design Files:',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black,
+                  ),
+                ),
+                DesignFilesGallery(
+                  designFiles: order.designFiles,
+                  height: 80,
+                  width: 80,
+                )
+              ],
+            ),
+          ),
         ],
       );
     } else {
@@ -51,16 +79,20 @@ class OrderDetailsSection extends StatelessWidget {
           const OrderDetailRow(label: 'Type', value: 'General Order'),
           OrderDetailRow(label: 'Client', value: order.clientName),
           OrderDetailRow(label: 'Vendor', value: order.vendorName),
-          OrderDetailRow(label: 'Price', value: '${order.currency} ${order.price}'),
+          OrderDetailRow(
+              label: 'Price', value: '${order.currency} ${order.price}'),
           OrderDetailRow(
             label: 'Products',
-            value: '${order.products.length} products, ${order.totalQuantity} items',
+            value:
+                '${order.products.length} products, ${order.totalQuantity} items',
           ),
           OrderDetailRow(
             label: 'Payment Status',
-            value: OrderConstants.getPaymentStatusDisplayText(order.paymentStatus),
+            value:
+                OrderConstants.getPaymentStatusDisplayText(order.paymentStatus),
           ),
-          OrderDetailRow(label: 'Shipping Address', value: order.shippingAddress),
+          OrderDetailRow(
+              label: 'Shipping Address', value: order.shippingAddress),
         ],
       );
     }

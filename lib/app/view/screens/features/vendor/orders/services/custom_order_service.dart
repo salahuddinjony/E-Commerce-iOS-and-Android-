@@ -65,19 +65,25 @@ class CustomOrderService {
   }
 
   /// Update order status
-  Future<bool> updateOrderStatusOrUpdateExtn(String orderId, String status, {String? passedUrl}) async {
+  Future<bool> updateOrderStatusOrUpdateExtn(String orderId, String status, {String? passedUrl,String? sessionId}) async {
     print('Updating order status: $orderId to $status');
     print('Using URL: ${passedUrl ?? "Url not provided, will use default"}');
     try {
       final url = passedUrl ?? ApiUrl.updateCustomOrderStatus(orderId: orderId);
       print('Sending PATCH request to: $url');
+      
+      final body={
+        'status': status,
+       if(sessionId!=null)'sessionId':sessionId
+
+      };
 
       final response = await http.patch(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({'status': status}),
+        body: jsonEncode(body),
       );
       print('Response status code: ${response.statusCode}');
 
