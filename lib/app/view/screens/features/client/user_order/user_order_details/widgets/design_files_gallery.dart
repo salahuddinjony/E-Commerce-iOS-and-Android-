@@ -16,13 +16,15 @@ class DesignFilesGallery extends StatelessWidget {
 
   List<dynamic> get safeDesignFiles {
     if (designFiles.isEmpty) return [];
-    return designFiles.where((file) => file != null && file.toString().isNotEmpty).toList();
+    return designFiles
+        .where((file) => file != null && file.toString().isNotEmpty)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final safeFiles = safeDesignFiles;
-    
+
     if (safeFiles.isEmpty) {
       return Container(
         height: height,
@@ -60,9 +62,9 @@ class DesignFilesGallery extends StatelessWidget {
             onTap: () => showImagePreview(context, 0),
             child: CustomNetworkImage(
               imageUrl: safeFiles[0].toString().replaceFirst(
-                'http://10.10.20.19:5007',
-                'https://gmosley-uteehub-backend.onrender.com',
-              ),
+                    'http://10.10.20.19:5007',
+                    'https://gmosley-uteehub-backend.onrender.com',
+                  ),
               height: height,
               width: width,
               borderRadius: BorderRadius.circular(8),
@@ -76,14 +78,16 @@ class DesignFilesGallery extends StatelessWidget {
               child: GestureDetector(
                 onTap: () => showGalleryPreview(context),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: .7),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    safeFiles.length == 1 ? 'Preview' :
-                    '+${safeFiles.length - 1}',
+                    safeFiles.length == 1
+                        ? 'Preview'
+                        : '+${safeFiles.length - 1}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,

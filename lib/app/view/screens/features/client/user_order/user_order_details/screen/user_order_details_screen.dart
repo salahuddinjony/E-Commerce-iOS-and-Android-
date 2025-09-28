@@ -7,8 +7,7 @@ import 'package:local/app/view/screens/features/client/user_order/controller/use
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_product_row.dart';
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_tracking_timeline.dart';
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/summary_row.dart';
-import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_action_card.dart';
-import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_status_card.dart';
+import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_card.dart';
 
 class UserOrderDetailsScreen extends StatelessWidget {
   final bool isCustom;
@@ -30,6 +29,16 @@ class UserOrderDetailsScreen extends StatelessWidget {
     return AppConstants.demoImage;
   }
 
+  String generalOrderImage(dynamic data) {
+    try {
+      final imageUrl = data?.products?.first?.productId?.images?.first;
+      if (imageUrl != null && imageUrl.toString().isNotEmpty) {
+        return imageUrl.toString();
+      }
+    } catch (_) {}
+    return AppConstants.demoImage;
+  }
+
   String safeFormatDate(dynamic value) {
     if (value == null) return '';
 
@@ -41,20 +50,24 @@ class UserOrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String productImage =
-        isCustom ? safeFirstDesignImage(orderData) : AppConstants.demoImage;
+    debugPrint(
+        'Rendering UserOrderDetailsScreen for ${isCustom ? 'Custom' : 'General'} Order ID: ${(isCustom ? orderData?.orderId : orderData?.id)?.toString() ?? 'N/A'}');
+    debugPrint('Order Data: ${orderData}');
+    final String productImage = isCustom
+        ? safeFirstDesignImage(orderData)
+        : generalOrderImage(orderData);
     final String orderID =
         (isCustom ? orderData?.orderId : orderData?.id)?.toString() ?? '';
     final String orderStatus =
-        (isCustom ? orderData?.status : orderData?.status)?.toString() ??
-            '';
+        (isCustom ? orderData?.status : orderData?.status)?.toString() ?? '';
     final String orderPrice =
         (isCustom ? orderData?.price : orderData?.price)?.toString() ?? '';
     final String orderCurrency =
         (isCustom ? orderData?.currency : orderData?.currency)?.toString() ??
             '';
     final String orderQuantity =
-        (isCustom ? orderData?.quantity : orderData?.totalQuantity)?.toString() ??
+        (isCustom ? orderData?.quantity : orderData?.totalQuantity)
+                ?.toString() ??
             '';
 
     final String orderDate =
@@ -69,9 +82,7 @@ class UserOrderDetailsScreen extends StatelessWidget {
                 ?.toString() ??
             '';
     final String deliveryOption =
-        (isCustom ? orderData?.deliveryOption : '')
-                ?.toString() ??
-            '';
+        (isCustom ? orderData?.deliveryOption : '')?.toString() ?? '';
     final String shippingAddress =
         (isCustom ? orderData?.shippingAddress : orderData?.shippingAddress)
                 ?.toString() ??
@@ -88,7 +99,13 @@ class UserOrderDetailsScreen extends StatelessWidget {
     if (isCustom) {
       // Custom order timeline: Offered/Pending -> Accepted -> Delivery Request -> Confirm Delivery (with optional Revision)
       if (status == 'revision') {
-        statuses = ['Offered', 'Accepted', 'Delivery Request', 'Revision', 'Confirm Delivery'];
+        statuses = [
+          'Offered',
+          'Accepted',
+          'Delivery Request',
+          'Revision',
+          'Confirm Delivery'
+        ];
         activeIndex = 3;
         timelineDates = [orderDate, updatedAt, updatedAt, updatedAt, ''];
       } else if (status == 'cancelled' || status == 'rejected') {
@@ -96,7 +113,12 @@ class UserOrderDetailsScreen extends StatelessWidget {
         activeIndex = 1;
         timelineDates = [orderDate, updatedAt];
       } else {
-        statuses = ['Offered', 'Accepted', 'Delivery Request', 'Confirm Delivery'];
+        statuses = [
+          'Offered',
+          'Accepted',
+          'Delivery Request',
+          'Confirm Delivery'
+        ];
         if (status == 'offered' || status == 'pending') {
           activeIndex = 0;
           timelineDates = [orderDate, '', '', ''];
@@ -108,7 +130,12 @@ class UserOrderDetailsScreen extends StatelessWidget {
           timelineDates = [orderDate, updatedAt, updatedAt, ''];
         } else if (status == 'delivery-confirmed' || status == 'completed') {
           activeIndex = 3;
-          timelineDates = [orderDate, updatedAt, updatedAt, orderDeliveryDate.isNotEmpty ? orderDeliveryDate : updatedAt];
+          timelineDates = [
+            orderDate,
+            updatedAt,
+            updatedAt,
+            orderDeliveryDate.isNotEmpty ? orderDeliveryDate : updatedAt
+          ];
         } else {
           activeIndex = 0;
           timelineDates = [orderDate, '', '', ''];
@@ -117,20 +144,32 @@ class UserOrderDetailsScreen extends StatelessWidget {
     } else {
       // Non-custom order timeline: Offered/Pending -> In Progress -> Delivery
       if (status == 'cancelled' || status == 'rejected') {
-        statuses = ['Offered', 'In Progress', 'Cancelled'];
+        statuses = ['Ordered', 'In Progress', 'Cancelled'];
         activeIndex = 2;
         timelineDates = [orderDate, updatedAt, updatedAt];
       } else {
-        statuses = ['Offered', 'In Progress', status == 'completed' || status == 'delivered' ? 'Delivered' : 'Delivery'];
-        if (status == 'offered' || status == 'pending') {
+        statuses = [
+          'Ordered',
+          'In Progress',
+          status == 'completed' || status == 'deliverd'
+              ? 'Delivered'
+              : 'Delivery'
+        ];
+        if (status == 'Ordered' || status == 'pending') {
           activeIndex = 0;
           timelineDates = [orderDate, '', ''];
-        } else if (status == 'in-progress') {
+        } else if (status == 'in-progress' || status == 'process') {
           activeIndex = 1;
           timelineDates = [orderDate, updatedAt, ''];
-        } else if (status == 'completed' || status == 'delivered') {
+        } else if (status == 'completed' ||
+            status == 'delivered' ||
+            status == 'deliverd') {
           activeIndex = 2;
-          timelineDates = [orderDate, updatedAt, orderDeliveryDate.isNotEmpty ? orderDeliveryDate : updatedAt];
+          timelineDates = [
+            orderDate,
+            updatedAt,
+            orderDeliveryDate.isNotEmpty ? orderDeliveryDate : updatedAt
+          ];
         } else {
           activeIndex = 0;
           timelineDates = [orderDate, '', ''];
@@ -181,8 +220,10 @@ class UserOrderDetailsScreen extends StatelessWidget {
                 SummaryRow(
                     label: 'Payment Status',
                     value: orderPaymentStatus.safeCap()),
-                SummaryRow(
-                    label: 'Delivery Option', value: deliveryOption.safeCap()),
+                if (isCustom)
+                  SummaryRow(
+                      label: 'Delivery Option',
+                      value: deliveryOption.safeCap()),
                 // const Divider(),
                 const SizedBox(height: 24),
                 const Text(
@@ -192,33 +233,28 @@ class UserOrderDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(shippingAddress.toString()),
                 const SizedBox(height: 24),
-                const Text(
-                  'Additional Notes',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(summery.toString()),
-                const SizedBox(height: 8),
+                if (isCustom) ...[
+                  const Text(
+                    'Additional Notes',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text(summery.toString()),
+                  const SizedBox(height: 24),
+                ]
               ],
             ),
           ),
-          const SizedBox(height: 24),
 
-          // Action card for different order statuses
-          if (isCustom)
-            OrderActionCard(
-              status: orderStatus,
-              orderData: orderData,
-              controller: controller,
-              orderPrice: orderPrice,
-              isCustom: isCustom,
-            ),
-          
-          // Show status card for all statuses except those with action cards
-          if (isCustom)
-            OrderStatusCard(
-              status: orderStatus,
-              time: orderData.updatedAt.toString(),
-            ),
+          // Unified card that handles both status display and actions
+          OrderCard(
+            status: orderStatus == 'deliverd' ? 'delivered' : orderStatus,
+            time: orderData.updatedAt.toString(),
+            orderData: orderData,
+            controller: controller,
+            orderPrice: orderPrice,
+            isCustom: isCustom,
+          ),
+          if (isCustom) const SizedBox(height: 20),
         ]),
       ),
     );

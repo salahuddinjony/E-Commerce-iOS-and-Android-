@@ -38,12 +38,12 @@ class DeliveryRouteSection extends StatelessWidget {
           DeliveryRouteItem(
             iconData: Icons.store,
             label: 'Vendor',
-            value: order.vendorName,
+            value: order.vendor?.profile.id.name ?? 'Unknown Vendor',
           ),
           DeliveryRouteItem(
             iconData: Icons.location_on_outlined,
             label: 'Drop-off',
-            value: order.shippingAddress,
+            value: order.shippingAddress.isNotEmpty ? order.shippingAddress : 'Unknown Location',
           ),
         ],
       );

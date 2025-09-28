@@ -118,7 +118,7 @@ class Meta {
 
 class GeneralOrder {
   final String id;
-  final Vendor vendor;
+  final Vendor? vendor;
   final Client client;
   final int price;
   final String currency;
@@ -133,7 +133,7 @@ class GeneralOrder {
 
   GeneralOrder({
     required this.id,
-    required this.vendor,
+    this.vendor,
     required this.client,
     required this.price,
     required this.currency,
@@ -151,7 +151,7 @@ class GeneralOrder {
     try {
       return GeneralOrder(
         id: json['_id'] ?? '',
-        vendor: Vendor.fromJson(json['vendor'] ?? {}),
+        vendor: json['vendor'] != null ? Vendor.fromJson(json['vendor']) : null,
         client: Client.fromJson(json['client'] ?? {}),
         price: json['price'] ?? 0,
         currency: json['currency'] ?? '',
@@ -175,7 +175,7 @@ class GeneralOrder {
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'vendor': vendor.toJson(),
+      'vendor': vendor?.toJson(),
       'client': client.toJson(),
       'price': price,
       'currency': currency,
@@ -191,11 +191,19 @@ class GeneralOrder {
   }
 
   // Helper getters for easier access
-  String get vendorName => vendor.profile.id.name;
-  String? get vendorImage => vendor.profile.id.image;
+  String get vendorName => vendor?.profile.id.name ?? 'Unknown Vendor';
+  String? get vendorImage => vendor?.profile.id.image;
   String get clientName => client.profile.id.name;
   String? get clientImage => client.profile.id.image;
   int get totalQuantity => products.fold(0, (sum, product) => sum + product.quantity);
+  
+  // Additional helper getters for product information
+  List<String> get productNames => products.map((p) => p.productName).toList();
+  List<String> get productImages => products
+      .map((p) => p.productImage)
+      .where((img) => img != null)
+      .cast<String>()
+      .toList();
 }
 
 class Vendor {
@@ -327,7 +335,7 @@ class ProfileId {
 }
 
 class Product {
-  final String? productId;
+  final ProductDetails? productId;
   final int quantity;
   final String id;
 
@@ -338,20 +346,31 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    // Handle productId which might be a map or string
-    String? productIdValue;
+    ProductDetails? productDetails;
+    
     if (json['productId'] != null) {
       if (json['productId'] is String) {
-        productIdValue = json['productId'];
+        // If productId is just a string, create a simple ProductDetails with just the ID
+        productDetails = ProductDetails(
+          id: json['productId'],
+          name: '',
+          price: 0,
+          currency: '',
+          quantity: 0,
+          images: [],
+          colors: [],
+          size: [],
+          creator: '',
+          isFeatured: false,
+        );
       } else if (json['productId'] is Map<String, dynamic>) {
-        // If productId is a map, try to extract the ID
-        final productIdMap = json['productId'] as Map<String, dynamic>;
-        productIdValue = productIdMap['_id'] ?? productIdMap['id'] ?? null;
+        // If productId is a full object, parse it as ProductDetails
+        productDetails = ProductDetails.fromJson(json['productId']);
       }
     }
 
     return Product(
-      productId: productIdValue,
+      productId: productDetails,
       quantity: json['quantity'] ?? 0,
       id: json['_id'] ?? '',
     );
@@ -359,9 +378,77 @@ class Product {
 
   Map<String, dynamic> toJson() {
     return {
-      'productId': productId,
+      'productId': productId?.toJson(),
       'quantity': quantity,
       '_id': id,
+    };
+  }
+
+  // Helper getters for easier access
+  String get productName => productId?.name ?? '';
+  String? get productImage => productId?.images.isNotEmpty == true ? productId!.images.first : null;
+  int get productPrice => productId?.price ?? 0;
+  String get productCurrency => productId?.currency ?? '';
+}
+
+class ProductDetails {
+  final String id;
+  final String creator;
+  final String name;
+  final bool isFeatured;
+  final int price;
+  final String currency;
+  final int quantity;
+  final List<String> size;
+  final List<String> images;
+  final List<String> colors;
+
+  ProductDetails({
+    required this.id,
+    required this.creator,
+    required this.name,
+    required this.isFeatured,
+    required this.price,
+    required this.currency,
+    required this.quantity,
+    required this.size,
+    required this.images,
+    required this.colors,
+  });
+
+  factory ProductDetails.fromJson(Map<String, dynamic> json) {
+    return ProductDetails(
+      id: json['_id'] ?? '',
+      creator: json['creator'] ?? '',
+      name: json['name'] ?? '',
+      isFeatured: json['isFeatured'] ?? false,
+      price: json['price'] ?? 0,
+      currency: json['currency'] ?? '',
+      quantity: json['quantity'] ?? 0,
+      size: (json['size'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
+      images: (json['images'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
+      colors: (json['colors'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'creator': creator,
+      'name': name,
+      'isFeatured': isFeatured,
+      'price': price,
+      'currency': currency,
+      'quantity': quantity,
+      'size': size,
+      'images': images,
+      'colors': colors,
     };
   }
 } 
