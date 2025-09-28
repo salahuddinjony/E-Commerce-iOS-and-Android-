@@ -29,15 +29,15 @@ class OrderCardShowcase extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Action card for offered status
             _buildDemoActionCard('offered'),
             const SizedBox(height: 16),
-            
+
             // Action card for delivery-requested status
             _buildDemoActionCard('delivery-requested'),
             const SizedBox(height: 32),
-            
+
             const Text(
               'Status Cards (Informational)',
               style: TextStyle(
@@ -47,50 +47,50 @@ class OrderCardShowcase extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Status cards for different states
             const OrderStatusCard(
               status: 'accepted',
               time: '2023-12-01T10:30:00Z',
             ),
             const SizedBox(height: 16),
-            
+
             const OrderStatusCard(
               status: 'in-progress',
               time: '2023-12-02T14:15:00Z',
             ),
             const SizedBox(height: 16),
-            
+
             const OrderStatusCard(
               status: 'completed',
               time: '2023-12-05T16:45:00Z',
             ),
             const SizedBox(height: 16),
-            
+
             const OrderStatusCard(
               status: 'delivered',
               time: '2023-12-06T09:20:00Z',
             ),
             const SizedBox(height: 16),
-            
+
             const OrderStatusCard(
               status: 'delivery-confirmed',
               time: '2023-12-06T12:30:00Z',
             ),
             const SizedBox(height: 16),
-            
+
             const OrderStatusCard(
               status: 'cancelled',
               time: '2023-12-02T11:10:00Z',
             ),
             const SizedBox(height: 16),
-            
+
             const OrderStatusCard(
               status: 'rejected',
               time: '2023-12-01T15:30:00Z',
             ),
             const SizedBox(height: 16),
-            
+
             const OrderStatusCard(
               status: 'revision',
               time: '2023-12-03T13:25:00Z',
