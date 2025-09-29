@@ -47,6 +47,10 @@ class ApiUrl {
   }
 
 
+//Upload image
+  static const uploadImage = "$baseUrl/user/file-upload";
+
+
 
 //=================Vendor=================
 
