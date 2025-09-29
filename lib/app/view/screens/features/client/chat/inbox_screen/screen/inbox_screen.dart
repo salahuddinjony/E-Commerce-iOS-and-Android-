@@ -110,6 +110,7 @@ class InboxScreen extends StatelessWidget {
                                   'conversationId': convo.id,
                                   'userId': loggedUserId,
                                   'userRole': loggedUserRole,
+                                  'isVendor': isVendor,
                                 },
                               );
                               // refresh conversations to pick up lastMessage updates

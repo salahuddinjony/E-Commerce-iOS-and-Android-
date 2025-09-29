@@ -39,7 +39,9 @@ class AddAddressScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: isCustomOrder ? const Text("Custom Order Details") : const Text('Add Address'),
+        title: isCustomOrder
+            ? const Text("Offer Custom Order")
+            : const Text('Add Address'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -47,56 +49,66 @@ class AddAddressScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Recipient’s Name', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              TextField(
-                controller: controller.customerNameController,
-                decoration: InputDecoration(
-                  hintText: 'Real name',
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-
               // show custom order fields if isCustomOrder is true
-              isCustomOrder ? CustomOrderField(controller: controller) : const SizedBox(),
-              const Text('Contact Number', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              TextField(
-                controller: controller.customerPhoneController,
-                keyboardType: TextInputType.phone,
-                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
-                decoration: InputDecoration(
-                  hintText: 'Phone Number',
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(8),
+              isCustomOrder
+                  ? CustomOrderField(controller: controller)
+                  : const SizedBox(),
+
+              if (!isCustomOrder) ...[
+                const Text('Recipient’s Name',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: controller.customerNameController,
+                  decoration: InputDecoration(
+                    hintText: 'Real name',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Text('City/Region', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              TextField(
-                controller: controller.customerRegionCityController,
-                decoration: InputDecoration(
-                  hintText: 'city/region',
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(8),
+                const Text('Contact Number',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: controller.customerPhoneController,
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  decoration: InputDecoration(
+                    hintText: 'Phone Number',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                const Text('City/Region',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: controller.customerRegionCityController,
+                  decoration: InputDecoration(
+                    hintText: 'city/region',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 16),
-              const Text('Address', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Address',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               TextField(
                 controller: controller.customerAddressController,
@@ -117,21 +129,24 @@ class AddAddressScreen extends StatelessWidget {
                   onTap: submitting
                       ? null
                       : () async {
-                          if (controller.checkCustomerInfoIsEmpty()) return;
+                          if (controller.checkCustomOrderInisEmpty()) return;
                           if (isCustomOrder) {
                             try {
                               EasyLoading.show(status: 'Creating order...');
-                              final success = await controller.createCustomOrder(
+                              final success =
+                                  await controller.createCustomOrder(
                                 vendorId: vendorId,
-                                localImage: productImage,
                               );
                               if (success) {
-                                EasyLoading.showSuccess('Order created successfully');
-                                context.goNamed(RoutePath.userHomeScreen);
+                                EasyLoading.showSuccess(
+                                    'Order created successfully');
+                                // context.goNamed(RoutePath.homeScreen);
+                                context.pop();
                               } else {
                                 EasyLoading.showError('Failed to create order');
                               }
                             } catch (e) {
+                              debugPrint('Error creating order: $e');
                               EasyLoading.showError('Error: ${e.toString()}');
                             }
                             return;
@@ -151,7 +166,11 @@ class AddAddressScreen extends StatelessWidget {
                             },
                           );
                         },
-                  title: submitting ? "Creating..." : isCustomOrder ? "Create Custom Order" : "Next",
+                  title: submitting
+                      ? "Creating..."
+                      : isCustomOrder
+                          ? "Create Custom Order"
+                          : "Next",
                 );
               }),
               SizedBox(height: 20.h),

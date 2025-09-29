@@ -58,10 +58,11 @@ class AddProductScreen extends StatelessWidget {
         categoryName: categoryName,
         image: imageUrl!,
       );
-    } else {
-      // Clear fields for new product
-      controller.initializeForEdit(image: '');
-    }
+    } 
+    // else {
+    //   // Clear fields for new product
+    //   controller.initializeForEdit(image: '');
+    // }
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: CustomAppBar(

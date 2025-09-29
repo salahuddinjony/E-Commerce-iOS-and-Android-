@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
-import '../../controller/profile_controller.dart';
 
 class DeliveryDropdown extends StatelessWidget {
-  final ProfileController controller;
+  final dynamic controller;
   const DeliveryDropdown({super.key, required this.controller});
 
   @override

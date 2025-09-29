@@ -185,7 +185,7 @@ class OrderCardActionButtons extends StatelessWidget {
     try {
       final isOrderSuccess = await controller.acceptOrder(
           orderId: orderData.id,
-          status: "delivery-confirmeds",
+          status: "delivery-confirmed",
           action: 'accept_delivery');
       if (isOrderSuccess) {
         controller.fetchCustomOrders();
@@ -204,7 +204,7 @@ class OrderCardActionButtons extends StatelessWidget {
     try {
       final isOrderSuccess = await controller.acceptOrder(
           orderId: orderData.id,
-          status: "revisions",
+          status: "revision",
           action: 'request_revision');
       if (isOrderSuccess) {
         controller.fetchCustomOrders();

@@ -329,6 +329,7 @@ class AppRouter {
             final receiverRole = extra['receiverRole'] as String? ?? '';
             final receiverName = extra['receiverName'] as String? ?? '';
             final receiverImage = extra['receiverImage'] as String? ?? '';
+            final isVendor = extra['isVendor'] as bool? ?? false;
 
             return _buildPageWithAnimation(
               child: ChatScreen(
@@ -337,6 +338,7 @@ class AppRouter {
                 userId: userId,
                 receiverRole: receiverRole,
                 receiverName: receiverName,
+                isVendor: isVendor,
                 receiverImage: receiverImage,
               ),
               state: state,

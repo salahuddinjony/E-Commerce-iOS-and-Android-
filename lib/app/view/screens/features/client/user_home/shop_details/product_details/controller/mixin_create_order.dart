@@ -13,19 +13,18 @@ mixin MixinCreateOrder {
   final items = 1.obs;
   final size = ''.obs;
   final color = ''.obs;
+  final RxString selectedDelivery = ''.obs;
 
   // Custome Oerder info
   final TextEditingController priceController =
-      TextEditingController(text: "10");
+      TextEditingController();
 
   final TextEditingController quantityController =
-      TextEditingController(text: "1");
-  final TextEditingController deliveryOptionController =
-      TextEditingController(text: "courier");
+      TextEditingController();
   final TextEditingController deliveryDate =
-      TextEditingController(text: "2024-12-31");
+      TextEditingController();
   final TextEditingController summeryController =
-      TextEditingController(text: "I would like a custom design with my logo.");
+      TextEditingController();
 
   Future<bool> createOrder(
       {required vendorId,
@@ -80,7 +79,7 @@ mixin MixinCreateOrder {
   Future<bool> customOrder({
     required vendorId,
     required String shippingAddress,
-    required dynamic localImage,
+    required dynamic designFiles,
   }) async {
     final clientId = await SharePrefsHelper.getString(AppConstants.userId);
 
@@ -93,7 +92,7 @@ mixin MixinCreateOrder {
         "currency": "USD",
         "quantity": quantityController.text.trim(),
         "isCustom": true,
-        "deliveryOption": deliveryOptionController.text.trim(),
+        "deliveryOption": selectedDelivery.value,
         "summery": summeryController.text.trim(),
         "shippingAddress": shippingAddress,
       };
@@ -102,10 +101,10 @@ mixin MixinCreateOrder {
 
       // Normalize localImage: accept File, String (path), XFile, or List of those
       final List<File> files = [];
-      if (localImage == null) {
+      if (designFiles == null) {
         // no files
-      } else if (localImage is List) {
-        for (final item in localImage) {
+      } else if (designFiles is List) {
+        for (final item in designFiles) {
           if (item == null) continue;
           if (item is File) {
             files.add(item);
@@ -122,15 +121,15 @@ mixin MixinCreateOrder {
           }
         }
       } else {
-        if (localImage is File) {
-          files.add(localImage);
-        } else if (localImage is XFile) {
-          files.add(File(localImage.path));
-        } else if (localImage is String) {
-          files.add(File(localImage));
+        if (designFiles is File) {
+          files.add(designFiles);
+        } else if (designFiles is XFile) {
+          files.add(File(designFiles.path));
+        } else if (designFiles is String) {
+          files.add(File(designFiles));
         } else {
           try {
-            files.add(File(localImage.toString()));
+            files.add(File(designFiles.toString()));
           } catch (e) {
             // ignore
           }
