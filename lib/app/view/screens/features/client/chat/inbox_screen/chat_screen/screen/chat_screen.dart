@@ -89,6 +89,7 @@ class ChatScreen extends StatelessWidget {
                     controller: controller, receiverImage: receiverImage),
               ),
               Obx(() => TypingIndicator(visible: controller.isTyping.value)),
+             
             ],
           ),
         ),

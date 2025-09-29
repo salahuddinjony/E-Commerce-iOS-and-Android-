@@ -31,8 +31,39 @@ class MapPickerScreen extends StatelessWidget {
       body: Stack(
         children: [
           // Google Map
-          Obx(
-            () => GoogleMap(
+          Obx(() {
+            // Build vendor markers inside Obx so changes to nearestVendors trigger a rebuild.
+            final vendorMarkers = mapPickerController.nearestVendors
+                .where((v) => v.location?.coordinates != null && v.location!.coordinates!.length >= 2)
+                .map((vendor) {
+              final coords = vendor.location!.coordinates!;
+              // API may return coordinates as [lng, lat] (GeoJSON) or [lat, lng].
+              // We'll try to detect invalid latitude values and swap if needed.
+              double longitude = coords[0];
+              double latitude = coords[1];
+
+              // If latitude is out of valid range (-90..90) then swap the values.
+              if (latitude.abs() > 90) {
+                final tmp = latitude;
+                latitude = longitude;
+                longitude = tmp;
+              }
+
+              // Debug print to help inspect incoming coords and the final marker position.
+              // Remove or comment out in production.
+              // ignore: avoid_print
+              print('Vendor ${vendor.id ?? 'unknown'} coords: $coords -> lat=$latitude, lon=$longitude');
+
+              final id = vendor.id ?? '${latitude}_$longitude';
+              final icon = mapPickerController.customVendorMarker.value ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+              return Marker(
+                markerId: MarkerId(id),
+                position: LatLng(latitude, longitude),
+                icon: icon,
+              );
+            }).toSet();
+
+            return GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: mapPickerController.pickedLocation.value,
                 zoom: 15,
@@ -46,13 +77,11 @@ class MapPickerScreen extends StatelessWidget {
                 mapPickerController.pickedLocation.value = latLng;
                 await mapPickerController.updateAddress(latLng);
               },
-                markers: {
+              markers: {
                 // Marker for picked location
                 Marker(
                   markerId: const MarkerId('picked'),
                   position: mapPickerController.pickedLocation.value,
-                  // position: LatLng(23.761491917390394, 90.35677046743345),
-
                 ),
                 // Marker for center location
                 // Marker(
@@ -62,29 +91,13 @@ class MapPickerScreen extends StatelessWidget {
                 //     mapPickerController.pickedLocation.value.longitude + 0.001,
                 //   ),
                 //   icon: BitmapDescriptor.defaultMarkerWithHue(
-                //     BitmapDescriptor.hueMagenta),
+                //       BitmapDescriptor.hueMagenta),
                 // ),
-                // Markers for your given lat/lng list
-                ...mapPickerController.nearestVendors
-                    .where((v) => v.location?.coordinates != null && v.location!.coordinates!.length >= 2)
-                    .map((vendor) {
-                  final coords = vendor.location!.coordinates!;
-                  // coords is List<double>. By GeoJSON convention it's [lng, lat].
-                  final double longitude = coords[0];
-                  final double latitude = coords[1];
-                  final id = vendor.id ?? '${latitude}_$longitude';
-                  return Marker(
-                    markerId: MarkerId(id),
-                    position: LatLng(latitude, longitude),
-                    icon: BitmapDescriptor.defaultMarkerWithHue(
-                      BitmapDescriptor.hueGreen,
-                    ),
-                  );
-                }).toSet(),
-                
+                // Spread the vendor markers
+                ...vendorMarkers,
               },
-            ),
-          ),
+            );
+          }),
           // Floating Search Bar (shows picked address)
           Positioned(
             top: 80,

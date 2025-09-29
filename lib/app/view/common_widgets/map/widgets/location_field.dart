@@ -6,6 +6,8 @@ import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
 import 'package:local/app/view/common_widgets/map/screen/map_picker_screen.dart';
 import 'package:local/app/view/common_widgets/map/show_address_based_on_latLng.dart';
+import 'package:local/app/view/screens/features/client/user_home/controller/user_home_controller.dart';
+import 'package:local/app/view/screens/features/client/user_home/controller/delivery_locations_controller.dart';
 
 class LocationField<T> extends StatelessWidget {
   final T controller;
@@ -35,6 +37,19 @@ class LocationField<T> extends StatelessWidget {
       dyn.latitude.value = picked.latitude.toString();
       dyn.longitude.value = picked.longitude.toString();
       dyn.address.value = await ShowAddressBasedOnLatlng.updateAddress(picked);
+      // If this field is the delivery location, propagate the selected
+      // coordinates to the main UserHomeController so its vendor search
+      // and markers update (UserHomeController listens to its latitude/longitude).
+      try {
+        if (controller is MixInDeliveryLocation) {
+          final userHome = Get.find<UserHomeController>();
+          userHome.latitude.value = picked.latitude.toString();
+          userHome.longitude.value = picked.longitude.toString();
+          userHome.address.value = dyn.address.value;
+        }
+      } catch (_) {
+        // If UserHomeController is not found, ignore silently.
+      }
       return;
     }
   }
