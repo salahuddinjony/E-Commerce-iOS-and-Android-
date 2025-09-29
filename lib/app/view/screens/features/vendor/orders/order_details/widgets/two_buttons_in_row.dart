@@ -10,6 +10,7 @@ Widget twoButtons({
   Icon rightIcon = const Icon(Icons.cancel_outlined, color: Colors.white),
   bool leftButton = true,
   bool rightButton = true,
+  double height=40,
   required VoidCallback leftOnTap,
   VoidCallback? rightOnTap,
   bool isLeftLoading = false,
@@ -21,7 +22,7 @@ Widget twoButtons({
         Expanded(
           flex: 4,
           child: Container(
-            height: 40.h,
+            height:height.h,
             decoration: BoxDecoration(
               color: leftColor,
               borderRadius: BorderRadius.circular(20.r),

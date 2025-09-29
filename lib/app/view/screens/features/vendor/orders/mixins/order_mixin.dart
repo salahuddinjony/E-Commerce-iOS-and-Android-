@@ -26,22 +26,31 @@ mixin OrderMixin on GetxController {
   // Get custom orders for specific tab
   List<Order> getCustomOrdersForTab(String tab) {
     switch (tab) {
-      case 'Pending':
+      case 'Offered':
         return customOrders.where((order) => 
           OrderConstants.isPendingStatus(order.status)
         ).toList();
-      case 'In Progress':
+      case 'Accepted Offers':
         return customOrders.where((order) => 
           OrderConstants.isInProgressStatus(order.status)
         ).toList();
-      case 'Completed':
+      case 'Delivery Requested': 
         return customOrders.where((order) => 
-          OrderConstants.isCompletedStatus(order.status)
+          OrderConstants.isDeliveryRequestedStatus(order.status) 
+        ).toList();
+      case 'Delivered':
+        return customOrders.where((order) =>  
+          OrderConstants.isDeliveryConfirmedStatus(order.status)
+        ).toList();
+      case 'Revision':
+        return customOrders.where((order) => 
+          OrderConstants.isRevisionStatus(order.status)
         ).toList();
       case 'Cancelled':
         return customOrders.where((order) => 
           OrderConstants.isCancelledStatus(order.status)
         ).toList();
+      
       default:
         return [];
     }
