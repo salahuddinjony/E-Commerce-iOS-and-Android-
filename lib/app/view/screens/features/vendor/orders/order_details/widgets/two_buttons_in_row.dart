@@ -4,6 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 Widget twoButtons({
   required String leftTitle,
   String? rightTitle,
+  Color leftColor = Colors.green,
+  Color rightColor = Colors.red,
+  Icon leftIcon = const Icon(Icons.check_circle_outline, color: Colors.white),
+  Icon rightIcon = const Icon(Icons.cancel_outlined, color: Colors.white),
   bool leftButton = true,
   bool rightButton = true,
   required VoidCallback leftOnTap,
@@ -19,7 +23,7 @@ Widget twoButtons({
           child: Container(
             height: 40.h,
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: leftColor,
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Material(
@@ -44,7 +48,7 @@ Widget twoButtons({
                         )
                       else
                         Icon(
-                          Icons.check_circle_outline,
+                          leftIcon.icon,
                           color: Colors.white,
                           size: 14.sp,
                         ),
@@ -71,7 +75,7 @@ Widget twoButtons({
           child: Container(
             height: 40.h,
             decoration: BoxDecoration(
-              color: Colors.red,
+              color: rightColor,
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Material(
@@ -96,7 +100,7 @@ Widget twoButtons({
                         )
                       else
                         Icon(
-                          Icons.cancel_outlined,
+                           rightIcon.icon,
                           color: Colors.white,
                           size: 14.sp,
                         ),

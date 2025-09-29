@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
-import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_constants/app_constants.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
@@ -10,9 +7,7 @@ import 'package:local/app/view/screens/features/client/user_order/controller/use
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_product_row.dart';
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_tracking_timeline.dart';
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/summary_row.dart';
-import 'package:local/app/view/screens/features/client/user_order/widgets/offer_accept_card.dart';
-import 'package:local/app/view/screens/features/vendor/orders/order_details/widgets/two_buttons_in_row.dart';
-
+import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_card.dart';
 
 class UserOrderDetailsScreen extends StatelessWidget {
   final bool isCustom;
@@ -34,6 +29,16 @@ class UserOrderDetailsScreen extends StatelessWidget {
     return AppConstants.demoImage;
   }
 
+  String generalOrderImage(dynamic data) {
+    try {
+      final imageUrl = data?.products?.first?.productId?.images?.first;
+      if (imageUrl != null && imageUrl.toString().isNotEmpty) {
+        return imageUrl.toString();
+      }
+    } catch (_) {}
+    return AppConstants.demoImage;
+  }
+
   String safeFormatDate(dynamic value) {
     if (value == null) return '';
 
@@ -45,20 +50,24 @@ class UserOrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String productImage =
-        isCustom ? safeFirstDesignImage(orderData) : AppConstants.demoImage;
+    debugPrint(
+        'Rendering UserOrderDetailsScreen for ${isCustom ? 'Custom' : 'General'} Order ID: ${(isCustom ? orderData?.orderId : orderData?.id)?.toString() ?? 'N/A'}');
+    debugPrint('Order Data: ${orderData}');
+    final String productImage = isCustom
+        ? safeFirstDesignImage(orderData)
+        : generalOrderImage(orderData);
     final String orderID =
         (isCustom ? orderData?.orderId : orderData?.id)?.toString() ?? '';
     final String orderStatus =
-        (isCustom ? orderData?.status : orderData?.orderStatus)?.toString() ??
-            '';
+        (isCustom ? orderData?.status : orderData?.status)?.toString() ?? '';
     final String orderPrice =
         (isCustom ? orderData?.price : orderData?.price)?.toString() ?? '';
     final String orderCurrency =
         (isCustom ? orderData?.currency : orderData?.currency)?.toString() ??
             '';
     final String orderQuantity =
-        (isCustom ? orderData?.quantity : orderData?.quantity)?.toString() ??
+        (isCustom ? orderData?.quantity : orderData?.totalQuantity)
+                ?.toString() ??
             '';
 
     final String orderDate =
@@ -73,9 +82,7 @@ class UserOrderDetailsScreen extends StatelessWidget {
                 ?.toString() ??
             '';
     final String deliveryOption =
-        (isCustom ? orderData?.deliveryOption : orderData?.deliveryOption)
-                ?.toString() ??
-            '';
+        (isCustom ? orderData?.deliveryOption : '')?.toString() ?? '';
     final String shippingAddress =
         (isCustom ? orderData?.shippingAddress : orderData?.shippingAddress)
                 ?.toString() ??
@@ -83,35 +90,92 @@ class UserOrderDetailsScreen extends StatelessWidget {
     final String summery =
         isCustom ? (orderData?.summery?.toString() ?? '') : '';
 
-    // determine statuses and activeIndex
+    // determine statuses and activeIndex based on order type
     final status = orderStatus.toLowerCase();
-    List<String> statuses = [
-      'Offered',
-      'In Progress',
-      status == 'completed' || status == 'accepted' ? 'Delivered' : 'Delivery'
-    ];
+    List<String> statuses;
     int activeIndex;
-    if (status == 'offered' || status == 'pending') {
-      activeIndex = 0;
-    } else if (status == 'in-progress') {
-      activeIndex = 1;
-    } else if (status == 'cancelled' || status == 'rejected') {
-      statuses = ['Offered', 'In Progress', 'Cancelled'];
-      activeIndex = 2;
-    } else if (status == 'completed' || status == 'delivered') {
-      activeIndex = 2;
-    } else {
-      activeIndex = 0;
-    }
+    List<String> timelineDates;
 
-    final List<String> timelineDates = List.generate(
-      statuses.length,
-      (i) {
-        if (i == 0) return orderDate;
-        if (i == 1) return updatedAt;
-        return orderDeliveryDate;
-      },
-    );
+    if (isCustom) {
+      // Custom order timeline: Offered/Pending -> Accepted -> Delivery Request -> Confirm Delivery (with optional Revision)
+      if (status == 'revision') {
+        statuses = [
+          'Offered',
+          'Accepted',
+          'Delivery Request',
+          'Revision',
+          'Confirm Delivery'
+        ];
+        activeIndex = 3;
+        timelineDates = [orderDate, updatedAt, updatedAt, updatedAt, ''];
+      } else if (status == 'cancelled' || status == 'rejected') {
+        statuses = ['Offered', 'Cancelled'];
+        activeIndex = 1;
+        timelineDates = [orderDate, updatedAt];
+      } else {
+        statuses = [
+          'Offered',
+          'Accepted',
+          'Delivery Request',
+          'Confirm Delivery'
+        ];
+        if (status == 'offered' || status == 'pending') {
+          activeIndex = 0;
+          timelineDates = [orderDate, '', '', ''];
+        } else if (status == 'accepted') {
+          activeIndex = 1;
+          timelineDates = [orderDate, updatedAt, '', ''];
+        } else if (status == 'delivery-requested') {
+          activeIndex = 2;
+          timelineDates = [orderDate, updatedAt, updatedAt, ''];
+        } else if (status == 'delivery-confirmed' || status == 'completed') {
+          activeIndex = 3;
+          timelineDates = [
+            orderDate,
+            updatedAt,
+            updatedAt,
+            orderDeliveryDate.isNotEmpty ? orderDeliveryDate : updatedAt
+          ];
+        } else {
+          activeIndex = 0;
+          timelineDates = [orderDate, '', '', ''];
+        }
+      }
+    } else {
+      // Non-custom order timeline: Offered/Pending -> In Progress -> Delivery
+      if (status == 'cancelled' || status == 'rejected') {
+        statuses = ['Ordered', 'In Progress', 'Cancelled'];
+        activeIndex = 2;
+        timelineDates = [orderDate, updatedAt, updatedAt];
+      } else {
+        statuses = [
+          'Ordered',
+          'In Progress',
+          status == 'completed' || status == 'deliverd'
+              ? 'Delivered'
+              : 'Delivery'
+        ];
+        if (status == 'Ordered' || status == 'pending') {
+          activeIndex = 0;
+          timelineDates = [orderDate, '', ''];
+        } else if (status == 'in-progress' || status == 'process') {
+          activeIndex = 1;
+          timelineDates = [orderDate, updatedAt, ''];
+        } else if (status == 'completed' ||
+            status == 'delivered' ||
+            status == 'deliverd') {
+          activeIndex = 2;
+          timelineDates = [
+            orderDate,
+            updatedAt,
+            orderDeliveryDate.isNotEmpty ? orderDeliveryDate : updatedAt
+          ];
+        } else {
+          activeIndex = 0;
+          timelineDates = [orderDate, '', ''];
+        }
+      }
+    }
 
     final bool isDisabled = status == 'cancelled' || status == 'rejected';
 
@@ -130,6 +194,7 @@ class UserOrderDetailsScreen extends StatelessWidget {
             orderStatus: orderStatus,
             isCustom: isCustom,
             orderDate: orderDate,
+            designFiles: isCustom ? orderData?.designFiles : null,
           ),
           const SizedBox(height: 24),
           OrderTrackingTimeline(
@@ -144,8 +209,8 @@ class UserOrderDetailsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Order Summary',
+                Text(
+                  '${isCustom ? 'Offer' : 'Order'} Summary',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
@@ -155,8 +220,10 @@ class UserOrderDetailsScreen extends StatelessWidget {
                 SummaryRow(
                     label: 'Payment Status',
                     value: orderPaymentStatus.safeCap()),
-                SummaryRow(
-                    label: 'Delivery Option', value: deliveryOption.safeCap()),
+                if (isCustom)
+                  SummaryRow(
+                      label: 'Delivery Option',
+                      value: deliveryOption.safeCap()),
                 // const Divider(),
                 const SizedBox(height: 24),
                 const Text(
@@ -166,43 +233,28 @@ class UserOrderDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(shippingAddress.toString()),
                 const SizedBox(height: 24),
-                const Text(
-                  'Additional Notes',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(summery.toString()),
-                const SizedBox(height: 8),
+                if (isCustom) ...[
+                  const Text(
+                    'Additional Notes',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text(summery.toString()),
+                  const SizedBox(height: 24),
+                ]
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          if (isCustom && (status == 'offered' || status == 'pending'))
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: Obx(() => twoButtons(
-                leftTitle: 'Accept',
-                rightTitle: 'Reject',
-                isLeftLoading: controller.isAcceptLoading.value,
-                isRightLoading: controller.isRejectLoading.value,
-                leftOnTap: () async {
-                  if (await controller.acceptOrder(orderData.id)) {
-                    toastMessage(message: 'Your accepted the Offer');
-                    context.pop();
-                  } else {
-                    toastMessage(message: 'Failed to accept order');
-                  }
-                },
-                rightOnTap: () async {
-                  if (await controller.rejectOrder(orderData.id)) {
-                    toastMessage(message: 'Reject The Offer');
-                    context.pop();
-                  } else {
-                    toastMessage(message: 'Failed to Reject Offer');
-                  }
-                },
-              )),
-            ),
-          if (isCustom && status == 'in-progress')  OfferAcceptCard(time: orderData.updatedAt.toString()),
+
+          // Unified card that handles both status display and actions
+          OrderCard(
+            status: orderStatus == 'deliverd' ? 'delivered' : orderStatus,
+            time: orderData.updatedAt.toString(),
+            orderData: orderData,
+            controller: controller,
+            orderPrice: orderPrice,
+            isCustom: isCustom,
+          ),
+          if (isCustom) const SizedBox(height: 20),
         ]),
       ),
     );

@@ -21,10 +21,11 @@ class AuthController extends GetxController with PasswordConstraintController {
   // final passWordController = TextEditingController(text: "salahAbc@1");
 
   // final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
-  // final passWordController = TextEditingController(text: "12345678");
+  // final passWordController = TextEditingController(text: "12345678"); 
 
   // for client
-  final emailController =TextEditingController(text: "pekasi2300@futurejs.com");
+  final emailController =
+      TextEditingController(text: "pekasi2300@futurejs.com");
   final passWordController = TextEditingController(text: "Salah!1aa");
 
   final confirmPasswordController = TextEditingController();
@@ -358,12 +359,6 @@ class AuthController extends GetxController with PasswordConstraintController {
       toastMessage(message: "Please upload a document before proceeding.");
       return;
     }
-    if (latitude.value.isEmpty || longitude.value.isEmpty) {
-      isVendorLoading.value = false;
-      refresh();
-      toastMessage(message: "Please select a location before proceeding.");
-      return;
-    }
     Map<String, dynamic> body = {
       "name": businessNameController.text.trim(),
       "email": businessEmailController.text.trim(),
@@ -372,11 +367,11 @@ class AuthController extends GetxController with PasswordConstraintController {
       "role": "vendor",
       "isSocial": "false",
       "address": address.value,
-      "lat": double.tryParse(latitude.value) ?? 0.0,
-      "lng": double.tryParse(longitude.value) ?? 0.0,
+      "lat": latitude.value,
+      "long": longitude.value,
       "description": businessDescriptionController.text.trim(),
       "deliveryOption":
-          businessDeliveryOptionController.text,
+          businessDeliveryOptionController.text.toLowerCase().trim(),
     };
 
     var response = await ApiClient.postMultipartData(
@@ -396,11 +391,9 @@ class AuthController extends GetxController with PasswordConstraintController {
           "email": businessEmailController.text,
         },
       );
-      toastMessage(message: responseData["message"] ?? "Registration successful");
+      toastMessage(message: responseData["message"]);
     } else if (response.statusCode == 400) {
-      toastMessage(message: responseData["error"] ?? "Bad request");
-    } else if (response.statusCode == 500) {
-      toastMessage(message: responseData["error"] ?? "Server error. Please try again.");
+      toastMessage(message: responseData["error"]);
     } else {
       ApiChecker.checkApi(response);
     }

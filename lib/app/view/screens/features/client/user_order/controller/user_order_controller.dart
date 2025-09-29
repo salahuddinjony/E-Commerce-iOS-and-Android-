@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:local/app/services/api_url.dart';
 import 'package:local/app/view/screens/features/client/user_order/mixin/mixin_extend_order.dart';
@@ -22,6 +23,12 @@ class UserOrderController extends GetxController
   // Loading states for order status updates
   RxBool isAcceptLoading = false.obs;
   RxBool isRejectLoading = false.obs;
+  
+  // Individual loading states for specific actions
+  RxBool isAcceptOfferLoading = false.obs;
+  RxBool isRejectOfferLoading = false.obs;
+  RxBool isAcceptDeliveryLoading = false.obs;
+  RxBool isRequestRevisionLoading = false.obs;
 
   // Fetch custom orders from API
   Future<void> fetchCustomOrders() async {
@@ -74,8 +81,8 @@ class UserOrderController extends GetxController
 
       // debug: inspect list after processing
       print("Total General Orders: ${totalGeneralOrder.value}");
-      print("General Orders length (after process): ${generalOrders.length}");
-      print("General Orders content: ${generalOrders}");
+      print("General Orders length (after process): ${generalOrdersList.length}");
+      print("General Orders content: ${generalOrdersList}");
       generalOrdersErrorMessage.value = '';
     } catch (e, st) {
       isGeneralOrdersError.value = true;
@@ -104,35 +111,83 @@ class UserOrderController extends GetxController
     }
   }
 
-  // Accept order method
-  Future<bool> acceptOrder(String orderId) async {
-    isAcceptLoading.value = true;
+  // Accept order method with action-specific loading states
+  Future<bool> acceptOrder({
+    required String orderId, 
+    String? sessionId, 
+    String? status, 
+    String? action
+  }) async {
+    // Set appropriate loading state based on action
+    switch (action) {
+      case 'accept_offer':
+        isAcceptOfferLoading.value = true;
+        break;
+      case 'accept_delivery':
+        isAcceptDeliveryLoading.value = true;
+        break;
+      case 'request_revision':
+        isRequestRevisionLoading.value = true;
+        break;
+      default:
+        isAcceptLoading.value = true; // fallback to default
+    }
+    
+    debugPrint("Accepting order: $orderId with sessionId: $sessionId, action: $action");
+    final String orderStatus = status ?? 'accepted';
     
     try {
       return await customerOrderService.updateOrderStatusOrUpdateExtn(
-          orderId, 'in-progress');
+          orderId, orderStatus, sessionId: sessionId);
     } catch (e) {
       isError.value = true;
       errorMessage.value = e.toString();
       return false;
     } finally {
-      isAcceptLoading.value = false;
+      // Clear appropriate loading state based on action
+      switch (action) {
+        case 'accept_offer':
+          isAcceptOfferLoading.value = false;
+          break;
+        case 'accept_delivery':
+          isAcceptDeliveryLoading.value = false;
+          break;
+        case 'request_revision':
+          isRequestRevisionLoading.value = false;
+          break;
+        default:
+          isAcceptLoading.value = false; // fallback to default
+      }
     }
   }
 
-  // Reject order method
-  Future<bool> rejectOrder(String orderId) async {
-    isRejectLoading.value = true;
+  // Reject order method with action-specific loading states
+  Future<bool> rejectOrder({required String orderId, String? status, String? action}) async {
+    // Set appropriate loading state based on action
+    switch (action) {
+      case 'reject_offer':
+        isRejectOfferLoading.value = true;
+        break;
+      default:
+        isRejectLoading.value = true; // fallback to default
+    }
     
     try {
       return await customerOrderService.updateOrderStatusOrUpdateExtn(
-          orderId, 'cancelled');
+          orderId, status ?? 'rejected');
     } catch (e) {
       isError.value = true;
       errorMessage.value = e.toString();
       return false;
     } finally {
-      isRejectLoading.value = false;
+      // Clear appropriate loading state based on action
+      switch (action) {
+        case 'reject_offer':
+          isRejectOfferLoading.value = false;
+          break;
+        default:
+          isRejectLoading.value = false; // fallback to default
+      }
     }
   }
 
