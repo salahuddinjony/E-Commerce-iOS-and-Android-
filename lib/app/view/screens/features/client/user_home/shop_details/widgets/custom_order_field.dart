@@ -24,12 +24,12 @@ class CustomOrderField extends StatelessWidget {
         ),
 
         const SizedBox(height: 8),
-        const Text('Price', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Price(\$)', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         TextField(
           controller: controller.priceController,
           decoration: InputDecoration(
-            hintText: 'Price',
+            hintText: 'Price in USD',
             filled: true,
             fillColor: Colors.grey[200],
             border: OutlineInputBorder(
@@ -38,12 +38,12 @@ class CustomOrderField extends StatelessWidget {
             ),
           ),
         ),
-        const Text('Quantity', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Quantities', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         TextField(
           controller: controller.quantityController,
           decoration: InputDecoration(
-            hintText: 'Quantity',
+            hintText: 'Enter Quantities',
             filled: true,
             fillColor: Colors.grey[200],
             border: OutlineInputBorder(
