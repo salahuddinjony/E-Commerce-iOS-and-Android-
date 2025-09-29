@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_network_image/custom_network_image.dart';
 
 class ChatHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -6,13 +7,16 @@ class ChatHeader extends StatelessWidget implements PreferredSizeWidget {
   final String receiverImage;
   final VoidCallback onBack;
   final VoidCallback? onMore;
+  final String id;
+  final bool isVendor;
 
   const ChatHeader({
     super.key,
     required this.receiverName,
     required this.receiverImage,
     required this.onBack,
-    this.onMore,
+    this.onMore, 
+    required this.id, required this.isVendor,
   });
 
   @override
@@ -65,10 +69,22 @@ class ChatHeader extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
-            IconButton(
+            // clearer "Make Offer" action for users
+           if(isVendor) TextButton.icon(
               onPressed: onMore,
-              icon: const Icon(Icons.more_vert),
-            ),
+              icon: const Icon(Icons.local_offer, color: AppColors.brightCyan, size: 20),
+              label: const Text(
+                'Make Offer',
+                style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+              ),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                backgroundColor: Colors.grey.shade100,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+            )else Icon( Icons.more_vert, color: Colors.grey.shade600),
+            // Text(id
+            //   , style: const TextStyle(fontSize: 12, color: Colors.grey),)
           ],
         ),
       ),

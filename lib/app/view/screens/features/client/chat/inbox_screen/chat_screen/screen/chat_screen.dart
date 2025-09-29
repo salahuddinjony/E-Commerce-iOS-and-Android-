@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/screens/features/client/chat/controllers/chat_controller.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/widgets/chat_header.dart';
+import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/widgets/make_an_offer.dart';
 import '../widgets/chat_body.dart';
 import '../widgets/typing_indicator.dart';
 
@@ -14,6 +15,7 @@ class ChatScreen extends StatelessWidget {
   final String receiverName;
   final String receiverImage;
   final String userRole;
+  final bool isVendor;
 
   const ChatScreen({
     super.key,
@@ -21,8 +23,9 @@ class ChatScreen extends StatelessWidget {
     required this.userId,
     required this.receiverRole,
     required this.receiverName,
-    required this.receiverImage, 
+    required this.receiverImage,
     required this.userRole,
+    required this.isVendor,
   });
 
   @override
@@ -30,16 +33,40 @@ class ChatScreen extends StatelessWidget {
     final controller = Get.isRegistered<ChatController>(tag: conversationId)
         ? Get.find<ChatController>(tag: conversationId)
         : Get.put(
-            ChatController(conversationId: conversationId, userRole: userRole, userId: userId),
+            ChatController(
+                conversationId: conversationId,
+                userRole: userRole,
+                userId: userId),
             tag: conversationId);
 
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: ChatHeader(
+        id: userId,
         receiverName: receiverName,
         receiverImage: receiverImage,
+        isVendor: isVendor,
         onBack: () => context.pop(),
-        onMore: () {}, 
+        onMore: () {
+          if (isVendor)
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              isScrollControlled: false,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              ),
+              builder: (context) {
+                return MakeAnOffer(
+                  controller: controller,
+                  receiverImage: receiverImage,
+                  receiverName: receiverName,
+                  userId: userId,
+                );
+              },
+            );
+          return;
+        },
       ),
       body: SafeArea(
         bottom: false,
@@ -58,7 +85,8 @@ class ChatScreen extends StatelessWidget {
             children: [
               const Divider(height: 1),
               Expanded(
-                child: ChatBody(controller: controller, receiverImage: receiverImage),
+                child: ChatBody(
+                    controller: controller, receiverImage: receiverImage),
               ),
               Obx(() => TypingIndicator(visible: controller.isTyping.value)),
             ],
