@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:local/app/core/route_path.dart';
+import 'package:local/app/services/api_client.dart';
+import 'package:local/app/services/api_url.dart';
 import '../mixins/order_mixin.dart';
 import '../mixins/general_order_mixin.dart';
 import '../models/custom_order_response_model.dart';
@@ -19,12 +24,27 @@ class OrdersController extends GetxController
   final GeneralOrderService generalOrderService = GeneralOrderService();
 
   var isCustomOrder = false.obs; // toggle state
+  RxList<File> selectedImages = <File>[].obs;
+  final TextEditingController descController = TextEditingController();
+  final RxList<String> selectedFiles = <String>[].obs;
+
+  Future<void> pickImages() async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final List<XFile>? images = await picker.pickMultipleMedia();
+      if (images != null && images.isNotEmpty) {
+        selectedImages.addAll(images.map((xfile) => File(xfile.path)));
+      }
+    } catch (e) {
+      print('Error picking images: $e');
+    }
+  }
 
   RxInt totalCustomOrder = 0.obs;
   RxInt totalInProgressOrder = 0.obs;
   RxInt totalGeneralOrder = 0.obs;
   RxInt totalPendingOrder = 0.obs;
-    
+
   // Loading states for order status updates
   RxBool isAcceptLoading = false.obs;
   RxBool isRejectLoading = false.obs;
@@ -136,7 +156,7 @@ class OrdersController extends GetxController
 
   // Update custom order status
   Future<bool> updateCustomOrderStatus(String orderId, String status) async {
-     isAcceptLoading.value = true;
+    isAcceptLoading.value = true;
     try {
       print('Updating custom order status: $orderId to $status');
       final result = await customerOrderService.updateOrderStatusOrUpdateExtn(
@@ -147,14 +167,66 @@ class OrdersController extends GetxController
     } catch (e) {
       print('Failed to update custom order status: $e');
       return false;
-    }finally{
-       isAcceptLoading.value = false;
+    } finally {
+      isAcceptLoading.value = false;
     }
+  }
+
+  Future<bool> updateOrderToDeliveryRequested(
+      String orderId, String status) async {
+    isAcceptLoading.value = true;
+    try {
+      print('Updating custom order status: $orderId to $status');
+
+      // Create the request body - exclude workSamples from body since they're sent as multipart
+      Map<String, dynamic> body = {
+        "status": status,
+        "description": descController.text,
+      };
+
+      // Debug the URL being generated
+      String apiUrl = ApiUrl.updateCustomOrderStatus(orderId: orderId);
+      print('Generated API URL: $apiUrl');
+      
+      // Try using the exact URL from your successful test
+      String correctUrl = "order/update/$orderId";
+      print('Using corrected URL: $correctUrl');
+
+      final result = await ApiClient.patchMultipart(
+          correctUrl, // Use the corrected URL instead
+          body,
+          multipartBody: selectedImages
+              .map((xfile) => MultipartBody(
+                    'workSamples',
+                    xfile,
+                  ))
+              .toList());
+      if (result.statusCode != 200) {
+        print('Failed to update custom order status: ${result.body}');
+        return false;
+      }
+      // Refresh custom orders after status update
+      refreshOrdersByType(true);
+      debugPrint('Order updated successfully: ${result.body}');
+      fetchCustomOrders();
+      return true;
+    } catch (e) {
+      print('Failed to update custom order status: $e');
+      return false;
+    } finally {
+      isAcceptLoading.value = false;
+    }
+  }
+
+// Method to clear form data after submission
+  void clearDeliveryRequestForm() {
+    descController.clear();
+    selectedImages.clear();
+    selectedFiles.clear();
   }
 
   // Update general order status
   Future<void> updateGeneralOrderStatus(String orderId, String status) async {
-     
     try {
       await generalOrderService.updateGeneralOrderStatus(orderId, status);
       // Refresh general orders after status update

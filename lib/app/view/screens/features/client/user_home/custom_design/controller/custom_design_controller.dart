@@ -9,7 +9,7 @@ import 'package:flutter/rendering.dart';
 // permission_handler removed because not used in current export flow
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+// import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class TextBoxModel {
@@ -300,7 +300,8 @@ class CustomDesignController extends GetxController {
     }
 
     try {
-      final result = await ImageGallerySaver.saveImage(bytes, quality: 100, name: 'design_${DateTime.now().millisecondsSinceEpoch}');
+      // final result = await ImageGallerySaver.saveImage(bytes, quality: 100, name: 'design_${DateTime.now().millisecondsSinceEpoch}');
+      final result = null; // placeholder since image_gallery_saver is not used
       String? savedPath;
       if (result != null) {
         if (result is Map) {

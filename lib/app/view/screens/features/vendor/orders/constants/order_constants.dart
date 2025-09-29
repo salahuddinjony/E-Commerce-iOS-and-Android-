@@ -125,14 +125,16 @@ class OrderConstants {
   static const List<String> generalTabs = [
     'All Orders',
     'Pending',
-    'Completed',
+    'in Progress',
     'Rejected'
   ];
 
   static const List<String> customTabs = [
-    'Pending',
-    'In Progress',
-    'Completed',
+    'Offered',
+    'Accepted Offers',
+    'Delivery Requested',
+    'Delivered',
+    'Revision',
     'Cancelled'
   ];
 
@@ -219,6 +221,22 @@ class OrderConstants {
   // Check if status is completed
   static bool isCompletedStatus(String status) {
     return status == statusDeliveryConfirmed || status == statusCompleted;
+  }
+  //check if status is delivered
+  static bool isDeliveredStatus(String status) {
+    return status == statusDelivered;
+  }
+  // Check if status is revision
+  static bool isRevisionStatus(String status) {
+    return status == statusRevision;
+  }
+  //check delivery requested status
+  static bool isDeliveryRequestedStatus(String status) {
+    return status == statusDeliveryRequested;
+  }
+  // delivery confirmed status
+  static bool isDeliveryConfirmedStatus(String status) {
+    return status == statusDeliveryConfirmed;
   }
 
   // Check if status is cancelled/rejected
