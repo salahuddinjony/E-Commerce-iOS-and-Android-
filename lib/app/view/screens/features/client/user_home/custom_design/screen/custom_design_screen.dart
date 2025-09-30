@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
-import 'package:local/app/core/route_path.dart';
-import 'package:local/app/global/helper/toast_message/toast_message.dart';
+// import 'package:go_router/go_router.dart';
+// import 'package:local/app/core/route_path.dart';
+// import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
-import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
-import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/controller/product_details_controller.dart';
+// import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
+// import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/controller/product_details_controller.dart';
 import '../controller/custom_design_controller.dart';
 import '../widgets/design_preview.dart';
 import '../widgets/design_toolbar.dart';
@@ -152,68 +152,68 @@ class CustomDesignScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   // order button placed at bottom; it's not Expanded so it won't break scroll
-                  isFromCustomHub
-                      ? SizedBox.shrink()
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Obx(() => CustomButton(
-                                onTap: c.isExporting.value
-                                    ? null
-                                    : () async {
-                                        if (c.imagePath.value == null) {
-                                          toastMessage(
-                                              message:
-                                                  'Please upload an image');
-                                          return;
-                                        }
-                                        // prepare payload (exports and stores bytes/base64)
-                                        final ok =
-                                            await c.prepareOrderPayload();
-                                        if (!ok ||
-                                            c.exportedImageBytes.value ==
-                                                null) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
-                                                  content: Text(
-                                                      'Failed to prepare order')));
-                                          return;
-                                        }
+                  // isFromCustomHub
+                  //     ? SizedBox.shrink()
+                  //     : Padding(
+                  //         padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  //         child: Obx(() => CustomButton(
+                  //               onTap: c.isExporting.value
+                  //                   ? null
+                  //                   : () async {
+                  //                       if (c.imagePath.value == null) {
+                  //                         toastMessage(
+                  //                             message:
+                  //                                 'Please upload an image');
+                  //                         return;
+                  //                       }
+                  //                       // prepare payload (exports and stores bytes/base64)
+                  //                       final ok =
+                  //                           await c.prepareOrderPayload();
+                  //                       if (!ok ||
+                  //                           c.exportedImageBytes.value ==
+                  //                               null) {
+                  //                         ScaffoldMessenger.of(context)
+                  //                             .showSnackBar(const SnackBar(
+                  //                                 content: Text(
+                  //                                     'Failed to prepare order')));
+                  //                         return;
+                  //                       }
 
-                                        // save exported bytes to a temp file and print path
-                                        final bytes =
-                                            c.exportedImageBytes.value!;
-                                        final tempPath =
-                                            await c.saveBytesToTempFile(bytes);
-                                        debugPrint(
-                                            'CustomDesign exported image path: $tempPath');
-                                        debugPrint("VendorId: $vendorId");
+                  //                       // save exported bytes to a temp file and print path
+                  //                       final bytes =
+                  //                           c.exportedImageBytes.value!;
+                  //                       final tempPath =
+                  //                           await c.saveBytesToTempFile(bytes);
+                  //                       debugPrint(
+                  //                           'CustomDesign exported image path: $tempPath');
+                  //                       debugPrint("VendorId: $vendorId");
 
-                                        // create a minimal controller object expected by AddAddressScreen
-                                        // final orderController = OrderFormController();
-                                        final customOrderController = Get.put(
-                                            ProductDetailsController(
-                                                basePrice: 0));
+                  //                       // create a minimal controller object expected by AddAddressScreen
+                  //                       // final orderController = OrderFormController();
+                  //                       final customOrderController = Get.put(
+                  //                           ProductDetailsController(
+                  //                               basePrice: 0));
 
-                                        // navigate to AddAddressScreen passing the temp image path
-                                        context.pushNamed(
-                                          RoutePath.addAddressScreen,
-                                          extra: {
-                                            'vendorId': vendorId,
-                                            'productId': '',
-                                            'controller': customOrderController,
-                                            'isCustomOrder': true,
-                                            'ProductImage': tempPath ?? '',
-                                            'productName': '',
-                                            'productCategoryName': '',
-                                          },
-                                        );
-                                      },
-                                title: c.isExporting.value
-                                    ? 'Processing...'
-                                    : 'Place Order',
-                                height: 48,
-                              )),
-                        ),
+                  //                       // navigate to AddAddressScreen passing the temp image path
+                  //                       context.pushNamed(
+                  //                         RoutePath.addAddressScreen,
+                  //                         extra: {
+                  //                           'vendorId': vendorId,
+                  //                           'productId': '',
+                  //                           'controller': customOrderController,
+                  //                           'isCustomOrder': true,
+                  //                           'ProductImage': tempPath ?? '',
+                  //                           'productName': '',
+                  //                           'productCategoryName': '',
+                  //                         },
+                  //                       );
+                  //                     },
+                  //               title: c.isExporting.value
+                  //                   ? 'Processing...'
+                  //                   : 'Place Order',
+                  //               height: 48,
+                  //             )),
+                  //       ),
                   const SizedBox(height: 12),
                 ],
               ),

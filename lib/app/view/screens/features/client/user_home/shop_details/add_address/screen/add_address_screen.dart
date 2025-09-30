@@ -126,46 +126,41 @@ class AddAddressScreen extends StatelessWidget {
               Obx(() {
                 final submitting = controller.isSubmitting?.value ?? false;
                 return CustomButton(
-                  onTap: submitting
-                      ? null
-                      : () async {
-                          if (controller.checkCustomOrderInisEmpty()) return;
-                          if (isCustomOrder) {
-                            try {
-                              EasyLoading.show(status: 'Creating order...');
-                              final success =
-                                  await controller.createCustomOrder(
-                                vendorId: vendorId,
-                              );
-                              if (success) {
-                                EasyLoading.showSuccess(
-                                    'Order created successfully');
-                                // context.goNamed(RoutePath.homeScreen);
-                                context.pop();
-                              } else {
-                                EasyLoading.showError('Failed to create order');
-                              }
-                            } catch (e) {
-                              debugPrint('Error creating order: $e');
-                              EasyLoading.showError('Error: ${e.toString()}');
-                            }
-                            return;
-                          }
-
-                          // For general order, navigate to order overview
-                          context.pushNamed(
-                            RoutePath.orderOverviewScreen,
-                            extra: {
-                              'vendorId': vendorId,
-                              'productId': productId,
-                              'controller': controller,
-                              'ProductImage': productImage,
-                              'isCustomOrder': isCustomOrder,
-                              'productName': productName,
-                              'productCategoryName': productCategoryName,
-                            },
-                          );
-                        },
+                  onTap: () async {
+                    if (isCustomOrder) {
+                      if (controller.checkCustomOrderInisEmpty()) return;
+                      try {
+                        EasyLoading.show(status: 'Creating order...');
+                        final success = await controller.createCustomOrder(
+                          vendorId: vendorId,
+                        );
+                        if (success) {
+                          EasyLoading.showSuccess('Order created successfully');
+                          // context.goNamed(RoutePath.homeScreen);
+                          context.pop();
+                        } else {
+                          EasyLoading.showError('Failed to create order');
+                        }
+                      } catch (e) {
+                        debugPrint('Error creating order: $e');
+                        EasyLoading.showError('Error: ${e.toString()}');
+                      }
+                      return;
+                    }
+                    // For general order, navigate to order overview
+                    context.pushNamed(
+                      RoutePath.orderOverviewScreen,
+                      extra: {
+                        'vendorId': vendorId,
+                        'productId': productId,
+                        'controller': controller,
+                        'ProductImage': productImage,
+                        'isCustomOrder': isCustomOrder,
+                        'productName': productName,
+                        'productCategoryName': productCategoryName,
+                      },
+                    );
+                  },
                   title: submitting
                       ? "Creating..."
                       : isCustomOrder

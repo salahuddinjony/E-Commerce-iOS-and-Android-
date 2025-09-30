@@ -25,7 +25,7 @@ mixin class VendorListService {
         isLoadingVendorList.value = false;
         final data = VendorResponse.fromJson(response.body);
         nearestVendors.value = data.data ?? [];
-        debugPrint('Nearest vendors fetched: ${nearestVendors.length}');
+        debugPrint('Nearest vendors fetched length: ${nearestVendors.length}');
         debugPrint('Response data: ${response.body}');
       } else {
         debugPrint(
