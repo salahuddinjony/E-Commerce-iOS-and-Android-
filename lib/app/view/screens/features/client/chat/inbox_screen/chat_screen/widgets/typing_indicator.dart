@@ -15,7 +15,7 @@ class TypingIndicator extends StatelessWidget {
         children: const [
           SizedBox(width: 8),
           Text(
-            'Someone is typing...',
+            'Typing...',
             style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
           ),
         ],

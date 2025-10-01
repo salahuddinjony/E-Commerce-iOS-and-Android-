@@ -1,31 +1,72 @@
-import 'package:flutter/widgets.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' show Location, locationFromAddress;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/map/show_address_based_on_latLng.dart';
 import 'package:local/app/view/screens/features/client/user_home/vendor_list/service/vendor_list_service.dart';
+
 class MapPickerController extends GetxController with VendorListService {
   Rx<LatLng> pickedLocation = LatLng(24.7136, 46.6753).obs; // Default to Riyadh
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var pickedAddress = ''.obs;
-   final searchController = TextEditingController();
+  final searchController = TextEditingController();
   GoogleMapController? mapController;
   RxBool itsHasText = false.obs;
+  // cached custom marker for vendors
+  final Rxn<BitmapDescriptor> customVendorMarker = Rxn<BitmapDescriptor>();
 
   MapPickerController(LatLng initialPosition) {
     pickedLocation.value = initialPosition;
     updateAddress(initialPosition);
   }
-  
+
   Future<BitmapDescriptor> getCustomMarkerIcon() async {
-  return await BitmapDescriptor.asset(
-    const ImageConfiguration(size: Size(48, 48)), // icon size
-    'assets/icons/download.png',
-  );
-}
-  
+    // Render a Material Icon (storefront) to an image and create a BitmapDescriptor
+    return await _bitmapDescriptorFromIcon(
+      Icons.shopping_bag,
+      color: Colors.white,
+      size: 30,
+      
+    );
+  }
+
+  Future<BitmapDescriptor> _bitmapDescriptorFromIcon(IconData icon,
+      {Color color = Colors.black, int size = 64}) async {
+    final pictureRecorder = ui.PictureRecorder();
+    final canvas = Canvas(pictureRecorder);
+
+    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+    final textStyle = TextStyle(
+      fontSize: size.toDouble(),
+      fontFamily: icon.fontFamily,
+      color: color,
+    );
+    final span = TextSpan(text: String.fromCharCode(icon.codePoint), style: textStyle);
+    textPainter.text = span;
+    textPainter.layout();
+
+    // paint background rounded rect for better visibility
+    final double padding = 6.0;
+    final double width = textPainter.width + padding * 2;
+    final double height = textPainter.height + padding * 2;
+
+    final paint = Paint()..color = AppColors.brightCyan;
+    final rrect = RRect.fromRectAndRadius(Offset.zero & Size(width, height), const Radius.circular(12));
+    canvas.drawRRect(rrect, paint);
+
+    // paint the icon centered
+    final offset = Offset(padding, padding);
+    textPainter.paint(canvas, offset);
+
+    final img = await pictureRecorder.endRecording().toImage(width.ceil(), height.ceil());
+    final data = await img.toByteData(format: ui.ImageByteFormat.png);
+    return BitmapDescriptor.bytes(data!.buffer.asUint8List());
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -35,6 +76,20 @@ class MapPickerController extends GetxController with VendorListService {
     // keep itsHasText in sync with the TextField content
     searchController.addListener(() {
       itsHasText.value = searchController.text.isNotEmpty;
+    });
+    // Fetch nearest vendors whenever pickedLocation changes so markers update.
+    ever<LatLng>(pickedLocation, (loc) {
+      try {
+        fetchNearestVendor(latLng: pickedLocation.value);
+      } catch (_) {
+        // ignore errors here; fetchNearestVendor already logs.
+      }
+    });
+    // Load custom vendor marker once
+    getCustomMarkerIcon().then((icon) {
+      customVendorMarker.value = icon;
+    }).catchError((_) {
+      // ignore; fallback marker used in UI
     });
   }
 
@@ -57,9 +112,8 @@ class MapPickerController extends GetxController with VendorListService {
         return;
       }
       Position position = await Geolocator.getCurrentPosition(
-        
-          desiredAccuracy: LocationAccuracy.high
-        );
+        desiredAccuracy: LocationAccuracy.high,
+      );
       pickedLocation.value = LatLng(position.latitude, position.longitude);
       mapController?.animateCamera(
         CameraUpdate.newLatLng(pickedLocation.value),
@@ -91,7 +145,8 @@ class MapPickerController extends GetxController with VendorListService {
     }
     isLoading.value = false;
   }
+
   updateAddress(LatLng initialPosition) async {
-   pickedAddress.value = await ShowAddressBasedOnLatlng.updateAddress(initialPosition);
+    pickedAddress.value = await ShowAddressBasedOnLatlng.updateAddress(initialPosition);
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/rendering.dart';
@@ -145,9 +145,9 @@ class PaymentResultCard extends StatelessWidget {
         final fileName = safeId != null
             ? 'payment_receipt_${safeId}_${DateTime.now().millisecondsSinceEpoch}'
             : 'payment_receipt_${DateTime.now().millisecondsSinceEpoch}';
-        // final result = await ImageGallerySaver.saveImage(pngBytes,
-        //     quality: 100, name: fileName);
-        final result = null;
+        final result = await ImageGallerySaver.saveImage(pngBytes,
+            quality: 100, name: fileName);
+        // final result = null;
         if (result['isSuccess'] == true || result['isSuccess'] == 1) {
           toastMessage(message: 'Receipt saved to gallery');
         } else {

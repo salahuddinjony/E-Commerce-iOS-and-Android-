@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/controller/conversation_controller.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/model/chat_message.dart';
+import 'package:local/app/services/api_url.dart';
 import 'package:local/app/view/screens/features/client/chat/socket_io/repositories/chat_repository.dart'
     show ChatRepository;
 import 'package:uuid/uuid.dart';
@@ -106,19 +107,40 @@ class ChatController extends GetxController {
         final senderRole = _roleForSender(h, fallbackRole: h.sender != null && (h.sender?.profile?.role == userRole) ? userRole : 'other');
 
         // Use senderRole as author.id so alignment can be decided by role reliably.
-        final msg = types.TextMessage(
-          author: types.User(
-            id: senderRole,
-            firstName: h.sender?.profile?.id?.name ?? '',
-          ),
-          createdAt:DateTime.now().millisecondsSinceEpoch,
-          id: h.id.isNotEmpty ? h.id : const Uuid().v4(),
-          text: h.text,
-          metadata: {'role': senderRole},
-        );
+        // If the server message includes attachments, map to an ImageMessage
+        final msg = (h.attachment.isNotEmpty)
+            ? types.ImageMessage(
+                author: types.User(
+                  id: senderRole,
+                  firstName: h.sender?.profile?.id?.name ?? '',
+                ),
+                createdAt: h.createdAt.millisecondsSinceEpoch,
+                id: h.id.isNotEmpty ? h.id : const Uuid().v4(),
+                name: h.attachment.first.split('/').last,
+                size: 0,
+                uri: ApiUrl.normalizeAttachmentUrl(h.attachment.first),
+                metadata: {'role': senderRole},
+              )
+            : types.TextMessage(
+                author: types.User(
+                  id: senderRole,
+                  firstName: h.sender?.profile?.id?.name ?? '',
+                ),
+                createdAt: h.createdAt.millisecondsSinceEpoch,
+                id: h.id.isNotEmpty ? h.id : const Uuid().v4(),
+                text: h.text,
+                metadata: {'role': senderRole},
+              );
 
         // newest first expected by UI, but we're iterating reversed to keep chronology
         messages.insert(0, msg);
+        try {
+          if (msg is types.ImageMessage) {
+            debugPrint('[ChatController] inserted history ImageMessage id=${msg.id} uri=${msg.uri}');
+          } else if (msg is types.TextMessage) {
+            debugPrint('[ChatController] inserted history TextMessage id=${msg.id} text=${msg.text}');
+          }
+        } catch (_) {}
       }
     }).catchError((e) {
       debugPrint('history load error: $e');
@@ -146,20 +168,40 @@ class ChatController extends GetxController {
       // Avoid duplicates
       if (chatMsg.id.isNotEmpty && messages.any((m) => m.id == chatMsg.id)) return;
 
-      final msg = types.TextMessage(
-        // Use role as author id for consistent side calculation
-        author: types.User(
-          id: incomingRole,
-          firstName: chatMsg.sender?.profile?.id?.name ?? '',
-        ),
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        id: chatMsg.id.isNotEmpty ? chatMsg.id : const Uuid().v4(),
-        text: chatMsg.text,
-        metadata: {'role': incomingRole},
-      );
+      final msg = (chatMsg.attachment.isNotEmpty)
+              ? types.ImageMessage(
+              author: types.User(
+                id: incomingRole,
+                firstName: chatMsg.sender?.profile?.id?.name ?? '',
+              ),
+              createdAt: chatMsg.createdAt.millisecondsSinceEpoch,
+              id: chatMsg.id.isNotEmpty ? chatMsg.id : const Uuid().v4(),
+              name: chatMsg.attachment.first.split('/').last,
+              size: 0,
+              uri: ApiUrl.normalizeAttachmentUrl(chatMsg.attachment.first),
+              metadata: {'role': incomingRole},
+            )
+          : types.TextMessage(
+              // Use role as author id for consistent side calculation
+              author: types.User(
+                id: incomingRole,
+                firstName: chatMsg.sender?.profile?.id?.name ?? '',
+              ),
+              createdAt: chatMsg.createdAt.millisecondsSinceEpoch,
+              id: chatMsg.id.isNotEmpty ? chatMsg.id : const Uuid().v4(),
+              text: chatMsg.text,
+              metadata: {'role': incomingRole},
+            );
 
       // newest first
       messages.insert(0, msg);
+      try {
+        if (msg is types.ImageMessage) {
+          debugPrint('[ChatController] inserted socket ImageMessage id=${msg.id} uri=${msg.uri}');
+        } else if (msg is types.TextMessage) {
+          debugPrint('[ChatController] inserted socket TextMessage id=${msg.id} text=${msg.text}');
+        }
+      } catch (_) {}
 
       // update inbox preview for this conversation
       updateConversationLastMessage(chatMsg.text,(chatMsg.createdAt).millisecondsSinceEpoch);
