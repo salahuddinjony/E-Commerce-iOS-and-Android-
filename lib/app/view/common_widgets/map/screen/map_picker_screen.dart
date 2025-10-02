@@ -22,12 +22,12 @@ class MapPickerScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Pick Address'),
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
-      //   foregroundColor: Colors.black,
-      // ),
+      appBar: AppBar(
+        title: const Text('Pick Address'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
+      ),
       body: Stack(
         children: [
           // Google Map
