@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
@@ -19,6 +20,10 @@ class AuthController extends GetxController with PasswordConstraintController {
   // for vendor
   final emailController = TextEditingController(text: "videostore06@gmail.com");
   final passWordController = TextEditingController(text: "salahAbc@1");
+//Salahuddin@1
+//salahuddin.duet.204113@gmail.com
+//dosir61370@mv6a.com
+
 
   // final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
   // final passWordController = TextEditingController(text: "12345678"); 
@@ -297,9 +302,9 @@ class AuthController extends GetxController with PasswordConstraintController {
           "email": clientEmailController.text,
         },
       );
-      toastMessage(message: responseData["message"]);
+      toastMessage(message: responseData["message"]); 
     } else if (response.statusCode == 400) {
-      toastMessage(message: responseData["error"]);
+     EasyLoading.showError(responseData["error"]);
     } else {
       ApiChecker.checkApi(response);
     }
@@ -368,7 +373,7 @@ class AuthController extends GetxController with PasswordConstraintController {
       "isSocial": "false",
       "address": address.value,
       "lat": latitude.value,
-      "long": longitude.value,
+      "lng": longitude.value,
       "description": businessDescriptionController.text.trim(),
       "deliveryOption":
           businessDeliveryOptionController.text.toLowerCase().trim(),
@@ -393,7 +398,7 @@ class AuthController extends GetxController with PasswordConstraintController {
       );
       toastMessage(message: responseData["message"]);
     } else if (response.statusCode == 400) {
-      toastMessage(message: responseData["error"]);
+      EasyLoading.showError(responseData["error"]);
     } else {
       ApiChecker.checkApi(response);
     }
