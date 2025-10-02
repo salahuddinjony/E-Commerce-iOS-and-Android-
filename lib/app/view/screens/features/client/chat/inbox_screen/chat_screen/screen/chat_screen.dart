@@ -15,6 +15,7 @@ class ChatScreen extends StatelessWidget {
   final String receiverName;
   final String receiverImage;
   final String userRole;
+  final String receiverId;
   final bool isVendor;
 
   const ChatScreen({
@@ -22,6 +23,7 @@ class ChatScreen extends StatelessWidget {
     required this.conversationId,
     required this.userId,
     required this.receiverRole,
+    required this.receiverId,
     required this.receiverName,
     required this.receiverImage,
     required this.userRole,
@@ -62,6 +64,7 @@ class ChatScreen extends StatelessWidget {
                   receiverImage: receiverImage,
                   receiverName: receiverName,
                   userId: userId,
+                  receiverId: receiverId,
                 );
               },
             );

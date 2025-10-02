@@ -77,11 +77,11 @@ mixin MixinCreateOrder {
   }
 
   Future<bool> customOrder({
-    required vendorId,
+    required clientId,
     required String shippingAddress,
     required dynamic designFiles,
   }) async {
-    final clientId = await SharePrefsHelper.getString(AppConstants.userId);
+    final vendorId = await SharePrefsHelper.getString(AppConstants.userId);
 
     try {
       final orderData = {

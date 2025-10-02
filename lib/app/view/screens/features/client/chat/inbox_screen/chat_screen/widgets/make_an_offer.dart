@@ -10,11 +10,13 @@ class MakeAnOffer extends StatelessWidget {
   final String receiverImage;
   final String receiverName; // Replace with actual name
   final String userId; // Replace with actual user ID
+  final String receiverId; // Replace with actual receiver ID
   const MakeAnOffer(
       {super.key,
       required this.controller,
       required this.receiverImage,
       required this.receiverName,
+      required this.receiverId,
       required this.userId});
 
   @override
@@ -122,6 +124,7 @@ class MakeAnOffer extends StatelessWidget {
                     RoutePath.addAddressScreen,
                     extra: {
                       'vendorId': userId,
+                      'receiverId': receiverId,
                       'controller': customOrderController,
                       'isCustomOrder': true,
                     },

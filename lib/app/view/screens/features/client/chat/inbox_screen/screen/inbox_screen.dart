@@ -83,7 +83,7 @@ class InboxScreen extends StatelessWidget {
                         final image= member?.profile?.id?.image ?? AppConstants.demoImage;
                         final receiverRole = member?.profile?.role ?? 'Unknown';
                         final receiverName = member?.profile?.id?.name ?? 'Unknown';
-                        final senderId = member?.id ?? '';
+                        final recieverId = member?.id ?? '';
                         final messageText =
                             convo.latestMessage?.toString() ?? '';
                         final lastdateTime = convo.updatedAt?.getDateTime();
@@ -99,7 +99,7 @@ class InboxScreen extends StatelessWidget {
                               final String loggedUserId= await SharePrefsHelper.getString(AppConstants.userId);
                               final String loggedUserRole= await SharePrefsHelper.getString(AppConstants.role);
                               debugPrint(
-                                  'Tapped conversation ID: ${convo.id}\nSender ID: $senderId');
+                                  'Tapped conversation ID: ${convo.id}\nSender ID: $recieverId');
                               // open chat screen and wait until it's popped
                                context.pushNamed(
                                 RoutePath.chatScreen,
@@ -109,6 +109,7 @@ class InboxScreen extends StatelessWidget {
                                   'receiverImage': image,
                                   'conversationId': convo.id,
                                   'userId': loggedUserId,
+                                  'receiverId': recieverId,
                                   'userRole': loggedUserRole,
                                   'isVendor': isVendor,
                                 },
