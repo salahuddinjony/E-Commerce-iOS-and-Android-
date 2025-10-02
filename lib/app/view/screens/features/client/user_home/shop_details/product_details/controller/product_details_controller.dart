@@ -245,7 +245,7 @@ class ProductDetailsController extends GetxController
   //     isSubmitting.value = false;
   //   }
   // }
-  Future<bool> createCustomOrder({required String vendorId}) async {
+  Future<bool> createCustomOrder({required String clientId}) async {
     isSubmitting.value = true;
     try {
       // if multiple files were picked, prefer sending the list; otherwise send single selectedDocument
@@ -254,7 +254,7 @@ class ProductDetailsController extends GetxController
           : selectedDocument.value;
 
       final response = await customOrder(
-        vendorId: vendorId,
+        clientId: clientId,
         shippingAddress: customerAddressController.text.trim(),
         designFiles: filesToSend,
       );

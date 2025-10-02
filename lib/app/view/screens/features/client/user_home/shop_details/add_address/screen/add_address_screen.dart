@@ -17,6 +17,7 @@ class AddAddressScreen extends StatelessWidget {
   final dynamic controller;
   final bool isCustomOrder;
   final String productImage;
+  final String receiverId;
 
   const AddAddressScreen({
     super.key,
@@ -27,6 +28,7 @@ class AddAddressScreen extends StatelessWidget {
     required this.controller,
     required this.isCustomOrder,
     required this.productImage,
+    this.receiverId= '',
   });
 
   @override
@@ -132,7 +134,7 @@ class AddAddressScreen extends StatelessWidget {
                       try {
                         EasyLoading.show(status: 'Creating order...');
                         final success = await controller.createCustomOrder(
-                          vendorId: vendorId,
+                          clientId: receiverId,
                         );
                         if (success) {
                           EasyLoading.showSuccess('Order created successfully');

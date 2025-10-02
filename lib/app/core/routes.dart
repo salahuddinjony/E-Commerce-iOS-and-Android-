@@ -330,6 +330,7 @@ class AppRouter {
             final receiverName = extra['receiverName'] as String? ?? '';
             final receiverImage = extra['receiverImage'] as String? ?? '';
             final isVendor = extra['isVendor'] as bool? ?? false;
+            final receiverId = extra['receiverId'] as String? ?? '';
 
             return _buildPageWithAnimation(
               child: ChatScreen(
@@ -338,6 +339,7 @@ class AppRouter {
                 userId: userId,
                 receiverRole: receiverRole,
                 receiverName: receiverName,
+                receiverId: receiverId,
                 isVendor: isVendor,
                 receiverImage: receiverImage,
               ),
@@ -685,10 +687,12 @@ class AppRouter {
             final productImage = extra['ProductImage'] as String? ?? '';
             final productName = extra['productName'] as String? ?? '';
             final productCategoryName = extra['productCategoryName'] as String? ?? '';
+            final receiverId = extra['receiverId'] as String? ?? '';
             return _buildPageWithAnimation(
               child: AddAddressScreen(
                 vendorId: vendorId,
                 productId: productId,
+                receiverId: receiverId,
                 controller: controller,
                 isCustomOrder: isCustomOrder,
                 productImage: productImage,
