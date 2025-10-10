@@ -20,14 +20,20 @@ class GeneralOrderService {
         queryParams[role] = UserId;
       }
 
+      if (page != null) queryParams['page'] = page.toString();
+      if (limit != null) queryParams['limit'] = limit.toString();
       if (status != null) {
         queryParams['status'] = status;
       }
+
+      print('Fetching general orders with query: $queryParams');
 
       final response = await ApiClient.getData(
         '${ApiUrl.baseUrl}general-order/retrieve',
         query: queryParams,
       );
+
+      print('General orders response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         try {

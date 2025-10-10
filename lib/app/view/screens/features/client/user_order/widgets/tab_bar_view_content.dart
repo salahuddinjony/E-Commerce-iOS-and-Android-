@@ -38,9 +38,20 @@ Widget buildCustomOrdersList(
     }
 
     return ListView.separated(
-      itemCount: customOrders.length,
+      controller: controller.customOrdersScrollController,
+      itemCount: customOrders.length + (controller.customIsPaginating.value ? 1 : 0),
       separatorBuilder: (_, __) => SizedBox(height: 8.h),
       itemBuilder: (context, index) {
+        // Show loading indicator at the end while paginating
+        if (index == customOrders.length) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        
         final item = customOrders[index];
         final imagePath = (item.designFiles.isNotEmpty)
             ? item.designFiles.first
@@ -100,9 +111,20 @@ Widget buildGeneralOrdersList(
     }
 
     return ListView.separated(
-      itemCount: generalOrders.length,
+      controller: controller.generalOrdersScrollController,
+      itemCount: generalOrders.length + (controller.generalIsPaginating.value ? 1 : 0),
       separatorBuilder: (_, __) => SizedBox(height: 8.h),
       itemBuilder: (context, index) {
+        // Show loading indicator at the end while paginating
+        if (index == generalOrders.length) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        
         final item = generalOrders[index];
         String imagePath = item.products.first.productId?.images.first ??
             AppConstants.demoImage;

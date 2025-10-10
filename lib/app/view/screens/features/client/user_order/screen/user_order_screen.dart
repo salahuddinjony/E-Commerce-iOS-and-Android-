@@ -138,14 +138,14 @@ class UserOrderScreen extends StatelessWidget {
                                   ? RefreshIndicator(
                                       backgroundColor: Colors.white,
                                       color: AppColors.brightCyan,
-                                      onRefresh: controller.fetchCustomOrders,
+                                      onRefresh: controller.refreshCustomOrders,
                                       child: buildCustomOrdersList(
                                           context, controller),
                                     )
                                   : RefreshIndicator(
                                       backgroundColor: Colors.white,
                                       color: AppColors.brightCyan,
-                                      onRefresh: controller.fetchGeneralOrders,
+                                      onRefresh: controller.refreshGeneralOrders,
                                       child: buildGeneralOrdersList(
                                           context, controller),
                                     )),
