@@ -13,7 +13,7 @@ class CategoryGridSection extends StatelessWidget {
   final CategoryController categoryController = Get.find<CategoryController>();
 
   Future<void> _refresh() async {
-    await categoryController.fetchCategories();
+    await categoryController.refreshCategories();
   }
 
   Widget _shimmerGrid() {
@@ -59,6 +59,8 @@ class CategoryGridSection extends StatelessWidget {
               }
 
               final categories = categoryController.categoriesData;
+              final isPaginating = categoryController.isPaginating.value;
+              
               if (categories.isEmpty) {
                 return LayoutBuilder(
                   builder: (context, constraints) => SingleChildScrollView(
@@ -80,6 +82,7 @@ class CategoryGridSection extends StatelessWidget {
               }
 
               return GridView.builder(
+                controller: categoryController.scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -88,8 +91,21 @@ class CategoryGridSection extends StatelessWidget {
                   crossAxisSpacing: 1,
                   childAspectRatio: 1.1,
                 ),
-                itemCount: categories.length,
+                itemCount: categories.length + (isPaginating ? 1 : 0),
                 itemBuilder: (context, index) {
+                  // Show loading indicator at the bottom when paginating
+                  if (index == categories.length && isPaginating) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: CircularProgressIndicator(
+                          color: AppColors.brightCyan,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    );
+                  }
+
                   return CategoryCard(category: categories[index]);
                 },
               );

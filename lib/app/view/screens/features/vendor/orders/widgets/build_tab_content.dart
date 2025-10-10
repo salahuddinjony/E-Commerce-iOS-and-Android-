@@ -9,6 +9,7 @@ import 'package:local/app/view/screens/features/vendor/orders/widgets/api_fialed
 import 'package:local/app/view/screens/features/vendor/orders/widgets/custom_order_card.dart';
 import 'package:local/app/view/screens/features/vendor/orders/widgets/general_order_card.dart';
 import 'package:local/app/view/screens/features/vendor/orders/widgets/shimmer_order_card.dart';
+import 'package:local/app/view/screens/features/vendor/orders/widgets/orders_data_loader.dart';
 
 
 class BuildTabContent extends StatelessWidget {
@@ -51,18 +52,40 @@ class BuildTabContent extends StatelessWidget {
               ? EmptyStateScrollable(
                   message: 'No custom orders found for $tab',
                 )
-              : ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(top: 16),
-                  itemCount: orders.length,
-                  itemBuilder: (context, index) {
-                    return CustomOrderCard(
-                      order: orders[index],
-                      controller: controller,
-                      onTap: () =>
-                          controller.onOrderTap<Order>(context, orders[index]),
-                    );
+              : NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    // Additional scroll detection for better reliability
+                    if (scrollInfo is ScrollEndNotification) {
+                      final pixels = scrollInfo.metrics.pixels;
+                      final maxExtent = scrollInfo.metrics.maxScrollExtent;
+                      if (pixels >= maxExtent * 0.5 && // Lowered to 50% for easier testing
+                          controller.isCustomOrder.value &&
+                          !controller.isPaginating.value &&
+                          controller.hasMoreData.value) {
+                        print('ScrollEndNotification - triggering pagination at 50%');
+                        controller.isPaginating.value = true;
+                        controller.getMoreOrders();
+                      }
+                    }
+                    return false;
                   },
+                  child: ListView.builder(
+                    controller: controller.scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(top: 16),
+                    itemCount: orders.length + (controller.hasMoreData.value || controller.isPaginating.value ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == orders.length) {
+                        return showOrdersDataLoader(controller);
+                      }
+                      return CustomOrderCard(
+                        order: orders[index],
+                        controller: controller,
+                        onTap: () =>
+                            controller.onOrderTap<Order>(context, orders[index]),
+                      );
+                    },
+                  ),
                 ),
         );
       } else {
@@ -78,6 +101,7 @@ class BuildTabContent extends StatelessWidget {
                   message: 'No general orders found for $tab',
                 )
               : ListView.builder(
+                  controller: controller.scrollController,
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.only(top: 16),
                   itemCount: orders.length,
