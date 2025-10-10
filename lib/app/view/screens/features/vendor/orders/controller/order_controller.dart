@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -71,84 +72,220 @@ class OrdersController extends GetxController
   TabController get currentTabController =>
       isCustomOrder.value ? customTabController : generalTabController;
 
+   // Pagination variables
+  ScrollController scrollController = ScrollController();
+  int currentPage = 1;
+  RxBool hasMoreData = true.obs;
+  RxBool isPaginating = false.obs;
+  final int itemsPerPage = 10; // Number of items to load per page
+  Rx<RxStatus> getCustomOrdersStatus = RxStatus.success().obs;
+  Timer? _scrollDebounce;
+
+
   @override
   void onInit() {
+
+    scrollController.addListener(_onScroll);
+
     super.onInit();
     totalOrder();
     generalTabController =
         TabController(length: generalTabs.length, vsync: this);
     customTabController = TabController(length: customTabs.length, vsync: this);
 
-    // // Listen for tab changes
-    // generalTabController.addListener(() {
-    //   if (generalTabController.indexIsChanging) {
-    //     isCustomOrder.value = false;
-    //   }
-    // });
-    // customTabController.addListener(() {
-    //   if (customTabController.indexIsChanging) {
-    //     isCustomOrder.value = true;
-    //   }
-    // });
+    // Listen for tab changes to filter orders by status
+    generalTabController.addListener(() {
+      if (!generalTabController.indexIsChanging) {
+        final currentTab = generalTabs[generalTabController.index];
+        final status = _getStatusFromGeneralTab(currentTab);
+        print('General tab changed to: $currentTab with status: $status');
+        print('Calling fetchGeneralOrders with status: $status');
+        fetchGeneralOrders(status: status);
+      }
+    });
+    
+    customTabController.addListener(() {
+      if (!customTabController.indexIsChanging) {
+        final currentTab = customTabs[customTabController.index];
+        final status = _getStatusFromCustomTab(currentTab);
+        print('Custom tab changed to: $currentTab with status: $status');
+        print('Calling fetchCustomOrders with status: $status');
+        fetchCustomOrders(status: status, isRefresh: true);
+      }
+    });
 
     // Load both types of orders
     fetchAllOrders();
+  }
+   void _onScroll() {
+    // Debounce scroll events to prevent rapid fire, but keep it responsive
+    if (_scrollDebounce?.isActive ?? false) _scrollDebounce!.cancel();
+    
+    _scrollDebounce = Timer(const Duration(milliseconds: 50), () {
+      _handleScrollEvent();
+    });
+  }
+  
+  void _handleScrollEvent() {
+    // Check if we can scroll (avoid division by zero)
+    if (!scrollController.position.hasContentDimensions) return;
+    
+    final currentPosition = scrollController.position.pixels;
+    final maxExtent = scrollController.position.maxScrollExtent;
+    
+    // Use multiple thresholds to make pagination more responsive (lowered for testing)
+    final threshold50 = maxExtent * 0.5; // 50% threshold for easier testing
+    final threshold80 = maxExtent * 0.8; // 80% threshold
+    final threshold90 = maxExtent * 0.9; // 90% threshold
+    final thresholdNearBottom = maxExtent - 100; // Within 100 pixels of bottom
+    
+    print('Scroll event - pixels: $currentPosition, maxExtent: $maxExtent');
+    print('Thresholds - 50%: $threshold50, 80%: $threshold80, 90%: $threshold90, nearBottom: $thresholdNearBottom');
+    print('isCustomOrder: ${isCustomOrder.value}, isPaginating: ${isPaginating.value}, hasMoreData: ${hasMoreData.value}');
+    
+    // Only paginate for custom orders since general orders don't support pagination
+    // Use multiple conditions to trigger pagination more reliably
+    bool shouldPaginate = isCustomOrder.value &&
+        !isPaginating.value &&
+        hasMoreData.value &&
+        maxExtent > 0 &&
+        (currentPosition >= threshold50 || // 50% scrolled (easier for testing)
+         currentPosition >= threshold80 || // 80% scrolled
+         currentPosition >= thresholdNearBottom || // Near bottom
+         (maxExtent > 0 && (currentPosition / maxExtent) >= 0.5)); // Alternative percentage check
+    
+    if (shouldPaginate) {
+      final percentage = (currentPosition / maxExtent * 100).toStringAsFixed(1);
+      print('Triggering pagination - $percentage% scrolled');
+      // Set paginating flag immediately to show loader
+      isPaginating.value = true;
+      getMoreOrders();
+    }
   }
 
   @override
   void onClose() {
     generalTabController.dispose();
     customTabController.dispose();
+    scrollController.dispose();
+    _scrollDebounce?.cancel();
     super.onClose();
   }
 
   // Fetch all orders (both custom and general)
   Future<void> fetchAllOrders() async {
     await Future.wait([
-      fetchCustomOrders(),
+      fetchCustomOrders(isRefresh: true),
       fetchGeneralOrders(),
     ]);
   }
 
   // Fetch custom orders from API
-  Future<void> fetchCustomOrders() async {
+  Future<void> fetchCustomOrders({int page = 1, bool isRefresh = false, String? status}) async {
     try {
-      isLoading.value = true;
+      print('fetchCustomOrders called with status: $status, page: $page, isRefresh: $isRefresh');
+      
+      // Only set isLoading for initial load (page 1) or refresh
+      if (page == 1) {
+        isLoading.value = true;
+        getCustomOrdersStatus.value = RxStatus.loading();
+      } else {
+        getCustomOrdersStatus.value = RxStatus.success();
+      }
+      
       isError.value = false;
-
-      final response =
-          await customerOrderService.fetchVendorOrders(role: 'vendor');
+      if (isRefresh) {
+        currentPage = 1;
+        hasMoreData.value = true;
+        customOrders.clear();
+      }
+  
+      final response = await customerOrderService.fetchVendorOrders(
+        role: 'vendor',
+        page: page, 
+        limit: itemsPerPage,
+        status: status,
+      );
       totalCustomOrder.value = response.data.meta.total;
-      processOrderResponse(response);
+      final newData = response.data.data;
+      
+      if(newData.isNotEmpty){
+        processOrderResponse(response, isRefresh: isRefresh);
+        currentPage = page;
+        
+        // Check if there's more data based on total count vs current loaded items
+        final totalLoadedItems = customOrders.length;
+        hasMoreData.value = totalLoadedItems < response.data.meta.total;
+        print('Loaded ${newData.length} items, total loaded: $totalLoadedItems, total available: ${response.data.meta.total}, hasMoreData: ${hasMoreData.value}');
+      } else {
+        hasMoreData.value = false;
+        print('No more data available');
+      }
+     
       totalOrder();
     } catch (e) {
-      isLoading.value = false;
       isError.value = true;
       errorMessage.value = e.toString();
+      // Reset pagination flag on error
+      isPaginating.value = false;
+    } finally {
+      // Always reset loading state for initial load or refresh
+      if (page == 1) {
+        isLoading.value = false;
+        getCustomOrdersStatus.value = RxStatus.success();
+      }
+      isPaginating.value = false;
+    }
+  }
+  // Fetch more orders for pagination
+    // Load more data when scrolling reaches the bottom
+  Future<void> getMoreOrders() async {
+    print('getMoreOrders called - hasMoreData: ${hasMoreData.value}, isPaginating: ${isPaginating.value}');
+    
+    if (!hasMoreData.value) {
+      print('Pagination blocked - no more data available');
+      isPaginating.value = false;
+      return;
+    }
+
+    print('Starting pagination - loading page ${currentPage + 1}');
+    try {
+      await fetchCustomOrders(page: currentPage + 1);
+      print('Pagination completed successfully');
+    } catch (e) {
+      print('Pagination failed: $e');
+    } finally {
+      isPaginating.value = false;
     }
   }
 
+
   // Fetch general orders from API
-  Future<void> fetchGeneralOrders() async {
+  Future<void> fetchGeneralOrders({int page = 1, bool isRefresh = false, String? status}) async {
     try {
+      print('fetchGeneralOrders called with status: $status, page: $page, isRefresh: $isRefresh');
+      
       isGeneralOrdersLoading.value = true;
       isGeneralOrdersError.value = false;
 
-      final response =
-          await generalOrderService.fetchGeneralOrders(role: 'vendor');
+      final response = await generalOrderService.fetchGeneralOrders(
+        role: 'vendor',
+        status: status,
+      );
       totalGeneralOrder.value = response.data.meta.total;
       processGeneralOrderResponse(response);
     } catch (e) {
-      isGeneralOrdersLoading.value = false;
       isGeneralOrdersError.value = true;
       generalOrdersErrorMessage.value = e.toString();
+    } finally {
+      isGeneralOrdersLoading.value = false;
     }
   }
 
   // Fetch orders by type
   Future<void> fetchOrdersByType(bool isCustom) async {
     if (isCustom) {
-      await fetchCustomOrders();
+      await fetchCustomOrders(isRefresh: true);
     } else {
       await fetchGeneralOrders();
     }
@@ -208,7 +345,7 @@ class OrdersController extends GetxController
       // Refresh custom orders after status update
       refreshOrdersByType(true);
       debugPrint('Order updated successfully: ${result.body}');
-      fetchCustomOrders();
+      fetchCustomOrders(isRefresh: true);
       return true;
     } catch (e) {
       print('Failed to update custom order status: $e');
@@ -368,9 +505,9 @@ class OrdersController extends GetxController
   // Refresh orders by type
   void refreshOrdersByType(bool isCustom) {
     if (isCustom) {
-      fetchCustomOrders();
+      fetchCustomOrders(isRefresh: true);
     } else {
-      fetchGeneralOrders();
+      fetchGeneralOrders(isRefresh: true);
     }
   }
 
@@ -399,5 +536,41 @@ class OrdersController extends GetxController
       }
     }
     return null;
+  }
+
+  // Helper method to get status from general tab name
+  String? _getStatusFromGeneralTab(String tabName) {
+    switch (tabName) {
+      case 'All Orders':
+        return null; // No status filter for "All Orders"
+      case 'Pending':
+        return OrderConstants.statusPending;
+      case 'in Progress':
+        return OrderConstants.statusInProgress;
+      case 'Rejected':
+        return OrderConstants.statusRejected;
+      default:
+        return null;
+    }
+  }
+
+  // Helper method to get status from custom tab name
+  String? _getStatusFromCustomTab(String tabName) {
+    switch (tabName) {
+      case 'Offered':
+        return OrderConstants.statusOffered;
+      case 'Accepted Offers':
+        return OrderConstants.statusAccepted;
+      case 'Delivery Requested':
+        return OrderConstants.statusDeliveryRequested;
+      case 'Delivered':
+        return OrderConstants.statusDeliveryConfirmed;
+      case 'Revision':
+        return OrderConstants.statusRevision;
+      case 'Cancelled':
+        return OrderConstants.statusCancelled;
+      default:
+        return null;
+    }
   }
 }

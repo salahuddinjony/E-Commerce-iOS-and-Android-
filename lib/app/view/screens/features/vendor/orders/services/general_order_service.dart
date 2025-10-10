@@ -14,10 +14,10 @@ class GeneralOrderService {
     required String role,
   }) async {
     try {
-      final queryParams = <String, dynamic>{ };
-        UserId ??= await SharePrefsHelper.getString(AppConstants.userId);
+      final queryParams = <String, String>{};
+      UserId ??= await SharePrefsHelper.getString(AppConstants.userId);
       if (UserId.isNotEmpty) {
-        queryParams[role] = UserId; 
+        queryParams[role] = UserId;
       }
 
       if (status != null) {

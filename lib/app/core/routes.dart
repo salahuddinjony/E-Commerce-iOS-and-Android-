@@ -71,7 +71,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.splashScreen,
           path: RoutePath.splashScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: SplashScreen(),
             state: state,
           ),
@@ -81,7 +81,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.onboardingScreen,
           path: RoutePath.onboardingScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: OnboardingScreen(),
             state: state,
           ),
@@ -91,7 +91,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.chooseAuthScreen,
           path: RoutePath.chooseAuthScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             // child: const HomeScreen(),
             child: const  ChooseAuthScreen(),
             state: state,
@@ -102,7 +102,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.signUpScreen,
           path: RoutePath.signUpScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child:  SignUpScreen(),
             state: state,
           ),
@@ -112,7 +112,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.signInScreen,
           path: RoutePath.signInScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child:  SignInScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
@@ -122,7 +122,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.forgetPasswordScreen,
           path: RoutePath.forgetPasswordScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child:  ForgetPasswordScreen(),
             state: state,
           ),
@@ -132,7 +132,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.otpScreen,
           path: RoutePath.otpScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child:  OtpScreen(),
             state: state,
           ),
@@ -142,7 +142,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.resetPasswordScreen,
           path: RoutePath.resetPasswordScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child:  ResetPasswordScreen(),
             state: state,
           ),
@@ -152,7 +152,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.homeScreen,
           path: RoutePath.homeScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child:  HomeScreen(), state: state, disableAnimation: true),
         ),
 
@@ -162,7 +162,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.ordersScreen,
           path: RoutePath.ordersScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child: OrdersScreen(),
               state: state,
               disableAnimation: true),
@@ -172,7 +172,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.categoryScreen,
           path: RoutePath.categoryScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child: const CategoryScreen(),
               state: state,
               disableAnimation: true
@@ -184,7 +184,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.addProductScreen,
           path: RoutePath.addProductScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child:  AddProductScreen(),
             state: state,
           ),
@@ -194,7 +194,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.profileScreen,
           path: RoutePath.profileScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child:  ProfileScreen(),
               state: state,
               disableAnimation: true),
@@ -204,7 +204,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.personalInfoScreen,
           path: RoutePath.personalInfoScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child:  PersonalInfoScreen(),
             state: state,
           ),
@@ -214,7 +214,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.walletScreen,
           path: RoutePath.walletScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const WalletScreen(),
             state: state,
           ),
@@ -224,7 +224,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.editProfileScreen,
           path: RoutePath.editProfileScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const EditProfileScreen(),
             state: state,
           ),
@@ -234,7 +234,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.transactionScreen,
           path: RoutePath.transactionScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child:  TransactionScreen(),
             state: state,
           ),
@@ -244,7 +244,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.aboutUsScreen,
           path: RoutePath.aboutUsScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child:  AboutUsScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
@@ -254,7 +254,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.privacyPolicyScreen,
           path: RoutePath.privacyPolicyScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child:  PrivacyPolicyScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
@@ -264,7 +264,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.helpCenterScreen,
           path: RoutePath.helpCenterScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const HelpCenterScreen(),
             state: state,
           ),
@@ -274,7 +274,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.businessDocumentsScreen,
           path: RoutePath.businessDocumentsScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const BusinessDocumentsScreen(),
             state: state,
           ),
@@ -284,7 +284,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.termsConditionScreen,
           path: RoutePath.termsConditionScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child:  TermsConditionScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
@@ -294,7 +294,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.changePasswordScreen,
           path: RoutePath.changePasswordScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const ChangePasswordScreen(),
             state: state,
           ),
@@ -304,7 +304,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.notificationScreen,
           path: RoutePath.notificationScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child:  NotificationScreen(),
             state: state,
           ),
@@ -314,7 +314,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.userHomeScreen,
           path: RoutePath.userHomeScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child: UserHomeScreen(), state: state, disableAnimation: true),
         ),
 
@@ -332,7 +332,7 @@ class AppRouter {
             final isVendor = extra['isVendor'] as bool? ?? false;
             final receiverId = extra['receiverId'] as String? ?? '';
 
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: ChatScreen(
                 userRole: extra['userRole'] as String? ?? '',
                 conversationId: conversationId,
@@ -359,7 +359,7 @@ class AppRouter {
             final categoryImage = extra['categoryImage'] as String? ?? '';
             final categoryId = extra['categoryId'] as String? ?? '';
 
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: CategoryWiseProducts(
                 categoryName: categoryName,
                 products: products.obs,
@@ -375,7 +375,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.inboxScreen,
           path: RoutePath.inboxScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child:  InboxScreen(), state: state, disableAnimation: true),
         ),
 
@@ -383,7 +383,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.supportScreen,
           path: RoutePath.supportScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child: const SupportScreen(),
               state: state,
               disableAnimation: true),
@@ -393,7 +393,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.userProfileScreen,
           path: RoutePath.userProfileScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child:  UserProfileScreen(),
               state: state,
               transitionType: TransitionType.detailsScreen),
@@ -403,7 +403,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.orderHistoryScreen,
           path: RoutePath.orderHistoryScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const OrderHistoryScreen(),
             state: state,
           ),
@@ -419,7 +419,7 @@ class AppRouter {
             final location = extra['location'] as String? ?? '';
             final name = extra['name'] as String? ?? '';
             final vendorId = extra['vendorId'] as String? ?? '';
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: ShopDetailsScreen(
                 imageUrl: image,
                 shopLocation: location,
@@ -439,7 +439,7 @@ class AppRouter {
             final extra = state.extra as Map<String, dynamic>? ?? {};
             final vendorId = extra['vendorId'] as String? ?? '';
             final isFromCustomHub = extra['isFromCustomHub'] as bool? ?? false;
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: CustomDesignScreen(
                 vendorId: vendorId, 
                 isFromCustomHub: isFromCustomHub,
@@ -456,7 +456,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.faqScreen,
           path: RoutePath.faqScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: FaqScreen(),
             state: state,
           ),
@@ -464,7 +464,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.orderManegmentScreen,
           path: RoutePath.orderManegmentScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const OrderManegmentScreen(),
             state: state,
           ),
@@ -472,7 +472,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.accountSecurityScreen,
           path: RoutePath.accountSecurityScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const AccountSecurityScreen(),
             state: state,
           ),
@@ -480,7 +480,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.uTeeHubAccount,
           path: RoutePath.uTeeHubAccount.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const UTeeHubAccount(),
             state: state,
           ),
@@ -499,7 +499,7 @@ class AppRouter {
            final productName= extra['productName'] as String? ?? '';
            final productCategoryName= extra['productCategoryName'] as String? ?? '';
 
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child:  OrderOverviewScreen(
                 vendorId: vendorId,
                 productId: productId,
@@ -533,7 +533,7 @@ class AppRouter {
             final controller = Get.find<UserHomeController>();
             final lat = double.tryParse(controller.latitude.value.toString()) ?? 0.0;
             final lng = double.tryParse(controller.longitude.value.toString()) ?? 0.0;
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
 
               
               child: MapPickerScreen(
@@ -548,7 +548,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.nextScreen,
           path: RoutePath.nextScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
             child: const NextScreen(),
             state: state,
           ),
@@ -558,7 +558,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.productScreen,
           path: RoutePath.productScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child: ProductScreen(), state: state, disableAnimation: true),
         ),
 
@@ -571,7 +571,7 @@ class AppRouter {
             final orderData = extra?['orderData'];
             final isCustomOrder = extra?['isCustomOrder'] ?? false;
             
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: OrderDetailsScreen(
                 orderData: orderData,
                 isCustomOrder: isCustomOrder,
@@ -586,7 +586,7 @@ class AppRouter {
         GoRoute(
           name: RoutePath.vendorMessageScreen,
           path: RoutePath.vendorMessageScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child: InboxScreen(isVendor: true),
               state: state,
               disableAnimation: true),
@@ -599,11 +599,11 @@ class AppRouter {
           pageBuilder: (context, state) {
             final extra = state.extra as Map<String, dynamic>?; 
             final status = extra?['status'] as String? ?? '';
-            final orderData = (extra?['orderData'] as List<Order>?) ?? const <Order>[];
-            return _buildPageWithAnimation(
+            final orderController = extra?['orderController'] as OrdersController?;
+            return buildPageWithAnimation(
               child: ViewOrderScreen(
                 status: status,
-                orderData: orderData,
+                orderController: orderController ?? OrdersController(),
               ),
               state: state,
             );
@@ -618,14 +618,14 @@ class AppRouter {
             final extra = state.extra as Map<String, dynamic>?;
             final order = extra?['order'] as Order?;
             if (order == null) {
-              return _buildPageWithAnimation(
+              return buildPageWithAnimation(
                 child: const SizedBox.shrink(),
                 state: state,
                 disableAnimation: true,
               );
             }
 
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: ViewOrderDetails(order: order),
               state: state,
             );
@@ -641,7 +641,7 @@ class AppRouter {
             final product = extra['product'];
             final vendorId = extra['vendorId'] as String? ?? '';
             final productCategoryName = extra['productCategoryName'] as String? ?? '';
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: ProductDetailsScreen(
                 product: product,
                 vendorId: vendorId,
@@ -663,7 +663,7 @@ class AppRouter {
                 ? extra['orderData'] as Order?
                 : extra['orderData'] as GeneralOrder?;
             final controller = extra['controller'] as UserOrderController;
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: UserOrderDetailsScreen(
                 isCustom: isCustom,
                 orderData: orderData,
@@ -688,7 +688,7 @@ class AppRouter {
             final productName = extra['productName'] as String? ?? '';
             final productCategoryName = extra['productCategoryName'] as String? ?? '';
             final receiverId = extra['receiverId'] as String? ?? '';
-            return _buildPageWithAnimation(
+            return buildPageWithAnimation(
               child: AddAddressScreen(
                 vendorId: vendorId,
                 productId: productId,
@@ -708,12 +708,12 @@ class AppRouter {
         GoRoute(
           name: RoutePath.userOrderScreen,
           path: RoutePath.userOrderScreen.addBasePath,
-          pageBuilder: (context, state) => _buildPageWithAnimation(
+          pageBuilder: (context, state) => buildPageWithAnimation(
               child: UserOrderScreen(), state: state, disableAnimation: true),
         ),
       ]);
 
-  static CustomTransitionPage _buildPageWithAnimation({
+  static CustomTransitionPage buildPageWithAnimation({
     required Widget child,
     required GoRouterState state,
     bool disableAnimation = false,

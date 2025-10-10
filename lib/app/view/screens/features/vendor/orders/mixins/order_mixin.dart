@@ -123,18 +123,33 @@ mixin OrderMixin on GetxController {
   
 
   // Process API response
-  void processOrderResponse(CustomOrderResponseModel response) {
+  void processOrderResponse(CustomOrderResponseModel response, {bool isRefresh = false}) {
     try {
-      allOrders.assignAll(response.data.data);
-      
-      // Separate custom and general orders
-      customOrders.assignAll(
-        response.data.data.where((order) => order.isCustom).toList()
-      );
-      
-      generalOrders.assignAll(
-        response.data.data.where((order) => !order.isCustom).toList()
-      );
+      if (isRefresh) {
+        // For refresh, replace all data
+        allOrders.assignAll(response.data.data);
+        
+        // Separate custom and general orders
+        customOrders.assignAll(
+          response.data.data.where((order) => order.isCustom).toList()
+        );
+        
+        generalOrders.assignAll(
+          response.data.data.where((order) => !order.isCustom).toList()
+        );
+      } else {
+        // For pagination, append new data
+        allOrders.addAll(response.data.data);
+        
+        // Separate and append custom and general orders
+        customOrders.addAll(
+          response.data.data.where((order) => order.isCustom).toList()
+        );
+        
+        generalOrders.addAll(
+          response.data.data.where((order) => !order.isCustom).toList()
+        );
+      }
       
       isLoading.value = false;
       isError.value = false;
