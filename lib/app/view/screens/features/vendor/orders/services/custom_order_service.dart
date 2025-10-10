@@ -20,23 +20,27 @@ class CustomOrderService {
       // Fallback: load UserId from prefs if not provided
       UserId ??= await SharePrefsHelper.getString(AppConstants.userId);
 
-      final queryParams = <String, dynamic>{};
+      final queryParams = <String, String>{};
 
-      // if (page != null) queryParams['page'] = page;
-      // if (limit != null) queryParams['limit'] = limit;
-      // if (status != null && status.isNotEmpty) queryParams['status'] = status;
-      // if (isCustom != null) queryParams['isCustom'] = isCustom;
+      if (page != null) queryParams['page'] = page.toString();
+      if (limit != null) queryParams['limit'] = limit.toString();
+      if (status != null && status.isNotEmpty) queryParams['status'] = status;
+      if (isCustom != null) queryParams['isCustom'] = isCustom.toString();
 
       if (UserId.isNotEmpty) {
         queryParams[role] = UserId;
       }
 
       print('Fetching orders with query: $queryParams');
+      print('Final URL will be: ${ApiUrl.customOrder}');
 
       final response = await ApiClient.getData(
         ApiUrl.customOrder,
         query: queryParams,
       );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         return CustomOrderResponseModel.fromJson(response.body);
@@ -64,17 +68,17 @@ class CustomOrderService {
   }
 
   /// Update order status
-  Future<bool> updateOrderStatusOrUpdateExtn(String orderId, String status, {String? passedUrl,String? sessionId}) async {
+  Future<bool> updateOrderStatusOrUpdateExtn(String orderId, String status,
+      {String? passedUrl, String? sessionId}) async {
     print('Updating order status: $orderId to $status');
     print('Using URL: ${passedUrl ?? "Url not provided, will use default"}');
     try {
       final url = passedUrl ?? ApiUrl.updateCustomOrderStatus(orderId: orderId);
       print('Sending PATCH request to: $url');
-      
-      final body={
-        'status': status,
-       if(sessionId!=null)'sessionId':sessionId
 
+      final body = {
+        'status': status,
+        if (sessionId != null) 'sessionId': sessionId
       };
 
       final response = await http.patch(
@@ -90,12 +94,11 @@ class CustomOrderService {
         // throw Exception('Failed to update order status: ${response.body}')
         fetchCustomOrders();
         fetchGeneralOrders();
-       print('Order status updated successfully: $orderId to $status');
-       return true;
+        print('Order status updated successfully: $orderId to $status');
+        return true;
       } else {
-         print('Failed to update order status: ${response.body}');  
+        print('Failed to update order status: ${response.body}');
         return false;
-       
       }
     } catch (e) {
       // throw Exception('Failed to update order status: $e');
@@ -126,7 +129,7 @@ class CustomOrderService {
 
   /// Request delivery extension
   Future<void> requestDeliveryExtension(
-    String orderId, 
+    String orderId,
     DateTime newDate,
     String reason,
   ) async {
@@ -140,7 +143,8 @@ class CustomOrderService {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to request delivery extension: ${response.statusText}');
+        throw Exception(
+            'Failed to request delivery extension: ${response.statusText}');
       }
     } catch (e) {
       throw Exception('Failed to request delivery extension: $e');

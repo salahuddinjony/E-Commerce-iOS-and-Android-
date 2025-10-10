@@ -160,7 +160,8 @@ mixin class ProductServices {
 
     isProductMutating.value = true;
     try {
-      EasyLoading.show(status: method == 'POST' ? 'Creating...' : 'Updating...');
+      EasyLoading.show(
+          status: method == 'POST' ? 'Creating...' : 'Updating...');
       final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
       if (token.isEmpty) {
         toastMessage(message: 'Token missing');
@@ -228,7 +229,7 @@ mixin class ProductServices {
         EasyLoading.showSuccess(
             method == 'POST' ? 'Product created' : 'Product updated');
         clear();
-        await fetchProducts(); // refresh list
+        await fetchProducts(isRefresh: true); // refresh list
         return true;
       } else {
         final msg = (decoded is Map && decoded['message'] != null)
@@ -246,27 +247,65 @@ mixin class ProductServices {
     }
   }
 
-  Future<void> fetchProducts({String? vendorId}) async {
-    isProductsLoading.value = true;
+  Future<void> fetchProducts(
+      {String? vendorId,
+      int page = 1,
+      bool isRefresh = false,
+      int itemsPerPage = 12}) async {
     try {
+      print('fetchProducts called with page: $page, isRefresh: $isRefresh');
+
+      // Only set isLoading for initial load (page 1) or refresh
+      if (page == 1) {
+        isProductsLoading.value = true;
+      }
+
+      if (isRefresh) {
+        productItems.clear();
+      }
+
+      final Map<String, String> queryParams = {
+        'page': page.toString(),
+        'limit': itemsPerPage.toString(),
+      };
+
       vendorId ??= await SharePrefsHelper.getString(AppConstants.userId);
-      final resp =
-          await ApiClient.getData(ApiUrl.productList(userId: vendorId));
+
+      final resp = await ApiClient.getData(ApiUrl.productList(userId: vendorId),
+          query: queryParams);
+
       if (resp.statusCode == 200) {
         final raw = resp.body;
         final root = (raw is String) ? jsonDecode(raw) : raw;
         if (root == null || root['data'] == null) {
           Get.snackbar('Product', 'Unexpected response');
-          productItems.clear();
+          if (page == 1 || isRefresh) {
+            productItems.clear();
+          }
           return;
         }
+
         final productResponse = ProductResponse.fromJson(root['data']);
-        productItems.value = productResponse.data;
-        if (productItems.isEmpty) {
+        final newProducts = productResponse.data;
+
+        if (page == 1 || isRefresh) {
+          // First page or refresh - replace all products
+          productItems.value = newProducts;
+        } else {
+          // Additional pages - append to existing products
+          productItems.addAll(newProducts);
+        }
+
+        print(
+            'Loaded ${newProducts.length} products for page $page. Total products: ${productItems.length}');
+
+        if (productItems.isEmpty && (page == 1 || isRefresh)) {
           debugPrint('No products found');
         }
       } else if (resp.statusCode == 404) {
-        productItems.clear();
+        if (page == 1 || isRefresh) {
+          productItems.clear();
+        }
         debugPrint('Products 404');
       } else {
         debugPrint('Fetch products failed (${resp.statusCode})');
@@ -274,7 +313,10 @@ mixin class ProductServices {
     } catch (e) {
       debugPrint('fetchProducts error: $e');
     } finally {
-      isProductsLoading.value = false;
+      // Always reset loading state for initial load or refresh
+      if (page == 1) {
+        isProductsLoading.value = false;
+      }
     }
   }
 
@@ -286,7 +328,7 @@ mixin class ProductServices {
       final fullUrl = '${ApiUrl.baseUrl}/product/delete/$productId';
       final resp = await ApiClient.deleteData(fullUrl);
       if (resp.statusCode == 200) {
-        fetchProducts(); // refresh list
+        fetchProducts(isRefresh: true); // refresh list
         productItems.removeWhere((p) => p.id == productId);
         EasyLoading.showSuccess('Product deleted');
         return true;

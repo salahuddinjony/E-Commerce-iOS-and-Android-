@@ -15,7 +15,7 @@ class ProductsGridSection extends StatelessWidget {
       Get.find<VendorProductController>();
 
   Future<void> _refresh() async {
-    await vendorProductController.fetchProducts();
+    await vendorProductController.refreshProducts();
   }
 
   Widget _shimmerGrid() {
@@ -81,6 +81,7 @@ class ProductsGridSection extends StatelessWidget {
                 );
               }
               return GridView.builder(
+                controller: vendorProductController.scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -89,12 +90,25 @@ class ProductsGridSection extends StatelessWidget {
                   crossAxisSpacing: 2.w,
                   childAspectRatio: 0.7,
                 ),
-                itemCount: products.length,
+                itemCount: products.length + (vendorProductController.isPaginating.value ? 1 : 0),
                 itemBuilder: (context, index) {
+                  // Show loading indicator at the bottom when paginating
+                  if (index == products.length && vendorProductController.isPaginating.value) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: CircularProgressIndicator(
+                          color: AppColors.brightCyan,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    );
+                  }
+                  
                   return ProductCard(
                     productData: products[index],
                     onProductDeleted: () {
-                      vendorProductController.fetchProducts();
+                      vendorProductController.refreshProducts();
                     },
                   );
                 },

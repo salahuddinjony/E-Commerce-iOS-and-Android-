@@ -81,7 +81,7 @@ class HomeScreen extends StatelessWidget {
                                 RoutePath.viewOrderScreen,
                                 extra: {
                                   'status': 'allOrder',
-                                  'orderData': orderController.customOrders.toList(),
+                                  'orderController': orderController,
                                 },
                               ),
                               title: 'Total Customs\nOrders',
@@ -96,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                                 RoutePath.viewOrderScreen,
                                 extra: {
                                   'status': 'pendingOrder',
-                                  'orderData': orderController.customOrders.toList(),
+                                  'orderController': orderController,
                                 },
                               ),
                               title: 'Customs Pending\nOrders',
@@ -111,7 +111,7 @@ class HomeScreen extends StatelessWidget {
                                 RoutePath.viewOrderScreen,
                                 extra: {
                                   'status': 'inProgressOrder',
-                                  'orderData': orderController.customOrders.toList(),
+                                  'orderController': orderController,
                                 },
                               ),
                               title: 'Customs in-Progress\nOrders',
