@@ -71,12 +71,12 @@ class SupportScreen extends StatelessWidget {
                 ],
               ),
             ),
-            CustomButton(
-              onTap: () {
-                context.pushNamed(RoutePath.helpCenterScreen);
-              },
-              title: "Contact Us",
-            )
+            // CustomButton(
+            //   onTap: () {
+            //     context.pushNamed(RoutePath.helpCenterScreen);
+            //   },
+            //   title: "Contact Us",
+            // )
           ],
         ),
       ),

@@ -81,12 +81,12 @@ class AccountSecurityScreen extends StatelessWidget {
             SizedBox(
               height: 20.h,
             ),
-            CustomButton(
-              onTap: () {
-                context.pushNamed(RoutePath.helpCenterScreen);
-              },
-              title: "Contact Us",
-            )
+            // CustomButton(
+            //   onTap: () {
+            //     context.pushNamed(RoutePath.helpCenterScreen);
+            //   },
+            //   title: "Contact Us",
+            // )
           ],
         ),
       ),
