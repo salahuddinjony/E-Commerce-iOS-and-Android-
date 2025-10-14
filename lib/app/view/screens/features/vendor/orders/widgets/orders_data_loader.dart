@@ -18,7 +18,7 @@ Widget showOrdersDataLoader(dynamic controller) {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.brightCyan.withOpacity(0.1),
+                  color: AppColors.brightCyan.withValues(alpha: .1),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: SizedBox(
@@ -44,7 +44,7 @@ Widget showOrdersDataLoader(dynamic controller) {
                 width: 60,
                 height: 2,
                 decoration: BoxDecoration(
-                  color: AppColors.brightCyan.withOpacity(0.3),
+                  color: AppColors.brightCyan.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(1),
                 ),
               ),
