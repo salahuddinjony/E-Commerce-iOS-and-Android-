@@ -75,7 +75,7 @@ class CustomOrderCard extends StatelessWidget {
                   Expanded(
                     child: OrderDetailRow(
                       label: 'Price',
-                      value: '${order.currency} ${order.price}',
+                      value: '\$${order.price}',
                     ),
                   ),
                   const SizedBox(width: 12),

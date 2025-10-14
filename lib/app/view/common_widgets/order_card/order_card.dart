@@ -31,7 +31,8 @@ class OrderCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return InkWell(
-      onTap: deliveryType == 'Completed' || deliveryType == 'Cancelled' ? null : onTap,
+      // onTap: deliveryType == 'Completed' || deliveryType == 'Cancelled' ? null : onTap,
+      onTap:  onTap, 
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
         margin: EdgeInsets.only(bottom: 12.h),

@@ -44,13 +44,16 @@ class UserHomeController extends GetxController with VendorListService {
       isLoading.value = true;
 
       LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        address.value = 'Location permission denied';
-        print('Location permission denied: ${address.value}');
-        toastMessage(message: 'Location permission denied');
-        isLoading.value = false;
-        return;
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        // Request permission interactively
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+          address.value = 'Location permission denied';
+          print('Location permission denied: ${address.value}');
+          toastMessage(message: 'Location permission denied');
+          isLoading.value = false;
+          return;
+        }
       }
 
       // try to get current position with a timeout, otherwise fall back to last known

@@ -43,23 +43,23 @@ class ChooseAuthScreen extends StatelessWidget {
             SizedBox(
               height: 25.h,
             ),
-            CustomAuthContainer(
-              buttonText: AppStrings.signUpWithGoogle,  // Text for the button
-              onPressed: () {
-                // Handle Google authentication logic here
-                print('Google Sign-Up button pressed');
-              }, image: Assets.images.google.image(),
-            ),
-            SizedBox(
-              height: 14.h,
-            ),
-            CustomAuthContainer(
-              buttonText: AppStrings.signUpWithApple,  // Text for the button
-              onPressed: () {
-                // Handle Google authentication logic here
-                print('Google Sign-Up button pressed');
-              }, image: Assets.images.apple.image(),
-            ),
+            // CustomAuthContainer(
+            //   buttonText: AppStrings.signUpWithGoogle,  // Text for the button
+            //   onPressed: () {
+            //     // Handle Google authentication logic here
+            //     print('Google Sign-Up button pressed');
+            //   }, image: Assets.images.google.image(),
+            // ),
+            // SizedBox(
+            //   height: 14.h,
+            // ),
+            // CustomAuthContainer(
+            //   buttonText: AppStrings.signUpWithApple,  // Text for the button
+            //   onPressed: () {
+            //     // Handle Google authentication logic here
+            //     print('Google Sign-Up button pressed');
+            //   }, image: Assets.images.apple.image(),
+            // ),
 
           ],
         ),

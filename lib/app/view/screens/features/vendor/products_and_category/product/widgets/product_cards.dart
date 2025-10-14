@@ -27,37 +27,48 @@ class ProductCard extends StatelessWidget {
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                // Check if product has images and display them, otherwise show a placeholder
-                productData.images.isNotEmpty &&
-                        productData.images.first.isNotEmpty
-                    ? CustomNetworkImage(
-                        imageUrl: productData.images.first.replaceFirst(
-                          'http://10.10.20.19:5007',
-                          'https://gmosley-uteehub-backend.onrender.com',
-                        ),
-                        height: 90.h,
-                        width: 119.w,
-                      )
-                    : Container(
-                        height: 90.h,
-                        width: 119.w,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 40,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                Positioned(
-                  right: -22,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                  maxHeight: constraints.maxHeight,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Flexible(
+                      child: Stack(
+                        children: [
+                          // Check if product has images and display them, otherwise show a placeholder
+                          productData.images.isNotEmpty &&
+                                  productData.images.first.isNotEmpty
+                              ? CustomNetworkImage(
+                                  imageUrl: productData.images.first.replaceFirst(
+                                    'http://10.10.20.19:5007',
+                                    'https://gmosley-uteehub-backend.onrender.com',
+                                  ),
+                                  height: 90.h,
+                                  width: 119.w,
+                                )
+                              : Container(
+                                  height: 90.h,
+                                  width: 119.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Icon(
+                                    Icons.image_not_supported,
+                                    size: 40,
+                                    color: Colors.grey[400],
+                                  ),
+                                ),
+                          Positioned(
+                            right: -22,
                   top: 0,
                   child: PopupMenuButton<String>(
                     color: Colors.white,
@@ -123,39 +134,42 @@ class ProductCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 6),
-            Text(
-             productData.name,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-
-              productData.size.isNotEmpty
-                  ? 'Size: ${productData.size.join(', ')}'
-                  : 'Size: Not specified',
-              style: TextStyle(color: Colors.grey[600], fontSize: 10),
-              
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.amber,
-              ),
-              padding: const EdgeInsets.all(1.5), // optional for spacing
-              child: Text(
-                '${productData.price} ${productData.currency}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 10,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      productData.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      productData.size.isNotEmpty
+                          ? 'Size: ${productData.size.join(', ')}'
+                          : 'Size: Not specified',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 10),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.amber,
+                      ),
+                      padding: const EdgeInsets.all(1.5), // optional for spacing
+                      child: Text(
+                        '${productData.price} ${productData.currency}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${productData.quantity.toString()} in stock',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 10),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            Text(
-              '${productData.quantity.toString()} in stock',
-              style: TextStyle(color: Colors.grey[600], fontSize: 10),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

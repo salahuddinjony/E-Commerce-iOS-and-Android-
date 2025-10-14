@@ -25,7 +25,7 @@ class OrderDetailsSection extends StatelessWidget {
           const OrderDetailRow(label: 'Type', value: 'Custom Order'),
           OrderDetailRow(label: 'Client Id', value: order.client.toString()),
           OrderDetailRow(
-              label: 'Price', value: '${order.currency} ${order.price}'),
+              label: 'Price', value: '\$ ${order.price}'),
           OrderDetailRow(label: 'Quantity', value: '${order.quantity}'),
           OrderDetailRow(
             label: 'Payment Status',
@@ -80,7 +80,7 @@ class OrderDetailsSection extends StatelessWidget {
           OrderDetailRow(label: 'Client', value: order.clientName),
           OrderDetailRow(label: 'Vendor', value: order.vendorName),
           OrderDetailRow(
-              label: 'Price', value: '${order.currency} ${order.price}'),
+              label: 'Price', value: '\$${order.price}'),
           OrderDetailRow(
             label: 'Products',
             value:
