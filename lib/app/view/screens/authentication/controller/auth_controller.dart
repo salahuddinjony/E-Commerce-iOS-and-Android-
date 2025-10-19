@@ -22,16 +22,16 @@ class AuthController extends GetxController with PasswordConstraintController {
   // final passWordController = TextEditingController(text: "salahAbc@1");
 //Salahuddin@1
 //salahuddin.duet.204113@gmail.com
-//dosir61370@mv6a.com
+//dosir61370@mv6a.com 
 
 
-  final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
-  final passWordController = TextEditingController(text: "12345678"); 
+  // final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
+  // final passWordController = TextEditingController(text: "12345678"); 
 
   // for client
-  // final emailController =
-  //     TextEditingController(text: "pekasi2300@futurejs.com");
-  // final passWordController = TextEditingController(text: "Salah!1aa");
+  final emailController =
+      TextEditingController(text: "pekasi2300@futurejs.com");
+  final passWordController = TextEditingController(text: "Salah!1aa");
 
   final confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -87,8 +87,10 @@ class AuthController extends GetxController with PasswordConstraintController {
           toastMessage(message: AppStrings.someThing);
           return;
         }
+        final userEmail = resBody['data']?['email'] ?? '';
 
         // Save token & user info
+        await SharePrefsHelper.setString(AppConstants.userEmail, userEmail);
         await SharePrefsHelper.setString(AppConstants.bearerToken, accessToken);
         await SharePrefsHelper.setString(
             AppConstants.userId, resBody['data']?["_id"] ?? '');
@@ -97,6 +99,7 @@ class AuthController extends GetxController with PasswordConstraintController {
 
         Map<String, dynamic> decodedToken = JwtDecoder.decode(accessToken);
         String role = decodedToken['role'] ?? '';
+      
 
         if (role == 'vendor') {
           AppRouter.route.goNamed(RoutePath.homeScreen);

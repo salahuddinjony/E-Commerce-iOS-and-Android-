@@ -26,14 +26,20 @@ mixin MixinCreateOrder {
   final TextEditingController summeryController =
       TextEditingController();
 
-  Future<bool> createOrder(
-      {required vendorId,
-      required int price,
-      required String ProductId,
-      required int quantity,
-      required String shippingAddress,
-      required String sessionId}) async {
+  Future<bool> createOrder({
+    required String vendorId,
+    required int price,
+    required String ProductId,
+    required int quantity,
+    required String shippingAddress,
+    required String sessionId,
+  }) async {
     final clientId = await SharePrefsHelper.getString(AppConstants.userId);
+
+    if (clientId.isEmpty) {
+      debugPrint('Error: Client ID not found');
+      return false;
+    }
 
     try {
       final orderData = {
@@ -48,31 +54,31 @@ mixin MixinCreateOrder {
         "sessionId": sessionId
       };
 
-      debugPrint('createOrder payload: ${jsonEncode(orderData)}');
+      debugPrint('=== Creating General Order ===');
+      debugPrint('Endpoint: ${ApiUrl.createGeneralOrder}');
+      debugPrint('Payload: ${jsonEncode(orderData)}');
 
-      // JSON-encode the body before sending
       final response = await ApiClient.postData(
         ApiUrl.createGeneralOrder,
         jsonEncode(orderData),
       );
 
-      debugPrint(
-          "createOrder response: ${response.statusCode} ${response.body}");
+      debugPrint('Response Status: ${response.statusCode}');
+      debugPrint('Response Body: ${response.body}');
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        debugPrint('Order created successfully');
+        debugPrint('✅ Order created successfully');
         return true;
       } else {
-        // let ApiChecker surface errors (401/403/others)
+        debugPrint('❌ Failed to create order: ${response.statusCode}');
+        debugPrint('Error details: ${response.body}');
         ApiChecker.checkApi(response);
-        debugPrint('Failed to create order: ${response.statusCode}');
         return false;
       }
     } catch (e, st) {
-      debugPrint('Error creating order: $e\n$st');
+      debugPrint('❌ Error creating order: $e');
+      debugPrint('Stack trace: $st');
       rethrow;
-    } finally {
-      // cleanup if needed
     }
   }
 

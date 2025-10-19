@@ -101,7 +101,7 @@ class ViewOrderScreen extends StatelessWidget {
 
                 final o = list[index];
                 return OrderCard(
-                  parcelId: '#${o.id}',
+                  parcelId: 'Parcel Id #${o.id}',
                   date: o.createdAt.toIso8601String().getDateTime(),
                   addressLine1: o.shippingAddress,
                   deliveryType: o.status.capitalizeFirstWord(),

@@ -15,7 +15,9 @@ import 'package:local/app/view/screens/authentication/sign_up/sign_up_screen.dar
 import 'package:local/app/view/screens/features/client/user_home/custom_design/screen/custom_design_screen.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/category_wise_product/screen/category_wise_products.dart';
 import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
+import 'package:local/app/view/screens/features/vendor/home/widgets/show_product_details_screen.dart';
 import 'package:local/app/view/screens/features/vendor/orders/models/general_order_response_model.dart';
+import 'package:local/app/view/screens/features/vendor/products_and_category/product/model/product_response.dart';
 import 'package:local/app/view/screens/splash/splash_screen.dart';
 import 'package:local/app/view/screens/features/client/chat/inbox_screen/chat_screen/screen/chat_screen.dart';
 import 'package:local/app/view/screens/features/client/support/order_mangement/order_manegment_screen.dart';
@@ -484,6 +486,21 @@ class AppRouter {
             child: const UTeeHubAccount(),
             state: state,
           ),
+        ),
+
+        ///=======================  OrderOverviewScreen =======================
+         
+         GoRoute(
+          name: RoutePath.showProductDetailsScreen,
+          path: RoutePath.showProductDetailsScreen.addBasePath,
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>? ?? {};
+            final product = extra['product'] as ProductItem;
+            return buildPageWithAnimation(
+              child: ShowProductDetailsScreen(product: product),
+              state: state,
+            );
+          },
         ),
 
         GoRoute(

@@ -13,17 +13,28 @@ class CountdownRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CountdownBox(
-            number: controller.twoDigits(remaining.inDays), label: 'Days'),
-        CountdownBox(
-            number: controller.twoDigits(remaining.inHours % 24),
-            label: 'Hours'),
-        CountdownBox(
-            number: controller.twoDigits(remaining.inMinutes % 60),
-            label: 'Min'),
-        CountdownBox(
-            number: controller.twoDigits(remaining.inSeconds % 60),
-            label: 'Sec'),
+        Expanded(
+          child: CountdownBox(
+              number: controller.twoDigits(remaining.inDays), label: 'Days'),
+        ),
+        SizedBox(width: 6),
+        Expanded(
+          child: CountdownBox(
+              number: controller.twoDigits(remaining.inHours % 24),
+              label: 'Hours'),
+        ),
+        SizedBox(width: 6),
+        Expanded(
+          child: CountdownBox(
+              number: controller.twoDigits(remaining.inMinutes % 60),
+              label: 'Min'),
+        ),
+        SizedBox(width: 6),
+        Expanded(
+          child: CountdownBox(
+              number: controller.twoDigits(remaining.inSeconds % 60),
+              label: 'Sec'),
+        ),
       ],
     );
   }

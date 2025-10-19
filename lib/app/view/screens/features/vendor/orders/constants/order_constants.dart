@@ -403,7 +403,7 @@ class OrderConstants {
         'title': 'Accept',
         'icon': Icons.check_circle_outline,
         'colorGroup': 'green',
-        'action': 'accept_delivery',
+        'action': 'delivery-confirmed',
       },
       {
         'title': 'Revision',

@@ -1,8 +1,8 @@
 class ApiUrl {
-  static const baseUrl = "http://10.10.20.19:5007/v1/";
-  // static const baseUrl = "https://gmosley-uteehub-backend.onrender.com/v1/";
-  static const networkUrl = "http://10.10.20.19:5007/v1/";
-  // static const networkUrl = "https://gmosley-uteehub-backend.onrender.com/v1/";
+  // static const baseUrl = "http://10.10.20.19:5007/v1/";
+  static const baseUrl = "https://gmosley-uteehub-backend.onrender.com/v1/";
+  // static const networkUrl = "http://10.10.20.19:5007/v1/";
+  static const networkUrl = "https://gmosley-uteehub-backend.onrender.com/v1/";
 
   ///================================= User Authentication url==========================
   static const login = "/user/auth/login";
@@ -37,6 +37,9 @@ class ApiUrl {
     return "$baseUrl/notification/retrive/consumer/$consumerId";
     
   }
+
+  // payment check
+  static const paymentCheck = "/order/initiate-payment";
 
   static String dismissNotification({required String notificationId}) {
     return "$baseUrl/notification/dismiss/$notificationId";
