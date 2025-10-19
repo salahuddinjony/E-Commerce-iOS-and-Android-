@@ -267,7 +267,7 @@ class AppRouter {
           name: RoutePath.helpCenterScreen,
           path: RoutePath.helpCenterScreen.addBasePath,
           pageBuilder: (context, state) => buildPageWithAnimation(
-            child: const HelpCenterScreen(),
+            child: HelpCenterScreen(),
             state: state,
           ),
         ),

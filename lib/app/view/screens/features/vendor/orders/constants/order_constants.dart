@@ -124,9 +124,9 @@ class OrderConstants {
   // Tab Names
   static const List<String> generalTabs = [
     'All Orders',
-    'Pending',
-    'in Progress',
-    'Rejected'
+    'In-Progress',
+    'Delivered',
+
   ];
 
   static const List<String> customTabs = [

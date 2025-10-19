@@ -101,13 +101,13 @@ class UserProfileScreen extends StatelessWidget {
                       context.pushNamed(RoutePath.personalInfoScreen);
                     },
                   ),
-                  _buildListItem(
-                    icon: Icons.payment,
-                    label: "Payment Methods",
-                    onTap: () {
-                      context.pushNamed(RoutePath.paymentMethodsScreen);
-                    },
-                  ),
+                  // _buildListItem(
+                  //   icon: Icons.payment,
+                  //   label: "Payment Methods",
+                  //   onTap: () {
+                  //     context.pushNamed(RoutePath.paymentMethodsScreen);
+                  //   },
+                  // ),
                   // _buildListItem(
                   //   icon: Icons.history,
                   //   label: "Order History",

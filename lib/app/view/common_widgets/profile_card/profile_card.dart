@@ -29,7 +29,7 @@ class ProfileCard extends StatelessWidget {
             'image': vendorItems.image,
             'location': vendorItems.address,
             'name': vendorItems.name,
-            'vendorId': vendorItems.id,
+            'vendorId': vendorItems.userId!.id!,
           },
         );
         shopDetailsController.fetchCategories(vendorId: vendorItems.userId!.id!);

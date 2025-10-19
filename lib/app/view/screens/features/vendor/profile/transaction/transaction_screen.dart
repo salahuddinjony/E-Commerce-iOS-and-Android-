@@ -167,7 +167,7 @@ class TransactionScreen extends StatelessWidget {
                           time:
                               "${tx.transactionAt.hour.toString().padLeft(2, '0')}:${tx.transactionAt.minute.toString().padLeft(2, '0')}",
                           type: tx.type,
-                          amount: tx.amount.toString(),
+                          amount: tx.amount.toStringAsFixed(2),
                           primaryColor: Colors.teal,
                           trxId: tx.id.toString(),
                         );

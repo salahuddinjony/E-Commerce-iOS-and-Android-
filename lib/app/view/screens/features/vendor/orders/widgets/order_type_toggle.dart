@@ -16,27 +16,6 @@ class OrderTypeToggle extends StatelessWidget {
             children: [
               ChoiceChip(
                 avatar: controller.isCustomOrder.value
-                    ? const Icon(Icons.list_alt, color: Colors.black)
-                    : null,
-                checkmarkColor: Colors.white,
-                label: const Text('General Orders'),
-                selected: !controller.isCustomOrder.value,
-                onSelected: (val) {
-                  controller.isCustomOrder.value = false;
-                  controller.refreshOrdersByType(false);
-                },
-                selectedColor: AppColors.brightCyan,
-                backgroundColor: Colors.white,
-                labelStyle: TextStyle(
-                  color: !controller.isCustomOrder.value
-                      ? Colors.white
-                      : Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 8),
-              ChoiceChip(
-                avatar: controller.isCustomOrder.value
                     ? null
                     : const Icon(Icons.design_services, color: Colors.black),
                 checkmarkColor: Colors.white,
@@ -50,6 +29,27 @@ class OrderTypeToggle extends StatelessWidget {
                 backgroundColor: Colors.white,
                 labelStyle: TextStyle(
                   color: controller.isCustomOrder.value
+                      ? Colors.white
+                      : Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              ChoiceChip(
+                avatar: controller.isCustomOrder.value
+                    ? const Icon(Icons.list_alt, color: Colors.black)
+                    : null,
+                checkmarkColor: Colors.white,
+                label: const Text('General Orders'),
+                selected: !controller.isCustomOrder.value,
+                onSelected: (val) {
+                  controller.isCustomOrder.value = false;
+                  controller.refreshOrdersByType(false);
+                },
+                selectedColor: AppColors.brightCyan,
+                backgroundColor: Colors.white,
+                labelStyle: TextStyle(
+                  color: !controller.isCustomOrder.value
                       ? Colors.white
                       : Colors.black,
                   fontWeight: FontWeight.bold,

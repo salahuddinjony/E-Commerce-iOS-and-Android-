@@ -13,7 +13,7 @@ import 'package:local/app/view/screens/features/vendor/orders/mixins/order_mixin
 import 'package:local/app/view/screens/features/vendor/profile/transaction/mixin/mixin_transaction_screen.dart';
 
 class HomePageController extends GetxController with MixinTransactionScreen, OrderMixin {
-  RxInt amount = 0.obs;
+  RxDouble amount = 0.0.obs;
   RxBool balanceFetch = false.obs;
   RxList<TransactionHistory> walletData = <TransactionHistory>[].obs;
   final withdrawAmount = TextEditingController();
@@ -87,7 +87,7 @@ class HomePageController extends GetxController with MixinTransactionScreen, Ord
         }
 
         // Balance
-        amount.value = data['balance']['amount'] ?? 0;
+        amount.value = (data['balance']['amount'] ?? 0.0).toDouble();
         balanceFetch.value = true;
         print("Balance amount: ${amount.value}");
 
@@ -121,7 +121,7 @@ class HomePageController extends GetxController with MixinTransactionScreen, Ord
       return;
     }
 
-    final amountToWithdraw = int.tryParse(text);
+    final amountToWithdraw = double.tryParse(text);
     if (amountToWithdraw == null || amountToWithdraw <= 0) {
       message.value = "Please enter a valid amount";
       return;

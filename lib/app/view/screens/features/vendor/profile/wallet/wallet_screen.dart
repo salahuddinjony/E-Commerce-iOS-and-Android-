@@ -115,7 +115,7 @@ class WalletScreen extends StatelessWidget {
                       ),
                       Obx(()=>
                       Text(
-                        '\$${homeController.amount.value}',
+                        '\$${homeController.amount.value.toStringAsFixed(2)}',
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,

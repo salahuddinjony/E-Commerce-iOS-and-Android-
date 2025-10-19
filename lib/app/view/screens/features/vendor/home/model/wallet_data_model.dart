@@ -60,7 +60,7 @@ class WalletData {
 
 class Balance {
   final String currency;
-  final int amount;
+  final double amount;
 
   Balance({
     required this.currency,
@@ -68,8 +68,8 @@ class Balance {
   });
 
   factory Balance.fromJson(Map<String, dynamic> json) => Balance(
-        currency: json['currency'],
-        amount: json['amount'],
+        currency: json['currency'] ?? '',
+        amount: (json['amount'] ?? 0.0).toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -79,7 +79,7 @@ class Balance {
 }
 
 class TransactionHistory {
-  final int amount;
+  final double amount;
   final String type;
   final DateTime transactionAt;
   final String id;
@@ -93,10 +93,10 @@ class TransactionHistory {
 
   factory TransactionHistory.fromJson(Map<String, dynamic> json) =>
       TransactionHistory(
-        amount: json['amount'],
-        type: json['type'],
+        amount: (json['amount'] ?? 0.0).toDouble(),
+        type: json['type'] ?? '',
         transactionAt: DateTime.parse(json['transactionAt']),
-        id: json['_id'],
+        id: json['_id'] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
