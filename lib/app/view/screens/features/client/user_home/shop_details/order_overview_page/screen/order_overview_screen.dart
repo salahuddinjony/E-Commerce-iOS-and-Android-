@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
@@ -6,7 +7,8 @@ import 'package:local/app/view/screens/features/client/user_home/shop_details/or
 import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/payment_loading_dialog.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/product_imsge_and_details_overview.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/widgets/order_overview_row.dart';
-import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/payment_methods/product_payment/stripe_services/stripe_service.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/payment_methods/product_payment/payment_success_screen/payment_success_page.dart';
+import 'package:local/app/services/payment/payment_exports.dart';
 
 class OrderOverviewScreen extends StatelessWidget {
   final String vendorId;
@@ -158,12 +160,12 @@ class OrderOverviewScreen extends StatelessWidget {
                     return;
                   }
                   if (total < 0.01) {
-                    debugPrint("Error: amount too small for Stripe: $total");
-                    toastMessage(message: "Error: amount too small for Stripe");
+                    debugPrint("Error: amount too small: $total");
+                    toastMessage(message: "Error: amount too small");
                     return;
                   }
 
-                  // show a nice non-dismissible loading dialog while the Stripe sheet is preparing/opening
+                  // Show loading dialog
                   showDialog<void>(
                     context: context,
                     barrierDismissible: false,
@@ -172,61 +174,81 @@ class OrderOverviewScreen extends StatelessWidget {
                   );
 
                   try {
-                    // Start payment but provide a callback that will be invoked when the payment sheet is shown.
-                    // The callback immediately dismisses our custom loader so the user sees the native sheet.
-                    final paymentFuture =
-                        StripeServicePayment.instance.makePayment(
+                    // Initialize payment controller
+                    final paymentController = Get.put(OrderPaymentController());
+
+                    // Initiate payment and wait for completion
+                    final paymentResult =
+                        await paymentController.initiateAndProcessPayment(
                       context: context,
-                      amount: (total).toInt(),
-                      currency: 'usd',
-                      onPaymentSheetOpened: () {
-                        try {
-                          if (Navigator.of(context, rootNavigator: true)
-                              .canPop()) {
-                            Navigator.of(context, rootNavigator: true)
-                                .pop(); // close loader
-                          }
-                        } catch (_) {
-                          // ignore
-                        }
-                      },
-                      // When Stripe reports success, call createGeneralOrder to post the order
-                      onPaymentSuccess: (sessionId, detailedPI) async {
-                        try {
-                          // sessionId may be null; createGeneralOrder expects a string
-                          final isOrderSuccess =
-                              await controller.createGeneralOrder(
-                            productId: productId,
-                            vendorId: vendorId,
-                            sessionId: sessionId ?? '',
-                          );
-                          return isOrderSuccess;
-                        } catch (e) {
-                          debugPrint("createGeneralOrder error: $e");
-                          toastMessage(message: "Order post-payment failed");
-                          return false; // <-- ensure we always return a bool
-                        }
-                      },
+                      amount: total,
+                      currency: 'USD',
+                      quantity: 1,
                     );
 
-                    // Await the overall payment future to catch completion/errors.
-                    await paymentFuture;
-                    debugPrint("makePayment completed");
+                    // Close loading dialog
+                    try {
+                      if (Navigator.of(context, rootNavigator: true).canPop()) {
+                        Navigator.of(context, rootNavigator: true).pop();
+                      }
+                    } catch (_) {
+                      // ignore
+                    }
+
+                    final paymentCompleted =
+                        paymentResult['success'] as bool? ?? false;
+                    final sessionId = paymentResult['sessionId'] as String?;
+
+                    debugPrint(
+                        '=== Payment Result ===');
+                    debugPrint('Payment completed: $paymentCompleted');
+                    debugPrint('Session ID: $sessionId');
+
+                    if (!paymentCompleted) {
+                      debugPrint('❌ Payment was not completed - aborting order creation');
+                      toastMessage(message: 'Payment was not completed');
+                      return;
+                    }
+
+                    // ✅ Payment succeeded - now create the order
+                    debugPrint('✅ Payment successful - Creating order...');
+                    final isOrderSuccess = await controller.createGeneralOrder(
+                      productId: productId,
+                      vendorId: vendorId,
+                      sessionId: sessionId ?? '',
+                    );
+
+                    if (isOrderSuccess) {
+                      // Show success page
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PaymentSuccessPage(
+                            isOrderSuccess: true,
+                            amountPaid: total.toString(),
+                            transactionId: sessionId ?? 'N/A',
+                            status: 'success',
+                          ),
+                        ),
+                      );
+                      toastMessage(message: 'Order created successfully!');
+                    } else {
+                      toastMessage(
+                        message: 'Payment succeeded but order creation failed',
+                        color: Colors.red,
+                      );
+                    }
                   } catch (e, st) {
-                    debugPrint("makePayment error: $e\n$st");
-                    // ensure loader is closed on error as well
+                    debugPrint("Payment error: $e\n$st");
+                    // ensure loader is closed on error
                     try {
                       if (Navigator.of(context, rootNavigator: true).canPop()) {
                         Navigator.of(context, rootNavigator: true).pop();
                       }
                     } catch (_) {}
-                  } finally {
-                    // final fallback: if loader somehow remains, try to close it
-                    // try {
-                    //   if (Navigator.of(context, rootNavigator: true).canPop()) {
-                    //     Navigator.of(context, rootNavigator: true).pop();
-                    //   }
-                    // } catch (_) {}
+                    toastMessage(
+                      message: 'Payment error: ${e.toString()}',
+                      color: Colors.red,
+                    );
                   }
                 },
               ),
