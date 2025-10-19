@@ -334,7 +334,7 @@ class UserOrderController extends GetxController
       case 'accept_offer':
         isAcceptOfferLoading.value = true;
         break;
-      case 'accept_delivery':
+      case 'delivery-confirmed':
         isAcceptDeliveryLoading.value = true;
         break;
       case 'request_revision':
@@ -360,7 +360,7 @@ class UserOrderController extends GetxController
         case 'accept_offer':
           isAcceptOfferLoading.value = false;
           break;
-        case 'accept_delivery':
+        case 'delivery-confirmed':
           isAcceptDeliveryLoading.value = false;
           break;
         case 'request_revision':

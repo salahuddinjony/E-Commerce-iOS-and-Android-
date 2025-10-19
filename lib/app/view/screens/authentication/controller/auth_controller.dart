@@ -22,7 +22,7 @@ class AuthController extends GetxController with PasswordConstraintController {
   // final passWordController = TextEditingController(text: "salahAbc@1");
 //Salahuddin@1
 //salahuddin.duet.204113@gmail.com
-//dosir61370@mv6a.com
+//dosir61370@mv6a.com 
 
 
   // final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");

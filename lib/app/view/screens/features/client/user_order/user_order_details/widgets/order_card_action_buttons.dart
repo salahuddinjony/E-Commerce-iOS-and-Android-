@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/global/helper/toast_message/toast_message.dart';
+import 'package:local/app/services/payment/controllers/order_payment_controller.dart';
+import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/payment_methods/product_payment/payment_success_screen/payment_success_page.dart';
 import 'package:local/app/view/screens/features/client/user_order/controller/user_order_controller.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/widgets/payment_loading_dialog.dart';
-import 'package:local/app/view/screens/features/client/user_home/shop_details/order_overview_page/payment_methods/product_payment/stripe_services/stripe_service.dart';
 import 'package:local/app/view/screens/features/vendor/orders/constants/order_constants.dart';
 import 'package:local/app/view/screens/features/client/user_order/user_order_details/widgets/order_action_button.dart';
 
@@ -63,7 +64,7 @@ class OrderCardActionButtons extends StatelessWidget {
         return controller.isAcceptOfferLoading.value;
       case 'reject_offer':
         return controller.isRejectOfferLoading.value;
-      case 'accept_delivery':
+      case 'delivery-confirmed':
         return controller.isAcceptDeliveryLoading.value;
       case 'request_revision':
         return controller.isRequestRevisionLoading.value;
@@ -80,7 +81,7 @@ class OrderCardActionButtons extends StatelessWidget {
       case 'reject_offer':
         handleRejectOffer(context);
         break;
-      case 'accept_delivery':
+      case 'delivery-confirmed':
         handleAcceptDelivery(context);
         break;
       case 'request_revision':
@@ -111,8 +112,8 @@ class OrderCardActionButtons extends StatelessWidget {
       return;
     }
     if (total < 0.01) {
-      debugPrint("Error: amount too small for Stripe: $total");
-      toastMessage(message: "Error: amount too small for Stripe");
+      debugPrint("Error: amount too small: $total");
+      toastMessage(message: "Error: amount too small");
       return;
     }
 
@@ -125,48 +126,70 @@ class OrderCardActionButtons extends StatelessWidget {
     );
 
     try {
-      bool paymentSuccessful = false;
-      final paymentFuture = StripeServicePayment.instance.makePayment(
+      // Initialize payment controller
+      final paymentController = Get.put(OrderPaymentController());
+
+      // Initiate payment and wait for completion
+      final paymentResult = await paymentController.initiateAndProcessPayment(
         context: context,
-        amount: total.toInt(),
-        currency: 'usd',
-        onPaymentSheetOpened: () {
-          try {
-            Navigator.of(context, rootNavigator: true).pop();
-          } catch (_) {
-            // ignore
-          }
-        },
-        onPaymentSuccess: (sessionId, detailedPI) async {
-          try {
-            final isOrderSuccess = await controller.acceptOrder(
-                sessionId: sessionId,
-                orderId: orderData.id,
-                action: 'accept_offer');
-            if (isOrderSuccess) {
-              paymentSuccessful = true;
-              toastMessage(message: 'Order accepted successfully!');
-            } else {
-              toastMessage(
-                  message: 'Payment succeeded but order acceptance failed');
-            }
-            return isOrderSuccess;
-          } catch (e) {
-            debugPrint("acceptOrder error: $e");
-            toastMessage(message: "Order post-payment failed");
-            return false;
-          }
-        },
+        amount: total,
+        currency: 'USD',
+        quantity: 1,
       );
 
-      await paymentFuture;
-      debugPrint("makePayment completed");
+      // Close loading dialog
+      try {
+        Navigator.of(context, rootNavigator: true).pop();
+      } catch (_) {
+        // ignore
+      }
 
-      if (paymentSuccessful) {
-        context.pop();
+      final paymentCompleted = paymentResult['success'] as bool? ?? false;
+      final sessionId = paymentResult['sessionId'] as String?;
+
+      debugPrint('=== Payment Result ===');
+      debugPrint('Payment completed: $paymentCompleted');
+      debugPrint('Session ID: $sessionId');
+
+      if (!paymentCompleted) {
+        debugPrint('❌ Payment was not completed - aborting order acceptance');
+        toastMessage(message: 'Payment was not completed');
+        return;
+      }
+
+      // ✅ Payment succeeded - now accept the order
+      debugPrint('✅ Payment successful - Accepting order...');
+      final isOrderSuccess = await controller.acceptOrder(
+        orderId: orderData.id,
+        sessionId: sessionId,
+        action: 'accept_offer',
+      );
+
+      if (isOrderSuccess) {
+        // Show success page
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PaymentSuccessPage(
+              isOrderSuccess: true,
+              amountPaid: total.toString(),
+              transactionId: orderData.id,
+              status: 'success',
+            ),
+          ),
+        );
+        toastMessage(message: 'Order accepted successfully!');
+      } else {
+        toastMessage(
+          message: 'Payment succeeded but order acceptance failed',
+          color: Colors.red,
+        );
       }
     } catch (e, st) {
-      debugPrint("makePayment error: $e\n$st");
+      debugPrint("Payment error: $e\n$st");
+      try {
+        Navigator.of(context, rootNavigator: true).pop();
+      } catch (_) {}
+      toastMessage(message: 'Payment failed: ${e.toString()}');
     }
   }
 
@@ -186,7 +209,7 @@ class OrderCardActionButtons extends StatelessWidget {
       final isOrderSuccess = await controller.acceptOrder(
           orderId: orderData.id,
           status: "delivery-confirmed",
-          action: 'accept_delivery');
+          action: 'delivery-confirmed');
       if (isOrderSuccess) {
         controller.fetchCustomOrders();
         context.pop();
