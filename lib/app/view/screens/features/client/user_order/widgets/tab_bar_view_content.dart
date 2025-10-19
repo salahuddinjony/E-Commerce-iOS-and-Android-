@@ -38,6 +38,7 @@ Widget buildCustomOrdersList(
     }
 
     return ListView.separated(
+      physics: const AlwaysScrollableScrollPhysics(),
       controller: controller.customOrdersScrollController,
       itemCount: customOrders.length + (controller.customIsPaginating.value ? 1 : 0),
       separatorBuilder: (_, __) => SizedBox(height: 8.h),
@@ -111,6 +112,7 @@ Widget buildGeneralOrdersList(
     }
 
     return ListView.separated(
+      physics: const AlwaysScrollableScrollPhysics(),
       controller: controller.generalOrdersScrollController,
       itemCount: generalOrders.length + (controller.generalIsPaginating.value ? 1 : 0),
       separatorBuilder: (_, __) => SizedBox(height: 8.h),

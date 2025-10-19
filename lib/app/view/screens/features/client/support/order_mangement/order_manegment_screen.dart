@@ -79,12 +79,15 @@ class OrderManegmentScreen extends StatelessWidget {
             SizedBox(
               height: 20.h,
             ),
-            // CustomButton(
-            //   onTap: () {
-            //     context.pushNamed(RoutePath.helpCenterScreen);
-            //   },
-            //   title: "Contact Us",
-            // )
+           CustomButton(
+              onTap: () {
+                 context.pushNamed(RoutePath.helpCenterScreen);
+              },
+              title: "Contact Us",
+            ),
+            SizedBox(
+              height: 15.h,
+            ),
 
           ],
         ),

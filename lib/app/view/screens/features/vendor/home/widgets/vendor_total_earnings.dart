@@ -76,7 +76,7 @@ class VendorTotalEarnings extends StatelessWidget {
                     ? CustomText(
                         font: CustomFont.poppins,
                         color: AppColors.white,
-                        text: "\$${controller.amount.toString()}",
+                        text: "\$${controller.amount.value.toStringAsFixed(2)}",
                         fontWeight: FontWeight.w600,
                         fontSize: 20.sp,
                         textAlign: TextAlign.center,
