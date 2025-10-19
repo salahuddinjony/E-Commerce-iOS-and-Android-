@@ -21,17 +21,13 @@ mixin GeneralOrderMixin on GetxController {
     switch (tab) {
       case 'All Orders':
         return generalOrdersList;
-      case 'Pending':
+      case 'In-Progress':
         return generalOrdersList.where((order) => 
-          OrderConstants.isPendingStatus(order.status)
+          order.status == OrderConstants.statusProcess
         ).toList();
-      case 'Completed':
+      case 'Delivered':
         return generalOrdersList.where((order) => 
-          OrderConstants.isCompletedStatus(order.status)
-        ).toList();
-      case 'Rejected':
-        return generalOrdersList.where((order) => 
-          OrderConstants.isCancelledStatus(order.status)
+          order.status == OrderConstants.statusDelivered
         ).toList();
       default:
         return [];

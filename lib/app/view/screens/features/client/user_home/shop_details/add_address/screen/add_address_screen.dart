@@ -138,7 +138,6 @@ class AddAddressScreen extends StatelessWidget {
                         );
                         if (success) {
                           EasyLoading.showSuccess('Order created successfully');
-                          // context.goNamed(RoutePath.homeScreen);
                           context.pop();
                         } else {
                           EasyLoading.showError('Failed to create order');
@@ -147,6 +146,14 @@ class AddAddressScreen extends StatelessWidget {
                         debugPrint('Error creating order: $e');
                         EasyLoading.showError('Error: ${e.toString()}');
                       }
+                      return;
+                    }
+                    // Validate required fields for general order
+                    if (controller.customerNameController.text.trim().isEmpty ||
+                        controller.customerPhoneController.text.trim().isEmpty ||
+                        controller.customerRegionCityController.text.trim().isEmpty ||
+                        controller.customerAddressController.text.trim().isEmpty) {
+                      EasyLoading.showInfo('Please fill all required fields');
                       return;
                     }
                     // For general order, navigate to order overview

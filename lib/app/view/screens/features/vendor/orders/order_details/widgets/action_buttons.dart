@@ -98,22 +98,52 @@ class ActionButtons extends StatelessWidget {
       );
     } else {
       final order = orderData as GeneralOrder;
-      if (order.status == 'offered' || order.status == 'pending') {
-        return twoButtons(
-          leftTitle: 'Approve',
-          rightTitle: 'Reject',
-          leftOnTap: () {
-            toastMessage(message: 'General Order Approved');
-            context.pop();
-          },
-          rightOnTap: () async {
-            if (await controller.deleteGeneralOrder(order.id)) {
-              toastMessage(message: 'General Order Deleted');
-              context.pop();
-            } else {
-              toastMessage(message: 'Failed to delete order');
-            }
-          },
+      if (order.status == 'process' || order.status == 'pending') {
+        return Obx(
+          () => CustomButton(
+            onTap: controller.isAcceptLoading.value
+                ? null
+                : () async {
+                    final success = await controller.updateGeneralOrderStatus(order.id, 'delivered');
+                    if (success) {
+                      toastMessage(message: 'General Order Marked as Delivered');
+                      // Refresh the orders list
+                      controller.refreshOrdersByType(false);
+                      context.pop();
+                    } else {
+                      toastMessage(message: 'Failed to update order status');
+                    }
+                  },
+            title: null,
+            isRadius: true,
+            fillColor: Colors.green,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (controller.isAcceptLoading.value)
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                else
+                  Icon(Icons.local_shipping, color: Colors.white, size: 20),
+                SizedBox(width: 7),
+                Text(
+                  'Delivery',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       }
       return CustomButton(

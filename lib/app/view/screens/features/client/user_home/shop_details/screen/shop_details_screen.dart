@@ -29,7 +29,8 @@ class ShopDetailsScreen extends StatelessWidget {
 
     final displayLocation =
         shopLocation.isNotEmpty ? shopLocation.split(',').last : 'USA 256';
-    // final displayVendorId = vendorId.isNotEmpty ? vendorId : 'Vendor ID';
+    final displayVendorId = vendorId.isNotEmpty ? vendorId : 'Vendor ID';
+    debugPrint('Vendor ID: $displayVendorId');
 
     return Scaffold(
       body: Stack(

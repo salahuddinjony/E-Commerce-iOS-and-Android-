@@ -34,6 +34,7 @@ class ViewOrderDetails extends StatelessWidget {
         iconColor = Colors.red;
         break;
       case 'delivered':
+      case 'delivery-confirmed':
         message = 'This order has been delivered.';
         color = Colors.blue.shade50;
         icon = Icons.local_shipping_rounded;
@@ -81,6 +82,7 @@ class ViewOrderDetails extends StatelessWidget {
       ),
     );
   }
+
   final Order order;
 
   ViewOrderDetails({super.key, required this.order}) {
@@ -112,28 +114,41 @@ class ViewOrderDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               OrderInfoCard(order: o),
-              SizedBox(height: 20.h),
-              if (!['completed', 'cancelled', 'delivered',].contains(o.status)) ...[
+
+              if (![
+                'completed',
+                'cancelled',
+                'delivered',
+              ].contains(o.status)) ...[
+                SizedBox(height: 20.h),
                 ExpirationAlert(isNotExpired: controller.isNotExpired),
                 SizedBox(height: 20.h),
               ],
               _statusMessageCard(o.status),
-              if (!['completed', 'cancelled', 'delivered',].contains(o.status)) ...[
+              if (![
+                'completed',
+                'cancelled',
+                'delivered',
+                'delivery-confirmed',
+              ].contains(o.status)) ...[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.h),
                   child: Row(
                     children: [
                       Expanded(
-                        child: CountdownRow(remaining: remaining, controller: controller),
+                        child: CountdownRow(
+                            remaining: remaining, controller: controller),
                       ),
+                      SizedBox(height: 25.h),
                     ],
                   ),
                 ),
               ],
-             
-              SizedBox(height: 25.h),
+
               //product image
-              Text("Product Images", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+              Text("Product Images",
+                  style:
+                      TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
               if (o.designFiles.isNotEmpty)
                 SizedBox(
                   height: 100.h,
@@ -155,16 +170,26 @@ class ViewOrderDetails extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 18.h),
                   child: Row(
                     children: [
-                      Icon(Icons.image_not_supported_outlined, color: Colors.grey, size: 28.sp),
+                      Icon(Icons.image_not_supported_outlined,
+                          color: Colors.grey, size: 28.sp),
                       SizedBox(width: 10.w),
                       Text(
                         "No product images available",
-                        style: TextStyle(fontSize: 14.5.sp, color: Colors.grey, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 14.5.sp,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                 ),
-              if (!['completed', 'cancelled', 'delivered', 'in-progress'].contains(o.status)) ...[
+              if (![
+                'completed',
+                'cancelled',
+                'delivered',
+                'in-progress',
+                'delivery-confirmed'
+              ].contains(o.status)) ...[
                 SizedBox(height: 30.h),
                 CustomButton(
                   isRadius: true,

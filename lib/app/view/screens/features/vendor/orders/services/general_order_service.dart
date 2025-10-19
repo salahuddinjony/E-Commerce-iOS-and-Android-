@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:local/app/data/local/shared_prefs.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/api_url.dart';
@@ -57,18 +59,21 @@ class GeneralOrderService {
   }
 
   /// Update general order status
-  Future<void> updateGeneralOrderStatus(String orderId, String status) async {
+  Future<bool> updateGeneralOrderStatus(String orderId, String status) async {
     try {
       final response = await ApiClient.patchData(
-        '/general-order/update/$orderId/status',
-        {'status': status},
+        '${ApiUrl.baseUrl}general-order/update/$orderId',
+        jsonEncode({'status': status}),
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to update general order status: ${response.statusText}');
+
+        return false;
+
       }
+      return true;
     } catch (e) {
-      throw Exception('Failed to update general order status: $e');
+      return false;
     }
   }
   //Delete order

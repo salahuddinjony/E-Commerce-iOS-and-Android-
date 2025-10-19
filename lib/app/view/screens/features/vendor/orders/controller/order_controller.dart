@@ -24,7 +24,7 @@ class OrdersController extends GetxController
   final CustomOrderService customerOrderService = CustomOrderService();
   final GeneralOrderService generalOrderService = GeneralOrderService();
 
-  var isCustomOrder = false.obs; // toggle state
+  var isCustomOrder = true.obs; // toggle state
   RxList<File> selectedImages = <File>[].obs;
   final TextEditingController descController = TextEditingController();
   final RxList<String> selectedFiles = <String>[].obs;
@@ -363,18 +363,24 @@ class OrdersController extends GetxController
   }
 
   // Update general order status
-  Future<void> updateGeneralOrderStatus(String orderId, String status) async {
+  Future<bool> updateGeneralOrderStatus(String orderId, String status) async {
+    isAcceptLoading.value = true;
     try {
-      await generalOrderService.updateGeneralOrderStatus(orderId, status);
+      final bool result = await generalOrderService.updateGeneralOrderStatus(orderId, status);
       // Refresh general orders after status update
-      await fetchGeneralOrders();
-      Get.snackbar(
-        'Success',
-        'General order status updated successfully',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      if (result) {
+        await fetchGeneralOrders();
+        Get.snackbar(
+          'Success',
+          'General order status updated successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        return true;
+      } else {
+        return false;
+      }
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -383,6 +389,9 @@ class OrdersController extends GetxController
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      return false;
+    } finally {
+      isAcceptLoading.value = false;
     }
   }
 
@@ -545,8 +554,10 @@ class OrdersController extends GetxController
         return null; // No status filter for "All Orders"
       case 'Pending':
         return OrderConstants.statusPending;
-      case 'in Progress':
-        return OrderConstants.statusInProgress;
+      case 'In-Progress':
+        return OrderConstants.statusProcess; // Use 'process' for general orders
+      case 'Delivered':
+        return OrderConstants.statusDelivered;
       case 'Rejected':
         return OrderConstants.statusRejected;
       default:
