@@ -89,7 +89,7 @@ class ChatController extends GetxController {
     super.onInit();
 
     // connect to socket and join room
-    repo.connect('https://gmosley-uteehub-backend.onrender.com');
+    repo.connect(ApiUrl.socketUrl);
 
     // load history first (if available) so UI shows past messages
 
