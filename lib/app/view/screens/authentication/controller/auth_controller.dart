@@ -378,7 +378,9 @@ class AuthController extends GetxController with PasswordConstraintController {
       "lng": longitude.value,
       "description": businessDescriptionController.text.trim(),
       "deliveryOption":
-          businessDeliveryOptionController.text.toLowerCase().trim(),
+          businessDeliveryOptionController.text.trim()=="Pickup And Courier"
+              ? "pickupAndCourier"
+              : businessDeliveryOptionController.text.trim().toLowerCase(),
     };
 
     var response = await ApiClient.postMultipartData(
