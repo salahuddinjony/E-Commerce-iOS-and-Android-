@@ -26,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar:  OwnerNav(currentIndex: 4),
+      bottomNavigationBar: OwnerNav(currentIndex: 4),
       appBar: const CustomAppBar(appBarContent: AppStrings.profile),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -65,12 +65,15 @@ class ProfileScreen extends StatelessWidget {
                     return Column(
                       children: [
                         GestureDetector(
-                          onTap:(){
-                            debugPrint(profileController.profileModel.value.profile?.id?.image ?? "");
+                          onTap: () {
+                            debugPrint(profileController
+                                    .profileModel.value.profile?.id?.image ??
+                                "");
                           },
                           child: CustomNetworkImage(
-                            imageUrl:
-                                profileController.profileModel.value.profile?.id!.image?? "",
+                            imageUrl: profileController
+                                    .profileModel.value.profile?.id!.image ??
+                                "",
                             height: 125.h,
                             width: 126.w,
                             boxShape: BoxShape.circle,
@@ -123,15 +126,15 @@ class ProfileScreen extends StatelessWidget {
                 height: 10.h,
               ),
 
-              ProfileCardRow(
-                icon: Assets.icons.business.svg(),
-                label: 'Business Documents  ',
-                onTap: () {
-                  context.pushNamed(
-                    RoutePath.businessDocumentsScreen,
-                  );
-                },
-              ),
+              // ProfileCardRow(
+              //   icon: Assets.icons.business.svg(),
+              //   label: 'Business Documents  ',
+              //   onTap: () {
+              //     context.pushNamed(
+              //       RoutePath.businessDocumentsScreen,
+              //     );
+              //   },
+              // ),
 
               ProfileCardRow(
                 icon: Assets.icons.wallet.svg(),
@@ -204,15 +207,17 @@ class ProfileScreen extends StatelessWidget {
 
               //===================Log Out ==================
               CustomLogoutButton(
-                onTap: () async{
-                    // final tokenBefore =await SharePrefsHelper.getString(AppConstants.bearerToken);
-                   await SharePrefsHelper.remove();
+                onTap: () async {
+                  // final tokenBefore =await SharePrefsHelper.getString(AppConstants.bearerToken);
+                  await SharePrefsHelper.remove();
                   //  final tokenAfter =await SharePrefsHelper.getString(AppConstants.bearerToken);
                   //  print("Before logout-->token:$tokenBefore");
                   //  print("After logout-->token :$tokenAfter");
 
-                   Get.deleteAll(force: true); //its indicates to clear all controllers before navigating
-                   context.goNamed(RoutePath.signInScreen);
+                  Get.deleteAll(
+                      force:
+                          true); //its indicates to clear all controllers before navigating
+                  context.goNamed(RoutePath.signInScreen);
                 },
               ),
             ],
