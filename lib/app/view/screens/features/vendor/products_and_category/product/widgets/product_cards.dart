@@ -47,7 +47,8 @@ class ProductCard extends StatelessWidget {
                           productData.images.isNotEmpty &&
                                   productData.images.first.isNotEmpty
                               ? CustomNetworkImage(
-                                  imageUrl: productData.images.first.replaceFirst(
+                                  imageUrl:
+                                      productData.images.first.replaceFirst(
                                     'http://10.10.20.19:5007',
                                     'https://gmosley-uteehub-backend.onrender.com',
                                   ),
@@ -69,76 +70,79 @@ class ProductCard extends StatelessWidget {
                                 ),
                           Positioned(
                             right: -22,
-                  top: 0,
-                  child: PopupMenuButton<String>(
-                    color: Colors.white,
-                    icon: Icon(Icons.more_vert,
-                        size: 20, color: Colors.grey[800]),
-                    onSelected: (value) async {
-                      if (value == 'edit') {
-                        await vendorProductController.fetchCategories();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddProductScreen(
-                              method: 'PATCH',
-                              productId: productData.id,
-                              productName: productData.name,
-                              imageUrl: productData.images.isNotEmpty
-                                  ? productData.images.first
-                                  : '',
-                              categoryId: productData.category,
-                              selectedColor: productData.colors,
-                              selectedSize: productData.size,
-                              price: productData.price.toString(),
-                              quantity: productData.quantity.toString(),
-                              isFeatured:
-                                  productData.isFeatured ? 'true' : 'false',
+                            top: 0,
+                            child: PopupMenuButton<String>(
+                              color: Colors.white,
+                              icon: Icon(Icons.more_vert,
+                                  size: 20, color: Colors.grey[800]),
+                              onSelected: (value)  {
+                                if (value == 'edit') {
+                                   vendorProductController
+                                      .fetchCategories();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddProductScreen(
+                                        method: 'PATCH',
+                                        productId: productData.id,
+                                        productName: productData.name,
+                                        imageUrl: productData.images.isNotEmpty
+                                            ? productData.images.first
+                                            : '',
+                                        categoryId: productData.category,
+                                        selectedColor: productData.colors,
+                                        selectedSize: productData.size,
+                                        price: productData.price.toString(),
+                                        quantity:
+                                            productData.quantity.toString(),
+                                        isFeatured: productData.isFeatured
+                                            ? 'true'
+                                            : 'false',
+                                      ),
+                                    ),
+                                  );
+                                } else if (value == 'delete') {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => ConfirmDialog(
+                                      title: 'Delete Product',
+                                      content:
+                                          'Are you sure you want to delete this product?',
+                                      onConfirm: () async {
+                                        // final success = await vendorProductController
+                                        //     .deleteProduct(productData.id);
+                                        // if (success) {
+                                        //   onProductDeleted?.call();
+                                        //   Navigator.of(context).pop();
+                                        // }
+
+                                        await vendorProductController
+                                            .deleteProduct(productData.id);
+                                      },
+                                    ),
+                                  );
+                                }
+                              },
+                              itemBuilder: (context) => const [
+                                PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Edit'),
+                                ),
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Delete'),
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      } else if (value == 'delete') {
-                        showDialog(
-                          context: context,
-                          builder: (context) => ConfirmDialog(
-                            title: 'Delete Product',
-                            content:
-                                'Are you sure you want to delete this product?',
-                            onConfirm: () async {
-                              
-                              // final success = await vendorProductController
-                              //     .deleteProduct(productData.id);
-                              // if (success) {
-                              //   onProductDeleted?.call();
-                              //   Navigator.of(context).pop();
-                              // }
-                              
-                              await vendorProductController
-                                  .deleteProduct(productData.id);
-                            },
-                          ),
-                        );
-                      }
-                    },
-                    itemBuilder: (context) => const [
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Text('Edit'),
+                        ],
                       ),
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Text('Delete'),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       productData.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
@@ -152,7 +156,8 @@ class ProductCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.amber,
                       ),
-                      padding: const EdgeInsets.all(1.5), // optional for spacing
+                      padding:
+                          const EdgeInsets.all(1.5), // optional for spacing
                       child: Text(
                         '${productData.price} ${productData.currency}',
                         style: const TextStyle(
