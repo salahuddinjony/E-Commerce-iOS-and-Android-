@@ -40,12 +40,13 @@ mixin MixinCreateOrder {
       debugPrint('Error: Client ID not found');
       return false;
     }
+    final int totalPrice = price * quantity;
 
     try {
       final orderData = {
         "vendor": vendorId,
         "client": clientId,
-        "price": price,
+        "price": totalPrice,
         "products": [
           {"productId": ProductId, "quantity": quantity}
         ],

@@ -195,47 +195,58 @@ class OrderOverviewScreen extends StatelessWidget {
                       // ignore
                     }
 
-                    final paymentCompleted =
-                        paymentResult['success'] as bool? ?? false;
-                    final sessionId = paymentResult['sessionId'] as String?;
+                    // paymentResult can be Map (from PaymentWebViewScreen) or bool
+                    bool paymentCompleted = false;
+                    String? sessionId;
+                    if (paymentResult.containsKey('success')) {
+                      paymentCompleted = paymentResult['success'] == true;
+                      sessionId = paymentResult['sessionId'] as String?;
+                    } else if (paymentResult is bool) {
+                      paymentCompleted = paymentResult as bool;
+                    }
 
                     debugPrint(
                         '=== Payment Result ===');
                     debugPrint('Payment completed: $paymentCompleted');
                     debugPrint('Session ID: $sessionId');
 
-                    if (!paymentCompleted) {
-                      debugPrint('❌ Payment was not completed - aborting order creation');
-                      toastMessage(message: 'Payment was not completed');
-                      return;
-                    }
+                    bool isOrderSuccess = false;
+                    String status = 'failed';
 
-                    // ✅ Payment succeeded - now create the order
-                    debugPrint('✅ Payment successful - Creating order...');
-                    final isOrderSuccess = await controller.createGeneralOrder(
-                      productId: productId,
-                      vendorId: vendorId,
-                      sessionId: sessionId ?? '',
-                    );
+                    if (paymentCompleted) {
+                      // ✅ Payment succeeded - now create the order
+                      debugPrint('✅ Payment successful - Creating order...');
+                      isOrderSuccess = await controller.createGeneralOrder(
+                        productId: productId,
+                        vendorId: vendorId,
+                        sessionId: sessionId ?? '',
+                      );
+                      status = isOrderSuccess ? 'success' : 'failed';
 
-                    if (isOrderSuccess) {
-                      // Show success page
+                      // Only go to PaymentSuccessPage if payment succeeded
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => PaymentSuccessPage(
-                            isOrderSuccess: true,
+                            isOrderSuccess: isOrderSuccess,
                             amountPaid: total.toString(),
                             transactionId: sessionId ?? 'N/A',
-                            status: 'success',
+                            status: status,
                           ),
                         ),
                       );
-                      toastMessage(message: 'Order created successfully!');
+
+                      if (isOrderSuccess) {
+                        toastMessage(message: 'Order created successfully!');
+                      } else {
+                        toastMessage(
+                          message: 'Payment succeeded but order creation failed',
+                          color: Colors.red,
+                        );
+                      }
                     } else {
-                      toastMessage(
-                        message: 'Payment succeeded but order creation failed',
-                        color: Colors.red,
-                      );
+                      debugPrint('❌ Payment was not completed - aborting order creation');
+                      toastMessage(message: 'Payment was not completed');
+                      // Do not navigate to PaymentSuccessPage
                     }
                   } catch (e, st) {
                     debugPrint("Payment error: $e\n$st");
