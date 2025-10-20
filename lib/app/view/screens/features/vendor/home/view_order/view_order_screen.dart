@@ -109,12 +109,12 @@ class ViewOrderScreen extends StatelessWidget {
                   timeAgo: '',
                   color: Color(OrderConstants.getStatusColor(o.status)),
                   imageUrl: AppConstants.demoImage,
-                  onTap: () async {
+                  onTap: ()  {
                     final tag = 'order_${o.id}';
                     final controller = Get.isRegistered<ViewOrderDetailsController>(tag: tag)
                         ? Get.find<ViewOrderDetailsController>(tag: tag)
                         : Get.put(ViewOrderDetailsController(o), tag: tag);
-                    await controller.refreshOrder(o.id);
+                    controller.refreshOrder(o.id);
                     context.pushNamed(RoutePath.viewOrderDetails, extra: {'order': o});
                   },
                 );
