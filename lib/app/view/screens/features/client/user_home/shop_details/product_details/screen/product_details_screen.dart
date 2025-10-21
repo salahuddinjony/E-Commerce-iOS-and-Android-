@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:get/get.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
@@ -60,10 +61,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
                 child: CachedNetworkImage(
                   imageUrl: product.images.isNotEmpty
-                      ? product.images.first.replaceFirst(
-                          'http://10.10.20.19:5007',
-                          'https://gmosley-uteehub-backend.onrender.com',
-                        )
+                      ? product.images.first
                       : AppConstants.teeShirt,
                   fit: BoxFit.contain,
                   width: 400,
@@ -93,7 +91,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
             // Price
             Container(
-              width: 80,
+              width: 80.w,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 color: Colors.green.shade50,
