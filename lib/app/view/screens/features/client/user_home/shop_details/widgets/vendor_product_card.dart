@@ -28,10 +28,7 @@ class VendorProductCard extends StatelessWidget {
               top: Radius.circular(12),
             ),
             child: CustomNetworkImage(
-              imageUrl: imageUrl.replaceFirst(
-                'http://10.10.20.19:5007',
-                'https://gmosley-uteehub-backend.onrender.com',
-              ),
+              imageUrl: imageUrl,
               height: 100.h,
               width: double.infinity,
               boxShape: BoxShape.rectangle,
@@ -45,8 +42,10 @@ class VendorProductCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
+                  maxLines: 1,
+                  
                   productName,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                 ),
                 const SizedBox(height: 4),
                 Text(

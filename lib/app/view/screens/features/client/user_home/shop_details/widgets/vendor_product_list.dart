@@ -28,7 +28,7 @@ class VendorProductList extends StatelessWidget {
             icon: Icons.shopping_bag_outlined);
       }
       return SizedBox(
-        height: 180, // height to fit the card + padding
+        height: 180.h, // height to fit the card + padding
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: productItems.length,
