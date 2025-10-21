@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -37,49 +39,62 @@ mixin DocumentMixin on ProfileStateMixin {
       return;
     }
 
-    const oldHost = '10.10.20.19:5007';
-    const newBase = 'https://gmosley-uteehub-backend.onrender.com';
     String finalUrl = url.trim();
-    if (finalUrl.contains(oldHost)) {
-      final u = Uri.parse(finalUrl);
-      finalUrl = '$newBase${u.path}${u.query.isNotEmpty ? '?${u.query}' : ''}';
-    }
-    if (!finalUrl.startsWith('http')) {
-      finalUrl = '$newBase${finalUrl.startsWith('/') ? '' : '/'}$finalUrl';
-    }
-
+    // If local file, open directly
     if (finalUrl.startsWith('file://') || finalUrl.startsWith('/')) {
       await OpenFilex.open(finalUrl.replaceFirst('file://', ''));
       return;
     }
 
     try {
+      // Debug log for troubleshooting
+      debugPrint('[Document Download] URL: $finalUrl');
+      final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
+      debugPrint('[Document Download] Token: $token');
+
       // Reset progress state
       isDownloading.value = true;
       downloadProgress.value = 0.0;
-      downloadingFileName.value = '';
 
-      final token = await SharePrefsHelper.getString(AppConstants.bearerToken);
-      final headers = {
-        'Accept': '*/*',
-        if (token.isNotEmpty) 'Authorization': 'Bearer $token',
-      };
       final uri = Uri.parse(finalUrl);
+      // If S3 URL (any region/host), skip Authorization header
+      final hostLower = uri.host.toLowerCase();
+      final isS3 = hostLower.contains('.s3.');
+      Map<String, String> headers = {'Accept': '*/*'};
+      if (!isS3 && token.isNotEmpty) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+      debugPrint('[Document Download] Headers (final): $headers');
       final request = http.Request('GET', uri);
+      request.headers.clear();
       request.headers.addAll(headers);
       final streamed = await request.send();
       if (streamed.statusCode != 200) {
-        EasyLoading.showError('Download failed (${streamed.statusCode})');
+        // Try to read error body for more info
+        String errorMsg = 'Download failed (${streamed.statusCode})';
+        try {
+          final errorBody = await streamed.stream.bytesToString();
+          if (errorBody.isNotEmpty) {
+            errorMsg += '\nServer response: $errorBody';
+          }
+        } catch (e) {
+          debugPrint('[Document Download] Error reading error body: $e');
+        }
+        EasyLoading.showError(errorMsg);
         isDownloading.value = false;
         return;
       }
 
-      String fileName = uri.pathSegments.isNotEmpty ? uri.pathSegments.last : 'document';
+      String fileName =
+          uri.pathSegments.isNotEmpty ? uri.pathSegments.last : 'document';
       if (!fileName.contains('.')) {
         final ct = streamed.headers['content-type'] ?? '';
-        if (ct.contains('pdf')) fileName += '.pdf';
-        else if (ct.contains('png')) fileName += '.png';
-        else if (ct.contains('jpeg') || ct.contains('jpg')) fileName += '.jpg';
+        if (ct.contains('pdf'))
+          fileName += '.pdf';
+        else if (ct.contains('png'))
+          fileName += '.png';
+        else if (ct.contains('jpeg') || ct.contains('jpg'))
+          fileName += '.jpg';
         else if (ct.contains('plain')) fileName += '.txt';
       }
       downloadingFileName.value = fileName;
@@ -107,9 +122,10 @@ mixin DocumentMixin on ProfileStateMixin {
           EasyLoading.showError('Cannot open file');
         }
       }
-    } catch (_) {
+    } catch (e) {
       isDownloading.value = false;
-      EasyLoading.showError('Open failed');
+      EasyLoading.showError('Open failed: ${e.toString()}');
+      debugPrint('[Document Download] Exception: $e');
     }
   }
 }
