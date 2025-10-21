@@ -62,7 +62,7 @@ static String getWallet({required String id}){
   return "$baseUrl/wallet/retrieve/user/$id";
 }
 
-static String withdrawWallet= "$baseUrl/wallet/withdraw";
+static String withdrawWallet= "/wallet/withdraw";
 
 
   //=================Order=================
