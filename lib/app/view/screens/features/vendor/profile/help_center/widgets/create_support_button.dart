@@ -17,7 +17,7 @@ class CreateSupportButton extends StatelessWidget {
           height: 40.h,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColors.brightCyan, AppColors.brightCyan.withOpacity(0.8)],
+              colors: [AppColors.brightCyan, AppColors.brightCyan.withValues(alpha: .8)],
             ),
             borderRadius: BorderRadius.circular(9.r),
           ),

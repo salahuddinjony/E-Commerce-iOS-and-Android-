@@ -104,9 +104,9 @@ class _ChatHeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.brightCyan.withOpacity(0.1),
+        color: AppColors.brightCyan.withValues(alpha: .1),
         border: Border(
-          bottom: BorderSide(color: AppColors.borderColor.withOpacity(0.3)),
+          bottom: BorderSide(color: AppColors.borderColor.withValues(alpha: .3)),
         ),
       ),
       child: Row(

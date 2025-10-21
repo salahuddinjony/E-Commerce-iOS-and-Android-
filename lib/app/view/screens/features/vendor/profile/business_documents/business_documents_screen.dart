@@ -75,7 +75,7 @@ class BusinessDocumentsScreen extends StatelessWidget {
                       border: Border.all(color: Colors.grey.shade300),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withValues(alpha: .04),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -89,7 +89,7 @@ class BusinessDocumentsScreen extends StatelessWidget {
                           height: 34.r,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: .12),
                             borderRadius: BorderRadius.circular(8.r),
                           ),
                           child: CustomText(
@@ -135,7 +135,7 @@ class BusinessDocumentsScreen extends StatelessWidget {
                                       onTap: () => controller.clearFile(index),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.redAccent.withOpacity(0.12),
+                                          color: Colors.redAccent.withValues(alpha: .12),
                                           shape: BoxShape.circle,
                                         ),
                                         padding: EdgeInsets.all(4),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import '../models/custom_order_response_model.dart';
@@ -29,7 +28,7 @@ class CustomOrderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.08),
+            color: Colors.grey.withValues(alpha: .08),
             spreadRadius: 10,
             blurRadius: 5,
             offset: Offset(0, 2.h),

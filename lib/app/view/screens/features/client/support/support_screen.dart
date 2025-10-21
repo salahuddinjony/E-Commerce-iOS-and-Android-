@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local/app/utils/custom_assets/assets.gen.dart';
-import 'package:local/app/view/common_widgets/profile_card_row/profile_card_row.dart';
-
 import '../../../../../core/route_path.dart';
 
 import 'package:local/app/utils/app_colors/app_colors.dart';
