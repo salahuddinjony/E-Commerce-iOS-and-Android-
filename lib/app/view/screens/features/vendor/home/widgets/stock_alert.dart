@@ -58,10 +58,7 @@ class StockAlert extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CustomNetworkImage(
-                          imageUrl: product.images.first.replaceFirst(
-                            'http://10.10.20.19:5007',
-                            'https://gmosley-uteehub-backend.onrender.com',
-                          ),
+                          imageUrl: product.images.first,
                           height: 119,
                           width: 119,
                         ),
@@ -75,7 +72,7 @@ class StockAlert extends StatelessWidget {
                         CustomText(
                           font: CustomFont.poppins,
                           color: AppColors.darkNaturalGray,
-                          text: 'Price: \$22.20 ',
+                          text: 'Price: \$${product.price.toString()}',
                           fontWeight: FontWeight.w500,
                           fontSize: 12.sp,
                           bottom: 10.h,

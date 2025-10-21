@@ -261,7 +261,7 @@ class _PaymentWebViewContentState extends State<_PaymentWebViewContent> {
                   preferredSize: const Size.fromHeight(3),
                   child: LinearProgressIndicator(
                     value: _loadingProgress / 100,
-                    backgroundColor: AppColors.white.withOpacity(0.3),
+                    backgroundColor: AppColors.white.withValues(alpha: 0.3),
                     valueColor: const AlwaysStoppedAnimation<Color>(AppColors.white),
                   ),
                 )

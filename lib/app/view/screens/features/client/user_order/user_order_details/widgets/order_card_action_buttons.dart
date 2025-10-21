@@ -160,11 +160,33 @@ class OrderCardActionButtons extends StatelessWidget {
       if (paymentCompleted) {
         // ✅ Payment succeeded - now accept the order
         debugPrint('✅ Payment successful - Accepting order...');
-        isOrderSuccess = await controller.acceptOrder(
-          orderId: orderData.id,
-          sessionId: sessionId,
-          action: 'accept_offer',
+
+        // Show finalizing loader while accepting the order
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          barrierColor: Colors.black45,
+          builder: (ctx) => const PaymentLoadingDialog(),
         );
+
+        try {
+          isOrderSuccess = await controller.acceptOrder(
+            orderId: orderData.id,
+            sessionId: sessionId,
+            action: 'accept_offer',
+          );
+        } catch (e) {
+          debugPrint('acceptOrder error: $e');
+          isOrderSuccess = false;
+        }
+
+        // close finalizing loader
+        try {
+          if (Navigator.of(context, rootNavigator: true).canPop()) {
+            Navigator.of(context, rootNavigator: true).pop();
+          }
+        } catch (_) {}
+
         status = isOrderSuccess ? 'success' : 'failed';
 
         // Only go to PaymentSuccessPage if payment succeeded

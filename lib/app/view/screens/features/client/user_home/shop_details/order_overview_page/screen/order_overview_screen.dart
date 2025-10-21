@@ -216,14 +216,54 @@ class OrderOverviewScreen extends StatelessWidget {
                     if (paymentCompleted) {
                       // ✅ Payment succeeded - now create the order
                       debugPrint('✅ Payment successful - Creating order...');
-                      isOrderSuccess = await controller.createGeneralOrder(
-                        productId: productId,
-                        vendorId: vendorId,
-                        sessionId: sessionId ?? '',
+
+                      // Show a finalizing loader while we create the order
+                      showDialog<void>(
+                        context: context,
+                        barrierDismissible: false,
+                        barrierColor: Colors.black45,
+                        builder: (ctx) {
+                          return WillPopScope(
+                            onWillPop: () async => false,
+                            child: AlertDialog(
+                              backgroundColor: Colors.white,
+                              content: SizedBox(
+                                height: 80,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    CircularProgressIndicator(),
+                                    SizedBox(height: 12),
+                                    Text('Finalizing order...', style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       );
+
+                      try {
+                        isOrderSuccess = await controller.createGeneralOrder(
+                          productId: productId,
+                          vendorId: vendorId,
+                          sessionId: sessionId ?? '',
+                        );
+                      } catch (e) {
+                        debugPrint('Create order error: $e');
+                        isOrderSuccess = false;
+                      }
+
+                      // close finalizing loader
+                      try {
+                        if (Navigator.of(context, rootNavigator: true).canPop()) {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        }
+                      } catch (_) {}
+
                       status = isOrderSuccess ? 'success' : 'failed';
 
-                      // Only go to PaymentSuccessPage if payment succeeded
+                      // Navigate to PaymentSuccessPage
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => PaymentSuccessPage(
