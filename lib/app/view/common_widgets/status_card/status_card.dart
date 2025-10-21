@@ -56,13 +56,13 @@ class StatussCard extends StatelessWidget {
             SizedBox(height: 6.h),
             loading
               ? Shimmer.fromColors(
-                  baseColor: Colors.white.withOpacity(0.3),
+                  baseColor: Colors.white.withValues(alpha: .3),
                   highlightColor: Colors.white,
                   child: Container(
                     width: 40.w,
                     height: 16.h,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.4),
+                      color: Colors.white.withValues(alpha: .4),
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                   ),

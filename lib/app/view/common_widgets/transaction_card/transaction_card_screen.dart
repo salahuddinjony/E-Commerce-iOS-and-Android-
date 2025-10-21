@@ -90,7 +90,7 @@ class TransactionCard extends StatelessWidget {
                         child: Text(
                           "$amount\$",
                           style: TextStyle(
-                            color: primaryColor.withOpacity(0.7),
+                            color: primaryColor.withValues(alpha: .7),
                             fontWeight: FontWeight.w800,
                             fontSize: 20.sp,
                           ),
@@ -129,7 +129,7 @@ class TransactionCard extends StatelessWidget {
                         child: Icon(
                           Icons.copy_rounded,
                           size: 16.sp,
-                          color: Colors.grey.withOpacity(0.7),
+                          color: Colors.grey.withValues(alpha: .7),
                         ),
                       ),
                     ],

@@ -30,7 +30,7 @@ class MessageBubble extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                   decoration: BoxDecoration(
                     gradient: isVendor
-                        ? LinearGradient(colors: [AppColors.brightCyan, AppColors.brightCyan.withOpacity(0.8)])
+                        ? LinearGradient(colors: [AppColors.brightCyan, AppColors.brightCyan.withValues(alpha: 0.8)])
                         : isClient
                             ? LinearGradient(colors: [Colors.orange, Colors.deepOrange])
                             : LinearGradient(colors: [Colors.grey[200]!, Colors.grey[100]!]),
@@ -47,7 +47,7 @@ class MessageBubble extends StatelessWidget {
                                 : isClient
                                     ? Colors.orange
                                     : Colors.grey)
-                            .withOpacity(0.2),
+                            .withValues(alpha: 0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -68,7 +68,7 @@ class MessageBubble extends StatelessWidget {
                     text: message.sentAt?.getDateTime() ?? '',
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.darkNaturalGray.withOpacity(0.6),
+                    color: AppColors.darkNaturalGray.withValues(alpha: 0.6),
                   ),
                 ),
               ],

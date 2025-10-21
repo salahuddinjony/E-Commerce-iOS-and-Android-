@@ -21,8 +21,8 @@ class EmptyState extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        AppColors.brightCyan.withOpacity(0.1),
-                        AppColors.brightCyan.withOpacity(0.05),
+                        AppColors.brightCyan.withValues(alpha: 0.1),
+                        AppColors.brightCyan.withValues(alpha: .05),
                       ],
                     ),
                     shape: BoxShape.circle,
