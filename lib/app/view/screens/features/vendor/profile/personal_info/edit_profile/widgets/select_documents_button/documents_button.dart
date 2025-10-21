@@ -11,7 +11,11 @@ Widget buildDocChip(String url, ProfileController profileController) {
     final progress = profileController.downloadProgress.value;
     final percent = (progress * 100).clamp(0, 100).toInt();
     return InkWell(
-      onTap: () => profileController.openDocument(url),
+      onTap: () {
+        profileController.isDownloading.value = true;
+        profileController.downloadingFileName.value = name;
+        profileController.openDocument(url);
+      },
       child: Chip(
         backgroundColor: Colors.white,
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

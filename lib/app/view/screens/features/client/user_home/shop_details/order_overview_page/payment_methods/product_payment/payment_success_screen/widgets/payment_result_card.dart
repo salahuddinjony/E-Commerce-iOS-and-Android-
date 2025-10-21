@@ -354,30 +354,30 @@ class PaymentResultCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 10.h),
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton.icon(
-                            icon: const Icon(Icons.download,
-                                color: Colors.blue, size: 20),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.blue,
-                              padding: EdgeInsets.symmetric(vertical: 14.h),
-                              side: BorderSide(color: Colors.blue, width: 2.5),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                            ),
-                            label: Text('Download Receipt',
-                                style: TextStyle(
-                                    fontSize: 16.sp, color: Colors.blue)),
-                            onPressed: () async {
-                              if (onDownload != null) {
-                                onDownload!();
-                              } else {
-                                await _downloadReceipt();
-                              }
-                            },
-                          ),
-                        ),
+                        // SizedBox(
+                        //   width: double.infinity,
+                        //   child: OutlinedButton.icon(
+                        //     icon: const Icon(Icons.download,
+                        //         color: Colors.blue, size: 20),
+                        //     style: OutlinedButton.styleFrom(
+                        //       foregroundColor: Colors.blue,
+                        //       padding: EdgeInsets.symmetric(vertical: 14.h),
+                        //       side: BorderSide(color: Colors.blue, width: 2.5),
+                        //       shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(12)),
+                        //     ),
+                        //     label: Text('Download Receipt',
+                        //         style: TextStyle(
+                        //             fontSize: 16.sp, color: Colors.blue)),
+                        //     onPressed: () async {
+                        //       if (onDownload != null) {
+                        //         onDownload!();
+                        //       } else {
+                        //         await _downloadReceipt();
+                        //       }
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     );
                   }
