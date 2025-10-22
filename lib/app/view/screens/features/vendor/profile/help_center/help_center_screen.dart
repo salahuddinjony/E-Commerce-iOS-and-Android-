@@ -104,9 +104,9 @@ class _ChatHeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.brightCyan.withOpacity(0.1),
+        color: AppColors.brightCyan.withValues(alpha: .1),
         border: Border(
-          bottom: BorderSide(color: AppColors.borderColor.withOpacity(0.3)),
+          bottom: BorderSide(color: AppColors.borderColor.withValues(alpha: .3)),
         ),
       ),
       child: Row(
@@ -193,7 +193,7 @@ class _ChatMessages extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [AppColors.white, AppColors.brightCyan.withOpacity(0.05)],
+          colors: [AppColors.white, AppColors.brightCyan.withValues(alpha: .05)],
         ),
       ),
       child: ListView.builder(
@@ -235,7 +235,7 @@ class _MessageBubble extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                   decoration: BoxDecoration(
                     gradient: alignRight
-                        ? LinearGradient(colors: [AppColors.brightCyan, AppColors.brightCyan.withOpacity(0.8)])
+                        ? LinearGradient(colors: [AppColors.brightCyan, AppColors.brightCyan.withValues(alpha: .8)])
                         : isClient
                             ? LinearGradient(colors: [Colors.orange, Colors.deepOrange])
                             : LinearGradient(colors: [Colors.grey[200]!, Colors.grey[100]!]),
@@ -252,7 +252,7 @@ class _MessageBubble extends StatelessWidget {
                                 : isClient
                                     ? Colors.orange
                                     : Colors.grey)
-                            .withOpacity(0.2),
+                            .withValues(alpha: 0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -273,7 +273,7 @@ class _MessageBubble extends StatelessWidget {
                     text: message.sentAt?.getDateTime() ?? '',
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.darkNaturalGray.withOpacity(0.6),
+                    color: AppColors.darkNaturalGray.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -299,14 +299,14 @@ class _Avatar extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isMenIcon
-              ? [AppColors.brightCyan, AppColors.brightCyan.withOpacity(0.7)]
+              ? [AppColors.brightCyan, AppColors.brightCyan.withValues(alpha: .7)]
               : [Colors.orange, Colors.deepOrange],
         ),
         shape: BoxShape.circle,
         border: Border.all(color: AppColors.white, width: 2),
         boxShadow: [
           BoxShadow(
-            color: (isMenIcon ? AppColors.brightCyan : Colors.orange).withOpacity(0.3),
+            color: (isMenIcon ? AppColors.brightCyan : Colors.orange).withValues(alpha: .3),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -336,7 +336,7 @@ class _CreateSupportButton extends StatelessWidget {
           height: 40.h,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [AppColors.brightCyan, AppColors.brightCyan.withOpacity(0.8)],
+              colors: [AppColors.brightCyan, AppColors.brightCyan.withValues(alpha: .8)],
             ),
             borderRadius: BorderRadius.circular(9.r),
           ),
@@ -405,7 +405,7 @@ class _FormHeader extends StatelessWidget {
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.brightCyan, AppColors.brightCyan.withOpacity(0.8)],
+          colors: [AppColors.brightCyan, AppColors.brightCyan.withValues(alpha: .8)],
         ),
         borderRadius: BorderRadius.circular(12.r),
       ),
@@ -414,7 +414,7 @@ class _FormHeader extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
-              color: AppColors.white.withOpacity(0.2),
+              color: AppColors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Icon(
@@ -439,7 +439,7 @@ class _FormHeader extends StatelessWidget {
                   text: 'We\'re here to help you 24/7',
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.white.withOpacity(0.9),
+                  color: AppColors.white.withValues(alpha: .9),
                 ),
               ],
             ),
@@ -476,16 +476,16 @@ class _SubjectField extends StatelessWidget {
           controller: controller,
           decoration: InputDecoration(
             hintText: 'e.g., Query about account',
-            hintStyle: TextStyle(color: AppColors.darkNaturalGray.withOpacity(0.5)),
+            hintStyle: TextStyle(color: AppColors.darkNaturalGray.withValues(alpha: .5)),
             filled: true,
-            fillColor: AppColors.brightCyan.withOpacity(0.05),
+            fillColor: AppColors.brightCyan.withValues(alpha: .05),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: AppColors.borderColor.withOpacity(0.3)),
+              borderSide: BorderSide(color: AppColors.borderColor.withValues(alpha: .3)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
@@ -526,16 +526,16 @@ class _MessageField extends StatelessWidget {
           maxLines: 6,
           decoration: InputDecoration(
             hintText: 'Describe your issue in detail...',
-            hintStyle: TextStyle(color: AppColors.darkNaturalGray.withOpacity(0.5)),
+            hintStyle: TextStyle(color: AppColors.darkNaturalGray.withValues(alpha: .5)),
             filled: true,
-            fillColor: AppColors.brightCyan.withOpacity(0.05),
+            fillColor: AppColors.brightCyan.withValues(alpha: .05),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: AppColors.borderColor.withOpacity(0.3)),
+              borderSide: BorderSide(color: AppColors.borderColor.withValues(alpha: .3)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
@@ -563,12 +563,12 @@ class _SendButton extends StatelessWidget {
         gradient: LinearGradient(
           colors: supportController.isSending.value
               ? [Colors.grey, Colors.grey]
-              : [AppColors.brightCyan, AppColors.brightCyan.withOpacity(0.8)],
+              : [AppColors.brightCyan, AppColors.brightCyan.withValues(alpha:0.8)],
         ),
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.brightCyan.withOpacity(0.3),
+            color: AppColors.brightCyan.withValues(alpha: .3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -653,8 +653,8 @@ class _EmptyState extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        AppColors.brightCyan.withOpacity(0.1),
-                        AppColors.brightCyan.withOpacity(0.05),
+                        AppColors.brightCyan.withValues(alpha: .1),
+                        AppColors.brightCyan.withValues(alpha: .05),
                       ],
                     ),
                     shape: BoxShape.circle,

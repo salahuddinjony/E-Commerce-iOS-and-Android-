@@ -1,8 +1,9 @@
 class ApiUrl {
-  static const baseUrl = "http://10.10.20.19:5007/v1/";
-  // static const baseUrl = "https://gmosley-uteehub-backend.onrender.com/v1/";
-  static const networkUrl = "http://10.10.20.19:5007/v1/";
-  // static const networkUrl = "https://gmosley-uteehub-backend.onrender.com/v1/";
+  // static const baseUrl = "http://10.10.20.19:5007/v1/";
+  static const baseUrl = "http://51.20.229.118:5007/v1/";
+  // static const networkUrl = "http://10.10.20.19:5007/v1/";
+  static const networkUrl = "http://51.20.229.118:5007/v1/";
+  static const socketUrl = "http://51.20.229.118:5007";
 
   ///================================= User Authentication url==========================
   static const login = "/user/auth/login";
@@ -61,7 +62,7 @@ static String getWallet({required String id}){
   return "$baseUrl/wallet/retrieve/user/$id";
 }
 
-static String withdrawWallet= "$baseUrl/wallet/withdraw";
+static String withdrawWallet= "/wallet/withdraw";
 
 
   //=================Order=================

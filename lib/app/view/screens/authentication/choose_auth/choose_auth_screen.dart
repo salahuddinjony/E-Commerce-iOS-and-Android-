@@ -5,7 +5,6 @@ import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
 import 'package:local/app/utils/custom_assets/assets.gen.dart';
-import 'package:local/app/view/common_widgets/custom_auth_container/custom_auth_container.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 
 class ChooseAuthScreen extends StatelessWidget {

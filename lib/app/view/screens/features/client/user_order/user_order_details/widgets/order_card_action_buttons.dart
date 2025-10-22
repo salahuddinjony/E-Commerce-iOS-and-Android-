@@ -144,45 +144,75 @@ class OrderCardActionButtons extends StatelessWidget {
         // ignore
       }
 
-      final paymentCompleted = paymentResult['success'] as bool? ?? false;
-      final sessionId = paymentResult['sessionId'] as String?;
-
+      // paymentResult can be Map (from PaymentWebViewScreen) or bool
+      bool paymentCompleted = false;
+      String? sessionId;
+      paymentCompleted = paymentResult['success'] == true;
+      sessionId = paymentResult['sessionId'] as String?;
+    
       debugPrint('=== Payment Result ===');
       debugPrint('Payment completed: $paymentCompleted');
       debugPrint('Session ID: $sessionId');
 
-      if (!paymentCompleted) {
-        debugPrint('❌ Payment was not completed - aborting order acceptance');
-        toastMessage(message: 'Payment was not completed');
-        return;
-      }
+      bool isOrderSuccess = false;
+      String status = 'failed';
 
-      // ✅ Payment succeeded - now accept the order
-      debugPrint('✅ Payment successful - Accepting order...');
-      final isOrderSuccess = await controller.acceptOrder(
-        orderId: orderData.id,
-        sessionId: sessionId,
-        action: 'accept_offer',
-      );
+      if (paymentCompleted) {
+        // ✅ Payment succeeded - now accept the order
+        debugPrint('✅ Payment successful - Accepting order...');
 
-      if (isOrderSuccess) {
-        // Show success page
+        // Show finalizing loader while accepting the order
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          barrierColor: Colors.black45,
+          builder: (ctx) => const PaymentLoadingDialog(),
+        );
+
+        try {
+          isOrderSuccess = await controller.acceptOrder(
+            orderId: orderData.id,
+            sessionId: sessionId,
+            action: 'accept_offer',
+          );
+        } catch (e) {
+          debugPrint('acceptOrder error: $e');
+          isOrderSuccess = false;
+        }
+
+        // close finalizing loader
+        try {
+          if (Navigator.of(context, rootNavigator: true).canPop()) {
+            Navigator.of(context, rootNavigator: true).pop();
+          }
+        } catch (_) {}
+
+        status = isOrderSuccess ? 'success' : 'failed';
+
+        // Only go to PaymentSuccessPage if payment succeeded
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => PaymentSuccessPage(
-              isOrderSuccess: true,
+              isOrderSuccess: isOrderSuccess,
               amountPaid: total.toString(),
               transactionId: orderData.id,
-              status: 'success',
+              status: status,
             ),
           ),
         );
-        toastMessage(message: 'Order accepted successfully!');
+
+        if (isOrderSuccess) {
+          toastMessage(message: 'Order accepted successfully!');
+        } else {
+          toastMessage(
+            message: 'Payment succeeded but order acceptance failed',
+            color: Colors.red,
+          );
+        }
       } else {
-        toastMessage(
-          message: 'Payment succeeded but order acceptance failed',
-          color: Colors.red,
-        );
+        debugPrint('❌ Payment was not completed - aborting order acceptance');
+        toastMessage(message: 'Payment was not completed');
+        // Do not navigate to PaymentSuccessPage
       }
     } catch (e, st) {
       debugPrint("Payment error: $e\n$st");

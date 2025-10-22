@@ -119,11 +119,13 @@ class ViewOrderDetails extends StatelessWidget {
                 'completed',
                 'cancelled',
                 'delivered',
+                'delivery-confirmed'
               ].contains(o.status)) ...[
                 SizedBox(height: 20.h),
                 ExpirationAlert(isNotExpired: controller.isNotExpired),
-                SizedBox(height: 20.h),
+               
               ],
+               SizedBox(height: 20.h),
               _statusMessageCard(o.status),
               if (![
                 'completed',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/global/helper/extension/extension.dart';
 import '../models/custom_order_response_model.dart';
@@ -20,19 +21,19 @@ class CustomOrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: .1),
-            spreadRadius: 30,
+            color: Colors.grey.withValues(alpha: .08),
+            spreadRadius: 10,
             blurRadius: 5,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2.h),
           ),
-        ], 
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,31 +43,30 @@ class CustomOrderCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Order: ${order.orderId}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 14.sp,
                   ),
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: Color(controller.getStatusColor(order.status)),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
                   controller.getStatusDisplayText(order.status),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 12,
+                    fontSize: 11.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 10.h),
           // Two horizontal rows: (Price + Payment) and (Quantity + Delivery/Date)
           Column(
             children: [

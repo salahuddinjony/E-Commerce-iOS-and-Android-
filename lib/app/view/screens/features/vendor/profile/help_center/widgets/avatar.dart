@@ -14,14 +14,14 @@ class Avatar extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isVendorOrClient
-              ? [AppColors.brightCyan, AppColors.brightCyan.withOpacity(0.7)]
+              ? [AppColors.brightCyan, AppColors.brightCyan.withValues(alpha:0.7)]
               : [Colors.orange, Colors.deepOrange],
         ),
         shape: BoxShape.circle,
         border: Border.all(color: AppColors.white, width: 2),
         boxShadow: [
           BoxShadow(
-            color: (isVendorOrClient ? AppColors.brightCyan : Colors.orange).withOpacity(0.3),
+            color: (isVendorOrClient ? AppColors.brightCyan : Colors.orange).withValues(alpha: 0.3),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

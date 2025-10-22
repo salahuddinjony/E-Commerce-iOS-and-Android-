@@ -195,47 +195,98 @@ class OrderOverviewScreen extends StatelessWidget {
                       // ignore
                     }
 
-                    final paymentCompleted =
-                        paymentResult['success'] as bool? ?? false;
-                    final sessionId = paymentResult['sessionId'] as String?;
+                    // paymentResult can be Map (from PaymentWebViewScreen) or bool
+                    bool paymentCompleted = false;
+                    String? sessionId;
+                    if (paymentResult.containsKey('success')) {
+                      paymentCompleted = paymentResult['success'] == true;
+                      sessionId = paymentResult['sessionId'] as String?;
+                    } else if (paymentResult is bool) {
+                      paymentCompleted = paymentResult as bool;
+                    }
 
                     debugPrint(
                         '=== Payment Result ===');
                     debugPrint('Payment completed: $paymentCompleted');
                     debugPrint('Session ID: $sessionId');
 
-                    if (!paymentCompleted) {
-                      debugPrint('❌ Payment was not completed - aborting order creation');
-                      toastMessage(message: 'Payment was not completed');
-                      return;
-                    }
+                    bool isOrderSuccess = false;
+                    String status = 'failed';
 
-                    // ✅ Payment succeeded - now create the order
-                    debugPrint('✅ Payment successful - Creating order...');
-                    final isOrderSuccess = await controller.createGeneralOrder(
-                      productId: productId,
-                      vendorId: vendorId,
-                      sessionId: sessionId ?? '',
-                    );
+                    if (paymentCompleted) {
+                      // ✅ Payment succeeded - now create the order
+                      debugPrint('✅ Payment successful - Creating order...');
 
-                    if (isOrderSuccess) {
-                      // Show success page
+                      // Show a finalizing loader while we create the order
+                      showDialog<void>(
+                        context: context,
+                        barrierDismissible: false,
+                        barrierColor: Colors.black45,
+                        builder: (ctx) {
+                          return WillPopScope(
+                            onWillPop: () async => false,
+                            child: AlertDialog(
+                              backgroundColor: Colors.white,
+                              content: SizedBox(
+                                height: 80,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    CircularProgressIndicator(),
+                                    SizedBox(height: 12),
+                                    Text('Finalizing order...', style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+
+                      try {
+                        isOrderSuccess = await controller.createGeneralOrder(
+                          productId: productId,
+                          vendorId: vendorId,
+                          sessionId: sessionId ?? '',
+                        );
+                      } catch (e) {
+                        debugPrint('Create order error: $e');
+                        isOrderSuccess = false;
+                      }
+
+                      // close finalizing loader
+                      try {
+                        if (Navigator.of(context, rootNavigator: true).canPop()) {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        }
+                      } catch (_) {}
+
+                      status = isOrderSuccess ? 'success' : 'failed';
+
+                      // Navigate to PaymentSuccessPage
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => PaymentSuccessPage(
-                            isOrderSuccess: true,
+                            isOrderSuccess: isOrderSuccess,
                             amountPaid: total.toString(),
                             transactionId: sessionId ?? 'N/A',
-                            status: 'success',
+                            status: status,
                           ),
                         ),
                       );
-                      toastMessage(message: 'Order created successfully!');
+
+                      if (isOrderSuccess) {
+                        toastMessage(message: 'Order created successfully!');
+                      } else {
+                        toastMessage(
+                          message: 'Payment succeeded but order creation failed',
+                          color: Colors.red,
+                        );
+                      }
                     } else {
-                      toastMessage(
-                        message: 'Payment succeeded but order creation failed',
-                        color: Colors.red,
-                      );
+                      debugPrint('❌ Payment was not completed - aborting order creation');
+                      toastMessage(message: 'Payment was not completed');
+                      // Do not navigate to PaymentSuccessPage
                     }
                   } catch (e, st) {
                     debugPrint("Payment error: $e\n$st");

@@ -16,15 +16,14 @@ class StatussCard extends StatelessWidget {
   final double cardHeight;
 
   const StatussCard({
-  
     super.key,
     required this.title,
     required this.value,
     required this.tealColor,
     required this.icon,
     required this.onTap,
-    this.cardWidth = 150, // tweak as needed
-    this.cardHeight = 190, // tweak as needed
+    this.cardWidth = 140, // smaller default for small screens
+    this.cardHeight = 150, // smaller default for small screens
     required this.loading,
     required this.status,
   });
@@ -36,64 +35,64 @@ class StatussCard extends StatelessWidget {
       child: Container(
         width: cardWidth.w,
         height: cardHeight.h,
-        margin: EdgeInsets.only(right: 10.r),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        margin: EdgeInsets.only(right: 8.w),
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
         decoration: BoxDecoration(
           color: tealColor,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 28),
-            const SizedBox(height: 8),
+            Icon(icon, color: Colors.white, size: 22.sp),
+            SizedBox(height: 6.h),
             Text(
               title,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: TextStyle(color: Colors.white, fontSize: 12.sp),
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 6.h),
             loading
               ? Shimmer.fromColors(
-                baseColor: Colors.white.withValues(alpha: .3),
-                highlightColor: Colors.white,
-                child: Container(
-                  width: 50,
-                  height: 20,
-                  decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: .4),
-                  borderRadius: BorderRadius.circular(4),
+                  baseColor: Colors.white.withValues(alpha: .3),
+                  highlightColor: Colors.white,
+                  child: Container(
+                    width: 40.w,
+                    height: 16.h,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: .4),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
                   ),
-                ),
                 )
               : Text(
-                value.padLeft(2, '0'),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  value.padLeft(2, '0'),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.sp,
+                  ),
                 ),
-                ),
-            const Spacer(), // Pushes button to bottom for uniform layout
+            Spacer(),
             OutlinedButton(
               onPressed: onTap,
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.white),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                minimumSize: const Size(0, 34),
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                minimumSize: Size(0, 28.h),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('view order', style: TextStyle(color: Colors.white, fontSize: 12)),
-                  SizedBox(width: 4),
-                  Icon(Icons.arrow_forward, color: Colors.white, size: 14),
+                  Text('view order', style: TextStyle(color: Colors.white, fontSize: 10.sp)),
+                  SizedBox(width: 2.w),
+                  Icon(Icons.arrow_forward, color: Colors.white, size: 12.sp),
                 ],
               ),
             ),

@@ -70,7 +70,7 @@ class BusinessVendorForm extends StatelessWidget {
             controller: controller.businessDeliveryOptionController,
             icon: Icons.delivery_dining,
             isDropdown: true,
-            dropdownOptions: const ['pickup', 'courier', 'pickupAndCourier'],
+            dropdownOptions: const ['Pickup', 'Courier', 'Pickup And Courier'],
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Select Delivery Option';

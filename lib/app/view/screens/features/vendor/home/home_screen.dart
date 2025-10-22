@@ -28,138 +28,153 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- 
-    
     return Scaffold(
       backgroundColor: AppColors.white,
-      bottomNavigationBar:  OwnerNav(
+      bottomNavigationBar: OwnerNav(
         currentIndex: 0,
       ),
-      body: Column(
-        children: [
-          //===============Top Appbar===========
-         OwnerAppbar(
-          scaffoldKey: GlobalKey<ScaffoldState>(),
-          notificationOnTap: () {
-            context.pushNamed(RoutePath.notificationScreen);
-          },
-          controller: notificationController,
-         ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.h),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //=================Total Earnings==========
-                    VendorTotalEarnings(
-                      controller: controller,
-                      notificationController: notificationController,
-                    ),
-
-                    SizedBox(
-                      height: 32.h,
-                    ),
-                    CustomText(
-                      font: CustomFont.poppins,
-                      color: AppColors.darkNaturalGray,
-                      text: ' Business Performance Overview',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18.sp,
-                      bottom: 10.h,
-                    ),
-                    // Cards Row
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Obx(() {
-                        final loading = orderController.isLoading.value;
-                        return Row(
-                          children: [
-                            StatussCard(
-                              onTap: () => context.pushNamed(
-                                RoutePath.viewOrderScreen,
-                                extra: {
-                                  'status': 'allOrder',
-                                  'orderController': orderController,
-                                },
-                              ),
-                              // title: 'Total Customs\nOrders', 
-                              title: 'Total Orders',
-                              value: orderController.totalCustomOrder.value.toString(),
-                              tealColor: AppColors.brightCyan,
-                              icon: Icons.shopping_cart,
-                              loading: loading,
-                              status: 'allOrder',
-                            ),
-                            StatussCard(
-                              onTap: () => context.pushNamed(
-                                RoutePath.viewOrderScreen,
-                                extra: {
-                                  'status': 'pendingOrder',
-                                  'orderController': orderController,
-                                },
-                              ),
-                              title: 'Customs Pending\nOrders',
-                              value: orderController.totalPendingOrder.value.toString(),
-                              tealColor: AppColors.brightCyan,
-                              icon: Icons.access_time,
-                              loading: loading,
-                              status: 'pendingOrder',
-                            ),
-                            StatussCard(
-                              onTap: () => context.pushNamed(
-                                RoutePath.viewOrderScreen,
-                                extra: {
-                                  'status': 'inProgressOrder',
-                                  'orderController': orderController,
-                                },
-                              ),
-                              title: 'Customs in-Progress\nOrders',
-                              value: orderController.totalInProgressOrder.value.toString(),
-                              tealColor: AppColors.brightCyan,
-                              icon: Icons.autorenew,
-                              loading: loading,
-                              status: 'inProgressOrder',
-                            ),
-                          ],
-                        );
-                      }),
-                    ),
-                    SizedBox(
-                      height: 32.h,
-                    ),
-                    CustomText(
-                      font: CustomFont.poppins,
-                      color: AppColors.darkNaturalGray,
-                      text: 'Best-Selling T-Shirts',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18.sp,
-                      bottom: 10.h,
-                    ),
-
-                    //==========Best Selling Product==============
-                    Obx(() => BestSellingProducts(controller: productsController, productsList: productsController.productItems.toList()),),
-                    SizedBox(
-                      height: 32.h,
-                    ),
-                    CustomText(
-                      font: CustomFont.poppins,
-                      color: AppColors.darkNaturalGray,
-                      text: 'Stock Alert Badge (Low Stock 🔴)',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18.sp,
-                      bottom: 10.h,
-                    ),
-
-                    //===========Stock Alert=============
-                    Obx(() => StockAlert(controller: productsController, productsList: productsController.productItems.toList()),),
-                  ],
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              children: [
+                // Top Appbar
+                OwnerAppbar(
+                  scaffoldKey: GlobalKey<ScaffoldState>(),
+                  notificationOnTap: () {
+                    context.pushNamed(RoutePath.notificationScreen);
+                  },
+                  controller: notificationController,
                 ),
-              ),
-            ),
-          ),
-        ],
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Total Earnings
+                          VendorTotalEarnings(
+                            controller: controller,
+                            notificationController: notificationController,
+                          ),
+                          SizedBox(height: 32.h),
+                          CustomText(
+                            font: CustomFont.poppins,
+                            color: AppColors.darkNaturalGray,
+                            text: ' Business Performance Overview',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18.sp,
+                            bottom: 10.h,
+                          ),
+                          // Cards Row
+                          SizedBox(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Obx(() {
+                                final loading = orderController.isLoading.value;
+                                return Row(
+                                  children: [
+                                    SizedBox(width: 8.w),
+                                    Container(
+                                      width: 140.w,
+                                      child: StatussCard(
+                                        onTap: () => context.pushNamed(
+                                          RoutePath.viewOrderScreen,
+                                          extra: {
+                                            'status': 'allOrder',
+                                            'orderController': orderController,
+                                          },
+                                        ),
+                                        title: 'Total Orders',
+                                        value: orderController.totalCustomOrder.value.toString(),
+                                        tealColor: AppColors.brightCyan,
+                                        icon: Icons.shopping_cart,
+                                        loading: loading,
+                                        status: 'allOrder',
+                                      ),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Container(
+                                      width: 140.w,
+                                      child: StatussCard(
+                                        onTap: () => context.pushNamed(
+                                          RoutePath.viewOrderScreen,
+                                          extra: {
+                                            'status': 'pendingOrder',
+                                            'orderController': orderController,
+                                          },
+                                        ),
+                                        title: 'Customs Pending\nOrders',
+                                        value: orderController.totalPendingOrder.value.toString(),
+                                        tealColor: AppColors.brightCyan,
+                                        icon: Icons.access_time,
+                                        loading: loading,
+                                        status: 'pendingOrder',
+                                      ),
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    Container(
+                                      width: 140.w,
+                                      child: StatussCard(
+                                        onTap: () => context.pushNamed(
+                                          RoutePath.viewOrderScreen,
+                                          extra: {
+                                            'status': 'inProgressOrder',
+                                            'orderController': orderController,
+                                          },
+                                        ),
+                                        title: 'Customs in-Progress\nOrders',
+                                        value: orderController.totalInProgressOrder.value.toString(),
+                                        tealColor: AppColors.brightCyan,
+                                        icon: Icons.autorenew,
+                                        loading: loading,
+                                        status: 'inProgressOrder',
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.w),
+                                  ],
+                                );
+                              }),
+                            ),
+                          ),
+                          SizedBox(height: 32.h),
+                          CustomText(
+                            font: CustomFont.poppins,
+                            color: AppColors.darkNaturalGray,
+                            text: 'Best-Selling T-Shirts',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18.sp,
+                            bottom: 10.h,
+                          ),
+                          // Best Selling Product
+                          Obx(() => BestSellingProducts(
+                            controller: productsController,
+                            productsList: productsController.productItems.toList(),
+                          )),
+                          SizedBox(height: 32.h),
+                          CustomText(
+                            font: CustomFont.poppins,
+                            color: AppColors.darkNaturalGray,
+                            text: 'Stock Alert Badge (Low Stock 🔴)',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18.sp,
+                            bottom: 10.h,
+                          ),
+                          // Stock Alert
+                          Obx(() => StockAlert(
+                            controller: productsController,
+                            productsList: productsController.productItems.toList(),
+                          )),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

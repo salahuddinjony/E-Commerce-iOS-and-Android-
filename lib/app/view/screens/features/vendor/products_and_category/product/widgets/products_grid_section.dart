@@ -120,8 +120,9 @@ class ProductsGridSection extends StatelessWidget {
         Obx(() => CustomButton(
               onTap: vendorProductController.isProductMutating.value
                   ? null
-                  : () async {
-                      await vendorProductController.fetchCategories();
+                  : ()  {
+                      // await vendorProductController.fetchCategories();
+                          vendorProductController.fetchCategories();
                       if (vendorProductController.categoriesData.isEmpty) {
                         Get.snackbar('Product', 'Add a category first');
                         return;

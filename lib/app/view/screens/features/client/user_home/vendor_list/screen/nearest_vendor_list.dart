@@ -23,7 +23,7 @@ class NearestVendorList extends StatelessWidget {
       itemBuilder: (context, index) {
         return ProfileCard(
           vendorItems: vendorList[index],
-          imageUrl: AppConstants.demoImage,
+          imageUrl: vendorList[index].image ?? AppConstants.demoImage,
         );
       },
     );
