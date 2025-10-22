@@ -345,7 +345,7 @@ class UserOrderController extends GetxController
     }
     
     debugPrint("Accepting order: $orderId with sessionId: $sessionId, action: $action");
-    final String orderStatus ='accepted';
+    final String orderStatus = status ?? 'accepted';
     
     try {
       return await customerOrderService.updateOrderStatusOrUpdateExtn(

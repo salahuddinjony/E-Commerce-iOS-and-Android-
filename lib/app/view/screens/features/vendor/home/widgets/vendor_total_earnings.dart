@@ -231,7 +231,8 @@ class VendorTotalEarnings extends StatelessWidget {
                                           color: controller.message.value.contains("Error") ||
                                                   controller.message.value.contains("error") ||
                                                   controller.message.value.contains("Insufficient") ||
-                                                  controller.message.value.contains("valid")
+                                                  controller.message.value.contains("not found") ||
+                                                  controller.message.value.contains("Invalid")
                                               ? Colors.red
                                               : Colors.green,
                                           fontSize: 12.sp,
