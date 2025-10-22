@@ -155,13 +155,40 @@ class HomePageController extends GetxController with MixinTransactionScreen, Ord
           await ApiClient.postData(ApiUrl.withdrawWallet, jsonEncode(body));
 
       if (response.statusCode == 200) {
+        // Try to extract API message from the response body
+        try {
+          final respBody = response.body;
+          if (respBody is Map && respBody.containsKey('message')) {
+            message.value = respBody['message']?.toString() ?? 'Withdrawal successful';
+          } else if (respBody is Map && respBody.containsKey('msg')) {
+            message.value = respBody['msg']?.toString() ?? 'Withdrawal successful';
+          } else {
+            message.value = 'Withdrawal request submitted';
+          }
+        } catch (e) {
+          // Fallback if body can't be parsed
+          message.value = 'Withdrawal request submitted';
+        }
+
         // Refresh wallet data after withdrawal
-         fetchWalletData();
-        EasyLoading.showSuccess("Withdrawal request submitted");
+        fetchWalletData();
+        EasyLoading.showSuccess(message.value);
         clearWithdrawAmount();
         AppRouter.route.pop();
       } else {
-        message.value = "Error processing withdrawal, Try again later";
+        // Attempt to parse error message from response body
+        try {
+          final respBody = response.body;
+          if (respBody is Map && respBody.containsKey('message')) {
+            message.value = respBody['message']?.toString() ?? 'Error processing withdrawal, Try again later';
+          } else if (respBody is Map && respBody.containsKey('error')) {
+            message.value = respBody['error']?.toString() ?? 'Error processing withdrawal, Try again later';
+          } else {
+            message.value = 'Error processing withdrawal, Try again later';
+          }
+        } catch (e) {
+          message.value = 'Error processing withdrawal, Try again later';
+        }
       }
     } catch (e) {
       print("Error processing withdrawal: $e");

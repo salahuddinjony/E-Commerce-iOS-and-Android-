@@ -401,6 +401,7 @@ class AuthController extends GetxController with PasswordConstraintController {
         },
       );
       toastMessage(message: responseData["message"]);
+      // EasyLoading.show(success: "Registration Successful. Please verify your email.");
     } else if (response.statusCode == 400) {
       EasyLoading.showError(responseData["error"]);
     } else {
