@@ -169,32 +169,32 @@ static String orderDateExtension({required String orderId}) {
 
 
 
-  // Normalize attachment URLs returned by backend (dev host -> public host)
-  // This ensures images use the public HTTPS host used by the app UI.
-  static String normalizeAttachmentUrl(String url) {
-    try {
-      if (url.isEmpty) return url;
-      // Known dev host to replace
-      const devHost = 'http://10.10.20.19:5007';
-      const publicHost = 'https://gmosley-uteehub-backend.onrender.com';
+  // // Normalize attachment URLs returned by backend (dev host -> public host)
+  // // This ensures images use the public HTTPS host used by the app UI.
+  // static String normalizeAttachmentUrl(String url) {
+  //   try {
+  //     if (url.isEmpty) return url;
+  //     // Known dev host to replace
+  //     const devHost = 'http://10.10.20.19:5007';
+  //     const publicHost = 'https://gmosley-uteehub-backend.onrender.com';
 
-      if (url.startsWith(devHost)) {
-        return url.replaceFirst(devHost, publicHost);
-      }
+  //     if (url.startsWith(devHost)) {
+  //       return url.replaceFirst(devHost, publicHost);
+  //     }
 
-      // If it's http and not the public host, convert scheme+host but keep path
-      final parsed = Uri.parse(url);
-      if (parsed.scheme == 'http' && parsed.host != Uri.parse(publicHost).host) {
-        final target = Uri(
-          scheme: 'https',
-          host: Uri.parse(publicHost).host,
-          path: parsed.path,
-          query: parsed.hasQuery ? parsed.query : null,
-        );
-        return target.toString();
-      }
-    } catch (_) {}
-    return url;
-  }
+  //     // If it's http and not the public host, convert scheme+host but keep path
+  //     final parsed = Uri.parse(url);
+  //     if (parsed.scheme == 'http' && parsed.host != Uri.parse(publicHost).host) {
+  //       final target = Uri(
+  //         scheme: 'https',
+  //         host: Uri.parse(publicHost).host,
+  //         path: parsed.path,
+  //         query: parsed.hasQuery ? parsed.query : null,
+  //       );
+  //       return target.toString();
+  //     }
+  //   } catch (_) {}
+  //   return url;
+  // }
 }
 
