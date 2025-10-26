@@ -118,7 +118,7 @@ class ChatController extends GetxController {
                 id: h.id.isNotEmpty ? h.id : const Uuid().v4(),
                 name: h.attachment.first.split('/').last,
                 size: 0,
-                uri: ApiUrl.normalizeAttachmentUrl(h.attachment.first),
+                uri: h.attachment.first,
                 metadata: {'role': senderRole},
               )
             : types.TextMessage(
@@ -178,7 +178,7 @@ class ChatController extends GetxController {
               id: chatMsg.id.isNotEmpty ? chatMsg.id : const Uuid().v4(),
               name: chatMsg.attachment.first.split('/').last,
               size: 0,
-              uri: ApiUrl.normalizeAttachmentUrl(chatMsg.attachment.first),
+              uri: chatMsg.attachment.first,
               metadata: {'role': incomingRole},
             )
           : types.TextMessage(
