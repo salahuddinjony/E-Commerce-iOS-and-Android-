@@ -17,20 +17,16 @@ import '../../../../utils/app_constants/app_constants.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AuthController extends GetxController with PasswordConstraintController {
-  // for vendor
-  
-  // final emailController = TextEditingController(text: "videostore06@gmail.com");
-  // final passWordController = TextEditingController(text: "salahAbc@1");
 
-
-
-  // final emailController = TextEditingController(text: "fahadhossaim24@gmail.com");
-  // final passWordController = TextEditingController(text: "12345678"); 
 
   // for client
-  final emailController =
-      TextEditingController(text: "salahuddin0758@gmail.com");
-  final passWordController = TextEditingController(text: "Abcd1234@");
+  final emailController =TextEditingController();
+  final passWordController = TextEditingController();
+
+
+  // final emailController =
+  //     TextEditingController(text: "salahuddin0758@gmail.com");
+  // final passWordController = TextEditingController(text: "Abcd1234@");
 
   final confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
