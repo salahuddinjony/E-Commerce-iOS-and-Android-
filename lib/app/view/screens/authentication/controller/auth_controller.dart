@@ -19,14 +19,14 @@ import 'package:image_picker/image_picker.dart';
 class AuthController extends GetxController with PasswordConstraintController {
 
 
-  // for client
-  final emailController =TextEditingController();
-  final passWordController = TextEditingController();
+  // // for client
+  // final emailController =TextEditingController();
+  // final passWordController = TextEditingController();
 
 
-  // final emailController =
-  //     TextEditingController(text: "salahuddin0758@gmail.com");
-  // final passWordController = TextEditingController(text: "Abcd1234@");
+  final emailController =
+      TextEditingController(text: "salahuddin0758@gmail.com");
+  final passWordController = TextEditingController(text: "Abcd1234@");
 
   final confirmPasswordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -273,11 +273,14 @@ class AuthController extends GetxController with PasswordConstraintController {
     isClient.value = true;
     refresh();
 
+    // Sanitize phone number: remove all non-digit characters
+    String sanitizedPhone = clientPhoneNumberController.text.trim().replaceAll(RegExp(r'[^0-9]'), '');
+
     Map<String, dynamic> body = {
       "name": nameController.text.trim(),
       "email": clientEmailController.text.trim(),
       "password": clientPasswordController.text.trim(),
-      "phone": clientPhoneNumberController.text.trim(),
+      "phone": sanitizedPhone,
       "role": "client",
       "isSocial": "false",
     };
@@ -289,7 +292,14 @@ class AuthController extends GetxController with PasswordConstraintController {
       //   MultipartBody("image", File(generalController.image.value)),
       // ],
     );
-    var responseData = jsonDecode(response.body);
+    dynamic responseData;
+    try {
+      responseData = response.body != null && response.body is String && (response.body as String).trim().isNotEmpty
+          ? jsonDecode(response.body)
+          : response.body;
+    } catch (e) {
+      responseData = null;
+    }
 
     if (response.statusCode == 201) {
       clearClientSIgnUpMethodFromClear();
@@ -300,9 +310,9 @@ class AuthController extends GetxController with PasswordConstraintController {
           "email": clientEmailController.text,
         },
       );
-      toastMessage(message: responseData["message"]); 
+      toastMessage(message: responseData != null && responseData["message"] != null ? responseData["message"] : AppStrings.someThing); 
     } else if (response.statusCode == 400) {
-     EasyLoading.showError(responseData["error"]);
+      EasyLoading.showError(responseData != null && responseData["error"] != null ? responseData["error"] : AppStrings.someThing);
     } else {
       ApiChecker.checkApi(response);
     }
@@ -356,17 +366,21 @@ class AuthController extends GetxController with PasswordConstraintController {
     }
     isVendorLoading.value = true;
     refresh();
+    // Remove any files that do not exist
+    pickedDocuments.removeWhere((file) => !file.existsSync());
     if (pickedDocuments.isEmpty) {
       isVendorLoading.value = false;
       refresh();
       toastMessage(message: "Please upload a document before proceeding.");
       return;
     }
+    // Sanitize phone number: remove all non-digit characters
+    String sanitizedPhone = businessPhoneController.text.trim().replaceAll(RegExp(r'[^0-9]'), '');
     Map<String, dynamic> body = {
       "name": businessNameController.text.trim(),
       "email": businessEmailController.text.trim(),
       "password": businessPasswordController.text.trim(),
-      "phone": businessPhoneController.text.trim(),
+      "phone": sanitizedPhone,
       "role": "vendor",
       "isSocial": "false",
       "address": address.value,
@@ -386,7 +400,14 @@ class AuthController extends GetxController with PasswordConstraintController {
           .map((file) => MultipartBody("documents", file))
           .toList(),
     );
-    var responseData = jsonDecode(response.body);
+    dynamic responseData;
+    try {
+      responseData = response.body != null && response.body is String && (response.body as String).trim().isNotEmpty
+          ? jsonDecode(response.body)
+          : response.body;
+    } catch (e) {
+      responseData = null;
+    }
 
     if (response.statusCode == 201) {
       AppRouter.route.pushNamed(
@@ -396,10 +417,10 @@ class AuthController extends GetxController with PasswordConstraintController {
           "email": businessEmailController.text,
         },
       );
-      toastMessage(message: responseData["message"]);
+      toastMessage(message: responseData != null && responseData["message"] != null ? responseData["message"] : AppStrings.someThing);
       // EasyLoading.show(success: "Registration Successful. Please verify your email.");
     } else if (response.statusCode == 400) {
-      EasyLoading.showError(responseData["error"]);
+      EasyLoading.showError(responseData != null && responseData["error"] != null ? responseData["error"] : AppStrings.someThing);
     } else {
       ApiChecker.checkApi(response);
     }

@@ -42,7 +42,7 @@ class CustomOrderCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Order: ${order.orderId}',
+                    'Order: ${order.orderId.replaceFirst('ORD-', '')}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14.sp,
@@ -101,7 +101,9 @@ class CustomOrderCard extends StatelessWidget {
                   Expanded(
                     child: OrderDetailRow(
                       label: 'Delivery Option',
-                      value: order.deliveryOption,
+                      value: order.deliveryOption.safeCap() == 'Pickupandcourier'
+                          ? 'Pickup and Courier'
+                          : order.deliveryOption.safeCap(),
                     ),
                   ),
                 ],
@@ -132,9 +134,9 @@ class CustomOrderCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              order.status.toLowerCase() == 'offered' ||
-                      order.status.toLowerCase() == 'pending' ||
-                      order.status.toLowerCase() == 'in-progress'
+              order.status.toLowerCase() != 'cancelled' &&
+                      order.status.toLowerCase() != 'delivery-confirmed'
+                     
                   ? Card(
                       elevation: 0.1,
                       color: Colors.white,

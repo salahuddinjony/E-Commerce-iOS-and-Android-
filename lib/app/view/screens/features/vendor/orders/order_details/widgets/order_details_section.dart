@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local/app/global/helper/extension/extension.dart';
 import '../../constants/order_constants.dart';
 import '../../models/custom_order_response_model.dart';
 import '../../models/general_order_response_model.dart';
@@ -32,7 +33,7 @@ class OrderDetailsSection extends StatelessWidget {
             value:
                 OrderConstants.getPaymentStatusDisplayText(order.paymentStatus),
           ),
-          OrderDetailRow(label: 'Delivery Option', value: order.deliveryOption),
+          OrderDetailRow(label: 'Delivery Option', value: order.deliveryOption.safeCap()=='Pickupandcourier'?'Pickup and Courier': order.deliveryOption.safeCap()),
           if (order.deliveryDate != null)
             OrderDetailRow(
               label: 'Delivery Date',

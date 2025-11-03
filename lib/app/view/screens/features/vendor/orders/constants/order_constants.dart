@@ -130,7 +130,7 @@ class OrderConstants {
   ];
 
   static const List<String> customTabs = [
-    'Offered',
+    'Offers',
     'Accepted Offers',
     'Delivery Requested',
     'Delivered',
