@@ -38,16 +38,76 @@ class TermsConditionScreen extends StatelessWidget {
             return GeneralErrorScreen(onTap: controller.getTerms);
 
           case Status.completed:
+            final termsCondition = controller.termsData.value.termsCondition ?? "";
             return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
               child: Html(
-                data: controller.termsData.value.termsCondition ?? "",
+                data: termsCondition.isEmpty ? "<p>No content available</p>" : termsCondition,
                 style: {
                   "body": Style(
-                    fontSize: FontSize(16.sp),
+                    fontSize: FontSize(14.sp),
                     color: AppColors.black,
                     fontWeight: FontWeight.w400,
                     textAlign: TextAlign.start,
+                    lineHeight: LineHeight(1.6),
+                  ),
+                  "h1": Style(
+                    fontSize: FontSize(20.sp),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black,
+                    margin: Margins.only(top: 16.h, bottom: 8.h),
+                  ),
+                  "h2": Style(
+                    fontSize: FontSize(18.sp),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black,
+                    margin: Margins.only(top: 14.h, bottom: 6.h),
+                  ),
+                  "h3": Style(
+                    fontSize: FontSize(16.sp),
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.black,
+                    margin: Margins.only(top: 12.h, bottom: 6.h),
+                  ),
+                  "p": Style(
+                    fontSize: FontSize(14.sp),
+                    color: AppColors.black,
+                    margin: Margins.only(bottom: 12.h),
+                    lineHeight: LineHeight(1.6),
+                    textAlign: TextAlign.justify,
+                  ),
+                  "ul": Style(
+                    margin: Margins.only(left: 10.w, bottom: 12.h),
+                  ),
+                  "ol": Style(
+                    margin: Margins.only(left: 10.w, bottom: 12.h),
+                  ),
+                  "li": Style(
+                    fontSize: FontSize(14.sp),
+                    color: AppColors.black,
+                    margin: Margins.only(bottom: 6.h),
+                    lineHeight: LineHeight(1.5),
+                  ),
+                  "strong": Style(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black,
+                  ),
+                  "b": Style(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  "em": Style(
+                    fontStyle: FontStyle.italic,
+                  ),
+                  "i": Style(
+                    fontStyle: FontStyle.italic,
+                  ),
+                  "a": Style(
+                    color: AppColors.brightCyan,
+                    textDecoration: TextDecoration.underline,
+                  ),
+                  "div": Style(
+                    margin: Margins.only(bottom: 10.h),
                   ),
                 },
               ),

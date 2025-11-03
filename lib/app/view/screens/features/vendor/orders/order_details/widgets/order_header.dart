@@ -45,7 +45,7 @@ class OrderHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Order ID: $orderId',
+                  'Order ID: ${orderId.replaceFirst('ORD-', '')}',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 8),

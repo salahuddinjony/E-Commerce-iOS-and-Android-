@@ -88,7 +88,7 @@ class TransactionCard extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 8.w, top: 2.h),
                         child: Text(
-                          "$amount\$",
+                          "\$$amount",
                           style: TextStyle(
                             color: primaryColor.withValues(alpha: .7),
                             fontWeight: FontWeight.w800,
