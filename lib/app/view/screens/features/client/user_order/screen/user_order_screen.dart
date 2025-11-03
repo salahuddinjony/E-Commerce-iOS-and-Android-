@@ -145,7 +145,8 @@ class UserOrderScreen extends StatelessWidget {
                                   : RefreshIndicator(
                                       backgroundColor: Colors.white,
                                       color: AppColors.brightCyan,
-                                      onRefresh: controller.refreshGeneralOrders,
+                                      onRefresh:
+                                          controller.refreshGeneralOrders,
                                       child: buildGeneralOrdersList(
                                           context, controller),
                                     )),
