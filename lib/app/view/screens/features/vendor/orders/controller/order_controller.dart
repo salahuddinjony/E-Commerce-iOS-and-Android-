@@ -484,9 +484,11 @@ class OrdersController extends GetxController
     while (true) {
       final now = DateTime.now();
 
-      if (now.isAfter(deliveryTime)) {
+      // Treat as expired only when deliveryTime is before now and more than 0 full days have passed.
+      // If deliveryTime is before now but within the same day (inDays == 0) we'll fall through to the countdown block below.
+      if (deliveryTime.isBefore(now) && now.difference(deliveryTime).inDays > 0) {
         yield "Expired";
-        break; // stop the stream when delivered
+        break; // stop the stream when delivered long ago
       } else if (now.isBefore(orderTime)) {
         yield "Not started";
       } else {
@@ -568,7 +570,7 @@ class OrdersController extends GetxController
   // Helper method to get status from custom tab name
   String? _getStatusFromCustomTab(String tabName) {
     switch (tabName) {
-      case 'Offered':
+      case 'Offers':
         return OrderConstants.statusOffered;
       case 'Accepted Offers':
         return OrderConstants.statusAccepted;

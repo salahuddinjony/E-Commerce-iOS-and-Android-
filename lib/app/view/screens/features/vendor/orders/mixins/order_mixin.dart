@@ -26,7 +26,7 @@ mixin OrderMixin on GetxController {
   // Get custom orders for specific tab
   List<Order> getCustomOrdersForTab(String tab) {
     switch (tab) {
-      case 'Offered':
+      case 'Offers':
         return customOrders.where((order) => 
           OrderConstants.isPendingStatus(order.status)
         ).toList();
