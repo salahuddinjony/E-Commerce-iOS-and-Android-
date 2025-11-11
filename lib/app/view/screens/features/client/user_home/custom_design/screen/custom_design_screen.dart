@@ -68,83 +68,6 @@ class CustomDesignScreen extends StatelessWidget {
                   const SizedBox(height: 8),
 
                   const DesignToolbar(),
-                  // show inline editor for active text box (if any)
-
-                  const SizedBox(height: 12),
-                  // upload controls
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      alignment: WrapAlignment.start,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: c.pickImageFromGallery,
-                          child: const Text("Upload Image",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        Obx(() {
-                          if (c.imagePath.value == null) {
-                            return const SizedBox.shrink();
-                          }
-                          return TextButton.icon(
-                            onPressed: c.isExporting.value
-                                ? null
-                                : () async {
-                                    debugPrint('Download button tapped');
-                                    final res = await c.savePreviewToGallery();
-                                    debugPrint(
-                                        'savePreviewToGallery result: $res');
-                                    debugPrint(
-                                        'exportedImageBytes length: ${c.exportedImageBytes.value?.lengthInBytes}');
-                                    debugPrint(
-                                        'exportedImageBase64 length: ${c.exportedImageBase64.value?.length}');
-                                    if (res['ok'] == true) {
-                                      final path = res['path']?.toString() ??
-                                          '<unknown>';
-                                      if (res['warning'] ==
-                                          'permission_denied') {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'Saved to temp (permission denied): $path')));
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text('Saved: $path')));
-                                      }
-                                    } else {
-                                      final err =
-                                          res['error']?.toString() ?? 'unknown';
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  'Failed to save: $err')));
-                                    }
-                                  },
-                            icon: c.isExporting.value
-                                ? const SizedBox(
-                                    width: 18,
-                                    height: 18,
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2))
-                                : const Icon(Icons.download),
-                            label: const Text("Preview",
-                                style: TextStyle(color: Colors.black)),
-                          );
-                        }),
-                        Obx(() => c.imagePath.value != null
-                            ? TextButton.icon(
-                                onPressed: c.clearImage,
-                                icon: const Icon(Icons.clear),
-                                label: const Text("Clear"),
-                              )
-                            : const SizedBox.shrink()),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 12),
                   SizedBox(
                     height: previewHeight,
@@ -214,7 +137,86 @@ class CustomDesignScreen extends StatelessWidget {
                   //               height: 48,
                   //             )),
                   //       ),
-                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                    child: Obx(() {
+                      final isBusy = c.isExporting.value;
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.brightCyan,
+                                side: BorderSide(color: AppColors.brightCyan),
+                                minimumSize: const Size.fromHeight(48),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              onPressed: isBusy
+                                  ? null
+                                  : () async {
+                                      final path = await c.exportAndSaveToTempAndOpen();
+                                      if (path == null) {
+                                        if (!context.mounted) return;
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Unable to open preview')),
+                                        );
+                                      }
+                                    },
+                              icon: isBusy
+                                  ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    )
+                                  : const Icon(Icons.visibility_outlined),
+                              label: Text(isBusy ? 'Processing...' : 'Preview'),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.brightCyan,
+                                foregroundColor: Colors.white,
+                                minimumSize: const Size.fromHeight(48),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              onPressed: isBusy
+                                  ? null
+                                  : () async {
+                                      final result = await c.savePreviewToGallery();
+                                      if (result['ok'] == true) {
+                                        final warning = result['warning']?.toString();
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              warning == 'permission_denied'
+                                                  ? 'Saved to temporary file (permission denied)'
+                                                  : 'Saved to gallery successfully',
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        final err = result['error']?.toString() ?? 'unknown';
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Failed to save: $err')),
+                                        );
+                                      }
+                                    },
+                              icon: isBusy
+                                  ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    )
+                                  : const Icon(Icons.download_done_rounded),
+                              label: Text(isBusy ? 'Saving...' : 'Save to Gallery'),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
                 ],
               ),
             ),
