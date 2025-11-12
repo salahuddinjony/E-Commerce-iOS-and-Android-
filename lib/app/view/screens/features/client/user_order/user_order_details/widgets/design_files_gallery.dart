@@ -61,10 +61,7 @@ class DesignFilesGallery extends StatelessWidget {
           GestureDetector(
             onTap: () => showImagePreview(context, 0),
             child: CustomNetworkImage(
-              imageUrl: safeFiles[0].toString().replaceFirst(
-                    'http://10.10.20.19:5007',
-                    'https://gmosley-uteehub-backend.onrender.com',
-                  ),
+              imageUrl: safeFiles[0].toString(),
               height: height,
               width: width,
               borderRadius: BorderRadius.circular(8),
