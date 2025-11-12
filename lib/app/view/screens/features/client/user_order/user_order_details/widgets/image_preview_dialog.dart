@@ -72,10 +72,7 @@ class ImagePreviewDialog extends StatelessWidget {
                           maxScale: 3.0,
                           child: Center(
                             child: CustomNetworkImage(
-                              imageUrl: images[index].replaceFirst(
-                                'http://10.10.20.19:5007',
-                                'https://gmosley-uteehub-backend.onrender.com',
-                              ),
+                              imageUrl: images[index],
                               height: double.infinity,
                               width: double.infinity,
                             ),
@@ -108,10 +105,7 @@ class ImagePreviewDialog extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: CustomNetworkImage(
-                                imageUrl: images[index].replaceFirst(
-                                  'http://10.10.20.19:5007',
-                                  'https://gmosley-uteehub-backend.onrender.com',
-                                ),
+                                imageUrl: images[index],
                                 height: 64,
                                 width: 64,
                                 borderRadius: BorderRadius.circular(8),
