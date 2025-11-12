@@ -11,9 +11,13 @@ import 'package:local/app/view/common_widgets/map/show_address_based_on_latLng.d
 class LocationField<T> extends StatelessWidget {
   final T controller;
   final bool isUser;
-  
+
   final bool isDeliveryLocation;
-  LocationField({super.key, required this.controller, this.isUser = false, this.isDeliveryLocation = false});
+  LocationField(
+      {super.key,
+      required this.controller,
+      this.isUser = false,
+      this.isDeliveryLocation = false});
   final RxBool isLoading = false.obs;
 
   Future<void> pickLocation(BuildContext context) async {
@@ -53,8 +57,7 @@ class LocationField<T> extends StatelessWidget {
 
   // Future<void> setCurrentLocationAndAddress(BuildContext context) async {
   //    final dyn = controller as dynamic;
-   
- 
+
   //    try {
   //     // show loader while resolving permission and obtaining location
   //     isLoading.value = true;
@@ -115,7 +118,6 @@ class LocationField<T> extends StatelessWidget {
   //   }
   //  }
 
-
   @override
   Widget build(BuildContext context) {
     final dyn = controller as dynamic;
@@ -124,26 +126,45 @@ class LocationField<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
-          text:isUser ? "Your Location" : isDeliveryLocation? "Delivery Location" : "Location",
+          text: isUser
+              ? "Your Location"
+              : isDeliveryLocation
+                  ? "Delivery Location"
+                  : "Location",
           textAlign: TextAlign.start,
           font: CustomFont.inter,
           color: AppColors.darkNaturalGray,
           fontWeight: FontWeight.w600,
           fontSize: 16.sp,
-          bottom: 12.h,   
+          bottom: 12.h,
         ),
         GestureDetector(
-          onTap: () => isUser ? dyn.setCurrentLocationAndAddress(context) : pickLocation(context),
+          onTap: () => isUser
+              ? dyn.setCurrentLocationAndAddress(context)
+              : pickLocation(context),
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color:isUser? AppColors.brightCyan.withValues(alpha: .3) : isDeliveryLocation ? Colors.red.withValues(alpha: .3) : Colors.transparent,
-              border: Border.all(color:isUser? isDeliveryLocation ? Colors.blue : Colors.transparent : Colors.grey), 
-              borderRadius: BorderRadius.circular(8), 
+              color: isUser
+                  ? AppColors.brightCyan.withValues(alpha: .3)
+                  : isDeliveryLocation
+                      ? Colors.red.withValues(alpha: .3)
+                      : Colors.transparent,
+              border: Border.all(
+                  color: isUser
+                      ? isDeliveryLocation
+                          ? Colors.blue
+                          : Colors.transparent
+                      : Colors.grey),
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Row( 
+            child: Row(
               children: [
-                isUser ? const Icon(Icons.my_location) : isDeliveryLocation ? const Icon(Icons.delivery_dining) : const Icon(Icons.map),
+                isUser
+                    ? const Icon(Icons.my_location)
+                    : isDeliveryLocation
+                        ? const Icon(Icons.delivery_dining)
+                        : const Icon(Icons.map),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Obx(() => Text(
@@ -160,7 +181,8 @@ class LocationField<T> extends StatelessWidget {
                             height: 16,
                             child: LinearProgressIndicator(
                               backgroundColor: AppColors.brightCyan,
-                              valueColor: AlwaysStoppedAnimation(Colors.deepOrangeAccent),
+                              valueColor: AlwaysStoppedAnimation(
+                                  Colors.deepOrangeAccent),
                             ),
                           ))
                     : const SizedBox.shrink(),
