@@ -139,19 +139,19 @@ class CustomDesignScreen extends StatelessWidget {
                   //       ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                    child: Obx(() {
-                      final isBusy = c.isExporting.value;
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Obx(() {
+                            final isPreviewing = c.isPreviewing.value;
+                            return OutlinedButton.icon(
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: AppColors.brightCyan,
                                 side: BorderSide(color: AppColors.brightCyan),
                                 minimumSize: const Size.fromHeight(48),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
-                              onPressed: isBusy
+                              onPressed: isPreviewing || c.isSaving.value
                                   ? null
                                   : () async {
                                       final path = await c.exportAndSaveToTempAndOpen();
@@ -162,26 +162,29 @@ class CustomDesignScreen extends StatelessWidget {
                                         );
                                       }
                                     },
-                              icon: isBusy
+                              icon: isPreviewing
                                   ? const SizedBox(
                                       width: 18,
                                       height: 18,
                                       child: CircularProgressIndicator(strokeWidth: 2),
                                     )
                                   : const Icon(Icons.visibility_outlined),
-                              label: Text(isBusy ? 'Processing...' : 'Preview'),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ElevatedButton.icon(
+                              label: Text(isPreviewing ? 'Processing...' : 'Preview'),
+                            );
+                          }),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Obx(() {
+                            final isSaving = c.isSaving.value;
+                            return ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.brightCyan,
                                 foregroundColor: Colors.white,
                                 minimumSize: const Size.fromHeight(48),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
-                              onPressed: isBusy
+                              onPressed: isSaving || c.isPreviewing.value
                                   ? null
                                   : () async {
                                       final result = await c.savePreviewToGallery();
@@ -203,19 +206,19 @@ class CustomDesignScreen extends StatelessWidget {
                                         );
                                       }
                                     },
-                              icon: isBusy
+                              icon: isSaving
                                   ? const SizedBox(
                                       width: 18,
                                       height: 18,
                                       child: CircularProgressIndicator(strokeWidth: 2),
                                     )
                                   : const Icon(Icons.download_done_rounded),
-                              label: Text(isBusy ? 'Saving...' : 'Save to Gallery'),
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
+                              label: Text(isSaving ? 'Saving...' : 'Save to Gallery'),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

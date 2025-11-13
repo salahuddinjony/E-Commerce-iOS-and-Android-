@@ -55,6 +55,7 @@ class StickerModel {
   final Rx<Offset> position;
   final RxDouble scale;
   final RxDouble rotation;
+  final Rx<Color> color; // Color for icons/graphics
 
   StickerModel({
     required this.id,
@@ -63,9 +64,11 @@ class StickerModel {
     Offset initialPos = const Offset(0.5, 0.5),
     double initialScale = 1.0,
     double initialRotation = 0.0,
+    Color initialColor = Colors.black,
   })  : position = Rx<Offset>(initialPos),
         scale = RxDouble(initialScale),
-        rotation = RxDouble(initialRotation);
+        rotation = RxDouble(initialRotation),
+        color = Rx<Color>(initialColor);
 }
 
 class MockupAssets {
@@ -121,8 +124,10 @@ class CustomDesignController extends GetxController {
   // key to capture preview
   final GlobalKey previewKey = GlobalKey();
 
-  // export in progress flag
-  final isExporting = false.obs;
+  // export in progress flags (separate for preview and save)
+  final isExporting = false.obs; // General export flag (for backward compatibility)
+  final isPreviewing = false.obs; // Preview button loading state
+  final isSaving = false.obs; // Save to gallery button loading state
 
   // exported image bytes (for API posting) and base64 string
   final exportedImageBytes = Rxn<Uint8List>();
@@ -325,6 +330,10 @@ class CustomDesignController extends GetxController {
   void setActiveText(String? id) {
     if (id != activeTextId.value) stopAllEditing();
     activeTextId.value = id;
+    // Clear active sticker when text is selected
+    if (id != null) {
+      activeStickerId.value = null;
+    }
   }
 
   // start editing a specific box (double-tap)
@@ -448,6 +457,18 @@ class CustomDesignController extends GetxController {
     stickerActiveIds[currentSide.value]?.value = id;
   }
 
+  void addStickerFromImageUrl(String url) {
+    final id = 'url_${DateTime.now().microsecondsSinceEpoch}';
+    final sticker = StickerModel(
+      id: id,
+      source: StickerSource.image,
+      data: url, // Store URL in data field
+      initialScale: 0.8,
+    );
+    stickers.add(sticker);
+    stickerActiveIds[currentSide.value]?.value = id;
+  }
+
   Future<void> addStickerFromGallery() async {
     try {
       final xfile = await _picker.pickImage(
@@ -492,6 +513,10 @@ class CustomDesignController extends GetxController {
 
   void setActiveSticker(String? id) {
     stickerActiveIds[currentSide.value]?.value = id;
+    // Clear active text when sticker is selected
+    if (id != null) {
+      activeTextId.value = null;
+    }
   }
 
   void beginStickerTransform(String id) {
@@ -534,6 +559,13 @@ class CustomDesignController extends GetxController {
     final sticker = getActiveSticker();
     if (sticker == null) return;
     setActiveStickerScale(sticker.scale.value + delta);
+  }
+
+  void setColorForActiveSticker(Color color) {
+    final sticker = getActiveSticker();
+    if (sticker != null) {
+      sticker.color.value = color;
+    }
   }
 
   void applyStickerGesture(
@@ -602,75 +634,96 @@ class CustomDesignController extends GetxController {
   /// Export preview, save to temp and open the file with the platform default app.
   /// Returns the saved file path on success, otherwise null.
   Future<String?> exportAndSaveToTempAndOpen() async {
-    final bytes = await exportPreviewAsPngBytes();
-    if (bytes == null) return null;
-    final path = await saveBytesToTempFile(bytes);
-    if (path == null) return null;
+    if (isPreviewing.value) return null;
+    isPreviewing.value = true;
     try {
-      await OpenFilex.open(path);
-    } catch (_) {
-      // ignore open errors
+      final bytes = await exportPreviewAsPngBytes();
+      if (bytes == null) {
+        isPreviewing.value = false;
+        return null;
+      }
+      final path = await saveBytesToTempFile(bytes);
+      if (path == null) {
+        isPreviewing.value = false;
+        return null;
+      }
+      // Reset loading state before opening file (opening is async and doesn't need loading state)
+      isPreviewing.value = false;
+      try {
+        await OpenFilex.open(path);
+      } catch (_) {
+        // ignore open errors
+      }
+      return path;
+    } catch (e) {
+      isPreviewing.value = false;
+      return null;
     }
-    return path;
   }
 
   /// Request required permission and save the exported image to the device gallery.
   /// Returns a map: { 'ok': bool, 'path': String?, 'error': String? }
   Future<Map<String, dynamic>> savePreviewToGallery() async {
-    debugPrint('savePreviewToGallery: starting');
-    final bytes = await exportPreviewAsPngBytes();
-    if (bytes == null) {
-      debugPrint('savePreviewToGallery: export failed (no bytes)');
-      return {'ok': false, 'error': 'export_failed'};
-    }
-    debugPrint(
-        'savePreviewToGallery: exported bytes size=${bytes.lengthInBytes}');
-
-    bool hasAccess = true;
+    if (isSaving.value) return {'ok': false, 'error': 'already_saving'};
+    isSaving.value = true;
     try {
-      if (Platform.isAndroid || Platform.isIOS) {
-        hasAccess = await Gal.hasAccess();
-        if (!hasAccess) {
-          hasAccess = await Gal.requestAccess();
+      debugPrint('savePreviewToGallery: starting');
+      final bytes = await exportPreviewAsPngBytes();
+      if (bytes == null) {
+        debugPrint('savePreviewToGallery: export failed (no bytes)');
+        return {'ok': false, 'error': 'export_failed'};
+      }
+      debugPrint(
+          'savePreviewToGallery: exported bytes size=${bytes.lengthInBytes}');
+
+      bool hasAccess = true;
+      try {
+        if (Platform.isAndroid || Platform.isIOS) {
+          hasAccess = await Gal.hasAccess();
+          if (!hasAccess) {
+            hasAccess = await Gal.requestAccess();
+          }
         }
+      } catch (e) {
+        debugPrint('savePreviewToGallery: access check error $e');
+        hasAccess = false;
       }
-    } catch (e) {
-      debugPrint('savePreviewToGallery: access check error $e');
-      hasAccess = false;
-    }
 
-    if (!hasAccess) {
-      debugPrint('savePreviewToGallery: permission denied - will attempt temp fallback');
-      final tempPath = await saveBytesToTempFile(bytes);
-      if (tempPath != null) {
-        try {
-          await OpenFilex.open(tempPath);
-        } catch (_) {}
-        return {'ok': true, 'path': tempPath, 'warning': 'permission_denied'};
+      if (!hasAccess) {
+        debugPrint('savePreviewToGallery: permission denied - will attempt temp fallback');
+        final tempPath = await saveBytesToTempFile(bytes);
+        if (tempPath != null) {
+          try {
+            await OpenFilex.open(tempPath);
+          } catch (_) {}
+          return {'ok': true, 'path': tempPath, 'warning': 'permission_denied'};
+        }
+        return {'ok': false, 'error': 'permission_denied'};
       }
-      return {'ok': false, 'error': 'permission_denied'};
-    }
 
-    try {
-      await Gal.putImageBytes(
-        bytes,
-        name: 'design_${DateTime.now().millisecondsSinceEpoch}.png',
-      );
-      debugPrint('savePreviewToGallery: saved via Gal');
-      return {'ok': true, 'path': 'gallery'};
-    } catch (e) {
-      debugPrint('savePreviewToGallery Gal error: $e');
-      final tempPath = await saveBytesToTempFile(bytes);
-      if (tempPath != null) {
-        try {
-          await OpenFilex.open(tempPath);
-        } catch (_) {}
-        debugPrint(
-            'savePreviewToGallery: exception fallback saved to temp: $tempPath');
-        return {'ok': true, 'path': tempPath};
+      try {
+        await Gal.putImageBytes(
+          bytes,
+          name: 'design_${DateTime.now().millisecondsSinceEpoch}.png',
+        );
+        debugPrint('savePreviewToGallery: saved via Gal');
+        return {'ok': true, 'path': 'gallery'};
+      } catch (e) {
+        debugPrint('savePreviewToGallery Gal error: $e');
+        final tempPath = await saveBytesToTempFile(bytes);
+        if (tempPath != null) {
+          try {
+            await OpenFilex.open(tempPath);
+          } catch (_) {}
+          debugPrint(
+              'savePreviewToGallery: exception fallback saved to temp: $tempPath');
+          return {'ok': true, 'path': tempPath};
+        }
+        debugPrint('savePreviewToGallery: exception and no fallback path');
+        return {'ok': false, 'error': e.toString()};
       }
-      debugPrint('savePreviewToGallery: exception and no fallback path');
-      return {'ok': false, 'error': e.toString()};
+    } finally {
+      isSaving.value = false;
     }
   }
 
@@ -679,6 +732,36 @@ class CustomDesignController extends GetxController {
   Future<bool> prepareOrderPayload() async {
     final bytes = await exportPreviewAsPngBytes();
     return bytes != null;
+  }
+
+  /// Reset everything to initial state - clear all text boxes and stickers from both sides
+  void resetAll() {
+    // Clear front side
+    for (final box in frontState.textBoxes) {
+      box.dispose();
+    }
+    frontState.textBoxes.clear();
+    frontState.stickers.clear();
+    frontState.imagePath.value = null;
+    textActiveIds[DesignSide.front]?.value = null;
+    stickerActiveIds[DesignSide.front]?.value = null;
+
+    // Clear back side
+    for (final box in backState.textBoxes) {
+      box.dispose();
+    }
+    backState.textBoxes.clear();
+    backState.stickers.clear();
+    backState.imagePath.value = null;
+    textActiveIds[DesignSide.back]?.value = null;
+    stickerActiveIds[DesignSide.back]?.value = null;
+
+    // Reset to front side
+    currentSide.value = DesignSide.front;
+    selectedProductColorIndex.value = 0;
+    
+    // Stop all editing
+    stopAllEditing();
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:local/app/view/screens/features/vendor/products_and_category/com
 import 'package:local/app/view/screens/features/vendor/products_and_category/product/add_product/screen/add_product_screen.dart';
 import 'package:local/app/view/screens/features/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 import 'package:local/app/view/screens/features/vendor/products_and_category/product/model/product_response.dart';
+import 'package:local/app/view/screens/features/vendor/home/widgets/show_product_details_screen.dart';
 import '../../../../../../common_widgets/custom_network_image/custom_network_image.dart';
 
 class ProductCard extends StatelessWidget {
@@ -25,21 +26,34 @@ class ProductCard extends StatelessWidget {
     return Card(
       elevation: 1,
       color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                  maxHeight: constraints.maxHeight,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
+      child: InkWell(
+        onTap: () {
+          // Navigate to product details screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShowProductDetailsScreen(
+                product: productData,
+              ),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(4),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                    maxHeight: constraints.maxHeight,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
                     Flexible(
                       child: Stack(
                         children: [
@@ -175,6 +189,7 @@ class ProductCard extends StatelessWidget {
               ),
             );
           },
+        ),
         ),
       ),
     );
