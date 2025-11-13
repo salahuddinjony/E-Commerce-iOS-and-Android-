@@ -1,12 +1,15 @@
 import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
 import 'package:vector_math/vector_math_64.dart' show Matrix4;
 
+import 'package:local/app/utils/app_colors/app_colors.dart';
 import '../controller/custom_design_controller.dart';
 
 class DesignPreview extends StatelessWidget {
@@ -79,9 +82,109 @@ class DesignPreview extends StatelessWidget {
                               fit: StackFit.expand,
                               children: [
                                 Container(color: Colors.grey[100]),
+                                // Front and Back thumbnail previews in top left
+                                Obx(() {
+                                  final currentSide = c.currentSide.value;
+                                  final frontPath = c.mockupAssetForSide(DesignSide.front);
+                                  final backPath = c.mockupAssetForSide(DesignSide.back);
+                                  final productColor = c.productColors[c.selectedProductColorIndex.value].swatch;
+                                  
+                                  return Positioned(
+                                    left: 8,
+                                    top: 8,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.1),
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // Front thumbnail
+                                          GestureDetector(
+                                            onTap: () => c.switchSide(DesignSide.front),
+                                            child: Container(
+                                              width: 38,
+                                              height: 38,
+                                              margin: const EdgeInsets.only(right: 3),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(6),
+                                                border: Border.all(
+                                                  color: currentSide == DesignSide.front
+                                                      ? AppColors.brightCyan
+                                                      : Colors.grey[300]!,
+                                                  width: currentSide == DesignSide.front ? 2 : 1,
+                                                ),
+                                                color: Colors.white,
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(5),
+                                                child: frontPath != null && frontPath.isNotEmpty
+                                                    ? ColorFiltered(
+                                                        colorFilter: ColorFilter.mode(
+                                                          productColor.withOpacity(0.9),
+                                                          BlendMode.modulate,
+                                                        ),
+                                                        child: Image.asset(
+                                                          frontPath,
+                                                          fit: BoxFit.contain,
+                                                          errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                                                        ),
+                                                      )
+                                                    : Container(color: Colors.grey[200]),
+                                              ),
+                                            ),
+                                          ),
+                                          // Back thumbnail
+                                          GestureDetector(
+                                            onTap: () => c.switchSide(DesignSide.back),
+                                            child: Container(
+                                              width: 38,
+                                              height: 38,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(6),
+                                                border: Border.all(
+                                                  color: currentSide == DesignSide.back
+                                                      ? AppColors.brightCyan
+                                                      : Colors.grey[300]!,
+                                                  width: currentSide == DesignSide.back ? 2 : 1,
+                                                ),
+                                                color: Colors.white,
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(5),
+                                                child: backPath != null && backPath.isNotEmpty
+                                                    ? ColorFiltered(
+                                                        colorFilter: ColorFilter.mode(
+                                                          productColor.withOpacity(0.9),
+                                                          BlendMode.modulate,
+                                                        ),
+                                                        child: Image.asset(
+                                                          backPath,
+                                                          fit: BoxFit.contain,
+                                                          errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                                                        ),
+                                                      )
+                                                    : Container(color: Colors.grey[200]),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
                                 Positioned.fill(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                                    padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                                     child: LayoutBuilder(
                                       builder: (context, boxConstraints) {
                                         final maxW = boxConstraints.maxWidth;
@@ -90,8 +193,8 @@ class DesignPreview extends StatelessWidget {
                                           return const SizedBox.shrink();
                                         }
 
-                                        final double canvasW = maxW * 0.92;
-                                        final double canvasH = maxH * 0.92;
+                                        final double canvasW = maxW;
+                                        final double canvasH = maxH;
                                         final Size canvasSize = Size(canvasW, canvasH);
 
                                         return Align(
@@ -113,18 +216,23 @@ class DesignPreview extends StatelessWidget {
                                                   final Widget? rawMockupWidget = (mockupPath != null && mockupPath.isNotEmpty)
                                                       ? Image.asset(
                                                           mockupPath,
-                                                          fit: BoxFit.cover,
+                                                          fit: BoxFit.contain,
+                                                          width: innerW * 1.2,
+                                                          height: innerH * 1.2,
+                                                          alignment: Alignment.center,
                                                           errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                                                         )
                                                       : null;
                                                   final Widget backgroundLayer = rawMockupWidget == null
                                                       ? Container(color: Colors.white)
-                                                      : ColorFiltered(
-                                                          colorFilter: ColorFilter.mode(
-                                                            color.withOpacity(0.9),
-                                                            BlendMode.modulate,
+                                                      : Center(
+                                                          child: ColorFiltered(
+                                                            colorFilter: ColorFilter.mode(
+                                                              color.withOpacity(0.9),
+                                                              BlendMode.modulate,
+                                                            ),
+                                                            child: rawMockupWidget,
                                                           ),
-                                                          child: rawMockupWidget,
                                                         );
 
                                                   final List<Widget> stickerWidgets = stickers.map<Widget>((sticker) {
@@ -149,10 +257,73 @@ class DesignPreview extends StatelessWidget {
                                                           style: const TextStyle(fontSize: 48),
                                                         );
                                                       } else {
-                                                        final file = File(sticker.data);
-                                                        content = file.existsSync()
-                                                            ? Image.file(file)
-                                                            : const Icon(Icons.broken_image_outlined, size: 48);
+                                                        // Check if data is a URL (starts with http)
+                                                        if (sticker.data.startsWith('http://') || 
+                                                            sticker.data.startsWith('https://')) {
+                                                          // Network image (icon from API) - check if SVG
+                                                          if (sticker.data.endsWith('.svg') || sticker.data.contains('.svg?')) {
+                                                            // SVG icon with color filter
+                                                            content = Obx(() => ColorFiltered(
+                                                              colorFilter: ColorFilter.mode(
+                                                                sticker.color.value,
+                                                                BlendMode.srcIn,
+                                                              ),
+                                                              child: SvgPicture.network(
+                                                                sticker.data,
+                                                                width: scaledSize * 0.8,
+                                                                height: scaledSize * 0.8,
+                                                                placeholderBuilder: (context) => const SizedBox(
+                                                                  width: 48,
+                                                                  height: 48,
+                                                                  child: Center(
+                                                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ));
+                                                          } else {
+                                                            // Regular image (PNG, JPG, etc.) with color filter
+                                                            content = Obx(() => ColorFiltered(
+                                                              colorFilter: ColorFilter.mode(
+                                                                sticker.color.value,
+                                                                BlendMode.modulate,
+                                                              ),
+                                                              child: CachedNetworkImage(
+                                                                imageUrl: sticker.data,
+                                                                placeholder: (context, url) => const SizedBox(
+                                                                  width: 48,
+                                                                  height: 48,
+                                                                  child: Center(
+                                                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                                                  ),
+                                                                ),
+                                                                errorWidget: (context, url, error) => const Icon(
+                                                                  Icons.broken_image_outlined,
+                                                                  size: 48,
+                                                                  color: Colors.grey,
+                                                                ),
+                                                              ),
+                                                            ));
+                                                          }
+                                                        } else {
+                                                          // Local file (uploaded image) - no color filter
+                                                          final file = File(sticker.data);
+                                                          if (file.existsSync()) {
+                                                            if (sticker.data.endsWith('.svg')) {
+                                                              // SVG file without color filter (user uploaded)
+                                                              content = SvgPicture.file(
+                                                                file,
+                                                                width: scaledSize * 0.8,
+                                                                height: scaledSize * 0.8,
+                                                              );
+                                                            } else {
+                                                              // Regular image file without color filter (user uploaded)
+                                                              content = Image.file(file);
+                                                            }
+                                                          } else {
+                                                            content = const Icon(Icons.broken_image_outlined, size: 48);
+                                                          }
+                                                        }
                                                       }
 
                                                       return Positioned(

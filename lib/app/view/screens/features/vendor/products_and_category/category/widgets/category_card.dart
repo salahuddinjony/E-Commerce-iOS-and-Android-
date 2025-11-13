@@ -5,6 +5,7 @@ import 'package:local/app/view/common_widgets/custom_network_image/custom_networ
 import 'package:local/app/view/screens/features/vendor/products_and_category/category/add_category/add_category.dart';
 import 'package:local/app/view/screens/features/vendor/products_and_category/category/model/category_response.dart';
 import 'package:local/app/view/screens/features/vendor/products_and_category/common_widgets/dialog/confirm_dialog.dart';
+import 'package:local/app/view/screens/features/vendor/home/widgets/show_category_details_screen.dart';
 import '../controller/category_controller.dart';
 
 
@@ -19,10 +20,23 @@ class CategoryCard extends StatelessWidget {
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Stack(
-          children: [
+      child: InkWell(
+        onTap: () {
+          // Navigate to category details screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShowCategoryDetailsScreen(
+                category: category,
+              ),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Stack(
+            children: [
             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -95,6 +109,7 @@ class CategoryCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:local/app/services/icon_service.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import '../controller/custom_design_controller.dart';
 
@@ -25,22 +27,69 @@ class DesignToolbar extends StatelessWidget {
     'Fira Sans',
   ];
 
-  // simple palette
+  // Extended color palette
   static const List<Color> _colorOptions = [
+    // Basic colors
     Colors.white,
     Colors.black,
+    Colors.grey,
+    // Reds & Pinks
     Colors.red,
+    Color(0xFFB71C1C), // Dark red
+    Color(0xFFE91E63), // Pink
     Colors.pink,
+    Color(0xFFF06292), // Light pink
+    Color(0xFFEC407A), // Medium pink
+    // Oranges & Yellows
     Colors.orange,
+    Color(0xFFFF6F00), // Dark orange
+    Color(0xFFFFA726), // Light orange
     Colors.amber,
     Colors.yellow,
+    Color(0xFFFFD54F), // Light yellow
+    Color(0xFFFFEB3B), // Bright yellow
+    // Greens
     Colors.green,
-    Colors.teal,
+    Color(0xFF1B5E20), // Dark green
+    Color(0xFF4CAF50), // Medium green
+    Color(0xFF66BB6A), // Light green
+    Color(0xFF81C784), // Lighter green
+    Color(0xFF8BC34A), // Lime green
+    // Blues
     Colors.blue,
-    Colors.indigo,
+    Color(0xFF0D47A1), // Dark blue
+    Color(0xFF1976D2), // Medium blue
+    Color(0xFF2196F3), // Light blue
+    Color(0xFF42A5F5), // Lighter blue
+    Color(0xFF64B5F6), // Sky blue
+    Color(0xFF03A9F4), // Cyan blue
+    // Teals & Cyans
+    Colors.teal,
+    Color(0xFF00695C), // Dark teal
+    Color(0xFF00897B), // Medium teal
+    Color(0xFF26A69A), // Light teal
+    Color(0xFF00BCD4), // Cyan
+    // Purples & Violets
     Colors.purple,
+    Color(0xFF4A148C), // Dark purple
+    Color(0xFF6A1B9A), // Medium purple
+    Color(0xFF7B1FA2), // Purple
+    Color(0xFF9C27B0), // Light purple
+    Color(0xFFBA68C8), // Lighter purple
+    Colors.indigo,
+    Color(0xFF1A237E), // Dark indigo
+    Color(0xFF3F51B5), // Medium indigo
+    Color(0xFF5C6BC0), // Light indigo
+    // Browns
     Colors.brown,
-    Colors.grey,
+    Color(0xFF3E2723), // Dark brown
+    Color(0xFF5D4037), // Medium brown
+    Color(0xFF8D6E63), // Light brown
+    // Special colors
+    Color(0xFF795548), // Brown
+    Color(0xFF607D8B), // Blue grey
+    Color(0xFF37474F), // Dark blue grey
+    Color(0xFF263238), // Almost black
   ];
 
   static const Map<String, Map<String, List<String>>> _artLibrary = {
@@ -158,40 +207,191 @@ class DesignToolbar extends StatelessWidget {
     if (selected != null) c.setFontFamilyForActive(selected);
   }
 
-  Future<void> _showColorPicker(BuildContext context, CustomDesignController c, Color initial) async {
+  Future<void> _showColorPicker(BuildContext context, CustomDesignController c, Color initial, {bool isForSticker = false}) async {
+    Color pickerColor = initial;
+    Color currentColor = initial;
+    
     final picked = await showDialog<Color>(
       context: context,
       builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Text color'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: GridView.count(
-              crossAxisCount: 6,
-              shrinkWrap: true,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              children: _colorOptions.map((col) {
-                return GestureDetector(
-                  onTap: () => Navigator.of(ctx).pop(col),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: col,
-                      border: Border.all(color: Colors.black26),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    width: 36,
-                    height: 36,
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(isForSticker ? 'Icon color' : 'Text color'),
+              content: SizedBox(
+                width: double.maxFinite,
+                height: 500,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Preset colors grid
+                      const Text(
+                        'Preset Colors',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 12),
+                      GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 8,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          childAspectRatio: 1.0,
+                        ),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _colorOptions.length,
+                        itemBuilder: (context, index) {
+                          final col = _colorOptions[index];
+                          final isSelected = col.value == pickerColor.value;
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                pickerColor = col;
+                                currentColor = col;
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: col,
+                                border: Border.all(
+                                  color: isSelected ? Colors.blue : Colors.black26,
+                                  width: isSelected ? 3 : 1,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: isSelected
+                                    ? [
+                                        BoxShadow(
+                                          color: Colors.blue.withOpacity(0.3),
+                                          blurRadius: 4,
+                                          spreadRadius: 1,
+                                        ),
+                                      ]
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      const Divider(),
+                      const SizedBox(height: 16),
+                      // Custom color picker using HSV sliders
+                      const Text(
+                        'Custom Color',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 12),
+                      // Hue slider
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Hue', style: TextStyle(fontSize: 12)),
+                          Slider(
+                            value: HSVColor.fromColor(pickerColor).hue,
+                            min: 0,
+                            max: 360,
+                            divisions: 360,
+                            onChanged: (value) {
+                              final hsv = HSVColor.fromColor(pickerColor);
+                              setState(() {
+                                pickerColor = HSVColor.fromAHSV(1.0, value, hsv.saturation, hsv.value).toColor();
+                                currentColor = pickerColor;
+                              });
+                            },
+                            activeColor: pickerColor,
+                          ),
+                        ],
+                      ),
+                      // Saturation slider
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Saturation', style: TextStyle(fontSize: 12)),
+                          Slider(
+                            value: HSVColor.fromColor(pickerColor).saturation,
+                            min: 0,
+                            max: 1,
+                            divisions: 100,
+                            onChanged: (value) {
+                              final hsv = HSVColor.fromColor(pickerColor);
+                              setState(() {
+                                pickerColor = HSVColor.fromAHSV(1.0, hsv.hue, value, hsv.value).toColor();
+                                currentColor = pickerColor;
+                              });
+                            },
+                            activeColor: pickerColor,
+                          ),
+                        ],
+                      ),
+                      // Value/Brightness slider
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Brightness', style: TextStyle(fontSize: 12)),
+                          Slider(
+                            value: HSVColor.fromColor(pickerColor).value,
+                            min: 0,
+                            max: 1,
+                            divisions: 100,
+                            onChanged: (value) {
+                              final hsv = HSVColor.fromColor(pickerColor);
+                              setState(() {
+                                pickerColor = HSVColor.fromAHSV(1.0, hsv.hue, hsv.saturation, value).toColor();
+                                currentColor = pickerColor;
+                              });
+                            },
+                            activeColor: pickerColor,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // Color preview
+                      Container(
+                        width: double.infinity,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: pickerColor,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.black26),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '#${pickerColor.value.toRadixString(16).substring(2).toUpperCase()}',
+                            style: TextStyle(
+                              color: pickerColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-          actions: [TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Close'))],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(currentColor),
+                  child: const Text('Select'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
-    if (picked != null) c.setColorForActive(picked);
+    if (picked != null) {
+      if (isForSticker) {
+        c.setColorForActiveSticker(picked);
+      } else {
+        c.setColorForActive(picked);
+      }
+    }
   }
 
   Future<void> _showProductColorPicker(BuildContext context, CustomDesignController c) async {
@@ -325,16 +525,58 @@ class DesignToolbar extends StatelessWidget {
   }
 
   Future<void> _showArtPicker(BuildContext context, CustomDesignController c) async {
-    final result = await showModalBottomSheet<String>(
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       backgroundColor: Colors.white,
       isScrollControlled: true,
       builder: (ctx) {
-        String selectedCategory = _artLibrary.keys.first;
-        String selectedSubcategory = _artLibrary[selectedCategory]!.keys.first;
+        String selectedCategory = 'Icons'; // Start with Icons category
+        String selectedSubcategory = '';
+        String searchQuery = '';
+        final searchController = TextEditingController();
+        List<IconResult> iconResults = [];
+        bool isLoadingIcons = false;
+        String? selectedIconSet;
+
         return StatefulBuilder(builder: (context, setState) {
-          final subcategories = _artLibrary[selectedCategory]!;
-          final items = subcategories[selectedSubcategory] ?? const [];
+          final isIconsCategory = selectedCategory == 'Icons';
+          final subcategories = isIconsCategory 
+              ? <String, List<String>>{} 
+              : _artLibrary[selectedCategory] ?? {};
+          final items = isIconsCategory 
+              ? <String>[] 
+              : (subcategories[selectedSubcategory] ?? const []);
+
+          // Load icons when Icons category is selected
+          void loadIcons() async {
+            if (isIconsCategory && !isLoadingIcons) {
+              setState(() => isLoadingIcons = true);
+              List<IconResult> results = [];
+              
+              if (searchQuery.isNotEmpty) {
+                results = await IconService.searchIcons(searchQuery, limit: 50);
+              } else if (selectedIconSet != null) {
+                results = await IconService.getIconsFromSet(selectedIconSet!, limit: 50);
+              } else {
+                // Load popular icons from multiple sets
+                for (final iconSet in IconService.popularIconSets.take(3)) {
+                  final icons = await IconService.getIconsFromSet(iconSet, limit: 20);
+                  results.addAll(icons);
+                  if (results.length >= 50) break;
+                }
+              }
+              
+              setState(() {
+                iconResults = results;
+                isLoadingIcons = false;
+              });
+            }
+          }
+
+          // Auto-load icons when category changes to Icons
+          if (isIconsCategory && iconResults.isEmpty && !isLoadingIcons) {
+            Future.microtask(loadIcons);
+          }
 
           return SafeArea(
             child: Padding(
@@ -347,7 +589,7 @@ class DesignToolbar extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Add art',
+                        'Add art & icons',
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                       ),
                       IconButton(
@@ -357,13 +599,16 @@ class DesignToolbar extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
+                  // Category selector
                   SizedBox(
                     height: 48,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
-                      itemCount: _artLibrary.length,
+                      itemCount: _artLibrary.length + 1, // +1 for Icons
                       itemBuilder: (_, index) {
-                        final key = _artLibrary.keys.elementAt(index);
+                        final key = index == 0 
+                            ? 'Icons' 
+                            : _artLibrary.keys.elementAt(index - 1);
                         final isActive = key == selectedCategory;
                         return ChoiceChip(
                           label: Text(key),
@@ -371,7 +616,13 @@ class DesignToolbar extends StatelessWidget {
                           onSelected: (_) {
                             setState(() {
                               selectedCategory = key;
-                              selectedSubcategory = _artLibrary[key]!.keys.first;
+                              if (key != 'Icons') {
+                                selectedSubcategory = _artLibrary[key]!.keys.first;
+                                iconResults = [];
+                                selectedIconSet = null;
+                                searchQuery = '';
+                                searchController.clear();
+                              }
                             });
                           },
                         );
@@ -379,29 +630,161 @@ class DesignToolbar extends StatelessWidget {
                       separatorBuilder: (_, __) => const SizedBox(width: 8),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 42,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: subcategories.length,
-                      itemBuilder: (_, index) {
-                        final key = subcategories.keys.elementAt(index);
-                        final isActive = key == selectedSubcategory;
-                        return ChoiceChip(
-                          label: Text(key),
-                          selected: isActive,
-                          onSelected: (_) => setState(() => selectedSubcategory = key),
-                        );
+                  // Search bar for Icons
+                  if (isIconsCategory) ...[
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search icons (e.g., home, heart, star)',
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: searchQuery.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  setState(() {
+                                    searchQuery = '';
+                                    searchController.clear();
+                                    selectedIconSet = null;
+                                    iconResults = [];
+                                  });
+                                  loadIcons();
+                                },
+                              )
+                            : null,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() => searchQuery = value);
                       },
-                      separatorBuilder: (_, __) => const SizedBox(width: 8),
+                      onSubmitted: (_) => loadIcons(),
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    // Icon set selector
+                    if (searchQuery.isEmpty)
+                      SizedBox(
+                        height: 42,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: IconService.popularIconSets.length,
+                          itemBuilder: (_, index) {
+                            final iconSet = IconService.popularIconSets[index];
+                            final isActive = selectedIconSet == iconSet;
+                            return ChoiceChip(
+                              label: Text(iconSet),
+                              selected: isActive,
+                              onSelected: (_) {
+                                setState(() {
+                                  selectedIconSet = isActive ? null : iconSet;
+                                  iconResults = [];
+                                });
+                                loadIcons();
+                              },
+                            );
+                          },
+                          separatorBuilder: (_, __) => const SizedBox(width: 8),
+                        ),
+                      ),
+                  ] else ...[
+                    // Subcategory selector for emojis
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 42,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: subcategories.length,
+                        itemBuilder: (_, index) {
+                          final key = subcategories.keys.elementAt(index);
+                          final isActive = key == selectedSubcategory;
+                          return ChoiceChip(
+                            label: Text(key),
+                            selected: isActive,
+                            onSelected: (_) => setState(() => selectedSubcategory = key),
+                          );
+                        },
+                        separatorBuilder: (_, __) => const SizedBox(width: 8),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   Flexible(
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         final crossAxisCount = constraints.maxWidth > 420 ? 6 : 4;
+                        
+                        if (isIconsCategory) {
+                          if (isLoadingIcons) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(32.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          
+                          if (iconResults.isEmpty) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(32.0),
+                                child: Text(
+                                  searchQuery.isEmpty 
+                                      ? 'Select an icon set or search for icons'
+                                      : 'No icons found. Try a different search.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.grey[600]),
+                                ),
+                              ),
+                            );
+                          }
+                          
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            itemCount: iconResults.length,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                            ),
+                            itemBuilder: (_, index) {
+                              final icon = iconResults[index];
+                              return InkWell(
+                                onTap: () => Navigator.of(ctx).pop({
+                                  'type': 'icon',
+                                  'url': icon.iconUrl,
+                                  'fullName': icon.fullName,
+                                }),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: Colors.black12),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SvgPicture.network(
+                                      icon.iconUrl,
+                                      width: 32,
+                                      height: 32,
+                                      placeholderBuilder: (context) => const Center(
+                                        child: SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(strokeWidth: 2),
+                                        ),
+                                      ),
+                                      semanticsLabel: icon.iconName,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        
+                        // Emoji grid
                         return GridView.builder(
                           shrinkWrap: true,
                           itemCount: items.length,
@@ -413,7 +796,10 @@ class DesignToolbar extends StatelessWidget {
                           itemBuilder: (_, index) {
                             final art = items[index];
                             return InkWell(
-                              onTap: () => Navigator.of(ctx).pop(art),
+                              onTap: () => Navigator.of(ctx).pop({
+                                'type': 'emoji',
+                                'data': art,
+                              }),
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
                                   color: Colors.grey[100],
@@ -440,8 +826,17 @@ class DesignToolbar extends StatelessWidget {
         });
       },
     );
-    if (result != null && result.isNotEmpty) {
-      c.addStickerFromEmoji(result);
+    
+    if (result != null) {
+      if (result['type'] == 'icon') {
+        // Add icon as image sticker
+        final iconUrl = result['url'] as String;
+        c.addStickerFromImageUrl(iconUrl);
+      } else if (result['type'] == 'emoji') {
+        // Add emoji as before
+        final emoji = result['data'] as String;
+        c.addStickerFromEmoji(emoji);
+      }
     }
   }
 
@@ -535,8 +930,8 @@ class DesignToolbar extends StatelessWidget {
                 IconButton(
                   color: Colors.white,
                   onPressed: () => _showArtPicker(context, c),
-                  icon: const Icon(Icons.emoji_emotions_outlined),
-                  tooltip: 'Add art',
+                  icon: const Icon(Icons.auto_awesome_outlined),
+                  tooltip: 'Add graphics & icons',
                 ),
 
                 IconButton(
@@ -544,6 +939,40 @@ class DesignToolbar extends StatelessWidget {
                   onPressed: c.addStickerFromGallery,
                   icon: const Icon(Icons.add_photo_alternate_outlined),
                   tooltip: 'Add image',
+                ),
+
+                const SizedBox(width: 6),
+
+                // Reset button
+                IconButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Reset Design'),
+                        content: const Text(
+                          'Are you sure you want to reset everything? This will remove all text, graphics, and icons from both front and back sides.',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              c.resetAll();
+                              Navigator.of(ctx).pop();
+                            },
+                            style: TextButton.styleFrom(foregroundColor: Colors.red),
+                            child: const Text('Reset'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.refresh_outlined),
+                  tooltip: 'Reset all',
                 ),
 
                 const SizedBox(width: 6),
@@ -591,7 +1020,7 @@ class DesignToolbar extends StatelessWidget {
                       // color plate button
                       IconButton(
                         color: Colors.white,
-                        onPressed: () => _showColorPicker(context, c, box.fontColor.value),
+                        onPressed: () => _showColorPicker(context, c, box.fontColor.value, isForSticker: false),
                         icon: Container(
                           width: 22,
                           height: 22,
@@ -655,15 +1084,38 @@ class DesignToolbar extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.emoji_emotions, color: Colors.white),
+                            Icon(
+                              sticker.source == StickerSource.art 
+                                  ? Icons.emoji_emotions 
+                                  : Icons.auto_awesome,
+                              color: Colors.white,
+                            ),
                             const SizedBox(width: 6),
                             Text(
-                              sticker.source == StickerSource.art ? 'Art selected' : 'Image selected',
+                              sticker.source == StickerSource.art ? 'Art selected' : 'Graphics selected',
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
                         ),
                       ),
+                      const SizedBox(width: 8),
+                      // Color picker for icons (only show for API icons, not uploaded images)
+                      if (sticker.source == StickerSource.image && 
+                          (sticker.data.startsWith('http://') || sticker.data.startsWith('https://')))
+                        Obx(() => IconButton(
+                          color: Colors.white,
+                          onPressed: () => _showColorPicker(context, c, sticker.color.value, isForSticker: true),
+                          icon: Container(
+                            width: 22,
+                            height: 22,
+                            decoration: BoxDecoration(
+                              color: sticker.color.value,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: Colors.black26),
+                            ),
+                          ),
+                          tooltip: 'Icon color',
+                        )),
                       const SizedBox(width: 8),
                       Row(
                         children: [

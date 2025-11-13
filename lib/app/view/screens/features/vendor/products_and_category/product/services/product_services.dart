@@ -228,7 +228,11 @@ mixin class ProductServices {
       if (status == 200) {
         EasyLoading.showSuccess(
             method == 'POST' ? 'Product created' : 'Product updated');
-        clear();
+        // Only clear form for POST (new product), not for PATCH (edit)
+        // The form will be cleared when navigating to add new product
+        if (method == 'POST') {
+          clear();
+        }
         await fetchProducts(isRefresh: true); // refresh list
         return true;
       } else {
