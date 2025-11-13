@@ -6,13 +6,13 @@ import 'package:local/app/view/screens/features/vendor/products_and_category/cat
 import 'package:local/app/view/screens/features/vendor/products_and_category/category/widgets/category_name_input.dart';
 import 'package:local/app/view/screens/features/vendor/products_and_category/common_widgets/image_upload_widget/image_upload_widget.dart';
 
-class AddCategory extends StatelessWidget {
+class AddCategory extends StatefulWidget {
   final String imagePath;
   final String categoryName;
   final String method;
   final String? categoryId;
 
-  AddCategory({
+  const AddCategory({
     super.key,
     required this.imagePath,
     required this.categoryName,
@@ -20,22 +20,36 @@ class AddCategory extends StatelessWidget {
     this.categoryId,
   });
 
+  @override
+  State<AddCategory> createState() => _AddCategoryState();
+}
+
+class _AddCategoryState extends State<AddCategory> {
   final CategoryController categoryController = Get.find<CategoryController>();
+  bool _initialValuesSet = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial values only once when the widget is first created
+    if (!_initialValuesSet) {
+      categoryController.setInitialValues(widget.imagePath, widget.categoryName);
+      _initialValuesSet = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Set initial values for the controller
-    categoryController.setInitialValues(imagePath, categoryName);
-
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(method == 'POST' ? 'Add Category' : 'Edit Category'),
+        title: Text(widget.method == 'POST' ? 'Add Category' : 'Edit Category'),
       ),
       body: SafeArea(
         child: Padding(
@@ -63,9 +77,9 @@ class AddCategory extends StatelessWidget {
                   print(
                       "Is Network Image: ${categoryController.isNetworkImage.value}");
                   await categoryController.createCategoryPost(
-                      method, categoryId ?? '', imagePath, categoryName);
+                      widget.method, widget.categoryId ?? '', widget.imagePath, widget.categoryName);
                 },
-                title: method == 'POST' ? 'Add' : 'Update',
+                title: widget.method == 'POST' ? 'Add' : 'Update',
                 isRadius: true,
               ),
             ],
