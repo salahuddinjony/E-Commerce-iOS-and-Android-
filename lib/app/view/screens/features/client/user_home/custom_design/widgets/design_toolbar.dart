@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:local/app/services/icon_service.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/view/screens/features/client/user_home/custom_design/tools_model.dart/tools_models.dart';
 import '../controller/custom_design_controller.dart';
 
 class DesignToolbar extends StatelessWidget {

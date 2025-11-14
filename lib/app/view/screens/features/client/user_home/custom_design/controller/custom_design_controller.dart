@@ -6,104 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/rendering.dart';
+import 'package:local/app/view/screens/features/client/user_home/custom_design/colors_library/color_library.dart';
+import 'package:local/app/view/screens/features/client/user_home/custom_design/tools_model.dart/tools_models.dart';
 // permission_handler removed because not used in current export flow
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
 // import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:gal/gal.dart';
-
-enum DesignSide { front, back }
-
-enum StickerSource { art, image }
-
-class TextBoxModel {
-  final String id;
-  final TextEditingController controller;
-  final Rx<Offset> position; // relative 0..1
-  final RxString fontFamily;
-  final RxDouble fontSize;
-  final RxBool isBold;
-  final RxBool isItalic;
-  final Rx<TextAlign> alignment;
-  final RxBool isEditing;
-  final Rx<Color> fontColor; // new
-
-  TextBoxModel({
-    required this.id,
-    required String text,
-    Offset initialPos = const Offset(0.5, 0.5),
-    String initialFont = 'Poppins',
-    double initialSize = 32,
-    Color initialColor = Colors.white,
-  })  : controller = TextEditingController(text: text),
-        position = Rx<Offset>(initialPos),
-        fontFamily = RxString(initialFont),
-        fontSize = RxDouble(initialSize),
-        isBold = RxBool(false),
-        isItalic = RxBool(false),
-        alignment = Rx<TextAlign>(TextAlign.center),
-        isEditing = RxBool(false),
-        fontColor = Rx<Color>(initialColor);
-
-  void dispose() => controller.dispose();
-}
-
-class StickerModel {
-  final String id;
-  final StickerSource source;
-  final String data; // emoji for art, file path for image
-  final Rx<Offset> position;
-  final RxDouble scale;
-  final RxDouble rotation;
-  final Rx<Color> color; // Color for icons/graphics
-
-  StickerModel({
-    required this.id,
-    required this.source,
-    required this.data,
-    Offset initialPos = const Offset(0.5, 0.5),
-    double initialScale = 1.0,
-    double initialRotation = 0.0,
-    Color initialColor = Colors.black,
-  })  : position = Rx<Offset>(initialPos),
-        scale = RxDouble(initialScale),
-        rotation = RxDouble(initialRotation),
-        color = Rx<Color>(initialColor);
-}
-
-class MockupAssets {
-  final String front;
-  final String back;
-
-  const MockupAssets({
-    required this.front,
-    required this.back,
-  });
-}
-
-class SideDesignState {
-  final imagePath = RxnString();
-  final RxList<TextBoxModel> textBoxes = <TextBoxModel>[].obs;
-  final RxList<StickerModel> stickers = <StickerModel>[].obs;
-
-  void dispose() {
-    for (final b in textBoxes) {
-      b.dispose();
-    }
-  }
-}
-
-class ProductColorOption {
-  final String name;
-  final Color swatch;
-  final List<String> sizes;
-
-  const ProductColorOption({
-    required this.name,
-    required this.swatch,
-    required this.sizes,
-  });
-}
 
 class CustomDesignController extends GetxController {
   final ImagePicker _picker = ImagePicker();
@@ -125,7 +34,8 @@ class CustomDesignController extends GetxController {
   final GlobalKey previewKey = GlobalKey();
 
   // export in progress flags (separate for preview and save)
-  final isExporting = false.obs; // General export flag (for backward compatibility)
+  final isExporting =
+      false.obs; // General export flag (for backward compatibility)
   final isPreviewing = false.obs; // Preview button loading state
   final isSaving = false.obs; // Save to gallery button loading state
 
@@ -151,110 +61,7 @@ class CustomDesignController extends GetxController {
 
   RxnString get activeStickerId => stickerActiveIds[currentSide.value]!;
 
-  final List<ProductColorOption> productColors = const [
-    ProductColorOption(
-        name: 'Classic White',
-        swatch: Colors.white,
-        sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL']),
-    ProductColorOption(
-        name: 'Heather Heliconia',
-        swatch: Color(0xFFF06292),
-        sizes: ['S', 'M', 'L', 'XL', '2XL', '3XL']),
-    ProductColorOption(
-        name: 'Steel Grey',
-        swatch: Color(0xFF9E9E9E),
-        sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Ocean Blue',
-        swatch: Color(0xFF42A5F5),
-        sizes: ['S', 'M', 'L', 'XL', 'XXL']),
-    ProductColorOption(
-        name: 'Sunset Orange',
-        swatch: Color(0xFFFFA726),
-        sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Forest Green',
-        swatch: Color(0xFF66BB6A),
-        sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Jet Black',
-        swatch: Colors.black,
-        sizes: ['S', 'M', 'L', 'XL', '2XL']),
-    ProductColorOption(
-        name: 'Ivory', swatch: Color(0xFFF5F5DC), sizes: ['XS', 'S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Royal Blue',
-        swatch: Color(0xFF1565C0),
-        sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Cardinal Red',
-        swatch: Color(0xFFB71C1C),
-        sizes: ['S', 'M', 'L', 'XL', '2XL']),
-    ProductColorOption(
-        name: 'Charcoal',
-        swatch: Color(0xFF424242),
-        sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Mint', swatch: Color(0xFFB2DFDB), sizes: ['XS', 'S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Banana', swatch: Color(0xFFFFF59D), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Lavender',
-        swatch: Color(0xFFB39DDB),
-        sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Deep Purple',
-        swatch: Color(0xFF512DA8),
-        sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Brick', swatch: Color(0xFF8D4A43), sizes: ['M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Sage', swatch: Color(0xFFA5B69C), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Sky', swatch: Color(0xFF90CAF9), sizes: ['XS', 'S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Coral', swatch: Color(0xFFFF8A80), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Sand', swatch: Color(0xFFE0C097), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Chocolate', swatch: Color(0xFF6D4C41), sizes: ['M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Maroon',
-        swatch: Color(0xFF500000),
-        sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Teal', swatch: Color(0xFF00897B), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Navy',
-        swatch: Color(0xFF0D47A1),
-        sizes: ['S', 'M', 'L', 'XL', 'XXL']),
-    ProductColorOption(
-        name: 'Peach', swatch: Color(0xFFFFCCBC), sizes: ['XS', 'S', 'M']),
-    ProductColorOption(
-        name: 'Mustard', swatch: Color(0xFFE1AD01), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Lime', swatch: Color(0xFFCDDC39), sizes: ['XS', 'S', 'M']),
-    ProductColorOption(
-        name: 'Olive', swatch: Color(0xFF6B8E23), sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Berry', swatch: Color(0xFFAD1457), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Slate', swatch: Color(0xFF607D8B), sizes: ['S', 'M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Copper', swatch: Color(0xFFB87333), sizes: ['M', 'L', 'XL']),
-    ProductColorOption(
-        name: 'Blush', swatch: Color(0xFFF8BBD0), sizes: ['XS', 'S', 'M']),
-    ProductColorOption(
-        name: 'Denim', swatch: Color(0xFF5479A7), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Aqua', swatch: Color(0xFF4DD0E1), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Plum', swatch: Color(0xFF6A1B9A), sizes: ['S', 'M', 'L']),
-    ProductColorOption(
-        name: 'Canary', swatch: Color(0xFFFFF176), sizes: ['XS', 'S', 'M']),
-    ProductColorOption(
-        name: 'Ash', swatch: Color(0xFFD7CCC8), sizes: ['S', 'M', 'L']),
-  ];
+  final List<ProductColorOption> productColors = ColorLibrary.productColors;
 
   final selectedProductColorIndex = 0.obs;
 
@@ -690,7 +497,8 @@ class CustomDesignController extends GetxController {
       }
 
       if (!hasAccess) {
-        debugPrint('savePreviewToGallery: permission denied - will attempt temp fallback');
+        debugPrint(
+            'savePreviewToGallery: permission denied - will attempt temp fallback');
         final tempPath = await saveBytesToTempFile(bytes);
         if (tempPath != null) {
           try {
@@ -759,7 +567,7 @@ class CustomDesignController extends GetxController {
     // Reset to front side
     currentSide.value = DesignSide.front;
     selectedProductColorIndex.value = 0;
-    
+
     // Stop all editing
     stopAllEditing();
   }
