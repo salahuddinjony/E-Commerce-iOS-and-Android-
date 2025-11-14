@@ -13,7 +13,7 @@ import 'package:local/app/view/screens/features/vendor/products_and_category/pro
 import 'package:local/app/view/screens/features/vendor/products_and_category/product/controller/vendor_product_controller.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-class AddProductScreen extends StatelessWidget {
+class AddProductScreen extends StatefulWidget {
   final String? method;
   final String? productId;
   final String? productName;
@@ -26,7 +26,7 @@ class AddProductScreen extends StatelessWidget {
   final String? quantity;
   final String? isFeatured;
 
-  AddProductScreen(
+  const AddProductScreen(
       {super.key,
       this.method,
       this.productId,
@@ -40,41 +40,63 @@ class AddProductScreen extends StatelessWidget {
       this.selectedColor,
       this.selectedSize});
 
+  @override
+  State<AddProductScreen> createState() => _AddProductScreenState();
+}
+
+class _AddProductScreenState extends State<AddProductScreen> {
   final VendorProductController controller =
       Get.find<VendorProductController>();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controller fields when the widget is initialized
+    if (widget.method == 'PATCH') {
+      controller.initializeForEdit(
+        productName: widget.productName,
+        colors: widget.selectedColor,
+        sizes: widget.selectedSize,
+        price: widget.price,
+        quantity: widget.quantity,
+        isFeaturedValue: widget.isFeatured,
+        categoryId: widget.categoryId,
+        categoryName: widget.categoryName,
+        image: widget.imageUrl!,
+      );
+    } else {
+      // Clear fields for new product
+      controller.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Initialize controller fields when the widget is built
-    if (method == 'PATCH') {
-      controller.initializeForEdit(
-        productName: productName,
-        colors: selectedColor,
-        sizes: selectedSize,
-        price: price,
-        quantity: quantity,
-        isFeaturedValue: isFeatured,
-        categoryId: categoryId,
-        categoryName: categoryName,
-        image: imageUrl!,
-      );
-    } 
-    // else {
-    //   // Clear fields for new product
-    //   controller.initializeForEdit(image: '');
-    // }
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: CustomAppBar(
         iconData: Icons.arrow_back,
-        appBarContent: method == 'POST' ? "Add Product" : "Edit Product",
+        appBarContent: widget.method == 'POST' ? "Add Product" : "Edit Product",
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      body: GestureDetector(
+        onTap: () {
+          // Dismiss keyboard when tapping outside text fields
+          FocusScope.of(context).unfocus();
+        },
+        behavior: HitTestBehavior.opaque,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               /// Upload image
               ImageUploadWidget<VendorProductController>(
                 controller: controller,
@@ -176,12 +198,17 @@ class AddProductScreen extends StatelessWidget {
 
               /// Submit Button
               CustomButton(
-                title: method == 'POST' ? "Submit" : "Update",
+                title: widget.method == 'POST' ? "Submit" : "Update",
                 onTap: () async {
+                  // Unfocus keyboard before submission
+                  FocusScope.of(context).unfocus();
+                  
                   bool success = await controller.createOrUpdateProduct(
-                      method: method!, productId: productId);
+                      method: widget.method!, productId: widget.productId);
 
-                  if (await success) {
+                  if (success) {
+                    // Ensure keyboard is closed after submission
+                    FocusScope.of(context).unfocus();
                     controller.fetchProducts();
                     context.pop();
                   }
@@ -189,7 +216,8 @@ class AddProductScreen extends StatelessWidget {
               ),
 
               SizedBox(height: 20.h),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -1,10 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:gal/gal.dart';
 import 'package:local/app/services/api_client.dart';
 import 'package:local/app/services/api_url.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
@@ -37,6 +42,7 @@ class ChatBody extends StatelessWidget {
             messages: messages,
             onSendPressed: controller.handleSendPressed,
             customMessageBuilder: (message, {required int messageWidth}) {
+              debugPrint('customMessageBuilder called for message type: ${message.runtimeType}');
               // Render image messages with our CustomNetworkImage which already
               // provides a shimmer placeholder and error widget.
               if (message is types.ImageMessage) {
@@ -62,7 +68,64 @@ class ChatBody extends StatelessWidget {
                 );
               }
 
-              return const SizedBox.shrink(); // fallback to default renderer for non-image messages
+              // Handle text messages with long press to copy
+              if (message is types.TextMessage) {
+                final textMessage = message as types.TextMessage;
+                final isCurrentUser = textMessage.author.id == controller.userId;
+                return Align(
+                  alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onLongPressStart: (_) {
+                      debugPrint('Text long press started: ${textMessage.text}');
+                    },
+                    onLongPress: () {
+                      debugPrint('Text long pressed: ${textMessage.text}');
+                      _showTextOptions(context, textMessage.text);
+                    },
+                    onLongPressEnd: (_) {
+                      debugPrint('Text long press ended: ${textMessage.text}');
+                    },
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isCurrentUser ? AppColors.brightCyan : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        constraints: BoxConstraints(
+                          maxWidth: messageWidth * 0.75,
+                        ),
+                        child: Text(
+                          textMessage.text,
+                          style: TextStyle(
+                            color: isCurrentUser ? Colors.white : Colors.black87,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return const SizedBox.shrink(); // fallback to default renderer for other message types
+            },
+            onMessageTap: (context, message) {
+              // Handle tap on messages - show save option for images
+              if (message is types.ImageMessage) {
+                _showImageOptions(context, message.uri);
+              }
+            },
+            onMessageLongPress: (context, message) {
+              // Handle long press on messages - copy text
+              if (message is types.TextMessage) {
+                _showTextOptions(context, message.text);
+              } else if (message is types.ImageMessage) {
+                _showImageOptions(context, message.uri);
+              }
             },
             // Provide attachment handler so users can pick images/files
             onAttachmentPressed: () async {
@@ -200,16 +263,163 @@ class ChatBody extends StatelessWidget {
               // you can tune more fields here if your package version supports them
             ),
           ),
-          Positioned.fill(
-            bottom: 88,
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onLongPress: () {},
-            ),
-          ),
           if (controller.isLoading.value) const LoaderOverlay(),
         ],
       );
     });
+  }
+
+  /// Show options dialog for image messages (Save Image)
+  void _showImageOptions(BuildContext context, String imageUrl) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.download, color: AppColors.brightCyan),
+              title: const Text('Save Image'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                _saveImageToGallery(context, imageUrl);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.cancel, color: Colors.grey),
+              title: const Text('Cancel'),
+              onTap: () => Navigator.of(ctx).pop(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Save image to gallery
+  Future<void> _saveImageToGallery(BuildContext context, String imageUrl) async {
+    try {
+      // Show loading indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              ),
+              SizedBox(width: 16),
+              Text('Saving image...'),
+            ],
+          ),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      Uint8List bytes;
+      
+      // Check if it's a local file or network URL
+      if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        // Network URL - download the image
+        final response = await http.get(Uri.parse(imageUrl));
+        if (response.statusCode == 200) {
+          bytes = response.bodyBytes;
+        } else {
+          throw Exception('Failed to download image: ${response.statusCode}');
+        }
+      } else {
+        // Local file path - read the file
+        final file = File(imageUrl);
+        if (await file.exists()) {
+          bytes = await file.readAsBytes();
+        } else {
+          throw Exception('Local file not found: $imageUrl');
+        }
+      }
+      
+      // Save to gallery using gal package
+      await Gal.putImageBytes(bytes, name: 'chat_image_${DateTime.now().millisecondsSinceEpoch}.png');
+      
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Text('Image saved to gallery'),
+              ],
+            ),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error saving image: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error, color: Colors.white),
+                const SizedBox(width: 8),
+                Expanded(child: Text('Failed to save image: ${e.toString()}')),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  /// Show options dialog for text messages (Copy)
+  void _showTextOptions(BuildContext context, String text) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.copy, color: AppColors.brightCyan),
+              title: const Text('Copy Text'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                _copyTextToClipboard(context, text);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.cancel, color: Colors.grey),
+              title: const Text('Cancel'),
+              onTap: () => Navigator.of(ctx).pop(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Copy text to clipboard
+  void _copyTextToClipboard(BuildContext context, String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white),
+            SizedBox(width: 8),
+            Text('Text copied to clipboard'),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 }

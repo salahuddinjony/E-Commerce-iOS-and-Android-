@@ -39,7 +39,10 @@ class ShowProductDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                       child: CachedNetworkImage(
                         imageUrl: product.images.isNotEmpty
-                            ? product.images.first
+                            ? product.images.first.replaceFirst(
+                                'http://10.10.20.19:5007',
+                                'https://gmosley-uteehub-backend.onrender.com',
+                              )
                             : '',
                         height: 160,
                         width: 160,
@@ -149,7 +152,10 @@ class ShowProductDetailsScreen extends StatelessWidget {
               itemBuilder: (context, idx) => ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
-                  imageUrl: images[idx],
+                  imageUrl: images[idx].replaceFirst(
+                    'http://10.10.20.19:5007',
+                    'https://gmosley-uteehub-backend.onrender.com',
+                  ),
                   height: 70,
                   width: 70,
                   fit: BoxFit.cover,
