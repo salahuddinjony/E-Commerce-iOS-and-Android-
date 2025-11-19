@@ -13,7 +13,9 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>recipe_app</string>
+		<string>U Tee Hub</string>
+		<key>CFBundleShortVersionString</key>
+		<string>1.1.0</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
