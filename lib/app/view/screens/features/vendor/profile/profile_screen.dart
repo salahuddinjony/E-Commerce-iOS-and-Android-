@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -202,6 +203,43 @@ class ProfileScreen extends StatelessWidget {
                   context.pushNamed(
                     RoutePath.changePasswordScreen,
                   );
+                },
+              ),
+              ProfileCardRow(
+                icon:Icon(Icons.delete_forever,color: Colors.red,),
+                label: 'Delete Account',
+                onTap: () async {
+                  final result = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Delete Account'),
+                    content: const Text('Do you agree to delete your account?'),
+                    actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Delete'),
+                    ),
+                    ],
+                  ),
+                  );
+                  if (result == true) {
+                    EasyLoading.showSuccess('Delete account successful');
+                    // final tokenBefore =await SharePrefsHelper.getString(AppConstants.bearerToken);
+                  await SharePrefsHelper.remove();
+                  //  final tokenAfter =await SharePrefsHelper.getString(AppConstants.bearerToken);
+                  //  print("Before logout-->token:$tokenBefore");
+                  //  print("After logout-->token :$tokenAfter");
+
+                  Get.deleteAll(
+                      force:
+                          true); //its indicates to clear all controllers before navigating
+                  context.goNamed(RoutePath.signInScreen);
+                  // TODO: Add your delete account logic here
+                  }
                 },
               ),
 
