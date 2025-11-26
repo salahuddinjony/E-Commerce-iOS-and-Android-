@@ -238,7 +238,6 @@ class ProfileScreen extends StatelessWidget {
                       force:
                           true); //its indicates to clear all controllers before navigating
                   context.goNamed(RoutePath.signInScreen);
-                  // TODO: Add your delete account logic here
                   }
                 },
               ),

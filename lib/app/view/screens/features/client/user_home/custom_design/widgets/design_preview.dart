@@ -8,8 +8,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:local/app/view/screens/features/client/user_home/custom_design/tools_model.dart/tools_models.dart';
 import 'package:matrix_gesture_detector/matrix_gesture_detector.dart';
-import 'package:vector_math/vector_math_64.dart' show Matrix4;
-
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import '../controller/custom_design_controller.dart';
 
@@ -100,7 +98,7 @@ class DesignPreview extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(10),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: Colors.black.withOpacity(0.1),
+                                            color: Colors.black.withValues(alpha: .1),
                                             blurRadius: 6,
                                             offset: const Offset(0, 2),
                                           ),
@@ -131,7 +129,7 @@ class DesignPreview extends StatelessWidget {
                                                 child: frontPath != null && frontPath.isNotEmpty
                                                     ? ColorFiltered(
                                                         colorFilter: ColorFilter.mode(
-                                                          productColor.withOpacity(0.9),
+                                                          productColor.withValues(alpha: .9),
                                                           BlendMode.modulate,
                                                         ),
                                                         child: Image.asset(
@@ -165,7 +163,7 @@ class DesignPreview extends StatelessWidget {
                                                 child: backPath != null && backPath.isNotEmpty
                                                     ? ColorFiltered(
                                                         colorFilter: ColorFilter.mode(
-                                                          productColor.withOpacity(0.9),
+                                                          productColor.withValues(alpha: .9),
                                                           BlendMode.modulate,
                                                         ),
                                                         child: Image.asset(
@@ -229,7 +227,7 @@ class DesignPreview extends StatelessWidget {
                                                       : Center(
                                                           child: ColorFiltered(
                                                             colorFilter: ColorFilter.mode(
-                                                              color.withOpacity(0.9),
+                                                              color.withValues(alpha: 0.9),
                                                               BlendMode.modulate,
                                                             ),
                                                             child: rawMockupWidget,
@@ -365,7 +363,7 @@ class DesignPreview extends StatelessWidget {
                                                                           width: 1.5,
                                                                         ),
                                                                         borderRadius: BorderRadius.circular(12),
-                                                                        color: Colors.white.withOpacity(0.08),
+                                                                        color: Colors.white.withValues(alpha: 0.08),
                                                                       )
                                                                     : null,
                                                                 child: FittedBox(
