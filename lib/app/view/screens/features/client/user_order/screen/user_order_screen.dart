@@ -35,7 +35,7 @@ class UserOrderScreen extends StatelessWidget {
                     TextStyle(fontWeight: FontWeight.w600, fontSize: 16.sp),
                 tabs: const [
                   Tab(text: 'Orders'),
-                  Tab(text: 'Date Extn Req'),
+                  Tab(text: 'Date Extension'),
                 ],
               ),
               SizedBox(height: 12.h),

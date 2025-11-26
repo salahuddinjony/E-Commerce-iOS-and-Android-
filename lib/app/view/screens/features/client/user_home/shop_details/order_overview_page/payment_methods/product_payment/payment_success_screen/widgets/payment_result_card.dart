@@ -133,18 +133,18 @@ class PaymentResultCard extends StatelessWidget {
         canvas.drawRect(Rect.fromLTWH(0, 0, newWidth.toDouble(), newHeight.toDouble()), bgPaint);
         // Draw the original image centered vertically with top padding
         canvas.drawImage(image, Offset(0, padPx.toDouble()), Paint());
-        final ui.Picture picture = recorder.endRecording();
-        final ui.Image padded = await picture.toImage(newWidth, newHeight);
+        // final ui.Picture picture = recorder.endRecording();
+        // final ui.Image padded = await picture.toImage(newWidth, newHeight);
 
-        ByteData? byteData = await padded.toByteData(format: ui.ImageByteFormat.png);
-        Uint8List pngBytes = byteData!.buffer.asUint8List();
+        // ByteData? byteData = await padded.toByteData(format: ui.ImageByteFormat.png);
+        // Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-        final safeId = transactionId != null
-            ? transactionId!.replaceAll(RegExp(r"[^0-9A-Za-z_-]"), "_")
-            : null;
-        final fileName = safeId != null
-            ? 'payment_receipt_${safeId}_${DateTime.now().millisecondsSinceEpoch}'
-            : 'payment_receipt_${DateTime.now().millisecondsSinceEpoch}';
+        // final safeId = transactionId != null
+        //     ? transactionId!.replaceAll(RegExp(r"[^0-9A-Za-z_-]"), "_")
+        //     : null;
+        // final fileName = safeId != null
+        //     ? 'payment_receipt_${safeId}_${DateTime.now().millisecondsSinceEpoch}'
+        //     : 'payment_receipt_${DateTime.now().millisecondsSinceEpoch}';
         // final result = await ImageGallerySaver.saveImage(pngBytes,
         //     quality: 100, name: fileName);
         final result = null;

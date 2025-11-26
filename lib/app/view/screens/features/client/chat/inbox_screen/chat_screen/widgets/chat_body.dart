@@ -6,7 +6,6 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:gal/gal.dart';

@@ -263,7 +263,7 @@ class DesignToolbar extends StatelessWidget {
                                 boxShadow: isSelected
                                     ? [
                                         BoxShadow(
-                                          color: Colors.blue.withOpacity(0.3),
+                                          color: Colors.blue.withValues(alpha: 0.3),
                                           blurRadius: 4,
                                           spreadRadius: 1,
                                         ),
@@ -864,7 +864,7 @@ class DesignToolbar extends StatelessWidget {
                   return Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.12),
+                      color: Colors.white.withValues(alpha: .12),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Row(
@@ -893,7 +893,7 @@ class DesignToolbar extends StatelessWidget {
                   return TextButton(
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.white.withOpacity(0.12),
+                      backgroundColor: Colors.white.withValues(alpha: .12),
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),
@@ -1080,7 +1080,7 @@ class DesignToolbar extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: .15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -1215,7 +1215,7 @@ class _SideToggleChip extends StatelessWidget {
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 6,
                     offset: const Offset(0, 3),
                   ),
