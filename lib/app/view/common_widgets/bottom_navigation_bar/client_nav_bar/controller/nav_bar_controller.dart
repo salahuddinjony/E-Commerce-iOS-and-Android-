@@ -4,6 +4,7 @@ import 'package:local/app/core/route_path.dart';
 import 'package:local/app/core/routes.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
+import 'package:local/app/utils/auth_helper.dart';
 import 'package:local/app/utils/custom_assets/assets.gen.dart';
 
 class NavBarController extends GetxController {
@@ -57,8 +58,17 @@ class NavBarController extends GetxController {
     currentIndex.value = index;
   }
 
-  void onTap(int index, String route) {
+  void onTap(int index, String route) async {
     if (currentIndex.value != index) {
+      // Check authentication for Order (index 1) and Chat (index 2)
+      if (index == 1 || index == 2) {
+        final isAuth = await AuthHelper.isAuthenticated();
+        if (!isAuth) {
+          // Navigate to ChooseAuthScreen for guest users
+          AppRouter.route.goNamed(RoutePath.chooseAuthScreen);
+          return;
+        }
+      }
       AppRouter.route.goNamed(route);
       currentIndex.value = index;
     }

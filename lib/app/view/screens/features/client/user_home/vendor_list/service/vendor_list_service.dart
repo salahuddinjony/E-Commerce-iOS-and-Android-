@@ -12,22 +12,40 @@ mixin class VendorListService {
     try {
       isLoadingVendorList.value = true;
      
-    
-      final body = {
-
+      // First call: Always send clientLocation in body
+      final Map<String, dynamic> body = {
         'clientLocation': '${latLng.latitude}, ${latLng.longitude}',
-        
       };
 
       String endpoint = ApiUrl.getNearestVendorlist;
       final response = await ApiClient.getData(endpoint, body: body);
+      
       if (response.statusCode == 200) {
-        isLoadingVendorList.value = false;
         final data = VendorResponse.fromJson(response.body);
-        nearestVendors.value = data.data ?? [];
-        debugPrint('Nearest vendors fetched length: ${nearestVendors.length}');
+        final vendors = data.data ?? [];
+        
+        // If vendor list is empty, make a second call with empty body
+        if (vendors.isEmpty) {
+          debugPrint('No vendors found with location, trying without location...');
+          final responseWithoutBody = await ApiClient.getData(endpoint, body: <String, dynamic>{});
+          
+          if (responseWithoutBody.statusCode == 200) {
+            final dataWithoutBody = VendorResponse.fromJson(responseWithoutBody.body);
+            nearestVendors.value = dataWithoutBody.data ?? [];
+            debugPrint('Nearest vendors fetched (without location) length: ${nearestVendors.length}');
+          } else {
+            nearestVendors.value = [];
+            debugPrint('Failed to load vendors without location: ${responseWithoutBody.statusText}');
+          }
+        } else {
+          nearestVendors.value = vendors;
+          debugPrint('Nearest vendors fetched length: ${nearestVendors.length}');
+        }
+        
         debugPrint('Response data: ${response.body}');
+        isLoadingVendorList.value = false;
       } else {
+        isLoadingVendorList.value = false;
         debugPrint(
             'Failed to load nearest vendors: ${response.statusText}');
         throw Exception(

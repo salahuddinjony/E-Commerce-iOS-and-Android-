@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/utils/auth_helper.dart';
 import 'package:local/app/view/common_widgets/common_home_app_bar/common_home_app_bar.dart';
 import 'package:local/app/view/common_widgets/custom_loader/custom_loader.dart';
 import 'package:local/app/view/common_widgets/custom_text/custom_text.dart';
@@ -47,7 +48,12 @@ class UserHomeScreen extends StatelessWidget {
                 RoutePath.termsConditionScreen,
               );
             },
-            profileTap: () {
+            profileTap: () async {
+              final isAuth = await AuthHelper.isAuthenticated();
+              if (!isAuth) {
+                context.pushNamed(RoutePath.chooseAuthScreen);
+                return;
+              }
               context.pushNamed(
                 RoutePath.userProfileScreen,
               );

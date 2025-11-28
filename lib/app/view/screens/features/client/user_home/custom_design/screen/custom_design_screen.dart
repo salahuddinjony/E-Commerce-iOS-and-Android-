@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 // import 'package:go_router/go_router.dart';
-// import 'package:local/app/core/route_path.dart';
+import 'package:local/app/core/route_path.dart';
 // import 'package:local/app/global/helper/toast_message/toast_message.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/utils/auth_helper.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 // import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 // import 'package:local/app/view/screens/features/client/user_home/shop_details/product_details/controller/product_details_controller.dart';
@@ -154,6 +156,11 @@ class CustomDesignScreen extends StatelessWidget {
                               onPressed: isPreviewing || c.isSaving.value
                                   ? null
                                   : () async {
+                                      final isAuth = await AuthHelper.isAuthenticated();
+                                      if (!isAuth) {
+                                        context.pushNamed(RoutePath.chooseAuthScreen);
+                                        return;
+                                      }
                                       final path = await c.exportAndSaveToTempAndOpen();
                                       if (path == null) {
                                         if (!context.mounted) return;
@@ -187,6 +194,11 @@ class CustomDesignScreen extends StatelessWidget {
                               onPressed: isSaving || c.isPreviewing.value
                                   ? null
                                   : () async {
+                                      final isAuth = await AuthHelper.isAuthenticated();
+                                      if (!isAuth) {
+                                        context.pushNamed(RoutePath.chooseAuthScreen);
+                                        return;
+                                      }
                                       final result = await c.savePreviewToGallery();
                                       if (result['ok'] == true) {
                                         final warning = result['warning']?.toString();
