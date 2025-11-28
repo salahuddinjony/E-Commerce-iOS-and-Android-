@@ -4,6 +4,7 @@ import '../../../../../core/route_path.dart';
 
 import 'package:local/app/utils/app_colors/app_colors.dart';
 import 'package:local/app/utils/app_strings/app_strings.dart';
+import 'package:local/app/utils/auth_helper.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 import 'package:local/app/view/common_widgets/custom_button/custom_button.dart';
 import 'package:local/app/view/common_widgets/bottom_navigation_bar/client_nav_bar/nav_bar.dart';
@@ -73,8 +74,13 @@ class SupportScreen extends StatelessWidget {
               ),
             ),
             CustomButton(
-              onTap: () {
-                 context.pushNamed(RoutePath.helpCenterScreen);
+              onTap: () async {
+                final isAuth = await AuthHelper.isAuthenticated();
+                if (!isAuth) {
+                  context.pushNamed(RoutePath.chooseAuthScreen);
+                  return;
+                }
+                context.pushNamed(RoutePath.helpCenterScreen);
               },
               title: "Contact Us",
             )

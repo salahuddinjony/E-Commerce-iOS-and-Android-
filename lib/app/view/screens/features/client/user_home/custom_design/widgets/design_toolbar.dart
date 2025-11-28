@@ -460,6 +460,7 @@ class DesignToolbar extends StatelessWidget {
                               ),
                             ),
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
@@ -471,16 +472,18 @@ class DesignToolbar extends StatelessWidget {
                                     border: Border.all(color: Colors.black12),
                                   ),
                                 ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  option.name,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: isSelected ? Colors.blueAccent : Colors.black87,
+                                const SizedBox(height: 4),
+                                Flexible(
+                                  child: Text(
+                                    option.name,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: isSelected ? Colors.blueAccent : Colors.black87,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -530,6 +533,7 @@ class DesignToolbar extends StatelessWidget {
       context: context,
       backgroundColor: Colors.white,
       isScrollControlled: true,
+      useSafeArea: true,
       builder: (ctx) {
         String selectedCategory = 'Icons'; // Start with Icons category
         String selectedSubcategory = '';
@@ -580,8 +584,15 @@ class DesignToolbar extends StatelessWidget {
           }
 
           return SafeArea(
+            top: true,
+            bottom: true,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              padding: EdgeInsets.only(
+                left: 12,
+                right: 12,
+                top: MediaQuery.of(ctx).padding.top > 0 ? 16 : 24,
+                bottom: 16,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,

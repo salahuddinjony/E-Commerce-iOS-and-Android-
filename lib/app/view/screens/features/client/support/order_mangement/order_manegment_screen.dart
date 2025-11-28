@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/utils/app_colors/app_colors.dart';
+import 'package:local/app/utils/auth_helper.dart';
 import 'package:local/app/view/common_widgets/custom_appbar/custom_appbar.dart';
 
 import '../../../../../../core/route_path.dart';
@@ -80,8 +81,13 @@ class OrderManegmentScreen extends StatelessWidget {
               height: 20.h,
             ),
            CustomButton(
-              onTap: () {
-                 context.pushNamed(RoutePath.helpCenterScreen);
+              onTap: () async {
+                final isAuth = await AuthHelper.isAuthenticated();
+                if (!isAuth) {
+                  context.pushNamed(RoutePath.chooseAuthScreen);
+                  return;
+                }
+                context.pushNamed(RoutePath.helpCenterScreen);
               },
               title: "Contact Us",
             ),

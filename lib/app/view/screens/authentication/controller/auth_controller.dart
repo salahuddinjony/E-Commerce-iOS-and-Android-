@@ -140,7 +140,8 @@ class AuthController extends GetxController with PasswordConstraintController {
         return RoutePath.userHomeScreen;
       }
     }
-    return RoutePath.chooseAuthScreen;
+    // Guest mode: show user home screen by default when no token
+    return RoutePath.userHomeScreen;
   }
 
   //>>>>>>>>>>>>>>>>>>✅✅Forget In Method✅✅<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

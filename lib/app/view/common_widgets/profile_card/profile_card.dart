@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local/app/core/route_path.dart';
+import 'package:local/app/utils/auth_helper.dart';
 import 'package:local/app/view/screens/features/client/user_home/shop_details/controller/shop_details_controller.dart';
 import 'package:local/app/view/screens/features/client/user_home/vendor_list/model/nearest_vendor_response.dart';
 
@@ -22,7 +23,12 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        final isAuth = await AuthHelper.isAuthenticated();
+        if (!isAuth) {
+          context.pushNamed(RoutePath.chooseAuthScreen);
+          return;
+        }
         context.pushNamed(
           RoutePath.shopDetailsScreen,
           extra: {
